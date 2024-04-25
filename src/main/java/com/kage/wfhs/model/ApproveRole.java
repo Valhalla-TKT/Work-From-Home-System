@@ -1,0 +1,39 @@
+package com.kage.wfhs.model;
+
+import jakarta.persistence.*;
+import lombok.*;
+import java.io.Serializable;
+import java.util.List;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
+@Entity
+@Table(name = "approve_role")
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+
+public class ApproveRole implements Serializable {
+	private static final long serialVersionUID = 1L;
+
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private long id;
+	private String name;
+
+	@ManyToMany(mappedBy = "approveRoles")
+	@JsonIgnore
+	@ToString.Exclude
+	private List<User> users;
+
+	@OneToMany(mappedBy = "approveRole", cascade = CascadeType.ALL)
+	@ToString.Exclude
+	@JsonIgnore
+	private List<WorkFlowOrder> workFlowOrders;
+	
+	@OneToMany(mappedBy = "approveRole", cascade = CascadeType.ALL)
+	@ToString.Exclude
+	@JsonIgnore
+	private List<WorkFlowStatus> workFlowStatuses;
+}

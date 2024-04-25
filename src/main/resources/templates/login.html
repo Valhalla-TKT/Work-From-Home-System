@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Sign in | WorkHub</title>
+	<link rel="stylesheet" media="screen" href="/assets/auth/auth.css" />
+
+</head>
+<body>
+<div class="video-container">
+	<video autoplay muted loop id="video-background">
+		<source src="/assets/auth/auth-background.mp4" type="video/mp4">
+	</video>
+	<div class="login-form">
+		<section class="content" data-content-container>
+			<main>
+
+				<div class="auth-content">
+					<h2>Welcome Back!
+						<p class="signin-subtitle">Sign in to your account to continue.</p>
+					</h2>
+					<div class="auth-form sign-in-form">
+						<form th:action="@{/signIn}" accept-charset="UTF-8" method="post">
+							<div th:if="${session.errorMessage != null}">
+								<p style="color: red" th:text="${session.errorMessage}"></p>
+							</div>
+							<div class="form-fields">
+								<fieldset>
+									<label for="login">Staff ID</label>
+									<input type="text" name="username" id="login" tabindex="1" class="text-input" autocorrect="off" autocapitalize="off">
+								</fieldset>
+								<fieldset>
+									<label for="password" class="password">Password <a href="../password_resets/new.html">Forgot Password?</a></label>
+									<input type="password" name="password" id="password" value="" tabindex="2" class="text-input" data-cypress="password">
+								</fieldset>
+							</div>
+							<input class="btn2 btn2--large btn2--full-width margin-t-20" type="submit" value="Sign In" tabindex="3" data-cypress="submit-sign-in-btn">
+						</form>
+					</div>
+				</div>
+			</main>
+		</section>
+	</div>
+</div>
+</body>
+</html>

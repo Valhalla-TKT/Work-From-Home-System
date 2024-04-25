@@ -1,0 +1,118 @@
+.boost-generic {
+  --boosted-gutter: 16px;
+  position: relative;
+}
+.boost-generic:after {
+  content: "";
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  pointer-events: none;
+  background: -webkit-gradient(
+    linear,
+    left top,
+    left bottom,
+    color-stop(62.73%, transparent),
+    color-stop(79.15%, rgba(0, 0, 0, 0.3))
+  );
+  background: linear-gradient(
+    180deg,
+    transparent 62.73%,
+    rgba(0, 0, 0, 0.3) 79.15%
+  );
+}
+.boost-generic a:link,
+.boost-generic a:visited {
+  color: #fff;
+}
+.boost-generic > video,
+.boost-generic > img {
+  width: 100%;
+  height: 100%;
+  -o-object-fit: cover;
+  object-fit: cover;
+}
+.boost-generic__link-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+}
+.boost-generic__external {
+  display: -ms-flexbox;
+  display: flex;
+  position: absolute;
+  top: var(--boosted-gutter);
+  right: var(--boosted-gutter);
+  -ms-flex-align: center;
+  align-items: center;
+  padding: 4px;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  border-radius: 4px;
+  background: #fff;
+  font-size: 13px;
+  font-weight: 500;
+  line-height: 15px;
+  pointer-events: none;
+}
+.boost-generic__external svg {
+  width: 14px;
+  height: 14px;
+}
+.boost-generic__external-url {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  max-width: 0;
+  margin: 0;
+  -webkit-transition: max-width 200ms ease, margin 200ms ease;
+  transition: max-width 200ms ease, margin 200ms ease;
+}
+.boost-generic:hover .boost-generic__external-url {
+  max-width: 100px;
+  margin-left: 4px;
+}
+.boost-generic__user-details,
+.boost-generic__boosted-link {
+  display: -ms-flexbox;
+  display: flex;
+  position: absolute;
+  z-index: 2;
+  bottom: var(--boosted-gutter);
+  -ms-flex-align: center;
+  align-items: center;
+  height: 24px;
+}
+.boost-generic__user-details {
+  left: var(--boosted-gutter);
+}
+.boost-generic__boosted-link {
+  right: var(--boosted-gutter);
+  font-size: 11px;
+  font-weight: 700;
+  line-height: 24px;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+.boost-generic__avatar {
+  border-radius: 50%;
+}
+.boost-generic__name {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  max-width: 150px;
+  margin-left: 8px;
+  font-size: 14px;
+  font-weight: 800;
+}
+.boost-generic__tracking-pixel {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  opacity: 0;
+  pointer-events: none;
+}

@@ -1,0 +1,30 @@
+package com.kage.wfhs.controller.api;
+
+import com.kage.wfhs.dto.LedgerDto;
+import com.kage.wfhs.dto.UserDto;
+import com.kage.wfhs.service.LedgerService;
+import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import java.util.List;
+
+@Controller
+@RequiredArgsConstructor
+@RequestMapping("/api/ledger/")
+public class LedgerController {
+
+    private final LedgerService ledgerService;
+
+    @GetMapping("/getAllLedgerInfo")
+    public String getAllLedger(Model model) {
+	    List<LedgerDto> ledgerList = ledgerService.getAllLedger();
+	    model.addAttribute("ledgerList", ledgerList);
+	    return "ledger-view";
+    }
+}

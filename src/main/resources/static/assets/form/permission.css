@@ -1,0 +1,12 @@
+@charset "UTF-8";
+.approve-role-permission-container {
+	display: flex;
+	flex-direction: column;
+	row-gap: 5px;
+}
+.approve-role-permission-box {
+	display: flex;
+	flex-direction: row;
+	column-gap: 15px;
+	margin-bottom: 10px;
+}

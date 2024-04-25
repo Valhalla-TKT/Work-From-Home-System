@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Approve Role List</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+            rel="stylesheet"
+            href="https://unicons.iconscout.com/release/v4.0.0/css/line.css"
+    />
+    <script src="https://code.jquery.com/jquery-3.7.1.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <style>
+        /* Import Google font - Poppins */
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap');
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+        body {
+            display: flex;
+            flex-direction: row;
+            column-gap: 20px;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            background: #444;
+        }
+        .sortable-list, .sortable-list-1 {
+            width: 425px;
+            padding: 25px;
+            background: #fff;
+            border-radius: 7px;
+            padding: 30px 25px 20px;
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
+        }
+        .sortable-list-1 {
+            width: 270px;
+        }
+        .sortable-list .item, .sortable-list-1 .item-1 {
+            list-style: none;
+            display: flex;
+            cursor: move;
+            background: #fff;
+            align-items: center;
+            border-radius: 5px;
+            padding: 10px 13px;
+            margin-bottom: 11px;
+            /* box-shadow: 0 2px 4px rgba(0,0,0,0.06); */
+            border: 1px solid #ccc;
+            justify-content: space-between;
+        }
+        .item .details, .item-1 .details-1 {
+            display: flex;
+            align-items: center;
+        }
+        .item .details img, .item-1 .details-1 img {
+            height: 43px;
+            width: 43px;
+            pointer-events: none;
+            margin-right: 12px;
+            object-fit: cover;
+            border-radius: 50%;
+        }
+        .item .details span, .item-1 .details-1 span {
+            font-size: 1.13rem;
+        }
+        .item i {
+            color: #474747;
+            font-size: 1.13rem;
+        }
+        .item.dragging {
+            opacity: 0.6;
+        }
+        .item.dragging :where(.details, i) {
+            opacity: 0;
+        }
+    </style>
+
+    <script>
+        $(document).ready(function () {
+            const $sortableList = $(".sortable-list");
+            let fromNumber, toNumber;
+
+            $sortableList.on("dragstart", ".item", function() {
+                var $item = $(this);
+                setTimeout(function() {
+                    $item.addClass("dragging");
+                    fromNumber = $item.index();
+                    console.log("from" + fromNumber);
+                }, 0);
+            });
+
+            $sortableList.on("dragend", ".item", function() {
+                $(this).removeClass("dragging");
+            });
+
+            $sortableList.on("dragover", ".item", function(e) {
+                e.preventDefault();
+                var $draggingItem = $(".dragging");
+                var $nextSibling = $(this).offset().top + $(this).outerHeight() / 2;
+                if (e.clientY <= $nextSibling) {
+                    $(this).before($draggingItem);
+                } else {
+                    $(this).after($draggingItem);
+                }
+            });
+
+            $sortableList.on("dragenter", ".item", function(e) {
+                e.preventDefault();
+            });
+
+            $sortableList.on("click", "#saveButton", function () {
+                var confirmed = confirm("Are you sure you want to change the order of roles?");
+                if (confirmed) {
+                    console.log(`From: ${fromNumber}, To: ${toNumber}`);
+                    $("#fromInput").val(fromNumber);
+                    $("#toInput").val(toNumber);
+                    updateListOrder();
+                    $(this).prop("disabled", true);
+                    sendDataToBackend();
+                }
+            });
+
+            $sortableList.on("dragover", function() {
+                $("#saveButton").prop("disabled", true);
+            });
+
+            $sortableList.on("dragend", function() {
+                $("#saveButton").prop("disabled", false);
+            });
+
+            var dataBackend;
+
+            function updateListOrder() {
+                var $items = $(".sortable-list .item");
+
+                var sortedItems = $items.toArray().sort(function(a, b) {
+                    return $sortableList.children().index(a) - $sortableList.children().index(b);
+                });
+
+                console.log("Updated list order:");
+                $(sortedItems).each(function(index) {
+                    var text = $(this).find("span").text();
+                    var id = text.substring(text.lastIndexOf("(") + 1, text.lastIndexOf(")"));
+                    var dataSentToBackend = `${id}`;
+                    console.log(dataSentToBackend);
+                    dataBackend = dataSentToBackend;
+                });
+
+            }
+            function sendDataToBackend() {
+                var idList = [];
+                $(".sortable-list .item").each(function() {
+                    var text = $(this).find("span").text();
+                    var id = text.substring(text.lastIndexOf("(") + 1, text.lastIndexOf(")"));
+                    idList.push(parseInt(id));
+                });
+
+                $.ajax({
+                    url: "/api/workfloworder/create",
+                    type: "POST",
+                    contentType: "application/json",
+                    data: JSON.stringify(idList),
+                    success: function(response) {
+                        console.log("Success:", response);
+                    },
+                    error: function(error) {
+                        console.error("Error:", error);
+                    }
+                });
+            }
+
+            function disabledDragIfApplicantAndMoveApplicantToBottomOfTheList() {
+                var applicantItem = $(".sortable-list .item span").filter(function() {
+                    return $(this).text().toUpperCase().indexOf("APPLICANT") !== -1;
+                });
+                if (applicantItem.length > 0) {
+                    console.log("Applicant exists");
+                    $(".sortable-list").append(applicantItem.parents('.item'));
+                    applicantItem.parents('.item').attr('draggable', false);
+                } else {
+                    console.log("Applicant does not exist");
+                }
+            }
+
+            getAllApproveRoleList();
+
+            function getAllApproveRoleList() {
+                $.ajax({
+                    url: "api/approveRole/approveRoleList",
+                    type: "POST",
+                    contentType: "application/json",
+                    success: function(response) {
+                        $(".sortable-list").empty();
+                        response.forEach(function(item) {
+                            var listItem = `<li class="item" draggable="true" data-id="${item.id}">
+                                        <div class="details">
+                                            <img src="../phonk.jpg" />
+                                            <span>${item.name} (${item.id})</span>
+                                        </div>
+                                        <i class="uil uil-draggabledots"></i>
+                                    </li>`;
+                            $(".sortable-list").append(listItem);
+                        });
+                        disabledDragIfApplicantAndMoveApplicantToBottomOfTheList();
+                        var button = `
+                    <button id="saveButton" draggable="false" disabled>Save Changes</button><br>
+                    from <input id="fromInput" type="text"><br>
+                    to <input id="toInput" type="text">
+                `;
+                        $(".sortable-list").append(button);
+
+                        response.forEach(function(item, index) {
+                            console.log(`${index + 1}. ${item.id}`);
+                        });
+                    },
+                    error: function(error) {
+                        console.error("Error:", error);
+                    }
+                });
+            }
+        });
+    </script>
+
+</head>
+
+
+<body>
+
+
+<ul class="sortable-list">
+    <li class="item" draggable="true">
+        <div class="details">
+            <img src="../phonk.jpg" />
+            <span>Human Resources (0)</span>
+        </div>
+        <i class="uil uil-draggabledots"></i>
+    </li>
+    <li class="item" draggable="true">
+        <div class="details">
+            <img src="../phonk.jpg" />
+            <span>Chief Executive Officer (1)</span>
+        </div>
+        <i class="uil uil-draggabledots"></i>
+    </li>
+    <li class="item" draggable="true">
+        <div class="details">
+            <img src="../phonk.jpg" />
+            <span>Chief Information Security Officer (2)</span>
+        </div>
+        <i class="uil uil-draggabledots"></i>
+    </li>
+    <li class="item" draggable="true">
+        <div class="details">
+            <img src="../phonk.jpg" />
+            <span>Division Head (3)</span>
+        </div>
+        <i class="uil uil-draggabledots"></i>
+    </li>
+    <li class="item" draggable="true">
+        <div class="details">
+            <img src="../phonk.jpg" />
+            <span>Department Head (4)</span>
+        </div>
+        <i class="uil uil-draggabledots"></i>
+    </li>
+    <li class="item" draggable="true">
+        <div class="details">
+            <img src="../phonk.jpg" />
+            <span>Project Manager (5)</span>
+        </div>
+        <i class="uil uil-draggabledots"></i>
+    </li>
+    <li class="item" draggable="true">
+        <div class="details">
+            <img src="../phonk.jpg" />
+            <span>Applicant (6)</span>
+        </div>
+        <i class="uil uil-draggabledots"></i>
+    </li>
+
+    <button id="saveButton" draggable="false" disabled>Save Changes</button><br>
+    from <input id="fromInput" type="text"><br>
+    to <input id="toInput" type="text">
+</ul>
+
+</body>
+
+</html>

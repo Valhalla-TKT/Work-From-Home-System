@@ -1,0 +1,44 @@
+package com.kage.wfhs.service;
+
+import com.kage.wfhs.dto.UserDto;
+import com.kage.wfhs.model.ApproveRole;
+import com.kage.wfhs.model.Team;
+import com.kage.wfhs.model.User;
+import org.springframework.stereotype.Service;
+
+import java.util.List;
+import java.util.Set;
+
+@Service
+public interface UserService {
+	void createUser(UserDto userDto);
+    void updateUser(long id, UserDto userDto);
+    UserDto getUserByStaff_id(String staff_id);
+    String createStaff_id(String gender);
+    String getLastStaffId(String gender);
+    List<UserDto> getAllUser();
+    boolean isDuplicated(UserDto userDto);
+    List<UserDto> getAllTeamMember(long id);
+    List<UserDto> getAllDepartmentMember(long id);
+    List<UserDto> getAllDivisionMember(long id);
+    Set<ApproveRole> getApproveRoleByUserId(long id);
+    Team getTeamIdByUserId(long id);
+    UserDto getUserById(long id);
+    
+    // codes for live chat between Service Desk and User
+	void setUserOnline(User user);
+	void disconnect(User user);
+	List<UserDto> findConnectedUsers();
+	List<UserDto> getUpperRole(long l);
+	List<Object[]> getUserRequestByTeamId(Long teamId);
+	List<Object[]> getTotalStaffRequestByTeamId(String teamId);
+	Object[] getTeamRegistrationInfo(Long teamId);
+	List<Object[]> getAllTeamRequestByDepartmentId(Long departmentId);
+	List<Object[]> getTotalTeamRequestByDepartmentId(String departmentId);
+	Object[] getDepartmentRegistrationInfo(Long departmentId);
+	List<Object[]> getAllDepartmentRequestByDivisionId(Long divisionId);
+	List<Object[]> getTotalDepartmentRequestByDivisionId(String divisionId);
+	Object[] getDivisionRegistrationInfo(Long divisionId);
+	List<Object[]> getAllUserRequests();
+	List<Object[]> getTotalStaffRequest();
+}

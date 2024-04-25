@@ -1,0 +1,2 @@
+const c=document.querySelectorAll("[data-toggle-signup-form-btn]"),e=document.querySelector("[data-signup-form]"),o=document.querySelector("[data-back-btn]"),s=document.querySelectorAll("[data-hide-on-signup-form]"),n=document.querySelector("[data-content-container]"),i=()=>{s.forEach(t=>{t.classList.toggle("hide")}),e&&e.classList.toggle("show"),o&&o.classList.toggle("hide"),n&&n.classList.toggle("shift-down")};c.forEach(t=>{t.addEventListener("click",i)});
+//# sourceMappingURL=signup-page-0533b020.js.map

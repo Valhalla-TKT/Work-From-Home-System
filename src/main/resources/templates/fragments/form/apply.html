@@ -1,0 +1,886 @@
+<!DOCTYPE html>
+
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+<title>WorkHub</title>
+</head>
+
+<body>
+	<!-- ============================================================== -->
+	<!-- Form -->
+	<!-- You can find style sheets file and JavaScript in static/assets/form/... -->
+	<!-- ============================================================== -->
+	<div id="wrap" th:fragment="content">
+		<div id="wrap-inner">
+			<div id="content" role="main">
+				<div class="container-job-board">
+					<div class="job-board-gradient"></div>
+					<div class="header">
+						<div class="inner-header">
+							<div class="go-back display-none" id="go-back" onclick="goBack()">
+								<button>
+									<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
+										fill="currentColor" class="bi bi-arrow-left"
+										viewBox="0 0 16 16">
+						                <path fill-rule="evenodd"
+											d="M15 8a.5.5 0 0 0-.5-.5H2.707l3.147-3.146a.5.5 0 1 0-.708-.708l-4 4a.5.5 0 0 0 0 .708l4 4a.5.5 0 0 0 .708-.708L2.707 8.5H14.5A.5.5 0 0 0 15 8" />
+						            </svg>
+								</button>
+							</div>
+							<div class="go-back display-none" id="go-back-1" onclick="goBack1()">
+								<button>
+									<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
+										fill="currentColor" class="bi bi-arrow-left"
+										viewBox="0 0 16 16">
+						                <path fill-rule="evenodd"
+											d="M15 8a.5.5 0 0 0-.5-.5H2.707l3.147-3.146a.5.5 0 1 0-.708-.708l-4 4a.5.5 0 0 0 0 .708l4 4a.5.5 0 0 0 .708-.708L2.707 8.5H14.5A.5.5 0 0 0 15 8" />
+						            </svg>
+								</button>
+							</div>
+							<div class="header-title">
+
+								<div class="title-section">
+									<h1 class="display-block">DIR-ACE Technology Ltd.</h1>
+									<h2>Request Work From Home: Complete the Form Below</h2>
+								</div>
+								<div data-v-741dde45="" class="step-counter"
+									style="font-size: 20px">
+									1/<span data-v-741dde45="" class="color-deep-blue-sea-light-40">4</span>
+								</div>
+							</div>
+						</div>
+
+
+					</div>
+					<!-- Form -->
+					<form id="apply-form" class="form-content" style="z-index: 2;" enctype="multipart/form-data">
+						<div data-v-115a39aa="" class="job-creation">
+							<!---->
+							<div data-v-115a39aa="" class="container">
+
+								<section data-v-115a39aa="" id="step1" class="step-container"
+									style="margin-bottom: 10px;">
+
+									<div id="data-section">
+										<section data-v-741dde45="" data-v-115a39aa=""
+											class="user-form-container user-form">
+
+											<div class="radio-inputs">
+												<label class="radio"> <input type="radio" checked
+													name="radio" id="self-request-radio"> <span
+													class="name">Self Request</span>
+												</label> <label class="radio"> <input type="radio"
+													name="radio" id="other-request-radio"> <span
+													class="name">Other Request</span>
+												</label>
+											</div>
+											<br>
+											<header data-v-741dde45=""
+												class="heading display-flex justify-space-between align-center">
+												<span data-v-741dde45="" class="title">Applicant
+													Information</span>
+											</header>
+											<div id="division-input-container" data-v-741dde45="" class="form-field-container">
+					                          <span data-v-741dde45="" class="error-marker">
+					                            <div data-v-42dea6db="" data-v-741dde45="" class="">
+					                              <label data-v-42dea6db=""for="jobTitle" class="label">
+					                                Choose Division
+					                                <span data-v-42dea6db="" class="color-lobster">*</span>
+					                              </label>
+					                              <div data-v-42dea6db="" class="">
+					                                <span data-v-42dea6db="" class="error-marker">
+					                                  <select data-v-42dea6db="" id="division-name" required="required" step="any" class="select" style="width: 100%"></select>										              
+					                                </span>
+					                              </div>
+					                            </div>
+					                          </span>
+					                        </div> 
+											<div id="department-input-container" data-v-741dde45="" class="form-field-container">
+					                          <span data-v-741dde45="" class="error-marker">
+					                            <div data-v-42dea6db="" data-v-741dde45="" class="">
+					                              <label data-v-42dea6db=""for="jobTitle" class="label">
+					                                Choose Department
+					                                <span data-v-42dea6db="" class="color-lobster">*</span>
+					                              </label>
+					                              <div data-v-42dea6db="" class="">
+					                                <span data-v-42dea6db="" class="error-marker">
+					                                  <select data-v-42dea6db="" id="department-name" required="required" step="any" class="select" style="width: 100%"></select>										              
+					                                </span>
+					                              </div>
+					                            </div>
+					                          </span>
+					                        </div> 
+											<div data-v-741dde45="" class="form">
+											 <div id="name-select-box-container" data-v-741dde45="" class="form-field-container">
+					                          <span data-v-741dde45="" class="error-marker">
+					                            <div data-v-42dea6db="" data-v-741dde45="" class="">
+					                              <label data-v-42dea6db=""for="name Select" class="label">
+					                                Name
+					                                <span data-v-42dea6db="" class="color-lobster">*</span>
+					                              </label>
+					                              <div data-v-42dea6db="" class="">
+					                                <span data-v-42dea6db="" class="error-marker">
+					                                  <select data-v-42dea6db="" id="team-member-list" required="required" step="any" class="select" style="width: 100%; color: #0d0c22;" >
+					                                  	<option selected disabled>Select Name</option>
+					                                  </select>					              
+					                                </span>
+					                              </div>
+					                            </div>
+					                          </span>
+					                        </div> 
+												
+
+												<div id="name-input-container" data-v-741dde45=""
+													class="form-field-container">
+													<span data-v-741dde45="" class="error-marker">
+														<div data-v-42dea6db="" data-v-741dde45="" class="">
+															<label data-v-42dea6db="" for="jobTitle" class="label">
+																Name <span data-v-42dea6db="" class="color-lobster">*</span>
+															</label>
+															<div data-v-42dea6db="" class="">
+																<!---->
+																<span data-v-42dea6db="" class="error-marker"> <input
+																	data-v-42dea6db="" type="text" id="name-input-box"
+																	placeholder="e.g. John Smith" style="color: #0d0c22; background: #fff;" disabled
+																	step="any" class="input" />
+																</span>
+																<!---->
+																<!---->
+															</div>
+															<!---->
+														</div> <!---->
+													</span>
+												</div>
+
+												<div data-v-741dde45="" class="form-field-container">
+													<label for="staff-id">Staff ID:</label>
+													<div class="staff-id-input-container">
+														<input type="text" class="input" disabled
+															style="background: #fff;"> <input type="text"
+															class="input" disabled style="background: #fff;">
+														<input type="text" class="input" value="-" disabled
+															style="background: #fff;"> <input type="text"
+															class="input" disabled style="background: #fff;">
+														<input type="text" class="input" disabled
+															style="background: #fff;"> <input type="text"
+															class="input" disabled style="background: #fff;">
+														<input type="text" class="input" disabled
+															style="background: #fff;"> <input type="text"
+															class="input" disabled style="background: #fff;">
+													</div>
+												</div>
+
+												<div data-v-741dde45="" class="form-field-container">
+													<span data-v-741dde45="" class="error-marker">
+														<div data-v-42dea6db="" data-v-741dde45="" class="">
+															<label data-v-42dea6db="" for="jobTitle" class="label">
+																Position <span data-v-42dea6db="" class="color-lobster">*</span>
+															</label>
+															<div data-v-42dea6db="" class="">
+																<!---->
+																<span data-v-42dea6db="" class="error-marker"> <input
+																	data-v-42dea6db="" id="position-input-box" type="text"
+																	placeholder="e.g. Senior Developer" style="color: #0d0c22; background: #fff;" disabled
+																	step="any" class="input" />
+																</span>
+																<!---->
+																<!---->
+															</div>
+															<!---->
+														</div> <!---->
+													</span>
+												</div>
+												<div data-v-741dde45="" class="form-field-container">
+													<span data-v-741dde45="" class="error-marker">
+														<div data-v-42dea6db="" data-v-741dde45="" class="">
+															<label data-v-42dea6db="" for="jobTitle" class="label">
+																Assigned Project/Team <span data-v-42dea6db=""
+																class="color-lobster">*</span>
+															</label>
+															<div data-v-42dea6db="" class="">
+																<!---->
+																<span data-v-42dea6db="" class="error-marker"> <input
+																	data-v-42dea6db="" id="team-input-box" type="text"
+																	placeholder="e.g. HIME" style="color: #0d0c22; background: #fff;" disabled step="any"
+																	class="input" />
+																</span>
+																<!---->
+																<!---->
+															</div>
+															<!---->
+														</div> <!---->
+													</span>
+												</div>
+												<div data-v-741dde45="" class="form-field-container">
+													<span data-v-741dde45="" class="error-marker">
+														<div data-v-42dea6db="" data-v-741dde45="" class="">
+															<label data-v-42dea6db="" for="jobTitle" class="label">
+																Department <span data-v-42dea6db=""
+																class="color-lobster">*</span>
+															</label>
+															<div data-v-42dea6db="" class="">
+																<!---->
+																<span data-v-42dea6db="" class="error-marker"> <input
+																	data-v-42dea6db="" id="department-input-box"
+																	type="text" placeholder="e.g. Offshore Department - 2"
+																	style="color: #0d0c22; background: #fff;" disabled step="any" class="input" />
+																</span>
+																<!---->
+																<!---->
+															</div>
+															<!---->
+														</div> <!---->
+													</span>
+												</div>
+											</div>
+										</section>
+
+										<section data-v-741dde45="" data-v-115a39aa=""
+											class="user-form-container user-form">
+											<div data-v-741dde45="" class="form">
+												<div data-v-741dde45="" class="form-field-container"
+													style="padding-top: 0px;">
+													<span data-v-741dde45="" class="error-marker">
+														<form data-v-42dea6db="" data-v-741dde45="" class="">
+															<label data-v-42dea6db="" for="jobTitle" class="label">
+																Working Place <span data-v-42dea6db=""
+																class="color-lobster">*</span>
+																<span>
+																	<button class="btn2" id="work-in-myanmar-button">Work in Myanmar?</button>
+																	<button class="btn2" id="work-in-others-button">Work in Others?</button>
+																</span>														
+															</label>
+															
+															<div data-v-42dea6db="" class="">
+																<!---->
+																<span data-v-42dea6db="" class="error-marker"> 
+																	<input
+																		id="working-input-box" type="text" autocomplete="off"
+																		placeholder="e.g. MICT Park"  />
+																	<select name="region-state" id="region-state-select" style="width: 100%; background: #fff; color: #0d0c22;">															        	
+															      	</select>
+															    	<select name="city-township" id="city-township-select" style="width: 100%; margin-top: 10px; color: #0d0c22;">
+															      	</select>
+																</span>
+																<!---->
+																<!---->
+															</div>
+															<!---->
+														</form> <!---->
+													</span>
+												</div>
+												<div data-v-741dde45="" class="form-field-container">
+													<span data-v-741dde45="" class="error-marker">
+														<div data-v-42dea6db="" data-v-741dde45="" class="">
+															<label data-v-42dea6db="" for="jobTitle" class="label">
+																Work From Home Request Percent <span data-v-42dea6db=""
+																class="color-lobster">*</span>
+															</label>
+															<div data-v-42dea6db="" class="radio-button-container">
+																<div class="radio-button">
+																	<input id="radio1" type="radio" class="radio-button__input"
+																		 name="radio-group" value="25"> <label
+																		class="radio-button__label" for="radio1"> <span
+																		class="radio-button__custom"></span> 25%
+																	</label>
+																</div>
+																<div class="radio-button">
+																	<input type="radio" class="radio-button__input"
+																		id="radio2" name="radio-group" value="50"> <label
+																		class="radio-button__label" for="radio2"> <span
+																		class="radio-button__custom"></span> 50%
+																	</label>
+																</div>
+																<div class="radio-button">
+																	<input type="radio" class="radio-button__input"
+																		id="radio3" name="radio-group" value="75"> <label
+																		class="radio-button__label" for="radio3"> <span
+																		class="radio-button__custom"></span> 75%
+																	</label>
+																</div>
+																<div class="radio-button">
+																	<input type="radio" class="radio-button__input"
+																		id="radio4" name="radio-group" value="100"> <label
+																		class="radio-button__label" for="radio4"> <span
+																		class="radio-button__custom"></span> 100%
+																	</label>
+																</div>
+															</div>
+															<!---->
+														</div> <!---->
+													</span>
+												</div>
+
+												<div data-v-741dde45="" class="form-field-container">
+													<span class="error-marker">
+														<div>
+															<label data-v-42dea6db="" for="jobTitle" class="label">
+																Request Period (From Date) <span class="color-lobster">*</span>
+															</label>
+															<div class="">
+																<!---->
+																<span class="error-marker"> <input id="from-date"
+																	type="text" placeholder="e.g. 1/1/2000"
+																	required="required" step="any" class="input" />
+																</span>
+																<!---->
+															</div>
+															<!---->
+														</div>
+													</span>
+												</div>
+
+												<div data-v-741dde45="" class="form-field-container">
+													<span class="error-marker">
+														<div>
+															<label data-v-42dea6db="" for="jobTitle" class="label">
+																Request Period (To Date) <span class="color-lobster">*</span>
+															</label>
+															<div class="">
+																<!---->
+																<span class="error-marker"> <input id="to-date"
+																	type="text" placeholder="e.g. 1/1/2000"
+																	required="required" step="any" class="input" />
+																</span>
+																<!---->
+															</div>
+															<!---->
+														</div>
+													</span>
+												</div>
+
+												<div data-v-741dde45="" class="form-field-container">
+													<span data-v-741dde45="" class="error-marker">
+														<div data-v-3ab916fa="" data-v-741dde45=""
+															class="wysiwyg-texteditor">
+															<label class="label"> Request Reason <span
+																data-v-3ab916fa="" data-test="required" class="required">*</span>
+															</label>
+															<!-- <div data-v-3ab916fa="" class="container">
+
+																<div data-v-3e4e869a="" data-v-3ab916fa=""
+																	class="editable-textarea text-field inline"
+																	data-test="editor" value="">
+																	
+																	<div data-v-3e4e869a="" class="outlined">
+																		<div data-v-3e4e869a="" class="editor">
+																			<div contenteditable="true" translate="no"
+																				class="ProseMirror" tabindex="0">
+																				<p data-placeholder="e.g. I want to take "
+																					class="is-empty is-editor-empty">
+																					<br class="ProseMirror-trailingBreak" />
+																				</p>
+																			</div>
+																		</div>
+																	</div>
+																</div>
+															</div> -->
+															<textarea style="height: 200px;" placeholder="e.g. I would like to go somewhere"  id="form-request-reason"></textarea>
+														</div> <!---->
+													</span>
+												</div>
+												<br>
+											</div>
+
+										</section>
+										<footer class="button-container display-flex justify-flex-end">
+											<div id="continue-button" class="margin-l-8 form-sub">Continue</div>
+										</footer>
+
+									</div>
+
+									<div id="capture-section" class="display-none">
+										<div class="radio-os">
+											<!-- First set of radio buttons -->
+											<label class="radio"> <input type="radio"
+												name="radio1" checked onclick="showWindow()"> <span
+												class="name"> <i class="fa-brands fa-windows" style="font-size: 18px;"></i>&nbsp; Window
+											</span>
+											</label> <label class="radio"> <input type="radio"
+												name="radio1" onclick="showMac()"> <span class="name">
+													<i class="fa-brands fa-apple" style="font-size: 18px;"></i>&nbsp;Macbook
+											</span>
+											</label> <label class="radio"> <input type="radio"
+												name="radio1" onclick="showLinux()"> <span class="name">
+												<i class="fa-brands fa-linux" style="font-size: 18px;"></i>&nbsp;Linux
+											</label>
+										</div>
+										<input type="text" id="os-type-value" value="Window" class="display-none">
+
+										<div id="window">
+											<section data-v-741dde45="" data-v-115a39aa=""
+												class="user-form-container-2 user-form">
+												<div data-v-741dde45="" class="form">
+													<div class="file-upload-form">
+														<label for="file1" class="file-upload-label"
+															id="file-label-1" ondrop="drop(event, 1)"
+															ondragover="allowDrop(event, 1)">
+															<p style="color: red;">➀ Press win key in keyboard.</p>
+															<p style="color: red;">➁ Type [winver] in windows
+																search box and [Enter].</p>
+															<div class="file-upload-design">
+																<svg viewBox="0 0 640 512" height="1em">
+												        <path
+																		d="M144 480C64.5 480 0 415.5 0 336c0-62.8 40.2-116.2 96.2-135.9c-.1-2.7-.2-5.4-.2-8.1c0-88.4 71.6-160 160-160c59.3 0 111 32.2 138.7 80.2C409.9 102 428.3 96 448 96c53 0 96 43 96 96c0 12.2-2.3 23.8-6.4 34.6C596 238.4 640 290.1 640 352c0 70.7-57.3 128-128 128H144zm79-217c-9.4 9.4-9.4 24.6 0 33.9s24.6 9.4 33.9 0l39-39V392c0 13.3 10.7 24 24 24s24-10.7 24-24V257.9l39 39c9.4 9.4 24.6 9.4 33.9 0s9.4-24.6 0-33.9l-80-80c-9.4-9.4-24.6-9.4-33.9 0l-80 80z"></path>
+												      </svg>
+																<p>Drag and Drop</p>
+																<p>or</p>
+																<span class="browse-button">Browse file</span>
+															</div> <input id="file1" type="file"
+															onchange="previewImage(this,1)" accept="image/*"
+															style="display: none;" ondragenter="dragEnter(event,1)"
+															ondragleave="dragLeave(event,1)"> <img
+															id="preview-window-1" alt="Preview Image"
+															style="display: none;">
+														</label>
+													</div>
+												</div>
+											</section>
+											<section data-v-741dde45="" data-v-115a39aa=""
+												class="user-form-container-2 user-form">
+												<div data-v-741dde45="" class="form">
+
+													<div class="file-upload-form">
+														<label for="file2" class="file-upload-label"
+															id="file-label-2" ondrop="drop(event,2)"
+															ondragover="allowDrop(event,2)">
+															<p style="color: red;">➀ Press win key in keyboard.</p>
+															<p style="color: red;">➁ Type [windows security] in
+																windows search box and [Enter].</p>
+															<p style="color: red;">➂ Select [Device Performance &
+																Health].</p>
+															<div class="file-upload-design">
+																<svg viewBox="0 0 640 512" height="1em">
+												        <path
+																		d="M144 480C64.5 480 0 415.5 0 336c0-62.8 40.2-116.2 96.2-135.9c-.1-2.7-.2-5.4-.2-8.1c0-88.4 71.6-160 160-160c59.3 0 111 32.2 138.7 80.2C409.9 102 428.3 96 448 96c53 0 96 43 96 96c0 12.2-2.3 23.8-6.4 34.6C596 238.4 640 290.1 640 352c0 70.7-57.3 128-128 128H144zm79-217c-9.4 9.4-9.4 24.6 0 33.9s24.6 9.4 33.9 0l39-39V392c0 13.3 10.7 24 24 24s24-10.7 24-24V257.9l39 39c9.4 9.4 24.6 9.4 33.9 0s9.4-24.6 0-33.9l-80-80c-9.4-9.4-24.6-9.4-33.9 0l-80 80z"></path>
+												      </svg>
+																<p>Drag and Drop</p>
+																<p>or</p>
+																<span class="browse-button">Browse file</span>
+															</div> <input id="file2" type="file"
+															onchange="previewImage(this,2)" accept="image/*"
+															style="display: none;" ondragenter="dragEnter(event,2)"
+															ondragleave="dragLeave(event,2)"> <img
+															id="preview-window-2" alt="Preview Image"
+															style="display: none;">
+														</label>
+													</div>
+												</div>
+											</section>
+											<section data-v-741dde45="" data-v-115a39aa=""
+												class="user-form-container-2 user-form">
+												<div data-v-741dde45="" class="form">
+
+													<div class="file-upload-form">
+														<label for="file3" class="file-upload-label"
+															id="file-label-3" ondrop="drop(event,3)"
+															ondragover="allowDrop(event,3)">
+															<p style="color: red;">➀ Press win key in keyboard.</p>
+															<p style="color: red;">➁ Type [appwiz.cpl] in windows
+																search box and [Enter].</p>
+															<p style="color: red;">➂ Select [Antivirus Name].</p>
+															<div class="file-upload-design">
+																<svg viewBox="0 0 640 512" height="1em">
+												        <path
+																		d="M144 480C64.5 480 0 415.5 0 336c0-62.8 40.2-116.2 96.2-135.9c-.1-2.7-.2-5.4-.2-8.1c0-88.4 71.6-160 160-160c59.3 0 111 32.2 138.7 80.2C409.9 102 428.3 96 448 96c53 0 96 43 96 96c0 12.2-2.3 23.8-6.4 34.6C596 238.4 640 290.1 640 352c0 70.7-57.3 128-128 128H144zm79-217c-9.4 9.4-9.4 24.6 0 33.9s24.6 9.4 33.9 0l39-39V392c0 13.3 10.7 24 24 24s24-10.7 24-24V257.9l39 39c9.4 9.4 24.6 9.4 33.9 0s9.4-24.6 0-33.9l-80-80c-9.4-9.4-24.6-9.4-33.9 0l-80 80z"></path>
+												      </svg>
+																<p>Drag and Drop</p>
+																<p>or</p>
+																<span class="browse-button">Browse file</span>
+															</div> <input id="file3" type="file"
+															onchange="previewImage(this,3)" accept="image/*"
+															style="display: none;" ondragenter="dragEnter(event,3)"
+															ondragleave="dragLeave(event,3)"> <img
+															id="preview-window-3" alt="Preview Image"
+															style="display: none;">
+														</label>
+													</div>
+												</div>
+											</section>
+											<section data-v-741dde45="" data-v-115a39aa=""
+												class="user-form-container-2 user-form">
+												<div data-v-741dde45="" class="form">
+
+													<div class="file-upload-form">
+														<label for="file4" class="file-upload-label"
+															id="file-label-4" ondrop="drop(event,4)"
+															ondragover="allowDrop(event,4)">
+															<p style="color: red;">➀ Open Kaspersky application.</p>
+															<p style="color: red;">➁ Select [Task].</p>
+															<p style="color: red;">➂ Update database need to be
+																up to date.</p>
+															<div class="file-upload-design">
+																<svg viewBox="0 0 640 512" height="1em">
+												        <path
+																		d="M144 480C64.5 480 0 415.5 0 336c0-62.8 40.2-116.2 96.2-135.9c-.1-2.7-.2-5.4-.2-8.1c0-88.4 71.6-160 160-160c59.3 0 111 32.2 138.7 80.2C409.9 102 428.3 96 448 96c53 0 96 43 96 96c0 12.2-2.3 23.8-6.4 34.6C596 238.4 640 290.1 640 352c0 70.7-57.3 128-128 128H144zm79-217c-9.4 9.4-9.4 24.6 0 33.9s24.6 9.4 33.9 0l39-39V392c0 13.3 10.7 24 24 24s24-10.7 24-24V257.9l39 39c9.4 9.4 24.6 9.4 33.9 0s9.4-24.6 0-33.9l-80-80c-9.4-9.4-24.6-9.4-33.9 0l-80 80z"></path>
+												      </svg>
+																<p>Drag and Drop</p>
+																<p>or</p>
+																<span class="browse-button">Browse file</span>
+															</div> <input id="file4" type="file"
+															onchange="previewImage(this,4)" accept="image/*"
+															style="display: none;" ondragenter="dragEnter(event,4)"
+															ondragleave="dragLeave(event,4)"> <img
+															id="preview-window-4" alt="Preview Image"
+															style="display: none;">
+														</label>
+													</div>
+												</div>
+											</section>
+											<section data-v-741dde45="" data-v-115a39aa=""
+												class="user-form-container-2 user-form">
+												<div data-v-741dde45="" class="form">
+
+													<div class="file-upload-form">
+														<label for="file5" class="file-upload-label"
+															id="file-label-5" ondrop="drop(event,5)"
+															ondragover="allowDrop(event,5)">
+															<p style="color: red;">➀ Open Kaspersky application.</p>
+															<p style="color: red;">➁ Select [Task].</p>
+															<div class="file-upload-design">
+																<svg viewBox="0 0 640 512" height="1em">
+												        <path
+																		d="M144 480C64.5 480 0 415.5 0 336c0-62.8 40.2-116.2 96.2-135.9c-.1-2.7-.2-5.4-.2-8.1c0-88.4 71.6-160 160-160c59.3 0 111 32.2 138.7 80.2C409.9 102 428.3 96 448 96c53 0 96 43 96 96c0 12.2-2.3 23.8-6.4 34.6C596 238.4 640 290.1 640 352c0 70.7-57.3 128-128 128H144zm79-217c-9.4 9.4-9.4 24.6 0 33.9s24.6 9.4 33.9 0l39-39V392c0 13.3 10.7 24 24 24s24-10.7 24-24V257.9l39 39c9.4 9.4 24.6 9.4 33.9 0s9.4-24.6 0-33.9l-80-80c-9.4-9.4-24.6-9.4-33.9 0l-80 80z"></path>
+												      </svg>
+																<p>Drag and Drop</p>
+																<p>or</p>
+																<span class="browse-button">Browse file</span>
+															</div> <input id="file5" type="file"
+															onchange="previewImage(this,5)" accept="image/*"
+															style="display: none;" ondragenter="dragEnter(event,5)"
+															ondragleave="dragLeave(event,5)"> <img
+															id="preview-window-5" alt="Preview Image"
+															style="display: none;">
+														</label>
+													</div>
+												</div>
+											</section>
+										</div>
+										
+										<div id="mac" class="display-none">
+											<section data-v-741dde45="" data-v-115a39aa=""
+												class="user-form-container-2 user-form">
+												<div data-v-741dde45="" class="form">
+													<div class="file-upload-form">
+														<label for="file6" class="file-upload-label"
+															id="file-label-6" ondrop="drop(event, 6)"
+															ondragover="allowDrop(event, 6)">
+															<p style="color: red;">➀ Type of Operating System</p>
+															<div class="file-upload-design">
+																<svg viewBox="0 0 640 512" height="1em">
+												        <path
+																		d="M144 480C64.5 480 0 415.5 0 336c0-62.8 40.2-116.2 96.2-135.9c-.1-2.7-.2-5.4-.2-8.1c0-88.4 71.6-160 160-160c59.3 0 111 32.2 138.7 80.2C409.9 102 428.3 96 448 96c53 0 96 43 96 96c0 12.2-2.3 23.8-6.4 34.6C596 238.4 640 290.1 640 352c0 70.7-57.3 128-128 128H144zm79-217c-9.4 9.4-9.4 24.6 0 33.9s24.6 9.4 33.9 0l39-39V392c0 13.3 10.7 24 24 24s24-10.7 24-24V257.9l39 39c9.4 9.4 24.6 9.4 33.9 0s9.4-24.6 0-33.9l-80-80c-9.4-9.4-24.6-9.4-33.9 0l-80 80z"></path>
+												      </svg>
+																<p>Drag and Drop</p>
+																<p>or</p>
+																<span class="browse-button">Browse file</span>
+															</div> <input id="file6" type="file"
+															onchange="previewImage(this,6)" accept="image/*"
+															style="display: none;" ondragenter="dragEnter(event,6)"
+															ondragleave="dragLeave(event,6)"> <img
+															id="preview-window-6" alt="Preview Image"
+															style="display: none;">
+														</label>
+													</div>
+												</div>
+											</section>
+											<section data-v-741dde45="" data-v-115a39aa=""
+												class="user-form-container-2 user-form">
+												<div data-v-741dde45="" class="form">
+
+													<div class="file-upload-form">
+														<label for="file7" class="file-upload-label"
+															id="file-label-7" ondrop="drop(event,7)"
+															ondragover="allowDrop(event,7)">
+															<p style="color: red;">➀ Apple Menu >> System Preferences>>Software Update</p>
+															<div class="file-upload-design">
+																<svg viewBox="0 0 640 512" height="1em">
+												        <path
+																		d="M144 480C64.5 480 0 415.5 0 336c0-62.8 40.2-116.2 96.2-135.9c-.1-2.7-.2-5.4-.2-8.1c0-88.4 71.6-160 160-160c59.3 0 111 32.2 138.7 80.2C409.9 102 428.3 96 448 96c53 0 96 43 96 96c0 12.2-2.3 23.8-6.4 34.6C596 238.4 640 290.1 640 352c0 70.7-57.3 128-128 128H144zm79-217c-9.4 9.4-9.4 24.6 0 33.9s24.6 9.4 33.9 0l39-39V392c0 13.3 10.7 24 24 24s24-10.7 24-24V257.9l39 39c9.4 9.4 24.6 9.4 33.9 0s9.4-24.6 0-33.9l-80-80c-9.4-9.4-24.6-9.4-33.9 0l-80 80z"></path>
+												      </svg>
+																<p>Drag and Drop</p>
+																<p>or</p>
+																<span class="browse-button">Browse file</span>
+															</div> <input id="file7" type="file"
+															onchange="previewImage(this,7)" accept="image/*"
+															style="display: none;" ondragenter="dragEnter(event,7)"
+															ondragleave="dragLeave(event,7)"> <img
+															id="preview-window-7" alt="Preview Image"
+															style="display: none;">
+														</label>
+													</div>
+												</div>
+											</section>
+											<section data-v-741dde45="" data-v-115a39aa=""
+												class="user-form-container-2 user-form">
+												<div data-v-741dde45="" class="form">
+
+													<div class="file-upload-form">
+														<label for="file8" class="file-upload-label"
+															id="file-label-8" ondrop="drop(event,8)"
+															ondragover="allowDrop(event,8)">
+															<p style="color: red;">➀ Click the Apple menu > >About This Mac</p>
+															<p style="color: red;">➁ Tap on System Report > Software > Installation.</p>
+															<p style="color: red;">➂ Look for XProtectPlistConfigData.</p>
+															<div class="file-upload-design">
+																<svg viewBox="0 0 640 512" height="1em">
+												        <path
+																		d="M144 480C64.5 480 0 415.5 0 336c0-62.8 40.2-116.2 96.2-135.9c-.1-2.7-.2-5.4-.2-8.1c0-88.4 71.6-160 160-160c59.3 0 111 32.2 138.7 80.2C409.9 102 428.3 96 448 96c53 0 96 43 96 96c0 12.2-2.3 23.8-6.4 34.6C596 238.4 640 290.1 640 352c0 70.7-57.3 128-128 128H144zm79-217c-9.4 9.4-9.4 24.6 0 33.9s24.6 9.4 33.9 0l39-39V392c0 13.3 10.7 24 24 24s24-10.7 24-24V257.9l39 39c9.4 9.4 24.6 9.4 33.9 0s9.4-24.6 0-33.9l-80-80c-9.4-9.4-24.6-9.4-33.9 0l-80 80z"></path>
+												      </svg>
+																<p>Drag and Drop</p>
+																<p>or</p>
+																<span class="browse-button">Browse file</span>
+															</div> <input id="file8" type="file"
+															onchange="previewImage(this,8)" accept="image/*"
+															style="display: none;" ondragenter="dragEnter(event,8)"
+															ondragleave="dragLeave(event,8)"> <img
+															id="preview-window-8" alt="Preview Image"
+															style="display: none;">
+														</label>
+													</div>
+												</div>
+											</section>
+										</div>
+										
+										<div id="linux" class="display-none">
+											<section data-v-741dde45="" data-v-115a39aa=""
+												class="user-form-container-2 user-form">
+												<div data-v-741dde45="" class="form">
+													<div class="file-upload-form">
+														<label for="file9" class="file-upload-label"
+															id="file-label-9" ondrop="drop(event, 9)"
+															ondragover="allowDrop(event, 9)">
+															<p style="color: red;">➀ Procedure 1</p>
+																search box and [Enter].</p>
+															<div class="file-upload-design">
+																<svg viewBox="0 0 640 512" height="1em">
+												        <path
+																		d="M144 480C64.5 480 0 415.5 0 336c0-62.8 40.2-116.2 96.2-135.9c-.1-2.7-.2-5.4-.2-8.1c0-88.4 71.6-160 160-160c59.3 0 111 32.2 138.7 80.2C409.9 102 428.3 96 448 96c53 0 96 43 96 96c0 12.2-2.3 23.8-6.4 34.6C596 238.4 640 290.1 640 352c0 70.7-57.3 128-128 128H144zm79-217c-9.4 9.4-9.4 24.6 0 33.9s24.6 9.4 33.9 0l39-39V392c0 13.3 10.7 24 24 24s24-10.7 24-24V257.9l39 39c9.4 9.4 24.6 9.4 33.9 0s9.4-24.6 0-33.9l-80-80c-9.4-9.4-24.6-9.4-33.9 0l-80 80z"></path>
+												      </svg>
+																<p>Drag and Drop</p>
+																<p>or</p>
+																<span class="browse-button">Browse file</span>
+															</div> <input id="file9" type="file"
+															onchange="previewImage(this,9)" accept="image/*"
+															style="display: none;" ondragenter="dragEnter(event,9)"
+															ondragleave="dragLeave(event,9)"> <img
+															id="preview-window-9" alt="Preview Image"
+															style="display: none;">
+														</label>
+													</div>
+												</div>
+											</section>
+											<section data-v-741dde45="" data-v-115a39aa=""
+												class="user-form-container-2 user-form">
+												<div data-v-741dde45="" class="form">
+
+													<div class="file-upload-form">
+														<label for="file10" class="file-upload-label"
+															id="file-label-10" ondrop="drop(event,10)"
+															ondragover="allowDrop(event,10)">
+															<p style="color: red;">➀ Procedure 2</p>
+															<div class="file-upload-design">
+																<svg viewBox="0 0 640 512" height="1em">
+												        <path
+																		d="M144 480C64.5 480 0 415.5 0 336c0-62.8 40.2-116.2 96.2-135.9c-.1-2.7-.2-5.4-.2-8.1c0-88.4 71.6-160 160-160c59.3 0 111 32.2 138.7 80.2C409.9 102 428.3 96 448 96c53 0 96 43 96 96c0 12.2-2.3 23.8-6.4 34.6C596 238.4 640 290.1 640 352c0 70.7-57.3 128-128 128H144zm79-217c-9.4 9.4-9.4 24.6 0 33.9s24.6 9.4 33.9 0l39-39V392c0 13.3 10.7 24 24 24s24-10.7 24-24V257.9l39 39c9.4 9.4 24.6 9.4 33.9 0s9.4-24.6 0-33.9l-80-80c-9.4-9.4-24.6-9.4-33.9 0l-80 80z"></path>
+												      </svg>
+																<p>Drag and Drop</p>
+																<p>or</p>
+																<span class="browse-button">Browse file</span>
+															</div> <input id="file10" type="file"
+															onchange="previewImage(this,10)" accept="image/*"
+															style="display: none;" ondragenter="dragEnter(event,10)"
+															ondragleave="dragLeave(event,10)"> <img
+															id="preview-window-10" alt="Preview Image"
+															style="display: none;">
+														</label>
+													</div>
+												</div>
+											</section>
+											<section data-v-741dde45="" data-v-115a39aa=""
+												class="user-form-container-2 user-form">
+												<div data-v-741dde45="" class="form">
+
+													<div class="file-upload-form">
+														<label for="file11" class="file-upload-label"
+															id="file-label-11" ondrop="drop(event,11)"
+															ondragover="allowDrop(event,11)">
+															<p style="color: red;">➀ Procedure 2</p>
+															<div class="file-upload-design">
+																<svg viewBox="0 0 640 512" height="1em">
+												        <path
+																		d="M144 480C64.5 480 0 415.5 0 336c0-62.8 40.2-116.2 96.2-135.9c-.1-2.7-.2-5.4-.2-8.1c0-88.4 71.6-160 160-160c59.3 0 111 32.2 138.7 80.2C409.9 102 428.3 96 448 96c53 0 96 43 96 96c0 12.2-2.3 23.8-6.4 34.6C596 238.4 640 290.1 640 352c0 70.7-57.3 128-128 128H144zm79-217c-9.4 9.4-9.4 24.6 0 33.9s24.6 9.4 33.9 0l39-39V392c0 13.3 10.7 24 24 24s24-10.7 24-24V257.9l39 39c9.4 9.4 24.6 9.4 33.9 0s9.4-24.6 0-33.9l-80-80c-9.4-9.4-24.6-9.4-33.9 0l-80 80z"></path>
+												      </svg>
+																<p>Drag and Drop</p>
+																<p>or</p>
+																<span class="browse-button">Browse file</span>
+															</div> <input id="file11" type="file"
+															onchange="previewImage(this,11)" accept="image/*"
+															style="display: none;" ondragenter="dragEnter(event,11)"
+															ondragleave="dragLeave(event,11)"> <img
+															id="preview-window-11" alt="Preview Image"
+															style="display: none;">
+														</label>
+													</div>
+												</div>
+											</section>
+										</div>
+										
+										<footer class="button-container display-flex justify-flex-end">											
+											<div class="margin-l-8 form-sub" id="continue-button-1">Continue</div>
+										</footer>
+									</div>
+									<div id="signature-section" class="display-none">										
+										<section data-v-741dde45="" data-v-115a39aa=""
+												class="user-form-container-2 user-form">
+											<div class="pledge-container">
+												<div class="pledge-heading">
+													<h2>Employee Pledge</h2>
+												</div>
+												<div class="pledge-body">
+													<span>I acknowledge that I will follow information Security Policy, Personal Information Handling Policy and <br> Business Continuity Policy released by DIR-ACE Technology Ltd.</span>
+												</div>
+											</div>
+											<div data-v-741dde45="" class="form-field-container" style="margin-left: 480px;">
+												<span class="error-marker">
+													<div>
+														<label data-v-42dea6db="" for="Signed Date" class="label">
+															Signed Date <span class="color-lobster">*</span>
+														</label>
+														<div class="">
+															<!---->
+															<span class="error-marker"> <input id="signed-date"
+																type="text"
+																required="required" step="any" class="input" />
+															</span>
+															<!---->
+														</div>
+														<!---->
+													</div>
+												</span>
+											</div>
+											<div data-v-741dde45="" class="form">
+												<div class="file-upload-form">
+													<label for="file12" class="file-upload-label"
+														id="file-label-12" ondrop="drop(event, 12)"
+														ondragover="allowDrop(event, 12)">
+														<p style="color: red;">➀ Please import your signature here.</p>
+														<div class="file-upload-design">
+															<svg viewBox="0 0 640 512" height="1em">
+											        <path
+																	d="M144 480C64.5 480 0 415.5 0 336c0-62.8 40.2-116.2 96.2-135.9c-.1-2.7-.2-5.4-.2-8.1c0-88.4 71.6-160 160-160c59.3 0 111 32.2 138.7 80.2C409.9 102 428.3 96 448 96c53 0 96 43 96 96c0 12.2-2.3 23.8-6.4 34.6C596 238.4 640 290.1 640 352c0 70.7-57.3 128-128 128H144zm79-217c-9.4 9.4-9.4 24.6 0 33.9s24.6 9.4 33.9 0l39-39V392c0 13.3 10.7 24 24 24s24-10.7 24-24V257.9l39 39c9.4 9.4 24.6 9.4 33.9 0s9.4-24.6 0-33.9l-80-80c-9.4-9.4-24.6-9.4-33.9 0l-80 80z"></path>
+											      </svg>
+															<p>Drag and Drop</p>
+															<p>or</p>
+															<span class="browse-button">Browse file</span>
+														</div> <input id="file12" type="file"
+														onchange="previewImage(this,12)" accept="image/*"
+														style="display: none;" ondragenter="dragEnter(event,12)"
+														ondragleave="dragLeave(event,12)"> <img
+														id="preview-window-12" alt="Preview Image"
+														style="display: none;">
+													</label>
+												</div>
+											</div>
+										</section>
+										<footer class="button-container display-flex justify-flex-end">		
+											<div class="margin-l-8 form-sub" id="apply-form-btn">Apply</div> 
+										</footer>
+									</div>
+								</section>
+							</div>
+						</div>
+					</form>
+
+
+					<dialog class="checkbox-dialog" id="checkbox-dialog">
+						<h2>Work From Home PC requirements</h2>
+						<br>
+					    <form id="checkbox-dialog-form">        
+					        <div class="outside-container">
+					            <div class="checkbox-wrapper">
+					                <input type="checkbox" required>
+					                <svg viewBox="0 0 35.6 35.6">
+					                    <circle class="background" cx="17.8" cy="17.8" r="17.8"></circle>
+					                    <circle class="stroke" cx="17.8" cy="17.8" r="14.37"></circle>
+					                    <polyline class="check" points="11.78 18.12 15.55 22.23 25.17 12.87"></polyline>
+					                </svg>
+					            </div>
+					            <div class="text-checkbox">
+					                <span>At least windows 8.1 (Windows OS user, OS version should be more than windows 8.1 and needs to use Edge browser.)</span>
+					            </div>
+					        </div>
+					        
+					        <br>
+					        <div class="outside-container">
+					            <div class="checkbox-wrapper">
+					                <input type="checkbox" required>
+					                <svg viewBox="0 0 35.6 35.6">
+					                    <circle class="background" cx="17.8" cy="17.8" r="17.8"></circle>
+					                    <circle class="stroke" cx="17.8" cy="17.8" r="14.37"></circle>
+					                    <polyline class="check" points="11.78 18.12 15.55 22.23 25.17 12.87"></polyline>
+					                </svg>
+					            </div>
+					            <div class="text-checkbox">
+					                <span>Must use Edge browser for windows user and Safari browser for MAC OS user when access to DAT VDI.</span>
+					            </div>
+					        </div>
+					
+					        <br>
+					        <div class="outside-container">
+					            <div class="checkbox-wrapper">
+					                <input type="checkbox" required>
+					                <svg viewBox="0 0 35.6 35.6">
+					                    <circle class="background" cx="17.8" cy="17.8" r="17.8"></circle>
+					                    <circle class="stroke" cx="17.8" cy="17.8" r="14.37"></circle>
+					                    <polyline class="check" points="11.78 18.12 15.55 22.23 25.17 12.87"></polyline>
+					                </svg>
+					            </div>
+					            <div class="text-checkbox">
+					                <span>Windows update or Apple security path is updated to latest version.</span>
+					            </div>
+					        </div>
+					
+					        <br>
+					        <div class="outside-container">
+					            <div class="checkbox-wrapper">
+					                <input type="checkbox" required>
+					                <svg viewBox="0 0 35.6 35.6">
+					                    <circle class="background" cx="17.8" cy="17.8" r="17.8"></circle>
+					                    <circle class="stroke" cx="17.8" cy="17.8" r="14.37"></circle>
+					                    <polyline class="check" points="11.78 18.12 15.55 22.23 25.17 12.87"></polyline>
+					                </svg>
+					            </div>
+					            <div class="text-checkbox">
+					                <span>Already Installed one of antivirus software(built-in, open source antivirus or third party software)</span>
+					            </div>
+					        </div>
+					
+					        <br>
+					        <div class="outside-container">
+					            <div class="checkbox-wrapper">
+					                <input type="checkbox" required>
+					                <svg viewBox="0 0 35.6 35.6">
+					                    <circle class="background" cx="17.8" cy="17.8" r="17.8"></circle>
+					                    <circle class="stroke" cx="17.8" cy="17.8" r="14.37"></circle>
+					                    <polyline class="check" points="11.78 18.12 15.55 22.23 25.17 12.87"></polyline>
+					                </svg>
+					            </div>
+					            <div class="text-checkbox">
+					                <span>Antivirus full-scan have finished.</span>
+					            </div>
+					        </div>
+					        <button class="btn2" style="position:absolute; right: 80px;" type="submit">submit</button>
+					    </form>	
+					</dialog>
+					<!-- FOrm -->
+
+
+				</div>
+			</div>
+		</div>
+		
+	</div>
+</body>
+</html>

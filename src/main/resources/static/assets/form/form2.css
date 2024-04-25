@@ -1,0 +1,337 @@
+@charset "UTF-8";
+
+.staff-id-input-container input[type="text"]:disabled {
+	background: #fff !important;
+	color: #0d0c22 !important;
+}
+
+.staff-id-input-container {
+	justify-content: space-between;
+	align-items: center;
+	display: flex;
+	gap: 10px; /* Adjust the gap between input fields */
+}
+
+.staff-id-input-container input {
+	text-align: center;
+	width: 70px;
+}
+
+.user-form-container .radio-inputs {
+	position: relative;
+	display: flex;
+	flex-wrap: wrap;
+	border-radius: 0.5rem;
+	background: #fff;
+	box-sizing: border-box;
+	box-shadow: 0 0 0px 1px rgba(0, 0, 0, 0.06);
+	padding: 0.25rem;
+	font-size: 14px;
+	height: 46px;
+}
+
+.user-form-container .radio-inputs .radio {
+	flex: 1 1 auto;
+	text-align: center;
+}
+
+.user-form-container .radio-inputs .radio input {
+	display: none;
+}
+
+.user-form-container .radio-inputs .radio .name {
+	display: flex;
+	cursor: pointer;
+	align-items: center;
+	justify-content: center;
+	border-radius: 0.5rem;
+	border: none;
+	padding: .5rem 0;
+	color: black;
+	transition: all .15s ease-in-out;
+}
+
+.user-form-container .radio-inputs .radio input:checked+.name {
+	background: linear-gradient(90deg, #f7e9f3 0%, #e0dffc 100%);
+	font-weight: 600;
+}
+
+.user-form-container .radio-button-container {
+	display: flex;
+	align-items: center;
+	gap: 24px;
+}
+
+.user-form-container .radio-button {
+	display: inline-block;
+	position: relative;
+	cursor: pointer;
+}
+
+.user-form-container .radio-button__input {
+	outline: none;
+	appearance: none;
+	position: absolute;
+	opacity: 0;
+	width: 0;
+	height: 0;
+}
+
+.user-form-container .radio-button__label {
+	display: inline-block;
+	padding-left: 30px;
+	margin-bottom: 10px;
+	position: relative;
+	font-size: 15px;
+	color: #0d0c22;
+	font-weight: 500;
+	cursor: pointer;
+	text-transform: capitalize;
+	transition: all 0.3s ease;
+}
+
+.user-form-container .radio-button__custom {
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 20px;
+	height: 20px;
+	border-radius: 50%;
+	border: 1.5px solid #e7e7e9;
+	background: #fff;
+	transition: all 0.3s ease;
+}
+
+.user-form-container .radio-button__input:checked+.radio-button__label .radio-button__custom
+	{
+	background-color: #ea64d9;
+	border-color: transparent;
+	transform: scale(0.8);
+	box-shadow: 0 0 20px #f789e8;
+}
+
+.user-form-container .radio-button__input:checked+.radio-button__label {
+	color: #ea64d9;
+}
+
+.user-form-container .radio-button__label:hover .radio-button__custom {
+	transform: scale(1.2);
+	border-color: #ea64d9;
+	box-shadow: 0 0 20px #f789e8;
+}
+
+.radio-os {
+	position: relative;
+	display: flex;
+	flex-wrap: wrap;
+	border-radius: 0.5rem;
+	background: linear-gradient(90deg, #f7e9f3 0%, #e0dffc 100%);
+	box-sizing: border-box;
+	box-shadow: 0 0 0px 1px rgba(0, 0, 0, 0.06);
+	padding: 0.25rem;
+	font-size: 14px;
+	font-size: 14px;
+	height: 46px;
+	margin: 45px 0px;
+}
+
+.radio-os .radio {
+	flex: 1 1 auto;
+	text-align: center;
+}
+
+.radio-os .radio input {
+	display: none;
+}
+
+.radio-os .radio .name {
+	display: flex;
+	cursor: pointer;
+	align-items: center;
+	justify-content: center;
+	border-radius: 0.5rem;
+	border: none;
+	padding: .5rem 0;
+	color: rgba(51, 65, 85, 1);
+	transition: all .15s ease-in-out;
+}
+
+.radio-os .radio input:checked+.name {
+	background-color: #fff;
+	font-weight: 600;
+}
+
+
+/*  */
+
+.outside-container {
+	display: flex;
+	flex-direction: row;
+	align-items: center;
+	column-gap: 10px;
+}
+
+.text-checkbox {
+	width: 100%;
+}
+
+.checkbox-wrapper:hover .check {
+	stroke-dashoffset: 0;
+}
+
+.checkbox-wrapper {
+	position: relative;
+	display: flex;
+	width: 25px;
+	height: 25px;
+}
+
+.checkbox-wrapper .background {
+	transition: ease all 0.6s;
+	-webkit-transition: ease all 0.6s;
+}
+
+.checkbox-wrapper .stroke {
+	fill: none;
+	stroke: #fff;
+	stroke-miterlimit: 10;
+	stroke-width: 2px;
+	stroke-dashoffset: 100;
+	stroke-dasharray: 100;
+	transition: ease all 0.6s;
+	-webkit-transition: ease all 0.6s;
+}
+
+.checkbox-wrapper .check {
+	fill: none;
+	stroke: #fff;
+	stroke-linecap: round;
+	stroke-linejoin: round;
+	stroke-width: 2px;
+	stroke-dashoffset: 22;
+	stroke-dasharray: 22;
+	transition: ease all 0.6s;
+	-webkit-transition: ease all 0.6s;
+}
+
+.checkbox-wrapper input[type=checkbox] {
+	position: absolute;
+	width: 100%;
+	height: 100%;
+	left: 0;
+	top: 0;
+	margin: 0;
+	opacity: 0;
+	-appearance: none;
+	-webkit-appearance: none;
+}
+
+.checkbox-wrapper input[type=checkbox]:hover {
+	cursor: pointer;
+}
+
+.checkbox-wrapper input[type=checkbox]:checked+svg .background {
+	fill: #421c64;
+}
+
+.checkbox-wrapper input[type=checkbox]:checked+svg .stroke {
+	stroke-dashoffset: 0;
+}
+
+.checkbox-wrapper input[type=checkbox]:checked+svg .check {
+	stroke-dashoffset: 0;
+}
+
+/*Dialog Styles*/
+.checkbox-dialog {
+    box-sizing: content-box;
+    padding: 80px;
+    background: white;
+    max-width: 600px;
+    border-radius: 20px;
+    border: 0;
+    box-shadow: 0 5px 30px 0 rgba(0, 0, 0, 0.1);
+    -webkit-animation: fadeIn 1s ease both;
+    animation: fadeIn 1s ease both;
+}
+
+.checkbox-dialog::-webkit-backdrop {
+	-webkit-animation: fadeIn 1s ease both;
+	animation: fadeIn 1s ease both;
+	background: rgba(255, 255, 255, 0.4);
+	z-index: 2;
+	-webkit-backdrop-filter: blur(20px);
+	backdrop-filter: blur(20px);
+}
+
+.checkbox-dialog::backdrop {
+	-webkit-animation: fadeIn 1s ease both;
+	animation: fadeIn 1s ease both;
+	background: rgba(255, 255, 255, 0.4);
+	z-index: 9000;
+	-webkit-backdrop-filter: blur(20px);
+	backdrop-filter: blur(20px);
+}
+
+.checkbox-dialog .x {
+	filter: grayscale(1);
+	border: none;
+	background: none;
+	position: absolute;
+	top: 15px;
+	right: 10px;
+	transition: ease filter, transform 0.3s;
+	cursor: pointer;
+	transform-origin: center;
+}
+
+.checkbox-dialog .x:hover {
+	filter: grayscale(0);
+	transform: scale(1.1);
+}
+
+.checkbox-dialog h2 {
+	font-weight: 600;
+	font-size: 2rem;
+	padding-bottom: 1rem;
+}
+
+.checkbox-dialog p {
+	font-size: 1rem;
+	line-height: 1.3rem;
+	padding: 0.5rem 0;
+}
+
+.checkbox-dialog p a:visited {
+	color: rgb(var(--vs-primary));
+}
+
+@-webkit-keyframes fadeIn {from { opacity:0;
+	
+}
+
+to {
+	opacity: 1;
+}
+
+}
+@keyframes fadeIn {from { opacity:0;
+	
+}
+
+to {
+	opacity: 1;
+}
+
+}
+/* modal */
+@media ( max-width : 768px) {
+	.outside-container {
+		align-items: flex-start;
+	}
+}
+
+.pledge-container {
+	width: 100%;
+	text-align: left;
+}

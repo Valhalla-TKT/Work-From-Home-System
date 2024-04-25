@@ -1,0 +1,64 @@
+
+<!DOCTYPE html>
+
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+<title>WorkHub</title>
+</head>
+
+<body>
+<div id="wrap" th:fragment="content" class="warp">
+	<section class="profile-pro-masthead">
+          <div class="container-large">
+              <div class="masthead-content show-profile-is-null">
+                  <div class="masthead-avatar">
+                      <img alt="Kaung Khant Lin" src="/assets/profile/default-male-avatar-profile.jpg" class="avatar male" />
+                  </div>
+                  <div class="masthead-avatar show-profile-is-null">
+                      <img alt="Kaung Khant Lin" src="/assets/profile/default-female-avatar-profile.jpg" class="avatar female" />
+                  </div>
+                  <div class="masthead-avatar show-profile-is-not-null">
+                      <img alt="Kaung Khant Lin" src="/assets/profile/default-male-avatar-profile.jpg"/>
+                  </div>
+                  <div class="masthead-profile-name">
+                      <h1 id="profile_page_name"></h1>
+                  </div>
+                  <div id="masthead" name="masthead" class="masthead-intro">
+                      <h2 id="profile_page_position_name"></h2>
+                      <div class="masthead-stats">
+                          <div class="stat" id="position_page_email"></div>
+                          <div class="stat" id="position_page_staff_id"></div>
+                      </div>
+                  </div>
+                  <div class="masthead-stats">
+                      <div class="stat" id="position_page_department_name"></div>
+                      <div class="stat" id="profile_page_role_name"></div>
+                  </div>
+              </div>
+          </div>
+      </section>
+      <div class="container-large">
+          <div class="change-password-form" id="changePasswordForm">  	
+              <form class="form-fields" action="" accept-charset="UTF-8" method="post">
+                  <div>
+                      <fieldset>
+                          <label for="password" class="password">Current Password </label>
+                          <input type="password" name="password" id="password" value="" tabindex="1" class="text-input" data-cypress="password">
+                      </fieldset>
+                      <fieldset>
+                          <label for="newPassword" class="password">New Password </label>
+                          <input type="password" name="newPassword" id="newPassword" value="" tabindex="2" class="text-input" data-cypress="password">
+                      </fieldset>
+                      <fieldset>
+                        <label for="password" class="password">Retype New Password </label>
+                        <input type="password" name="password" id="password" value="" tabindex="1" class="text-input" data-cypress="password">
+                    </fieldset>
+                  </div>
+                  <input class="btn2 margin-t-20 profile-btn" type="submit" value="Confirm" tabindex="3"/>
+              </form>
+          </div>
+      </div>
+</div>
+</body>
+</html>

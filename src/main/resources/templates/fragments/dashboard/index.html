@@ -1,0 +1,396 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+	<title>WorkHub</title>
+</head>
+
+<body>
+	<main th:fragment="content" class="home-page">
+		<section class="hero" data-track-location="Header">
+			<div class="home-container">
+				<div class="home-badge home-badge--color-cycle">
+					<a data-track-cta="Get started">Welcome From WorkHub!</a>
+				</div>
+				<br>
+				<h1 class="hero__heading">WorkHub for managing remote work</h1>
+				<div class="home-type-body-large font-weight-500">Get inspired
+					by the productivity and success of millions of remote workers and
+					companies around the world.</div>
+				<br> <a class="margin-t-32 btn2 btn2--large hide-ceo-only" data-track-cta="Get started" href="/applyForm">Apply Form
+					Now</a>
+				<a class="margin-t-32 btn2 btn2--large visible-ceo-only" id="ceo-apply-form-btn" data-track-cta="Get started">Apply Form
+					Now</a>
+			</div>
+		</section>
+		<div class="home-feed"
+			style="background: #fff; margin-top: 0px;display: flex; flex-direction: column; align-items: center;">
+			<h2 class="home-feed__heading home-container">Dashboard</h2>
+			<div class="js-thumbnail-grid group container-fluid row row-cols-1 row-cols-md-3 g-4">
+				<div class="shot-thumbnail js-thumbnail shot-thumbnail-container col-lg-12 col-md-12">
+					<div class="card-widget">
+						<div class="card-header">
+							<h5 class="card-title startCountHere" style="text-align: start;">Your Request Stage</h5>
+						</div>
+						<ul class="wfh-form-step-wizard-list">
+							<li class="wfh-form-step-wizard-item"><span class="wfh-form-progress-count">1</span> <span
+									class="wfh-form-progress-label">Project Manager</span></li>
+							<li class="wfh-form-step-wizard-item"><span class="wfh-form-progress-count">2</span> <span
+									class="wfh-form-progress-label">Department Head</span></li>
+							<li class="wfh-form-step-wizard-item"><span class="wfh-form-progress-count">3</span> <span
+									class="wfh-form-progress-label">Division Head</span></li>
+							<li class="wfh-form-step-wizard-item"><span class="wfh-form-progress-count">4</span> <span
+									class="wfh-form-progress-label">CISO</span></li>
+							<li class="wfh-form-step-wizard-item"><span class="wfh-form-progress-count">5</span> <span
+									class="wfh-form-progress-label">CEO</span></li>
+						</ul>
+					</div>
+				</div> <br>
+				<div class="col-lg-5 col-md-12">
+					<div class="card-widget">
+						<div class="card-header">
+							<h5 class="card-title">Activity Overview</h5>
+						</div>
+						<div class="row g-4">
+							<div class="shot-thumbnail js-thumbnail shot-thumbnail-container col-md-6">
+								<div class="shot-thumbnail-base ">
+									<figure class="js-thumbnail-placeholder shot-thumbnail-placeholder bg-1">
+										<img alt="Divisions" class="lazyload" src="assets/images/division.png" />
+									</figure>
+									<div class="shot-thumbnail-extras"></div>
+									<a class="shot-thumbnail-link dribbble-link js-shot-link" data-turbo="true"
+										href="shots/23716274-Glyph-Beer-31.html">
+										<span class="accessibility-text">Divisions</span>
+									</a>
+								</div>
+
+								<div class="shot-details-container js-shot-details-container">
+									<div class="user-information">
+										<a class="hoverable url" rel="contact" href="ethnfndr.html">
+											<span class="display-name" style="font-size: 18px;">Division</span>
+										</a>
+									</div>
+									<div class="shot-statistics-container js-shot-statistics">
+										<div class="shot-statistic js-shot-likes-container">
+											<span
+												class="js-shot-likes-count num color-deep-blue-sea-light-20 font-weight-500"
+												data-val="4"
+												style="font-size: 20px; margin-right: 0.5rem; color: #0d0c22;">0 </span>
+											<div class="like-action-23716274 compact-true shot-action">
+												<img class="photo lazyload" alt="Ethan Fender" width="24" height="24"
+													src="assets/icons/cell-division.png" />
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+
+							<div class="shot-thumbnail js-thumbnail shot-thumbnail-container col-md-6">
+								<div class="shot-thumbnail-base ">
+									<figure class="js-thumbnail-placeholder shot-thumbnail-placeholder bg-2">
+										<img alt="Divisions" class="lazyload" src="assets/images/department.png" />
+									</figure>
+									<div class="shot-thumbnail-extras"></div>
+									<a class="shot-thumbnail-link dribbble-link js-shot-link" data-turbo="true"
+										href="shots/23716274-Glyph-Beer-31.html">
+										<span class="accessibility-text">Departments</span>
+									</a>
+								</div>
+
+								<div class="shot-details-container js-shot-details-container">
+									<div class="user-information">
+										<a class="hoverable url" rel="contact" href="ethnfndr.html">
+											<span class="display-name" style="font-size: 18px;">Departments</span>
+										</a>
+									</div>
+									<div class="shot-statistics-container js-shot-statistics">
+										<div class="shot-statistic js-shot-likes-container">
+											<span
+												class="js-shot-likes-count num color-deep-blue-sea-light-20 font-weight-500"
+												data-val="12"
+												style="font-size: 20px; margin-right: 0.5rem; color: #0d0c22;">0 </span>
+											<div class="like-action-23716274 compact-true shot-action">
+												<img class="photo lazyload" alt="Ethan Fender" width="24" height="24"
+													src="assets/icons/department.png" />
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+
+							<div class="shot-thumbnail js-thumbnail shot-thumbnail-container col-md-6">
+								<div class="shot-thumbnail-base ">
+									<figure class="js-thumbnail-placeholder shot-thumbnail-placeholder bg-3">
+										<img alt="Divisions" class="lazyload" src="assets/images/team.jpg" />
+									</figure>
+									<div class="shot-thumbnail-extras"></div>
+									<a class="shot-thumbnail-link dribbble-link js-shot-link" data-turbo="true"
+										href="shots/23716274-Glyph-Beer-31.html">
+										<span class="accessibility-text">Teams</span>
+									</a>
+								</div>
+
+								<div class="shot-details-container js-shot-details-container">
+									<div class="user-information">
+										<a class="hoverable url" rel="contact" href="ethnfndr.html">
+											<span class="display-name" style="font-size: 18px;">Team</span>
+										</a>
+									</div>
+									<div class="shot-statistics-container js-shot-statistics">
+										<div class="shot-statistic js-shot-likes-container">
+											<span
+												class="js-shot-likes-count num color-deep-blue-sea-light-20 font-weight-500"
+												data-val="43"
+												style="font-size: 20px; margin-right: 0.5rem; color: #0d0c22;">0 </span>
+											<div class="like-action-23716274 compact-true shot-action">
+												<img class="photo lazyload" alt="Ethan Fender" width="24" height="24"
+													src="assets/icons/team.png" />
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+
+							<div class="shot-thumbnail js-thumbnail shot-thumbnail-container col-md-6">
+								<div class="shot-thumbnail-base ">
+									<figure class="js-thumbnail-placeholder shot-thumbnail-placeholder bg-4">
+										<img alt="Divisions" class="lazyload" src="assets/images/employee.jpg" />
+									</figure>
+									<div class="shot-thumbnail-extras"></div>
+									<a class="shot-thumbnail-link dribbble-link js-shot-link" data-turbo="true"
+										href="shots/applyForm">
+										<span class="accessibility-text">Employees</span>
+									</a>
+								</div>
+
+								<div class="shot-details-container js-shot-details-container">
+									<div class="user-information">
+										<a class="hoverable url" rel="contact" href="ethnfndr.html">
+											<span class="display-name" style="font-size: 18px;">Employee</span>
+										</a>
+									</div>
+									<div class="shot-statistics-container js-shot-statistics">
+										<div class="shot-statistic js-shot-likes-container">
+											<span
+												class="js-shot-likes-count num color-deep-blue-sea-light-20 font-weight-500"
+												data-val="160"
+												style="font-size: 20px; margin-right: 0.5rem; color: #0d0c22;">0 </span>
+											<div class="like-action-23716274 compact-true shot-action">
+												<img class="photo lazyload" alt="Ethan Fender" width="24" height="24"
+													src="assets/icons/employee.png" />
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+
+					</div>
+				</div> <br>
+				<div class="shot-thumbnail js-thumbnail shot-thumbnail-container col-lg-7 col-md-12">
+					<div class="card-widget">
+						<div class="card-header">
+							<h5 class="card-title">Calendar</h5>
+						</div>
+						<div class="calendar-container">
+							<div class="calendar-month-arrow-container">
+								<div class="calendar-month-year-container">
+									<select class="calendar-years"></select> <select class="calendar-months">
+									</select>
+								</div>
+								<div class="calendar-month-year"></div>
+								<div class="calendar-arrow-container">
+									<button class="calendar-today-button"></button>
+									<button class="calendar-left-arrow">←</button>
+									<button class="calendar-right-arrow">→</button>
+								</div>
+							</div>
+							<ul class="calendar-week">
+							</ul>
+							<ul class="calendar-days">
+							</ul>
+						</div>
+					</div>
+				</div> <br>
+				<div class="p-manager row g-3 col-lg-12 col-md-12 visible-pm-only" >
+					<div class="col-lg-7 col-md-12">
+						<div class="card-widget">
+							<div class="card-header">
+								<h5 class="card-title">Work From Home Percentage (%)</h5>
+							</div>
+							<div class="percentage-chart-bg">
+								<div class="d-md-flex align-items-center mb-3 pm">
+									<div class="d-flex align-items-center">
+										<div class="display-7 me-3">
+											<i class="bi bi-bag-check me-2 text-success"></i> All Teams
+										</div>
+										<span class="text-success">
+											<i class="bi bi-arrow-up me-1 small"></i>8.30%
+										</span>
+									</div>
+								</div>
+								<div id="chart" style=" display: flex; justify-content: center;">
+									<canvas id="wfh-team-percent-chartjs"></canvas>
+								</div>
+							</div>
+						</div>
+					</div> <br>
+					<div class="col-lg-5 col-md-12">
+						<div class="card-widget">
+							<div class="card-header">
+								<h5 class="card-title">Request Status </h5>
+							</div>
+							<div class="gender-chart-bg">
+								<div class="d-md-flex align-items-center mb-3">
+									<div class="d-flex align-items-center">
+										<div class="display-7 me-3">
+											<i class="bi bi-bag-check me-2 text-success"></i>Team Pioneers
+										</div>
+									</div>
+								</div>
+								<div id="chart" style=" display: flex; justify-content: center;height: 357px ">
+									<canvas id="team-gender-distribution-chartjs"></canvas>
+								</div>
+							</div>
+						</div>
+					</div> <br>
+				</div>
+
+				<div class="dept-head row g-3 col-lg-12 col-md-12 visible-dept-head-only" >
+					<div class="col-lg-7 col-md-12">
+						<div class="card-widget">
+							<div class="card-header">
+								<h5 class="card-title">Work From Home Percentage (%)</h5>
+							</div>
+							<div class="percentage-chart-bg">
+								<div class="d-md-flex align-items-center mb-3 dept">
+									<div class="d-flex align-items-center">
+										<div class="display-7 me-3">
+											<i class="bi bi-bag-check me-2 text-success"></i> All Teams
+										</div>
+										<span class="text-success">
+											<i class="bi bi-arrow-up me-1 small"></i>8.30%
+										</span>
+									</div>
+								</div>
+								<div id="chart" style=" display: flex; justify-content: center;">
+									<canvas id="wfh-department-percent-chartjs"></canvas>
+								</div>
+							</div>
+						</div>
+					</div> <br>
+					<div class="col-lg-5 col-md-12">
+						<div class="card-widget">
+							<div class="card-header">
+								<h5 class="card-title">Request Status </h5>
+							</div>
+							<div class="gender-chart-bg">
+								<div class="d-md-flex align-items-center mb-3">
+									<div class="d-flex align-items-center">
+										<div class="display-7 me-3">
+											<i class="bi bi-bag-check me-2 text-success"></i> Team Ambassadors
+										</div>
+									</div>
+								</div>
+								<div id="chart" style=" display: flex; justify-content: center;height: 357px ">
+									<canvas id="department-gender-distribution-chartjs"></canvas>
+								</div>
+							</div>
+						</div>
+					</div> <br>
+				</div>
+
+				<div class="div-head row g-3 col-lg-12 col-md-12 visible-division-head-only" >
+					<div class="col-lg-7 col-md-12">
+						<div class="card-widget">
+							<div class="card-header">
+								<h5 class="card-title">Work From Home Percentage (%)</h5>
+							</div>
+							<div class="percentage-chart-bg">
+								<div class="d-md-flex align-items-center mb-3 divi">
+									<div class="d-flex align-items-center">
+										<div class="display-7 me-3">
+											<i class="bi bi-bag-check me-2 text-success"></i> All Departments
+										</div>
+										<span class="text-success">
+											<i class="bi bi-arrow-up me-1 small"></i>8.30%
+										</span>
+									</div>
+								</div>
+								<div id="chart" style=" display: flex; justify-content: center;">
+									<canvas id="wfh-division-percent-chartjs"></canvas>
+								</div>
+							</div>
+						</div>
+					</div> <br>
+					<div class="col-lg-5 col-md-12">
+						<div class="card-widget">
+							<div class="card-header">
+								<h5 class="card-title">Request Status </h5>
+							</div>
+							<div class="gender-chart-bg">
+								<div class="d-md-flex align-items-center mb-3">
+									<div class="d-flex align-items-center">
+										<div class="display-7 me-3">
+											<i class="bi bi-bag-check me-2 text-success"></i> Department Champions
+										</div>
+									</div>
+								</div>
+								<div id="chart" style=" display: flex; justify-content: center;height: 357px ">
+									<canvas id="division-gender-distribution-chartjs"></canvas>
+								</div>
+							</div>
+						</div>
+					</div> <br>
+				</div>
+
+				<div class="cch row g-3 col-lg-12 col-md-12 visible-cis-ceo-hr" >
+					<div class="col-lg-7 col-md-12">
+						<div class="card-widget">
+							<div class="card-header">
+								<h5 class="card-title">Work From Home Percentage (%)</h5>
+							</div>
+							<div class="percentage-chart-bg">
+								<div id="chart" style=" display: flex; justify-content: center;">
+									<canvas id="wfh-every-percent-chartjs"></canvas>
+								</div>
+							</div>
+						</div>
+					</div> <br>
+					<div class="col-lg-5 col-md-12">
+						<div class="card-widget">
+							<div class="card-header">
+								<h5 class="card-title">Request Status</h5>
+							</div>
+							<div class="gender-chart-bg">
+								<div class="d-md-flex align-items-center mb-3">
+									<div class="d-flex align-items-center">
+										<div class="display-7 me-3">
+											<i class="bi bi-bag-check me-2 text-success"></i> All Employee
+										</div>
+									</div>
+								</div>
+								<div id="chart" style=" display: flex; justify-content: center;height: 357px ">
+									<canvas id="every-gender-distribution-chartjs"></canvas>
+								</div>
+							</div>
+						</div>
+					</div> <br>
+				</div>
+
+			</div>
+			<div class="dashboard-container">
+
+
+
+			</div>
+		</div>
+		<script src="/assets/dashboard/chart.js"></script>
+		<script src="/assets/dashboard/count.js"></script>
+		<script src="/assets/dashboard/progressBar.js"></script>
+		<script src="/assets/dashboard/calendar.js"></script>
+	</main>
+
+</body>
+
+</html>

@@ -1,0 +1,423 @@
+
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" id="fullscreen-body">
+
+<head th:replace="fragments/header :: header">
+<title>WorkHub</title>
+</head>
+
+<body id="page"
+	class="logged-out not-pro not-player not-self not-team not-on-team no-hiring  nav-v2-theme-cream">
+
+
+	<!-- header -->
+	<div th:replace="fragments/navigation :: navigation"></div>
+	<!-- header -->
+
+	<div id="g_id_onload"
+		data-client_id="32073492121-s6ur8ti01mh34gq2bpbufb8ujdfrpn4v.apps.googleusercontent.com"
+		data-login_uri="index.html" data-ux_mode="redirect"></div>
+
+	<div th:replace="fragments/hr/department :: content"></div>
+	<!-- main -->
+
+
+<div th:replace="fragments/footer :: footer"></div>
+	<div id="site-notifications"></div>
+
+	<div th:replace="fragments/chat :: chat"></div>
+
+	<script src="/assets/welcome/fullscreen.js" type="text/javascript"></script>
+
+
+
+<script src="https://code.jquery.com/jquery-3.6.4.min.js" type="text/javascript"></script>
+<script>
+
+  	$(document).ready(function() {
+  		getAllDepartment();
+    $('#create-department').click(function(event) {
+      event.preventDefault();
+      createDepartment();
+    });
+    $('#department-code').prop('disabled', true);
+    getAllDivision();
+    $('#division-name').change(function () {
+        var selectedOption = $('#division-name option:selected');
+        var selectedDivisionCode = selectedOption.data('code') + "-";
+        $('#department-code').prop('disabled', false);
+        $('#department-code').val(selectedDivisionCode);
+
+        $('#department-code').on('input', function (e) {
+            var inputValue = this.value;
+
+            if (inputValue.length > 11) {
+                this.value = inputValue.slice(0, 11);
+            }
+
+            if (inputValue.length <= 8) {
+                this.value = selectedDivisionCode; // Reset to the original value
+            }
+        });
+
+        // Disable backspace key
+        $('#department-code').on('keydown', function (e) {
+            if (e.which === 8 && this.value.length <= 8) {
+                e.preventDefault();
+            }
+        });
+    });
+    
+    $('#edit-division-name').change(function () {
+    var selectedOption = $('#edit-division-name option:selected');
+    var divisionId = selectedOption.val();
+
+    // AJAX request to fetch division data
+    $.ajax({
+        url: '/api/division/getDivisionById',
+        type: 'POST',
+        contentType: 'application/json',
+        data: JSON.stringify({ divisionId: divisionId }),
+        success: function (response) {
+            var selectedDivisionCode = response.code + "-";
+            $('#edit-department-code').prop('disabled', false);
+            $('#edit-department-code').val(selectedDivisionCode);
+
+            // Disable backspace key
+            $('#edit-department-code').off('keydown').on('keydown', function (e) {
+                if (e.which === 8 && this.value.length <= 8) {
+                    e.preventDefault();
+                }
+            });
+
+            $('#edit-department-code').off('input').on('input', function (e) {
+                var inputValue = this.value;
+
+                if (inputValue.length > 11) {
+                    this.value = inputValue.slice(0, 11);
+                }
+
+                // Reset to the original value if the length is less than or equal to 3
+                if (inputValue.length <= 8) {
+                    this.value = selectedDivisionCode;
+                }
+            });
+        },
+        error: function (error) {
+            console.error('Error:', error);
+        }
+    });
+});
+
+$('#saveChangesBtn').click(function () {
+    var departmentId = $(this).data('departmentId');
+    saveChanges();
+});
+
+
+  });
+  function getAllDivision() {
+        $.ajax({
+            url: `api/division/divisionList`,
+            type: 'POST',
+            contentType: 'application/json',
+            success: function (response) {
+                var selectBox = $('#division-name');
+                selectBox.empty();
+                selectBox.append('<option value="" disabled selected>Select Division Name</option>');
+                for (var i = 0; i < response.length; i++) {
+                    var option = $('<option>', {
+                        value: response[i].id,
+                        text: response[i].name,
+                        'data-code': response[i].code
+                    });
+                    selectBox.append(option);
+                }
+                var selectBox = $('#division-filter');
+                selectBox.empty();
+                selectBox.append('<option value="" disabled selected>Select Division Name</option>');
+                for (var i = 0; i < response.length; i++) {
+                    var option = $('<option>', {
+                        value: response[i].id,
+                        text: response[i].name,
+                        'data-code': response[i].code
+                    });
+                    selectBox.append(option);
+                }
+            },
+            error: function (error) {
+                console.error('Error:', error);
+            }
+        });
+    }
+  
+  function createDepartment() {
+	  var code = $('#department-code').val();
+	  var name = $('#department-name').val();
+	  var division = $('#division-name').val();
+	  var requestData = {
+	    code: code,
+	    name: name,
+	    divisionId:division
+	  };
+
+    // AJAX call
+    $.ajax({
+      url: `/api/department/create`,
+      type: 'POST',
+      contentType: 'application/json',
+      data: JSON.stringify(requestData),
+      success: function(response) {
+        $('#message').text("Department create successful.");
+        $('#add-data-overlay').hide();
+        Swal.fire({
+  		  title: "Success!",
+  		  text: "You've Completely added a new division!",
+  		  icon: "success"
+  		});
+        getAllDepartment();
+        $('#division-name').val('');
+        $('#department-code').val('');
+        $('#department-name').val('');
+      },
+      error: function(error) {
+        console.error('Error:', error);
+      }
+    });
+  }
+  var rowCount = 0;
+  
+  function getAllDepartment() {
+      
+      $.ajax({
+      	url: `api/department/departmentList`,
+          type: 'POST',
+          contentType: 'application/json',
+          success: function (response) {
+              $('#department-list').empty();
+              response.forEach(function (department) {
+            	  rowCount++;
+                  $('#department-list').append(`
+                      <li class="job-list-item">
+	                      <a class="job-link" rel="nofollow"
+	                          href="#"></a>
+	                      <div class="job-details-container">
+	                          <div class="lazy-avatar company-avatar">
+	                              <img src="/assets/icons/DAT Logo.png" />
+	                          </div>
+	                          <div class="job-title-company-container">
+	                              <div class="job-role">
+	                                  <span class="job-board-job-company">${department.code}</span>
+	                              </div>
+	                              <h4 class="job-title job-board-job-title">
+	                              	${department.name}
+	                              </h4>
+	                              <div class="job-details job-details--mobile">
+	                                  <div class="color-deep-blue-sea-light-40">
+	                                  
+	                                  </div>
+	                              </div>
+	                          </div>
+	                      </div>
+	                      <div class="job-additional-details-container">
+	                          <div class="buttons-container">
+	                              <button class="form-btn outlined edit-data" data-department-id="${department.id}">Edit </button>
+	                              <button class="btn2 btn2--tertiary margin-l-12 delete-button" data-department-id="${department.id}" onclick="confirmDelete(${department.id}, '${department.name}')">Delete</button>
+	                          </div>
+	                          <div class="job-details">
+	                              <div class="hide-on-desktop data-detail">
+	                                  <a class="manage-data" href="#" data-target="data-modal-1">
+	                                      <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor" class="bi bi-three-dots" viewBox="0 0 16 16">
+	                                          <path d="M3 9.5a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3m5 0a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3m5 0a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3"/>
+	                                      </svg>
+	                                  </a>
+	                                  /* <div id="data-modal-1" class="data-modal">
+	                                      <button class="data-modal-button edit-data edit-button"  data-department-id="${department.id}">Edit</button>
+	                                      <button class="data-modal-button delete-button"  data-department-id="${department.id}">Delete</button>
+	                                  </div> */
+	                              </div>
+	                          </div>
+	                      </div>
+	                  </li>
+                  `);
+              });
+              console.log("row count =", rowCount)
+              document.getElementById('total-count').innerText = rowCount
+          },
+          error: function (error) {
+              console.error('Error:', error);
+          }
+      });
+  }
+  
+  
+function openEditModal(departmentId) {
+    $.ajax({
+        url: `api/department/getDepartment?departmentId=${departmentId}`,
+        type: 'POST',
+        contentType: 'application/json',
+        success: function (response) {
+            $('#edit-department-name').val(response.name);
+            $('#edit-department-code').val(response.code);
+            $('#departmentId').val(departmentId);
+            
+            $.ajax({
+                url: `api/division/divisionList`,
+                type: 'POST',
+                contentType: 'application/json',
+                success: function (divisions) {
+                    var selectBox = $('#edit-division-name');
+                    // Populate select box with all divisions
+                    divisions.forEach(function(division) {
+                        var option = $('<option>', {
+                            value: division.id,
+                            text: division.name,
+                            selected: division.id === response.divisionId // Automatically select the related division
+                        });
+                        selectBox.append(option);
+                    });
+                },
+                error: function (error) {
+                    console.error('Error fetching division list:', error);
+                }
+            });
+
+            $('#edit-data-overlay').show();
+        },
+        error: function (error) {
+            console.error('Error fetching department data:', error);
+        }
+    });
+}
+  function saveChanges() {
+      var editedCode = $('#edit-department-code').val();
+      var editedName = $("#edit-department-name").val();
+      var departmentId = $('#departmentId').val();
+      var editedDivisionId = $('#edit-division-name').val();
+      var requestData = {
+          code: editedCode,
+          name: editedName,
+          divisionId: editedDivisionId
+      };
+
+      $.ajax({
+          url: `api/department/editDepartment?departmentId=${departmentId}`,
+          type: 'POST',
+          contentType: 'application/json',
+          data: JSON.stringify(requestData),
+          success: function (response) {
+              console.log('Department data updated successfully:', response);
+              $('#edit-data-overlay').hide();
+              getAllDepartment();
+          },
+          error: function (error) {
+              console.error('Error updating department data:', error);
+          }
+      });
+  }
+  function confirmDelete(departmentId, departmentName) {
+      Swal.fire({
+          title: `Are you sure you want to delete ${departmentName}?`,
+          text: "This action cannot be undone!",
+          icon: 'warning',
+          showCancelButton: true,
+          confirmButtonColor: '#3085d6',
+          cancelButtonColor: '#d33',
+          confirmButtonText: 'Yes, delete it!'
+      }).then((result) => {
+          if (result.isConfirmed) {
+          	deleteDepartment(departmentId)
+          	Swal.fire(
+                  'Deleted!',
+                  `Department with ID ${departmentId} has been deleted.`,
+                  'success'
+              );
+          }
+      });
+  }  
+  function deleteDepartment(departmentId) {
+    $.ajax({
+        url: `/api/department/deleteById?id=${departmentId}`,
+        type: 'POST',
+        success: function(response) {
+            console.log('Department deleted successfully:', response);
+            $(`#department-list li[data-department-id="${departmentId}"]`).remove();
+            getAllDepartment();
+        },
+        error: function(error) {
+            console.error('Error deleting department:', error);
+        }
+    });
+	}
+	  $(document).on('click', '.delete-button', function() {
+		    var departmentId = $(this).data('departmentId');
+		    var departmentName = $(this).closest('.job-list-item').find('.job-board-job-title').text().trim();
+		    deleteDepartment(departmentId, departmentName);
+			});
+	
+	  $(document).on('click', '.edit-data', function() {
+		    var departmentId = $(this).data('department-id');
+		    openEditModal(departmentId);
+		});
+	  
+	  
+
+</script>
+
+
+<script type="text/javascript">
+  // Get the modal
+  var modal = document.getElementById("myModal");
+
+  // Get the button that opens the modal
+  var btn = document.getElementById("create-department");
+
+  // When the user clicks on the button, open the modal
+  btn.onclick = function() {
+    modal.style.display = "block";
+  }
+
+  // When the user clicks anywhere outside of the modal, close it
+  window.onclick = function(event) {
+    if (event.target == modal) {
+      modal.style.display = "none";
+    }
+  }
+  
+  document.addEventListener('DOMContentLoaded', function () {
+	    document.querySelector('.add-data').addEventListener('click', function () {
+	        document.getElementById('add-data-overlay').style.display = 'block';
+	        document.getElementById('add-data-modal').style.display = 'block';
+	    });
+	    document.querySelector('#add-data-overlay .close').addEventListener('click', function () {
+	        document.getElementById('add-data-overlay').style.display = 'none';
+	        document.getElementById('add-data-modal').style.display = 'none';
+	    });
+
+	    document.querySelector('.edit-data').addEventListener('click', function() {
+	        document.getElementById('edit-data-overlay').style.display = 'block';
+	        document.getElementById('edit-data-modal').style.display = 'block';
+	    });
+		
+	    document.querySelector('#edit-data-overlay .close').addEventListener('click', function() {	    	
+	        document.getElementById('edit-data-overlay').style.display = 'none';
+	        document.getElementById('edit-data-modal').style.display = 'none';
+	    });
+	    
+	    document.querySelectorAll('.manage-data').forEach(item => {
+	        item.addEventListener('click', event => {
+	            const targetId = event.currentTarget.getAttribute('data-target');
+	            const modal = document.getElementById(targetId);
+	            if (modal) {
+	                modal.style.display = modal.style.display === 'none' ? 'block' : 'none';
+	            }
+	        });
+	    });
+
+	    
+	});
+</script>
+
+</body>
+
+</html>

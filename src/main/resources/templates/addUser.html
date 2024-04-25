@@ -1,0 +1,422 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>The Easiest Way to Add Input Masks to Your Forms</title>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/simple-line-icons/2.4.1/css/simple-line-icons.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+  <style>
+
+    body{
+      background-color: #dee9ff;
+    }
+
+    .registration-form{
+      padding: 50px 0;
+    }
+
+    .registration-form form{
+      background-color: #fff;
+      max-width: 600px;
+      margin: auto;
+      padding: 50px 70px;
+      border-top-left-radius: 30px;
+      border-top-right-radius: 30px;
+      box-shadow: 0px 2px 10px rgba(0, 0, 0, 0.075);
+    }
+
+    .registration-form .form-icon{
+      text-align: center;
+      background-color: #5891ff;
+      border-radius: 50%;
+      font-size: 40px;
+      color: white;
+      width: 100px;
+      height: 100px;
+      margin: auto;
+      margin-bottom: 50px;
+      line-height: 100px;
+    }
+
+    .registration-form .item{
+      border-radius: 20px;
+      margin-bottom: 25px;
+      padding: 10px 20px;
+    }
+
+    .registration-form .create-account{
+      border-radius: 30px;
+      padding: 10px 20px;
+      font-size: 18px;
+      font-weight: bold;
+      background-color: #5791ff;
+      border: none;
+      color: white;
+      margin-top: 20px;
+    }
+
+    .registration-form .social-media{
+      max-width: 600px;
+      background-color: #fff;
+      margin: auto;
+      padding: 35px 0;
+      text-align: center;
+      border-bottom-left-radius: 30px;
+      border-bottom-right-radius: 30px;
+      color: #9fadca;
+      border-top: 1px solid #dee9ff;
+      box-shadow: 0px 2px 10px rgba(0, 0, 0, 0.075);
+    }
+
+    .registration-form .social-icons{
+      margin-top: 30px;
+      margin-bottom: 16px;
+    }
+
+    .registration-form .social-icons a{
+      font-size: 23px;
+      margin: 0 3px;
+      color: #5691ff;
+      border: 1px solid;
+      border-radius: 50%;
+      width: 45px;
+      display: inline-block;
+      height: 45px;
+      text-align: center;
+      background-color: #fff;
+      line-height: 45px;
+    }
+
+    .registration-form .social-icons a:hover{
+      text-decoration: none;
+      opacity: 0.6;
+    }
+
+    @media (max-width: 576px) {
+      .registration-form form{
+        padding: 50px 20px;
+      }
+
+      .registration-form .form-icon{
+        width: 70px;
+        height: 70px;
+        font-size: 30px;
+        line-height: 70px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+
+<div class="registration-form">
+  <form>
+    <div class="form-group">
+      <input type="text" class="form-control item" id="staff-id" placeholder="Staff-ID" readonly>
+    </div>
+    <div class="form-group">
+      <select class="form-control item" id="gender" aria-label="Gender">
+        <option selected>Choose Gender</option>
+        <option value="male">Male</option>
+        <option value="female">Female</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <input type="text" class="form-control item" id="name" placeholder="Username">
+    </div>
+    <div class="form-group">
+      <input type="email" class="form-control item" id="email" placeholder="Email">
+    </div>
+
+    <div class="container">
+      <div class="row">
+        <div class="col-md-6">
+          <div class="form-group">
+            <input type="radio" class="form-check-input item" id="has_parent" name="parent" value="true" placeholder="Has Parent">
+            <label class="form-check-label" for="has_parent">Has Parent</label>
+          </div>
+        </div>
+
+        <div class="col-md-6">
+          <div class="form-group">
+            <input type="radio" class="form-check-input item" id="orphan" name="parent" value="false" placeholder="Orphan">
+            <label class="form-check-label" for="orphan">Orphan</label>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="form-group">
+      <input type="text" class="form-control item" id="phone-number" placeholder="Phone Number">
+    </div>
+
+    <div class="container">
+      <div class="row">
+        <div class="col-md-6">
+          <div class="form-group">
+            <input type="radio" class="form-check-input item" id="dink" name="children" value="false" placeholder="Dink Couple">
+            <label class="form-check-label" for="dink">Dink</label>
+          </div>
+        </div>
+
+        <div class="col-md-6">
+          <div class="form-group">
+            <input type="radio" class="form-check-input item" id="nuclear_family" name="children" value="true" placeholder="Nuclear Family">
+            <label class="form-check-label" for="nuclear_family">Nuclear Family</label>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="container">
+      <div class="row">
+        <div class="col-md-6">
+          <div class="form-group">
+            <input type="radio" class="form-check-input item" id="married" name="marital_status" value="true" placeholder="Marital Status">
+            <label class="form-check-label" for="married">Married</label>marital_status
+          </div>
+        </div>
+
+        <div class="col-md-6">
+          <div class="form-group">
+            <input type="radio" class="form-check-input item" id="single" name="marital_status" value="false" placeholder="Marital Status">
+            <label class="form-check-label" for="single">Single</label>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+
+
+
+
+    <div class="form-group">
+      <input type="date" class="form-control item" id="join-date" placeholder="Join Date">
+    </div>
+
+    <div class="form-group">
+      <select class="form-control item" id="role-name" required></select>
+    </div>
+
+    <div class="form-group">
+      <select class="form-control item" id="position-name" required></select>
+    </div>
+
+    <div class="form-group">
+      <select class="form-control item" id="approve-role-name" required></select>
+    </div>
+    <div class="form-group">
+      <select class="form-control item" id="team-name" required></select>
+    </div>
+
+    <div class="form-group">
+      <button type="button" id="create-user" class="btn btn-block create-account">Create Account</button>
+    </div>
+  </form>
+  </div>
+
+<script type="text/javascript" src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.15/jquery.mask.min.js"></script>
+<script>
+
+  $(document).ready(function(){
+    getAllTeam(), getAllApproveRole(), getAllPosition(), getAllRole()
+    $('#phone-number').mask('0000-0000');
+
+    $('#gender').change(function() {
+      // Get the selected gender value
+      var selectedGender = $(this).val();
+      console.log(selectedGender)
+      // Call the generateStaffId function with the selected gender as a parameter
+      generateStaffId(selectedGender);
+    });
+
+    $('#create-user').click(function(event) {
+      event.preventDefault();
+      createUser();
+    });
+  })
+
+
+  function createUser(){
+    var staff_id = $('#staff-id').val();
+    var name = $('#name').val();
+    var email = $('#email').val();
+    var phone_number = $('#phone-number').val();
+    var gender = $('#gender').val();
+    var parent =$('input[name="parent"]:checked').val();
+    var children =$('input[name="children"]:checked').val();
+    var marital_status =$('input[name="marital_status"]:checked').val();
+    var join_date = $('#join-date').val();
+    var formattedJoinDate = new Date($('#join-date').val()).toISOString().split('T')[0];
+    if(formattedJoinDate) {
+      console.log(formattedJoinDate)
+    }
+
+    var approve_role = $('#approve-role-name').val();
+    var role = $('#role-name').val();
+    var position = $('#position-name').val();
+    var team = $('#team-name').val();
+
+    var requestData = {
+      staff_id : staff_id,
+      name : name,
+      email : email,
+      phone_number : phone_number,
+      gender : gender,
+      marital_status : marital_status,
+      parent : parent,
+      children : children,
+      join_date : formattedJoinDate,
+      role_id : role,
+      position_id : position,
+      team_id : team,
+      approveRole_id : approve_role
+    };
+
+    $.ajax({
+      url: `api/user/create`,
+      type: 'POST',
+      contentType: 'application/json',
+      data: JSON.stringify(requestData),
+      dataType: 'text',
+      success: function(response) {
+        console.log("Successful : ", response);
+        console.log('Success:', response);
+
+        $('#message').text(response);
+      },
+      error: function(error) {
+        console.error('Error:', error);
+      }
+    });
+  }
+
+  function generateStaffId(gender) {
+    console.log("In function : " , gender)
+    var requestData = {
+      gender:gender
+    };
+    $.ajax({
+      url: `api/user/generateStaffId`,
+      type: 'POST',
+      contentType: 'application/json',
+      data: JSON.stringify(requestData),
+      dataType: 'text',
+       // Pass gender as JSON
+      success: function (response) {
+        console.log('Response:', response);
+        var textBox = $('#staff-id');
+        textBox.empty();
+        textBox.val(response);
+      },
+      error: function (xhr, status, error) {
+        console.error('Error:', error);
+        console.error('Status:', status);
+        console.error('Response Text:', error.responseText)
+        console.error('XHR:', xhr);
+      }
+
+    });
+  }
+
+  function getAllTeam() {
+    $.ajax({
+      url: `api/team/teamList`,
+      type: 'POST',
+      contentType: 'application/json',
+      success: function (response) {
+        var selectBox = $('#team-name');
+        selectBox.empty();
+        selectBox.append('<option value="" disabled selected>Select Team Name</option>');
+        for (var i = 0; i < response.length; i++) {
+          var option = $('<option>', {
+            value: response[i].id,
+            text: response[i].name,
+            'data-code': response[i].code
+          });
+          selectBox.append(option);
+        }
+      },
+      error: function (error) {
+        console.error('Error:', error);
+      }
+    });
+  }
+  function getAllRole() {
+    $.ajax({
+      url: `api/role/roleList`,
+      type: 'POST',
+      contentType: 'application/json',
+      success: function (response) {
+        var selectBox = $('#role-name');
+        selectBox.empty();
+        selectBox.append('<option value="" disabled selected>Select Role Name</option>');
+        for (var i = 0; i < response.length; i++) {
+          var option = $('<option>', {
+            value: response[i].id,
+            text: response[i].name,
+            'data-code': response[i].code
+          });
+          selectBox.append(option);
+        }
+      },
+      error: function (error) {
+        console.error('Error:', error);
+      }
+    });
+  }
+
+  function getAllApproveRole() {
+    $.ajax({
+      url: `api/approveRole/approveRoleList`,
+      type: 'POST',
+      contentType: 'application/json',
+      success: function (response) {
+        var selectBox = $('#approve-role-name');
+        selectBox.empty();
+        selectBox.append('<option value="" disabled selected>Select Approve Role Name</option>');
+        for (var i = 0; i < response.length; i++) {
+          var option = $('<option>', {
+            value: response[i].id,
+            text: response[i].name,
+            'data-code': response[i].code
+          });
+          selectBox.append(option);
+        }
+      },
+      error: function (error) {
+        console.error('Error:', error);
+      }
+    });
+  }
+
+  function getAllPosition() {
+    $.ajax({
+      url: `api/position/positionList`,
+      type: 'POST',
+      contentType: 'application/json',
+      success: function (response) {
+        var selectBox = $('#position-name');
+        selectBox.empty();
+        selectBox.append('<option value="" disabled selected>Select Position Name</option>');
+        for (var i = 0; i < response.length; i++) {
+          var option = $('<option>', {
+            value: response[i].id,
+            text: response[i].name,
+            'data-code': response[i].code
+          });
+          selectBox.append(option);
+        }
+      },
+      error: function (error) {
+        console.error('Error:', error);
+      }
+    });
+  }
+</script>
+</body>
+</html>
