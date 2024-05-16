@@ -1,3 +1,10 @@
+/*
+ * @Author 		 : Valhalla TKT (DAT OJT Batch II - Team III)
+ * @Date 		 : 2024-04-24
+ * @Time  		 : 21:00
+ * @Project_Name : Work From Home System
+ * @Contact      : tktvalhalla@gmail.com
+ */
 package com.kage.wfhs.controller.api;
 
 import java.util.List;
@@ -47,7 +54,6 @@ public class TeamController {
 
     @PostMapping("/editTeam")
     public ResponseEntity<String> updateTeam(@RequestParam("teamId") long id, @RequestBody TeamDto teamDto){
-    	System.out.println(teamDto.getName());
         teamService.updateTeam(id, teamDto);
         return ResponseEntity.ok("Successfully Updated Team..");
     }

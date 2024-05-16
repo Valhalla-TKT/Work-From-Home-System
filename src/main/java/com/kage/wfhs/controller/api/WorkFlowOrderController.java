@@ -1,3 +1,10 @@
+/*
+ * @Author 		 : Valhalla TKT (DAT OJT Batch II - Team III)
+ * @Date 		 : 2024-04-24
+ * @Time  		 : 21:00
+ * @Project_Name : Work From Home System
+ * @Contact      : tktvalhalla@gmail.com
+ */
 package com.kage.wfhs.controller.api;
 
 import com.kage.wfhs.dto.WorkFlowOrderDto;
@@ -22,13 +29,7 @@ public class WorkFlowOrderController {
     @PostMapping("/create")
     public ResponseEntity<String> createWorkFlowOrder(@RequestBody List<Long> approveRoleList) {
         List<String> approveState = workFlowOrderService.getOrder(approveRoleList.size());
-
-        for(String state : approveState){
-            System.out.println(state);
-        }
-        for(long id  : approveRoleList){
-            System.out.println(id);
-        }
+        
         WorkFlowOrderDto workFlowOrderDto = new WorkFlowOrderDto();
 
         for (int i = 0; i < approveState.size(); i++) {

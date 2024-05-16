@@ -1,3 +1,10 @@
+/*
+ * @Author 		 : Valhalla TKT (DAT OJT Batch II - Team III)
+ * @Date 		 : 2024-04-24
+ * @Time  		 : 21:00
+ * @Project_Name : Work From Home System
+ * @Contact      : tktvalhalla@gmail.com
+ */
 package com.kage.wfhs.controller.api;
 
 import com.kage.wfhs.dto.UserDto;
@@ -44,12 +51,8 @@ public class UserController {
     public ResponseEntity<String> updateApproveRole(
     		@RequestParam(value = "userId") long userId,
     		@RequestParam(value = "approveRoleId") List<Long> approveRoleIdList
-    		) {
-    	System.out.println("userId = " + userId);
-    	for(long approveRoleId : approveRoleIdList) {
-    		System.out.println("approveRoleId = " + approveRoleId);
-    	}
-    	
+    		) {    	
+    	// need to implement
         return ResponseEntity.ok("Update User Role Success...");    
     }
     

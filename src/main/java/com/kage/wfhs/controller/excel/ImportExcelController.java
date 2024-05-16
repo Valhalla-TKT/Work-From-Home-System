@@ -1,3 +1,10 @@
+/*
+ * @Author 		 : Valhalla TKT (DAT OJT Batch II - Team III)
+ * @Date 		 : 2024-04-24
+ * @Time  		 : 21:00
+ * @Project_Name : Work From Home System
+ * @Contact      : tktvalhalla@gmail.com
+ */
 package com.kage.wfhs.controller.excel;
 
 import com.kage.wfhs.dto.ExcelImportDto;
@@ -31,14 +38,12 @@ public class ImportExcelController {
 
             if (file.isEmpty()) {
                 model.addAttribute("message", "Uploaded file is empty.");
-                System.out.println("Empty file");
                 model.addAttribute("dto", new ExcelImportDto());
                 return "hr/importExcel";
             }
 
             if (sheetName == null || sheetName.trim().isEmpty()) {
                 model.addAttribute("message", "Sheet name cannot be null or empty.");
-                System.out.println("No sheet");
                 model.addAttribute("dto", new ExcelImportDto());
                 return "hr/importExcel";
             }
@@ -48,7 +53,6 @@ public class ImportExcelController {
 
             if (sheet == null) {
                 model.addAttribute("message", "No sheet found with the name: " + sheetName);
-                System.out.println("No sheet found with the name: " + sheetName);
                 model.addAttribute("dto", new ExcelImportDto());
                 return "hr/importExcel";
             }

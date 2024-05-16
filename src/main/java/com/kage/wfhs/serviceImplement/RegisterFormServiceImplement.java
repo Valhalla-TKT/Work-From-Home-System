@@ -1,3 +1,10 @@
+/*
+ * @Author 		 : Valhalla TKT (DAT OJT Batch II - Team III)
+ * @Date 		 : 2024-04-24
+ * @Time  		 : 21:00
+ * @Project_Name : Work From Home System
+ * @Contact      : tktvalhalla@gmail.com
+ */
 package com.kage.wfhs.serviceImplement;
 
 import com.kage.wfhs.dto.RegisterFormDto;
@@ -12,7 +19,6 @@ import com.kage.wfhs.repository.RegisterFormRepository;
 import com.kage.wfhs.repository.UserRepository;
 import com.kage.wfhs.service.NotificationService;
 import com.kage.wfhs.service.RegisterFormService;
-import com.kage.wfhs.util.Helper;
 import com.kage.wfhs.util.ImageUtil;
 import com.kage.wfhs.util.OTPStaffIDExcelGenerator;
 
@@ -138,7 +144,6 @@ public class RegisterFormServiceImplement implements RegisterFormService {
 
     @Override
     public List<RegisterFormDto> getAllFormSpecificTeamAll(long approveRoleId, long teamId) {
-    	System.out.println("Approve Role Id : " + approveRoleId + " Team Id : " + teamId);
         List<RegisterForm> registerForms = registerFormRepo.findRegisterFormByTeamAll(approveRoleId, teamId);
         List<RegisterFormDto> registerFormList = new ArrayList<>();
         for (RegisterForm registerForm : registerForms){

@@ -1,3 +1,10 @@
+/*
+ * @Author 		 : Valhalla TKT (DAT OJT Batch II - Team III)
+ * @Date 		 : 2024-04-24
+ * @Time  		 : 21:00
+ * @Project_Name : Work From Home System
+ * @Contact      : tktvalhalla@gmail.com
+ */
 package com.kage.wfhs.config;
 
 import lombok.RequiredArgsConstructor;
@@ -38,6 +45,7 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/static/**").permitAll()
                         .requestMatchers("/assets/**").permitAll()
+                        .requestMatchers("/swagger-ui/**").permitAll()
                         .requestMatchers("/icons/**").permitAll()
                         .requestMatchers("/formImages/**").permitAll()
                         .requestMatchers("/images/**").permitAll()

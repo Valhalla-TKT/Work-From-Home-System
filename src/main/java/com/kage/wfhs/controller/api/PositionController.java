@@ -1,3 +1,10 @@
+/*
+ * @Author 		 : Valhalla TKT (DAT OJT Batch II - Team III)
+ * @Date 		 : 2024-04-24
+ * @Time  		 : 21:00
+ * @Project_Name : Work From Home System
+ * @Contact      : tktvalhalla@gmail.com
+ */
 package com.kage.wfhs.controller.api;
 
 import java.util.List;
@@ -39,7 +46,6 @@ public class PositionController {
 
     @PostMapping("/editPosition")
     public ResponseEntity<String> updatePosition(@RequestParam("positionId") long id, @RequestBody PositionDto positionDto){
-    	System.out.println(positionDto.getName());
         positionService.updatePosition(id, positionDto);
         return ResponseEntity.ok("Successfully Updated Position..");
     }

@@ -1,3 +1,10 @@
+/*
+ * @Author 		 : Valhalla TKT (DAT OJT Batch II - Team III)
+ * @Date 		 : 2024-04-24
+ * @Time  		 : 21:00
+ * @Project_Name : Work From Home System
+ * @Contact      : tktvalhalla@gmail.com
+ */
 package com.kage.wfhs.serviceImplement;
 
 import com.kage.wfhs.dto.UserDto;
@@ -86,8 +93,7 @@ public class UserServiceImplement implements UserService {
 
 	@Override
 	public void updateUser(long id, UserDto userDto) {
-		User user = userRepo.findById(id);
-		System.out.println(user);
+		// need to implement
 	}
 
 	@Override
@@ -168,7 +174,6 @@ public class UserServiceImplement implements UserService {
 
 	@Override
 	public List<UserDto> getAllDepartmentMember(long id) {
-		System.out.println("getall");
 		List<User> users = userRepo.findByTeamDepartmentId(id);
 		List<UserDto> userList = new ArrayList<>();
 		for (User user : users) {
@@ -264,9 +269,7 @@ public class UserServiceImplement implements UserService {
 		//DEPARTMENT HEAD
 
 		@Override
-	    public List<Object[]> getAllTeamRequestByDepartmentId(Long departmentId) {
-	    	List<Object[]> departmetArr = userRepo.getAllTeamRequestByDepartmentId(departmentId);
-	    	
+	    public List<Object[]> getAllTeamRequestByDepartmentId(Long departmentId) {	    	
 	        return userRepo.getAllTeamRequestByDepartmentId(departmentId);
 	    }
 

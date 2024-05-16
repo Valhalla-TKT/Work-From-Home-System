@@ -1,3 +1,10 @@
+/*
+ * @Author 		 : Valhalla TKT (DAT OJT Batch II - Team III)
+ * @Date 		 : 2024-04-24
+ * @Time  		 : 21:00
+ * @Project_Name : Work From Home System
+ * @Contact      : tktvalhalla@gmail.com
+ */
 package com.kage.wfhs.serviceImplement;
 
 import com.kage.wfhs.dto.WorkFlowStatusDto;
@@ -17,10 +24,7 @@ import java.util.*;
 @AllArgsConstructor
 public class WorkFlowStatusServiceImplement implements WorkFlowStatusService {
 	@Autowired
-    private final WorkFlowStatusRepository workFlowStatusRepo;
-    
-	@Autowired
-    private final LedgerRepository ledgerRepo;
+    private final WorkFlowStatusRepository workFlowStatusRepo;    
 	
     @Autowired
     private final ModelMapper modelMapper;
@@ -155,7 +159,6 @@ public class WorkFlowStatusServiceImplement implements WorkFlowStatusService {
 
             if (Objects.equals(userRole, "CISO")) {
                 if (workFlowStatusDto.isState()) {
-                	System.out.println("Form Id = " + workFlowStatusDto.getRegisterFormId());
                     createApproval(workFlowStatusDto.getRegisterFormId(), "CEO");
                     List<WorkFlowStatus> existingApproval = workFlowStatusRepo.findByUserApproveRolesNameAndRegisterFormId("SERVICE_DESK", workFlowStatusDto.getRegisterFormId() );
                     if (existingApproval != null) {

@@ -1,3 +1,10 @@
+/*
+ * @Author 		 : Valhalla TKT (DAT OJT Batch II - Team III)
+ * @Date 		 : 2024-04-24
+ * @Time  		 : 21:00
+ * @Project_Name : Work From Home System
+ * @Contact      : tktvalhalla@gmail.com
+ */
 package com.kage.wfhs.controller.api;
 
 import java.util.List;
@@ -48,7 +55,6 @@ public class DivisionController {
 	@PostMapping("/editDivision")
 	public ResponseEntity<String> updateDivision(@RequestParam("divisionId") long id,
 			@RequestBody DivisionDto divisionDto) {
-		System.out.println(divisionDto.getName());
 		divisionService.updateDivision(id, divisionDto);
 		return ResponseEntity.ok("Successfully Updated Division..");
 	}

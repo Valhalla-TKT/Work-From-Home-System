@@ -1,3 +1,10 @@
+/*
+ * @Author 		 : Valhalla TKT (DAT OJT Batch II - Team III)
+ * @Date 		 : 2024-04-24
+ * @Time  		 : 21:00
+ * @Project_Name : Work From Home System
+ * @Contact      : tktvalhalla@gmail.com
+ */
 package com.kage.wfhs.controller.api;
 
 import java.util.List;
@@ -41,7 +48,6 @@ public class RoleController {
 
     @PostMapping("/editRole")
     public ResponseEntity<String> updateApprover(@RequestParam("roleId") long id, @RequestBody RoleDto roleDto){
-    	System.out.println(roleDto.getName());
         roleService.updateRole(id, roleDto);
         return ResponseEntity.ok("Successfully Updated Role..");
     }

@@ -1,3 +1,10 @@
+/*
+ * @Author 		 : Valhalla TKT (DAT OJT Batch II - Team III)
+ * @Date 		 : 2024-04-24
+ * @Time  		 : 21:00
+ * @Project_Name : Work From Home System
+ * @Contact      : tktvalhalla@gmail.com
+ */
 package com.kage.wfhs.controller.api;
 
 import java.util.List;
@@ -48,7 +55,6 @@ public class DepartmentController {
 	@PostMapping("/editDepartment")
 	public ResponseEntity<String> updateDepartment(@RequestParam("departmentId") long id,
 			@RequestBody DepartmentDto departmentDto) {
-		System.out.println(departmentDto.getName());
 		departmentService.updateDepartment(id, departmentDto);
 		return ResponseEntity.ok("Successfully Updated Department..");
 	}

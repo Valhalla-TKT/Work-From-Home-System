@@ -1,3 +1,10 @@
+/*
+ * @Author 		 : Valhalla TKT (DAT OJT Batch II - Team III)
+ * @Date 		 : 2024-04-24
+ * @Time  		 : 21:00
+ * @Project_Name : Work From Home System
+ * @Contact      : tktvalhalla@gmail.com
+ */
 package com.kage.wfhs.controller.api;
 
 import com.kage.wfhs.dto.CaptureDto;
@@ -27,7 +34,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.ss.usermodel.WorkbookFactory;
 import org.modelmapper.ModelMapper;
@@ -100,7 +106,6 @@ public class RegisterFormController {
         registerFormDto.setTo_date(toDate);
         registerFormDto.setOs_type(osType);
         registerFormDto.setSignedDate(appliedDate);
-        System.out.println("sdjskdslkldsdklsdskaldksaldkl"+appliedDate);
         registerFormDto.setOperationSystemInput(operationSystem);
         registerFormDto.setSecurityPatchInput(securityPatch);
         
@@ -140,11 +145,9 @@ public class RegisterFormController {
             @RequestParam(value = "status") String status,
             @RequestParam(value = "teamId") long teamId,
             @RequestParam(value = "userId") long userId){
-    	System.out.println(status + teamId + userId);
         UserDto user = userService.getUserById(userId);
         ApproveRole approveRole = helper.getMaxOrder(user.getApproveRoles());
         long orderId = workFlowOrderService.getWorkFlowOrderByApproveRoleId(approveRole.getId()).getId();
-        System.out.println("Order Id : " + orderId);
         long approveRoleId = approveRoleService.getIdByWorkFlowOrderId(orderId);        
         Map<String, Object> responseData = new HashMap<>();
         List<RegisterFormDto> registerFormDtoList =  new ArrayList<>();
@@ -175,7 +178,6 @@ public class RegisterFormController {
         UserDto user = userService.getUserById(userId);
         ApproveRole approveRole = helper.getMaxOrder(user.getApproveRoles());
         long orderId = workFlowOrderService.getWorkFlowOrderByApproveRoleId(approveRole.getId()).getId();
-        System.out.println("Order Id : " + orderId);
         long approveRoleId = approveRoleService.getIdByWorkFlowOrderId(orderId);        
         Map<String, Object> responseData = new HashMap<>();
         List<RegisterFormDto> registerFormDtoList =  new ArrayList<>();
@@ -275,7 +277,6 @@ public class RegisterFormController {
     	workFlowStatusDto.setRegisterFormId(registerFormId);
     	workFlowStatusDto.setState(state);
     	workFlowStatusDto.setReason(reason);
-    	System.out.println("reason = " + reason);
     	workFlowStatusDto.setApproveDate(approveDate);    	
         workFlowStatusService.updateStatus(workFlowStatusDto.getId(),workFlowStatusDto);
         return ResponseEntity.ok("Work Flow Status is Update Success....");

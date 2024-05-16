@@ -1,3 +1,10 @@
+/*
+ * @Author 		 : Valhalla TKT (DAT OJT Batch II - Team III)
+ * @Date 		 : 2024-04-24
+ * @Time  		 : 21:00
+ * @Project_Name : Work From Home System
+ * @Contact      : tktvalhalla@gmail.com
+ */
 package com.kage.wfhs.util;
 
 import com.kage.wfhs.dto.DepartmentDto;
@@ -224,7 +231,6 @@ public class ExcelParser {
 			}
 			insertRowQuery.setLength(insertRowQuery.length() - 2);
 			insertRowQuery.append(");");
-			System.out.println(insertRowQuery);
 			try (Connection connection = DriverManager.getConnection(url, username, password);
 					Statement statement = connection.createStatement()) {
 				statement.executeUpdate(insertRowQuery.toString());
@@ -267,7 +273,6 @@ public class ExcelParser {
 
 			Row row = sheet.getRow(i);
 			if (row != null) {
-				System.out.println("Hello not null");
 				Cell codeCell = row.getCell(0);
 				Cell nameCell = row.getCell(1);
 				if (codeCell != null && nameCell != null) {
@@ -275,7 +280,6 @@ public class ExcelParser {
 					String name = nameCell.toString().trim();
 
 					String divisionInfo = code + "_" + name;
-					System.out.println(divisionInfo);
 					uniqueDivisionInfo.add(divisionInfo);
 				}
 			}
@@ -286,9 +290,7 @@ public class ExcelParser {
 			if (parts.length == 2) {
 				DivisionDto divisionDto = new DivisionDto();
 				divisionDto.setCode(parts[0]);
-				divisionDto.setName(parts[1]);
-				System.out.println("code = " + divisionDto.getCode());
-				System.out.println("name = " + divisionDto.getName());
+				divisionDto.setName(parts[1]);				
 				divisionRepo.save(modelMapper.map(divisionDto, Division.class));
 			}
 		}
@@ -529,7 +531,6 @@ public class ExcelParser {
 				String emailBodyForOTPPart2 = Message.emailBodyForOTPPart2;
 				String emailSubjectForOtp = Message.emailSubjectForOtp;
 				
-				System.out.println(email + emailSubjectForOtp + emailBodyForOTPPart1 + otp + "\n" + emailBodyForOTPPart2);
 				emailService.sendMail(email, emailSubjectForOtp, emailBodyForOTPPart1 + otp + "\n" + emailBodyForOTPPart2);
 			}
 		}

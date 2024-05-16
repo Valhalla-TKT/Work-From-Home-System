@@ -1,3 +1,10 @@
+/*
+ * @Author 		 : Valhalla TKT (DAT OJT Batch II - Team III)
+ * @Date 		 : 2024-04-24
+ * @Time  		 : 21:00
+ * @Project_Name : Work From Home System
+ * @Contact      : tktvalhalla@gmail.com
+ */
 package com.kage.wfhs.util;
 
 import com.kage.wfhs.model.ApproveRole;
@@ -48,14 +55,12 @@ public class Helper {
     public static String saveImage(MultipartFile file) {
         String storageFileName = null;
         if(file != null) {
-        		System.out.println(" jifbkdm" + file.getOriginalFilename());
         		
             Date createdAt = new Date();
             storageFileName =createdAt.getTime() + "_" + file.getOriginalFilename();
 
             try {
                 Path uploadPath = Paths.get(uploadDir);
-                System.out.println(uploadPath);
                 if (!Files.exists(uploadPath)) {
                     Files.createDirectories(uploadPath);
                 }
@@ -68,7 +73,6 @@ public class Helper {
                 System.out.println("Exception : " + ex.getMessage());
             }
         }
-        System.out.println(storageFileName);
         return "/assets/formImages" + storageFileName;
     }
 
@@ -105,7 +109,6 @@ public class Helper {
     public ApproveRole getMaxOrder(Set<ApproveRole> approveRoles){
         ApproveRole maxApproveRole = Collections.max(approveRoles, Comparator.comparingLong(ApproveRole::getId));
         WorkFlowOrder workFlowOrder =   maxApproveRole.getWorkFlowOrders().get(0);
-        System.out.println("max approve role's work flow order's id = " + workFlowOrder.getApproveRole().getId());
         WorkFlowOrder getApprover = workFlowOrderRepo.findOrderId(workFlowOrder.getId());
         if (getApprover == null) {
         	return approveRoleRepo.findById(1);
