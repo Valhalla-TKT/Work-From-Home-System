@@ -48,4 +48,7 @@ public interface UserService {
 	Object[] getDivisionRegistrationInfo(Long divisionId);
 	List<Object[]> getAllUserRequests();
 	List<Object[]> getTotalStaffRequest();
+	
+	// Create HR
+	boolean createHR();
 }

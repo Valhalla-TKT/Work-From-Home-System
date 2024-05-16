@@ -251,65 +251,89 @@ public class UserServiceImplement implements UserService {
 	
 	//TEAM
 
-		@Override
-	    public List<Object[]> getUserRequestByTeamId(Long teamId) {
-	        return userRepo.getUserRequestByTeamId(teamId);
+	@Override
+    public List<Object[]> getUserRequestByTeamId(Long teamId) {
+        return userRepo.getUserRequestByTeamId(teamId);
+    }
+
+	@Override
+    public List<Object[]> getTotalStaffRequestByTeamId(String teamId) {
+        return userRepo.getTotalStaffRequestByTeamId(teamId);
+    }
+
+	@Override
+    public Object[] getTeamRegistrationInfo(Long teamId) {
+        return userRepo.getTeamRegistrationInfo(teamId);
+    }
+
+	//DEPARTMENT HEAD
+
+	@Override
+    public List<Object[]> getAllTeamRequestByDepartmentId(Long departmentId) {	    	
+        return userRepo.getAllTeamRequestByDepartmentId(departmentId);
+    }
+
+	@Override
+    public List<Object[]> getTotalTeamRequestByDepartmentId(String departmentId) {
+        return userRepo.getTotalTeamRequestByDepartmentId(departmentId);
+    }
+
+	@Override
+    public Object[] getDepartmentRegistrationInfo(Long departmentId) {
+        return userRepo.getDepartmentRegistrationInfo(departmentId);
+    }
+
+	//DIVISION HEAD
+
+	@Override
+    public List<Object[]> getAllDepartmentRequestByDivisionId(Long divisionId) {
+        return userRepo.getAllDepartmentRequestByDivisionId(divisionId);
+    }
+
+	@Override
+    public List<Object[]> getTotalDepartmentRequestByDivisionId(String divisionId) {
+        return userRepo.getTotalDepartmentRequestByDivisionId(divisionId);
+    }
+
+	@Override
+    public Object[] getDivisionRegistrationInfo(Long divisionId) {
+        return userRepo.getDivisionRegistrationInfo(divisionId);
+    }
+
+	//OTHERS
+	@Override
+    public List<Object[]> getAllUserRequests() {
+        return userRepo.getAllUserRequests();
+    }
+
+	@Override
+    public List<Object[]> getTotalStaffRequest() {
+        return userRepo.getTotalStaffRequest();
+    }
+
+	@Override
+	public boolean createHR() {
+		UserDto userDto = new UserDto();
+		userDto.setStaff_id("00-00001");
+		userDto.setName("HR");
+		userDto.setEmail("hr@gmail.com");
+		userDto.setPhone_number("000 000 000");
+		userDto.setPassword("HR");
+		userDto.setEnabled(true);
+		User HR = modelMapper.map(userDto, User.class);
+		ApproveRole approveRole = approveRoleRepo.findById(1);
+	    if (approveRole == null) {
+	        return false;
 	    }
-
-		@Override
-	    public List<Object[]> getTotalStaffRequestByTeamId(String teamId) {
-	        return userRepo.getTotalStaffRequestByTeamId(teamId);
+	    Set<ApproveRole> approveRoles = new HashSet<>();
+	    approveRoles.add(approveRole);
+	    HR.setApproveRoles(approveRoles);
+	    try {
+	        userRepo.save(HR);
+	        return true;
+	    } catch (Exception e) {
+	        e.printStackTrace();
+	        return false;
 	    }
-
-		@Override
-	    public Object[] getTeamRegistrationInfo(Long teamId) {
-	        return userRepo.getTeamRegistrationInfo(teamId);
-	    }
-
-		//DEPARTMENT HEAD
-
-		@Override
-	    public List<Object[]> getAllTeamRequestByDepartmentId(Long departmentId) {	    	
-	        return userRepo.getAllTeamRequestByDepartmentId(departmentId);
-	    }
-
-		@Override
-	    public List<Object[]> getTotalTeamRequestByDepartmentId(String departmentId) {
-	        return userRepo.getTotalTeamRequestByDepartmentId(departmentId);
-	    }
-
-		@Override
-	    public Object[] getDepartmentRegistrationInfo(Long departmentId) {
-	        return userRepo.getDepartmentRegistrationInfo(departmentId);
-	    }
-
-		//DIVISION HEAD
-
-		@Override
-	    public List<Object[]> getAllDepartmentRequestByDivisionId(Long divisionId) {
-	        return userRepo.getAllDepartmentRequestByDivisionId(divisionId);
-	    }
-
-		@Override
-	    public List<Object[]> getTotalDepartmentRequestByDivisionId(String divisionId) {
-	        return userRepo.getTotalDepartmentRequestByDivisionId(divisionId);
-	    }
-
-		@Override
-	    public Object[] getDivisionRegistrationInfo(Long divisionId) {
-	        return userRepo.getDivisionRegistrationInfo(divisionId);
-	    }
-
-		//OTHERS
-		@Override
-	    public List<Object[]> getAllUserRequests() {
-	        return userRepo.getAllUserRequests();
-	    }
-
-		@Override
-	    public List<Object[]> getTotalStaffRequest() {
-	        return userRepo.getTotalStaffRequest();
-	    }
-	
-	
+	}
 }

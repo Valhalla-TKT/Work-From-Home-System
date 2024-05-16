@@ -68,6 +68,6 @@ public class ImportExcelController {
                 model.addAttribute("message", "Error uploading file: " + e.getMessage());
             }
         }
-        return "redirect:/viewCloneTable";
+        return "redirect:/dashboard";
     }
 }

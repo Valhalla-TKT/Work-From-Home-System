@@ -14,6 +14,7 @@ import com.kage.wfhs.repository.DepartmentRepository;
 import com.kage.wfhs.repository.DivisionRepository;
 import com.kage.wfhs.repository.TeamRepository;
 import com.kage.wfhs.repository.UserRepository;
+import com.kage.wfhs.service.ApproveRoleService;
 import com.kage.wfhs.service.LedgerService;
 import com.kage.wfhs.service.NotificationTypeService;
 import com.kage.wfhs.service.UserService;
@@ -42,13 +43,29 @@ public class ViewController {
     private final UserService userService;    
     private final ExcelParser excelParser;
     private final LedgerService ledgerService;
+    private final ApproveRoleService approveRoleService;
     private final NotificationTypeService notificationTypeService;
     private final DivisionRepository divisionRepo;
     private final DepartmentRepository departmentRepo;
     private final TeamRepository teamRepo;
     private final UserRepository userRepo;
+    
     @GetMapping("/login")
     public String login(){
+    	int approveRoleCount = approveRoleService.getAllApproveRole().size();
+    	if(approveRoleCount == 0) {
+    		boolean isApproveRoleAdded = approveRoleService.createHRRole();
+    		if(!isApproveRoleAdded) {
+    			return "redirect:/login";
+    		}
+    	}
+    	int userCount = userService.getAllUser().size();
+    	if(userCount == 0) {
+    		boolean isHRAdded = userService.createHR();
+    		if(!isHRAdded) {
+    			return "redirect:/login";
+    		}
+    	}  
         return "login";
     }
    
@@ -61,7 +78,7 @@ public class ViewController {
         	int notificationTypeCount = notificationTypeService.getAllNotificationTypes().size();
         	if(notificationTypeCount == 0) {
         		notificationTypeService.addAllNotificationTypes();
-        	}
+        	}        	      	
         	model.addAttribute("divisionCount", divisionRepo.count());
         	model.addAttribute("departmentCount", departmentRepo.count());
         	model.addAttribute("teamCount", teamRepo.count());

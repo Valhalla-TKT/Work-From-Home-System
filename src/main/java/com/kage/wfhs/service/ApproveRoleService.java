@@ -25,4 +25,6 @@ public interface ApproveRoleService {
 	long getIdByWorkFlowOrderId(long orderId);
 
 	void deleteApproverById(long id);
+
+	boolean createHRRole();
 }

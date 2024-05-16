@@ -21,7 +21,9 @@ $(document).ready(function() {
 		console.log(currentUser)
 	    if (currentUser) {
 	        var userName = currentUser.name;
-	       	var positionName = currentUser.position.name;
+	        var currentUserPosition = currentUser.position;
+	        if(currentUserPosition)
+	       		var positionName = currentUserPosition.name;
 	       	var email = currentUser.email;
 	       	var staffId = currentUser.staff_id;
 	       	if(currentUser.department) {
