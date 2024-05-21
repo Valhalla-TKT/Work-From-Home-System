@@ -318,7 +318,7 @@ public class UserServiceImplement implements UserService {
 		userDto.setName("HR");
 		userDto.setEmail("hr@gmail.com");
 		userDto.setPhone_number("000 000 000");
-		userDto.setPassword("HR");
+		userDto.setPassword(passwordEncoder.encode("HR"));
 		userDto.setEnabled(true);
 		User HR = modelMapper.map(userDto, User.class);
 		ApproveRole approveRole = approveRoleRepo.findById(1);
