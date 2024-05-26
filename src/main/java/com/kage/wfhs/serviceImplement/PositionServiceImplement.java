@@ -60,8 +60,8 @@ public class PositionServiceImplement implements PositionService {
     }
 
     @Override
-    public void updatePosition(long id, PositionDto positionDto) {
-        Position position = positionRepo.findById(id);
+    public void updatePosition(PositionDto positionDto) {
+        Position position = positionRepo.findById(positionDto.getId());
         position.setName(positionDto.getName());
         positionRepo.save(position);
     }

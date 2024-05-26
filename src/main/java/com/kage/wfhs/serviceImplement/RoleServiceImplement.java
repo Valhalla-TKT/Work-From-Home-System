@@ -59,8 +59,8 @@ public class RoleServiceImplement implements RoleService {
     }
 
     @Override
-    public void updateRole(long id, RoleDto roleDto) {
-        Role role = roleRepo.findById(id);
+    public void updateRole(RoleDto roleDto) {
+        Role role = roleRepo.findById(roleDto.getId());
         role.setName(roleDto.getName());
         roleRepo.save(role);
     }

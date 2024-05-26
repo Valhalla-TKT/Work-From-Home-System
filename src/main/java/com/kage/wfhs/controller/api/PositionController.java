@@ -11,7 +11,10 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -29,7 +32,7 @@ public class PositionController {
     @Autowired
     private final PositionService positionService;
 
-    @PostMapping("/create")
+    @PostMapping("/")
     public ResponseEntity<PositionDto> createPosition(@RequestBody PositionDto positionDto){
         return ResponseEntity.ok(positionService.createPosition(positionDto));
     }
@@ -39,18 +42,18 @@ public class PositionController {
         return ResponseEntity.ok(positionService.getAllPosition());
     }
 
-    @PostMapping("/getPosition")
+    @GetMapping("/")
     public ResponseEntity<PositionDto> getPosition(@RequestParam("positionId") long id) {
         return ResponseEntity.ok(positionService.getPositionById(id));
     }
 
-    @PostMapping("/editPosition")
-    public ResponseEntity<String> updatePosition(@RequestParam("positionId") long id, @RequestBody PositionDto positionDto){
-        positionService.updatePosition(id, positionDto);
+    @PutMapping("/")
+    public ResponseEntity<String> updatePosition(@RequestBody PositionDto positionDto){
+        positionService.updatePosition(positionDto);
         return ResponseEntity.ok("Successfully Updated Position..");
     }
 
-    @PostMapping("/deleteById")
+    @DeleteMapping("/")
     public ResponseEntity<String> deletePositionById(@RequestParam("id") long id) {
         positionService.deletePositionById(id);
         return ResponseEntity.ok("Position deleted successfully");

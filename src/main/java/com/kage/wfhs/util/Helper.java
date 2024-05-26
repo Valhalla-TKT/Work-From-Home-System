@@ -8,8 +8,10 @@
 package com.kage.wfhs.util;
 
 import com.kage.wfhs.model.ApproveRole;
+import com.kage.wfhs.model.Division;
 import com.kage.wfhs.model.WorkFlowOrder;
 import com.kage.wfhs.repository.ApproveRoleRepository;
+import com.kage.wfhs.repository.DivisionRepository;
 import com.kage.wfhs.repository.WorkFlowOrderRepository;
 
 import lombok.AllArgsConstructor;
@@ -37,7 +39,10 @@ public class Helper {
     private final WorkFlowOrderRepository workFlowOrderRepo;
     
     @Autowired
-    private final ApproveRoleRepository approveRoleRepo;        
+    private final ApproveRoleRepository approveRoleRepo;
+    
+    @Autowired
+    private final DivisionRepository divisionRepo;
     
     public static String changeToSmallLetter(String text) {
         return text.toLowerCase();
@@ -115,6 +120,27 @@ public class Helper {
         } else {
         	return getApprover.getApproveRole();
         }
-        
+    }
+    
+    public String getLastDivisionCode() {
+        Division lastDivision = divisionRepo.findLastDivision();
+        String lastCode = (lastDivision != null) ? lastDivision.getCode() : null;
+
+        if (lastCode == null || lastCode.isEmpty()) {
+            return "001-001";
+        } else {
+            return incrementDivisionCode(lastCode);
+        }
+    }
+
+    private String incrementDivisionCode(String lastCode) {
+        String[] parts = lastCode.split("-");
+        if (parts.length != 2) {
+            throw new IllegalArgumentException("Invalid code format");
+        }
+        int mainPart = Integer.parseInt(parts[0]);
+        int subPart = Integer.parseInt(parts[1]);
+        subPart++;
+        return String.format("%03d-%03d", mainPart, subPart);
     }
 }

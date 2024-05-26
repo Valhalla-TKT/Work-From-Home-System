@@ -9,8 +9,7 @@
 
 	<div id="wrap" th:fragment="content">
 	      <div id="wrap-inner" class="flushed">
-            <div id="content" role="main">
-                <script src="../cdn.dribbble.com/assets/packs/js/jobs-landing.0b84700565e7372a2aee.js"></script>
+            <div id="content" role="main">            
                 <div class="container-medium">
                     <div class="hero-banner">
                         <div class="banner-content">
@@ -146,7 +145,7 @@
 	                <span class="close">&times;</span>
 	                <form id="editForm">
 	                    <label for="code">Division Code</label>
-	                    <input type="tel" id="division-code" placeholder="xxx-xxx" pattern="[0-9]{3}-[0-9]{3}" required="required">
+	                    <input type="tel" id="division-code" class="division-code" placeholder="xxx-xxx" pattern="[0-9]{3}-[0-9]{3}" required="required">
 	                    <label for="name">Division Name</label>
 	                    <input type="text" id="division-name" placeholder="e.g. Offshore Division" required="required">
 	                    <input type="hidden" id="divisionId" name="divisionId">

@@ -22,7 +22,7 @@ public interface PositionService {
 	
 	PositionDto getPositionByName(String name);
 	
-	void updatePosition(long id, PositionDto positionDto);
+	void updatePosition(PositionDto positionDto);
 	
 	void  deletePositionById(long id);
 	

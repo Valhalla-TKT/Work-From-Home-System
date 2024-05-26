@@ -57,15 +57,16 @@ public class ViewController {
     		boolean isApproveRoleAdded = approveRoleService.createHRRole();
     		if(!isApproveRoleAdded) {
     			return "redirect:/login";
+    		} else {
+    			int userCount = userService.getAllUser().size();
+    	    	if(userCount == 0) {
+    	    		boolean isHRAdded = userService.createHR();
+    	    		if(!isHRAdded) {
+    	    			return "redirect:/login";
+    	    		}
+    	    	}
     		}
-    	}
-    	int userCount = userService.getAllUser().size();
-    	if(userCount == 0) {
-    		boolean isHRAdded = userService.createHR();
-    		if(!isHRAdded) {
-    			return "redirect:/login";
-    		}
-    	}  
+    	} 
         return "login";
     }
    

@@ -16,5 +16,5 @@ import lombok.*;
 @ToString
 public class DivisionDto {
     private long id;
-    private String code, name;
+    private String code, name, lastCode;
 }

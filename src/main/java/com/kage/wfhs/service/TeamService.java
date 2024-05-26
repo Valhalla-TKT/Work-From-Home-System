@@ -22,7 +22,7 @@ public interface TeamService {
 	
 	List<TeamDto> getAllTeam();
 
-	void updateTeam(long id, TeamDto teamDto);
+	void updateTeam(TeamDto teamDto);
 
 	void deleteTeamById(long id);
 

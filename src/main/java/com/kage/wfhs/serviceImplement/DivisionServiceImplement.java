@@ -19,7 +19,9 @@ import com.kage.wfhs.dto.DivisionDto;
 import com.kage.wfhs.model.Division;
 import com.kage.wfhs.repository.DivisionRepository;
 import com.kage.wfhs.service.DivisionService;
+import com.kage.wfhs.util.Helper;
 
+import jakarta.persistence.EntityNotFoundException;
 import lombok.AllArgsConstructor;
 
 @Service
@@ -28,6 +30,9 @@ public class DivisionServiceImplement implements DivisionService {
     @Autowired
     private final DivisionRepository divisionRepo;
     private final ModelMapper modelMapper;
+    
+    @Autowired
+    private final Helper helper;
 
     @Override
     public DivisionDto createDivision(DivisionDto divisionDto) {
@@ -43,6 +48,9 @@ public class DivisionServiceImplement implements DivisionService {
         List<DivisionDto> divisionList = new ArrayList<>();
         for (Division division : divisions){
             DivisionDto divisionDto = modelMapper.map(division, DivisionDto.class);
+            System.out.println("hi");
+            divisionDto.setLastCode(helper.getLastDivisionCode());
+            System.out.println(helper.getLastDivisionCode());
             divisionList.add(divisionDto);
         }
         return divisionList;
@@ -61,11 +69,13 @@ public class DivisionServiceImplement implements DivisionService {
 	}
 
 	@Override
-	public void updateDivision(long id, DivisionDto divisionDto) {
-		Division division = divisionRepo.findById(id);
-        division.setCode(divisionDto.getCode());
-        division.setName(divisionDto.getName());
-		divisionRepo.save(division);
+	public void updateDivision(DivisionDto divisionDto) {
+		Division division = divisionRepo.findById(divisionDto.getId());
+        if (division == null) {
+            throw new EntityNotFoundException("Division not found");
+        }
+        modelMapper.map(divisionDto, division);
+        divisionRepo.save(division);
 	}
 
     @Override

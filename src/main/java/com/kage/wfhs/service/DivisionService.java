@@ -18,7 +18,7 @@ public interface DivisionService {
     DivisionDto getDivisionById(long id);
     DivisionDto getDivisionByName(String name);
     
-    void updateDivision(long id, DivisionDto divisionDto);
+    void updateDivision(DivisionDto divisionDto);
     void deleteDivisionById(long id);
 
     List<DivisionDto> getAllDivision();

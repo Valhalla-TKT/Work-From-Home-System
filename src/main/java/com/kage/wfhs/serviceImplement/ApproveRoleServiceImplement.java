@@ -12,6 +12,8 @@ import com.kage.wfhs.model.ApproveRole;
 import com.kage.wfhs.repository.ApproveRoleRepository;
 import com.kage.wfhs.service.ApproveRoleService;
 import com.kage.wfhs.util.Helper;
+
+import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -83,4 +85,14 @@ public class ApproveRoleServiceImplement implements ApproveRoleService {
 	        return false;
 	    }
 	}
+
+    @Override
+    public void updateApproveRole(ApproveRoleDto approveRoleDto) {        
+        ApproveRole approveRole = approveRoleRepo.findById(approveRoleDto.getId());
+        if (approveRole == null) {
+            throw new EntityNotFoundException("Approve Role not found");
+        }
+        modelMapper.map(approveRoleDto, approveRole);
+        approveRoleRepo.save(approveRole);
+    }
 }

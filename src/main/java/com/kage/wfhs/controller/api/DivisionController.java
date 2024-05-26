@@ -11,7 +11,10 @@ import java.util.List;
 import java.util.Map;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -19,6 +22,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.kage.wfhs.dto.DivisionDto;
 import com.kage.wfhs.service.DivisionService;
+import com.kage.wfhs.util.Helper;
 
 import lombok.AllArgsConstructor;
 
@@ -28,16 +32,23 @@ import lombok.AllArgsConstructor;
 public class DivisionController {
 
 	private final DivisionService divisionService;
+	
+	private final Helper helper;
 
-	@PostMapping("/create")
+	@PostMapping("/")
 	public ResponseEntity<String> createdivision(@RequestBody DivisionDto divisionDto) {
 		divisionService.createDivision(divisionDto);
 		return ResponseEntity.ok("Division Add Success!!!");
 	}
 
 	@PostMapping("/divisionList")
-	public ResponseEntity<List<DivisionDto>> getAllDivision() {
-		return ResponseEntity.ok(divisionService.getAllDivision());
+	public ResponseEntity<?> getAllDivision() {
+		List<DivisionDto> divisionList = divisionService.getAllDivision();
+		if(divisionList.isEmpty()) {
+			return ResponseEntity.ok(helper.getLastDivisionCode());
+		} else {
+			return ResponseEntity.ok(divisionService.getAllDivision());
+		}
 	}
 
 	@PostMapping("/getDivisionById")
@@ -47,19 +58,18 @@ public class DivisionController {
 		return ResponseEntity.ok(divisionDto);
 	}
 
-	@PostMapping("/getDivision")
+	@GetMapping("/")
 	public ResponseEntity<DivisionDto> getDivision(@RequestParam("divisionId") long id) {
 		return ResponseEntity.ok(divisionService.getDivisionById(id));
 	}
 
-	@PostMapping("/editDivision")
-	public ResponseEntity<String> updateDivision(@RequestParam("divisionId") long id,
-			@RequestBody DivisionDto divisionDto) {
-		divisionService.updateDivision(id, divisionDto);
+	@PutMapping("/")
+	public ResponseEntity<String> updateDivision(@RequestBody DivisionDto divisionDto) {
+		divisionService.updateDivision(divisionDto);
 		return ResponseEntity.ok("Successfully Updated Division..");
 	}
 
-	@PostMapping("/deleteById")
+	@DeleteMapping("/")
 	public ResponseEntity<String> deleteDivisionById(@RequestParam("id") long id) {
 		divisionService.deleteDivisionById(id);
 		return ResponseEntity.ok("Division deleted successfully");

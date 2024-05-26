@@ -11,6 +11,8 @@ import com.kage.wfhs.dto.DepartmentDto;
 import com.kage.wfhs.model.Department;
 import com.kage.wfhs.repository.DepartmentRepository;
 import com.kage.wfhs.service.DepartmentService;
+
+import jakarta.persistence.EntityNotFoundException;
 import lombok.AllArgsConstructor;
 import com.kage.wfhs.repository.DivisionRepository;
 import java.util.ArrayList;
@@ -61,10 +63,12 @@ public class DepartmentServiceImplement implements DepartmentService {
     }
 
     @Override
-	public void updateDepartment(long id, DepartmentDto departmentDto) {
-		Department department = departmentRepo.findById(id);
-		department.setCode(departmentDto.getCode());
-		department.setName(departmentDto.getName());
+	public void updateDepartment(DepartmentDto departmentDto) {
+		Department department = departmentRepo.findById(departmentDto.getId());
+        if(department == null) {
+            throw new EntityNotFoundException("Department not found");
+        }
+        modelMapper.map(departmentDto, department);	
 		departmentRepo.save(department);
 	}
 	

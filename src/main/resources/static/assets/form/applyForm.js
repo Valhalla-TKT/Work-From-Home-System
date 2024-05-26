@@ -104,45 +104,55 @@ $(document).ready(function() {
     });    
 
 	
+	if(fromDateInputBox.length) {
+		fromDateInputBox.dateDropper({
+			format: 'd-m-Y',
+		});
+		fromDateInputBox.on('change', function() {
+			var chosenDate = $(this).val();
+			console.log(chosenDate);
+		});
+		
+		fromDateInputBox.on('blur', function() {
+			$(this).removeAttr('readonly');
+		});
+	}
 	
-	fromDateInputBox.dateDropper({
-		format: 'd-m-Y',
-	});
 	
-	fromDateInputBox.on('change', function() {
-		var chosenDate = $(this).val();
-		console.log(chosenDate);
-	});
 	
-	fromDateInputBox.on('blur', function() {
-		$(this).removeAttr('readonly');
-	});
 	
-	toDateInputBox.dateDropper({
-		format: 'd-m-Y'
-	});
+	if(toDateInputBox.length) {
+		toDateInputBox.dateDropper({
+			format: 'd-m-Y'
+		});
+		toDateInputBox.on('change', function() {
+			var chosenDate = $(this).val();
+			console.log(chosenDate);
+		});toDateInputBox.on('blur', function() {
+		  $(this).removeAttr('readonly');
+		});
+	}
 	
-	toDateInputBox.on('change', function() {
-		var chosenDate = $(this).val();
-		console.log(chosenDate);
-	});
 	
-	toDateInputBox.on('blur', function() {
-	  $(this).removeAttr('readonly');
-	});	
 	
-	signedDateInputBox.dateDropper({
-		format: 'd-m-Y'
-	});
 	
-	signedDateInputBox.on('change', function() {
-		var chosenDate = $(this).val();
-		console.log(chosenDate);
-	});
+		
 	
-	signedDateInputBox.on('blur', function() {
-	  $(this).removeAttr('readonly');
-	});	
+	if(signedDateInputBox.length) {
+		signedDateInputBox.dateDropper({
+			format: 'd-m-Y'
+		});
+		signedDateInputBox.on('change', function() {
+			var chosenDate = $(this).val();
+			console.log(chosenDate);
+		});
+		
+		signedDateInputBox.on('blur', function() {
+		  $(this).removeAttr('readonly');
+		});	
+	}
+	
+	
     
     const otherRequestData = {
         name: '',

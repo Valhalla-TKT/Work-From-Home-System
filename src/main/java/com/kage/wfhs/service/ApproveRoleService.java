@@ -8,6 +8,7 @@
 package com.kage.wfhs.service;
 
 import com.kage.wfhs.dto.ApproveRoleDto;
+
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -27,4 +28,6 @@ public interface ApproveRoleService {
 	void deleteApproverById(long id);
 
 	boolean createHRRole();
+
+    void updateApproveRole(ApproveRoleDto approveRoleDto);
 }

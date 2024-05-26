@@ -13,7 +13,10 @@ import com.kage.wfhs.service.ApproveRoleService;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -29,7 +32,7 @@ public class ApproveRoleController {
     @Autowired
     private final ApproveRoleService approveRoleService;
 
-    @PostMapping("/create")
+    @PostMapping("/")
     public ResponseEntity<String > createApproveRole(@RequestBody ApproveRoleDto approveRoleDto){
         approveRoleService.createApproveRole(approveRoleDto);
         return ResponseEntity.ok("Approve Role Create Successful...");
@@ -39,13 +42,21 @@ public class ApproveRoleController {
     public ResponseEntity<List<ApproveRoleDto>> getAllApproveRole(){
         return ResponseEntity.ok(approveRoleService.getAllApproveRole());
     }
-    @PostMapping("/get")
+
+    @GetMapping("/")
     public ResponseEntity<String > get(@RequestBody List<WorkFlowOrder> idList){
         return ResponseEntity.ok("Approve Role Create Successful...");
     }
-    @PostMapping("/deleteById")
-    public ResponseEntity<String> deleteApproverById(@RequestParam("id") long id) {
+
+    @PutMapping("/")
+    public ResponseEntity<String> updatePosition(@RequestBody ApproveRoleDto approveRoleDto){
+        approveRoleService.updateApproveRole(approveRoleDto);
+        return ResponseEntity.ok("Successfully Updated Approve Role..");
+    }
+
+    @DeleteMapping("/")
+    public ResponseEntity<String> deletePositionById(@RequestParam("id") long id) {
         approveRoleService.deleteApproverById(id);
-        return ResponseEntity.ok("Approver deleted successfully");
+        return ResponseEntity.ok("Approve Role deleted successfully");
     }
 }

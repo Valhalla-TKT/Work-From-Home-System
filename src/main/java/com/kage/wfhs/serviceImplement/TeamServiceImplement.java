@@ -61,8 +61,8 @@ public class TeamServiceImplement implements TeamService {
     }
 
     @Override
-    public void updateTeam(long id, TeamDto teamDto){
-        Team team = teamRepo.findById(id);
+    public void updateTeam(TeamDto teamDto){
+        Team team = teamRepo.findById(teamDto.getId());
         team.setCode(teamDto.getCode());
         team.setName(teamDto.getName());
         teamRepo.save(team);

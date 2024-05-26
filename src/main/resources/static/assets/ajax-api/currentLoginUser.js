@@ -168,7 +168,6 @@ $(document).ready(function() {
 				}
 	        });
 	        console.log('dfskfdksldk',userRole)
-	       	var roleName = currentUser.role.name;
 	        console.log(userName)
 	        $('.nav-v2-user__name').text(userName);
 	        $('.nav-v2-position').text(positionName);
@@ -177,7 +176,7 @@ $(document).ready(function() {
 	        $('#position_page_email').text(email);
 	        $('#position_page_staff_id').text("Staff ID : " + staffId);
 	        $('#position_page_department_name').text(departmentName);
-	        $('#profile_page_role_name').text(roleName);
+	        $('#profile_page_role_name').text(userRole);
 	        if (currentUser.profile && currentUser.profile.length) {
 		        $('.show-profile-is-null').hide();
 		        $('.show-profile-is-not-null').show();

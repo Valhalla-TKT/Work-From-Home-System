@@ -12,7 +12,10 @@ import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -30,7 +33,7 @@ public class DepartmentController {
 	@Autowired
 	private final DepartmentService departmentService;
 
-	@PostMapping("/create")
+	@PostMapping("/")
     public ResponseEntity<DepartmentDto> createDepartment(@RequestBody DepartmentDto departmentDto){
         return ResponseEntity.ok(departmentService.createDepartment(departmentDto));
     }
@@ -47,19 +50,18 @@ public class DepartmentController {
 		return ResponseEntity.ok(departmentDto);
 	}
 
-	@PostMapping("/getDepartment")
+	@GetMapping("/")
 	public ResponseEntity<DepartmentDto> getDepartment(@RequestParam("departmentId") long id) {
 		return ResponseEntity.ok(departmentService.getDepartmentById(id));
 	}
 
-	@PostMapping("/editDepartment")
-	public ResponseEntity<String> updateDepartment(@RequestParam("departmentId") long id,
-			@RequestBody DepartmentDto departmentDto) {
-		departmentService.updateDepartment(id, departmentDto);
+	@PutMapping("/")
+	public ResponseEntity<String> updateDepartment(@RequestBody DepartmentDto departmentDto) {
+		departmentService.updateDepartment(departmentDto);
 		return ResponseEntity.ok("Successfully Updated Department..");
 	}
 
-	@PostMapping("/deleteById")
+	@DeleteMapping("/")
 	public ResponseEntity<String> deleteDepartmentById(@RequestParam("id") long id) {
 		departmentService.deleteDepartmentById(id);
 		return ResponseEntity.ok("Department deleted successfully");

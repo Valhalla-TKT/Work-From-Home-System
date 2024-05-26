@@ -22,7 +22,7 @@ public interface RoleService {
 
 	RoleDto getRoleById(long id);
 
-	void updateRole(long id, RoleDto roleDto);
+	void updateRole(RoleDto roleDto);
 
 	void deleteApproverById(long id);
 
