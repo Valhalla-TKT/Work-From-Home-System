@@ -10,6 +10,7 @@ package com.kage.wfhs.util;
 import com.kage.wfhs.dto.DepartmentDto;
 import com.kage.wfhs.dto.DivisionDto;
 import com.kage.wfhs.dto.TeamDto;
+import com.kage.wfhs.exception.EntityNotFoundException;
 import com.kage.wfhs.model.ActiveStatus;
 import com.kage.wfhs.model.ApproveRole;
 import com.kage.wfhs.model.Department;
@@ -326,7 +327,9 @@ public class ExcelParser {
 				departmentDto.setCode(parts[0]);
 				departmentDto.setName(parts[1]);
 				departmentDto.setDivisionName(parts[2]);
-				departmentDto.setDivision(divisionRepo.findByName(departmentDto.getDivisionName()));
+				Division division = divisionRepo.findByName(departmentDto.getDivisionName())
+                		.orElseThrow(() -> new EntityNotFoundException("Division not found"));
+				departmentDto.setDivision(division);
 				departmentRepo.save(modelMapper.map(departmentDto, Department.class));
 			}
 		}
@@ -362,7 +365,9 @@ public class ExcelParser {
 				teamDto.setCode(parts[0]);
 				teamDto.setName(parts[1]);
 				teamDto.setDepartmentName(parts[2]);
-				teamDto.setDepartment(departmentRepo.findByName(teamDto.getDepartmentName()));
+				Department department = departmentRepo.findByName(teamDto.getDepartmentName())
+                		.orElseThrow(() -> new EntityNotFoundException("Department not found"));
+				teamDto.setDepartment(department);
 				teamRepo.save(modelMapper.map(teamDto, Team.class));
 			}
 		}
@@ -399,7 +404,9 @@ public class ExcelParser {
 				String permanentDate = row.get(13);
 				User user = new User();
 				user.setDivision(divisionRepo.findByCode(divisionCode));
-				user.setDepartment(departmentRepo.findByName(departmentName));
+				Department department = departmentRepo.findByName(departmentName)
+                		.orElseThrow(() -> new EntityNotFoundException("Department not found"));
+				user.setDepartment(department);
 				user.setTeam(teamRepo.findByName(teamName));
 				user.setStaff_id(staffId);
 				user.setName(name);

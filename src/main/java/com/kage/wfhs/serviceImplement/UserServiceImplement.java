@@ -12,6 +12,8 @@ import com.kage.wfhs.model.*;
 import com.kage.wfhs.repository.*;
 import com.kage.wfhs.service.UserService;
 import com.kage.wfhs.util.Helper;
+
+import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -74,12 +76,15 @@ public class UserServiceImplement implements UserService {
             user.setDivision(team.getDepartment().getDivision());
         }
         if (userDto.getDepartmentId() > 0) {
-            Department department = departmentRepo.findById(userDto.getDepartmentId());
+			Department department = departmentRepo.findById(userDto.getId())
+                .orElseThrow(() -> new EntityNotFoundException("Department not found"));
             user.setDepartment(department);
             user.setDivision(department.getDivision());
         }
         if (userDto.getDivisionId() > 0) {
-            Division division = divisionRepo.findById(userDto.getDivisionId());
+            // Division division = divisionRepo.findById(userDto.getDivisionId());
+			Division division = divisionRepo.findById(userDto.getDivisionId())
+                    .orElseThrow(() -> new EntityNotFoundException("Division not found"));
             user.setDivision(division);
         }
         ApproveRole approveRole = approveRoleRepo.findById(userDto.getApproveRoleId());

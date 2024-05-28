@@ -191,7 +191,7 @@ function openEditModal(teamId) {
                         var option = $("<option>", {
                             value: department.id,
                             text: department.name,
-                            selected: department.id === departmentResponse.teamId, // Automatically select the related division
+                            selected: department.id === teamResponse.departmentId, // Automatically select the related division
                         });
                         selectBox.append(option);                        
                     });

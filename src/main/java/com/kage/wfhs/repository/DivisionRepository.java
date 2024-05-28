@@ -10,16 +10,21 @@ package com.kage.wfhs.repository;
 import com.kage.wfhs.model.Division;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.util.Optional;
+
 @Repository
-public interface DivisionRepository extends JpaRepository<Division,Long> {
-    Division findById(long id);
+public interface DivisionRepository extends JpaRepository<Division,Long> {    
     
-    Division findByName(String name);
+    Optional<Division> findByName(String name);
     
     Division findByCode(String code);
-    
+
     @Query(value="SELECT * FROM Division ORDER BY id DESC LIMIT 1", nativeQuery = true)
     Division findLastDivision();
+
+    @Query("SELECT d FROM Division d JOIN d.departments dept WHERE dept.id = :departmentId")
+    Division findByDepartmentId(@Param("departmentId") Long departmentId);
 }

@@ -77,6 +77,8 @@ async function getAllDivision() {
             throw new Error('Invalid response format');
         }
 
+		console.table(divisionResponse)
+
         populateSelectBox('#division-name', divisionResponse, 'Division');
         populateSelectBox('#division-filter', divisionResponse, 'Division');
 
@@ -185,14 +187,17 @@ async function openEditModal(departmentId) {
 			$('#edit-department-name').val(departmentResponse.name);
 			$('#edit-department-code').val(departmentResponse.code);
 			$('#departmentId').val(departmentId);
+			console.table(departmentId, departmentResponse.division)
 			fetchDivisions()
 				.then(divisionResponse => {
 					var selectBox = $('#edit-division-name');
+					selectBox.empty();
 					divisionResponse.forEach(function(division) {
+						console.table(division.id)
 						var option = $('<option>', {
 							value: division.id,
 							text: division.name,
-							selected: division.id === divisionResponse.divisionId
+							selected: division.id === departmentResponse.divisionId
 						});
 						selectBox.append(option);		
 					});
@@ -227,7 +232,7 @@ async function saveChanges() {
 	var editedCode = $('#edit-department-code').val();
 	var editedName = $("#edit-department-name").val();
 	var editedDivisionId = $('#edit-division-name').val();
-	var departmentId = $('#departmentId').val();
+	var departmentId = $('#departmentId').val();	
 	var requestData = {
 		code: editedCode,
 		name: editedName,

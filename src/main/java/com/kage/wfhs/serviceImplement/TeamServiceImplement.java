@@ -15,11 +15,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.kage.wfhs.dto.TeamDto;
+import com.kage.wfhs.model.Department;
 import com.kage.wfhs.model.Team;
 import com.kage.wfhs.repository.DepartmentRepository;
 import com.kage.wfhs.repository.TeamRepository;
 import com.kage.wfhs.service.TeamService;
 
+import jakarta.persistence.EntityNotFoundException;
 import lombok.AllArgsConstructor;
 
 @Service
@@ -32,7 +34,9 @@ public class TeamServiceImplement implements TeamService {
     @Override
     public TeamDto createTeam(TeamDto teamDto) {
         Team team = modelMapper.map(teamDto, Team.class);
-        team.setDepartment(teamDto.getDepartmentId() > 0 ? departmentRepo.findById(teamDto.getDepartmentId()) : null);
+        Department department = departmentRepo.findById(teamDto.getId())
+                .orElseThrow(() -> new EntityNotFoundException("Department not found"));
+        team.setDepartment(department);
         teamRepo.save(team);
         return teamDto;
     }
@@ -63,9 +67,22 @@ public class TeamServiceImplement implements TeamService {
     @Override
     public void updateTeam(TeamDto teamDto){
         Team team = teamRepo.findById(teamDto.getId());
-        team.setCode(teamDto.getCode());
-        team.setName(teamDto.getName());
-        teamRepo.save(team);
+        if(team == null) {
+            throw new EntityNotFoundException("Team not found");
+        } else {
+            modelMapper.map(teamDto, team);
+            if(teamDto.getDepartmentId() == 0) {
+                team.setDepartment(departmentRepo.findByTeamId(teamDto.getId()));                
+            } else {
+                Department department = departmentRepo.findById(teamDto.getId())
+                        .orElseThrow(() -> new EntityNotFoundException("Department not found"));
+                if(department == null) {
+                    throw new EntityNotFoundException("Department not found");
+                }
+                team.setDepartment(department);
+            }
+            teamRepo.save(team);
+        }
     }
 
     @Override

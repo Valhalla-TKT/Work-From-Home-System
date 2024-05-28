@@ -19,9 +19,10 @@ import com.kage.wfhs.dto.DivisionDto;
 import com.kage.wfhs.model.Division;
 import com.kage.wfhs.repository.DivisionRepository;
 import com.kage.wfhs.service.DivisionService;
+import com.kage.wfhs.util.EntityUtil;
 import com.kage.wfhs.util.Helper;
 
-import jakarta.persistence.EntityNotFoundException;
+import com.kage.wfhs.exception.EntityNotFoundException;
 import lombok.AllArgsConstructor;
 
 @Service
@@ -37,49 +38,47 @@ public class DivisionServiceImplement implements DivisionService {
     @Override
     public DivisionDto createDivision(DivisionDto divisionDto) {
         Division division = modelMapper.map(divisionDto, Division.class);
-        divisionRepo.save(division);
-        return divisionDto;
+        Division savedDivision = EntityUtil.saveEntity(divisionRepo, division, "division");
+        return modelMapper.map(savedDivision, DivisionDto.class);
     }
 
     @Override
     public List<DivisionDto> getAllDivision() {
-    	Sort sort = Sort.by(Sort.Direction.ASC, "code");
-        List<Division> divisions = divisionRepo.findAll(sort);
+        Sort sort = Sort.by(Sort.Direction.ASC, "code");
+        List<Division> divisions = EntityUtil.getAllEntities(divisionRepo, sort, "division");
         List<DivisionDto> divisionList = new ArrayList<>();
-        for (Division division : divisions){
+        for (Division division : divisions) {
             DivisionDto divisionDto = modelMapper.map(division, DivisionDto.class);
-            System.out.println("hi");
             divisionDto.setLastCode(helper.getLastDivisionCode());
-            System.out.println(helper.getLastDivisionCode());
             divisionList.add(divisionDto);
         }
         return divisionList;
     }
 
-    @Override
+	@Override
     public DivisionDto getDivisionById(long id) {
-        Division division = divisionRepo.findById(id);
+        Division division = divisionRepo.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Division not found"));
         return modelMapper.map(division, DivisionDto.class);
     }
 
-	@Override
-	public DivisionDto getDivisionByName(String name) {
-		Division division = divisionRepo.findByName(name);
-		return modelMapper.map(division, DivisionDto.class);
-	}
+    @Override
+    public DivisionDto getDivisionByName(String name) {
+        Division division = divisionRepo.findByName(name)
+                .orElseThrow(() -> new EntityNotFoundException("Division not found"));
+        return modelMapper.map(division, DivisionDto.class);
+    }
 
-	@Override
-	public void updateDivision(DivisionDto divisionDto) {
-		Division division = divisionRepo.findById(divisionDto.getId());
-        if (division == null) {
-            throw new EntityNotFoundException("Division not found");
-        }
+    @Override
+    public void updateDivision(DivisionDto divisionDto) {
+        Division division = divisionRepo.findById(divisionDto.getId())
+                .orElseThrow(() -> new EntityNotFoundException("Division not found"));
         modelMapper.map(divisionDto, division);
         divisionRepo.save(division);
-	}
+    }
 
     @Override
     public void deleteDivisionById(long id) {
-        divisionRepo.deleteById(id);
+        EntityUtil.deleteEntity(divisionRepo, id, "Division");
     }
 }
