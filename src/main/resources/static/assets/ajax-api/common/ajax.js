@@ -182,8 +182,14 @@ async function createNewTeam(requestData) {
 async function fetchTeams() {
     try {
         const responseData = await sendRequest(`/api/team/teamList`, 'POST', {});
-		const jsonData = await responseData.json();
-		return jsonData;
+		const contentType = responseData.headers.get('content-type');
+        if (contentType && contentType.includes('application/json')) {
+            const jsonData = await responseData.json();
+            return jsonData;
+        } else {
+            const textData = await responseData.text();
+            return textData;
+        }
     } catch (error) {
         console.error('Error:', error);
     }
@@ -222,34 +228,6 @@ async function updateTeam(requestData) {
 async function deleteTeam(value) {    
     try {
         const responseData = await sendRequestWithOneParam('/api/team/', 'DELETE', 'id', value);
-        handleResponse(responseData, null);
-    } catch (error) {
-        console.error('Error:', error);
-    }
-}
-
-async function useFetchedPosts() {
-    const postsData = await fetchPosts();
-    postsData.forEach(post => {
-        const user = post.user;
-        console.log(user);
-    });
-}
-
-async function addFriend(requestData) {
-    try {
-        const {userId, friendId} = requestData;
-        const responseData = await sendRequestWithTwoParams('/api/friendship/addFriend', 'POST', 'userId', userId, 'friendId', friendId);
-        handleResponse(responseData, null);
-    } catch (error) {
-        console.error('Error:', error);
-    }
-}
-
-async function acceptOrRemoveFriend(requestData) {
-    try {
-        const {friendId, userId, status} = requestData;
-        const responseData = await sendRequestWithThreeParams('/api/friendship/acceptOrRemoveFriend', 'POST','friendId', friendId, 'userId', userId, 'status', status);
         handleResponse(responseData, null);
     } catch (error) {
         console.error('Error:', error);

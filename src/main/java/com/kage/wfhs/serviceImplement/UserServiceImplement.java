@@ -70,7 +70,8 @@ public class UserServiceImplement implements UserService {
         user.setPosition(userDto.getPositionId() > 0 ? positionRepo.findById(userDto.getPositionId()) : null);
         user.setRole(userDto.getRoleId() > 0 ? roleRepo.findById(userDto.getRoleId()) : null);
         if (userDto.getTeamId() > 0) {
-            Team team = teamRepo.findById(userDto.getTeamId());
+        	Team team = teamRepo.findById(userDto.getTeamId())
+            		.orElseThrow(() -> new EntityNotFoundException("Team not found"));
             user.setTeam(team);
             user.setDepartment(team.getDepartment());
             user.setDivision(team.getDepartment().getDivision());

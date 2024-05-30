@@ -407,7 +407,9 @@ public class ExcelParser {
 				Department department = departmentRepo.findByName(departmentName)
                 		.orElseThrow(() -> new EntityNotFoundException("Department not found"));
 				user.setDepartment(department);
-				user.setTeam(teamRepo.findByName(teamName));
+				Team team = teamRepo.findByName(teamName)
+		        		.orElseThrow(() -> new EntityNotFoundException("Team not found"));
+				user.setTeam(team);
 				user.setStaff_id(staffId);
 				user.setName(name);
 				user.setGender(gender);

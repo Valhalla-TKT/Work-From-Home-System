@@ -7,11 +7,12 @@
  */
 package com.kage.wfhs.serviceImplement;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import com.kage.wfhs.dto.TeamDto;
@@ -20,6 +21,7 @@ import com.kage.wfhs.model.Team;
 import com.kage.wfhs.repository.DepartmentRepository;
 import com.kage.wfhs.repository.TeamRepository;
 import com.kage.wfhs.service.TeamService;
+import com.kage.wfhs.util.EntityUtil;
 
 import jakarta.persistence.EntityNotFoundException;
 import lombok.AllArgsConstructor;
@@ -35,38 +37,43 @@ public class TeamServiceImplement implements TeamService {
     public TeamDto createTeam(TeamDto teamDto) {
         Team team = modelMapper.map(teamDto, Team.class);
         Department department = departmentRepo.findById(teamDto.getId())
-                .orElseThrow(() -> new EntityNotFoundException("Department not found"));
+                .orElseThrow(() -> new EntityNotFoundException("Team not found"));
         team.setDepartment(department);
-        teamRepo.save(team);
-        return teamDto;
+        Team savedTeam = EntityUtil.saveEntity(teamRepo, team, "team");
+        return modelMapper.map(savedTeam, TeamDto.class);
     }
 
     @Override
     public List<TeamDto> getAllTeam() {
-        List<Team> teams =  teamRepo.findAllByOrderByCodeAsc();
-        List<TeamDto> teamList = new ArrayList<>();
-        for(Team team : teams){
-            TeamDto teamDto = modelMapper.map(team, TeamDto.class);
-            teamList.add(teamDto);
-        }
-        return teamList;
+    	Sort sort = Sort.by(Sort.Direction.ASC, "code");
+        List<Team> teams =  EntityUtil.getAllEntities(teamRepo, sort, "team");
+        if(teams == null)
+        	return null;
+        return teams.stream()
+        		.map(team -> modelMapper.map(teams, TeamDto.class))
+        		.collect(Collectors.toList());
     }
 
     @Override
     public TeamDto getTeamById(long id){
-        Team team = teamRepo.findById(id);
+        Team team = teamRepo.findById(id)
+        		.orElseThrow(() -> new EntityNotFoundException("Team not found"));
+        if(team.getDepartment() == null)
+        	team.setDepartment(departmentRepo.findByTeamId(id));
         return modelMapper.map(team, TeamDto.class);
     }
 
     @Override
     public TeamDto getTeamByName(String name){
-        Team team = teamRepo.findByName(name);
+        Team team = teamRepo.findByName(name)
+        		.orElseThrow(() -> new EntityNotFoundException("Team not found"));
         return modelMapper.map(team, TeamDto.class);
     }
 
     @Override
     public void updateTeam(TeamDto teamDto){
-        Team team = teamRepo.findById(teamDto.getId());
+    	Team team = teamRepo.findById(teamDto.getId())
+        		.orElseThrow(() -> new EntityNotFoundException("Team not found"));
         if(team == null) {
             throw new EntityNotFoundException("Team not found");
         } else {
@@ -87,6 +94,6 @@ public class TeamServiceImplement implements TeamService {
 
     @Override
     public void  deleteTeamById(long id) {
-        teamRepo.deleteById(id);
+        EntityUtil.deleteEntity(teamRepo, id, "Team");
     }
 }
