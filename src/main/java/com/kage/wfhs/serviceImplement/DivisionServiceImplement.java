@@ -46,6 +46,9 @@ public class DivisionServiceImplement implements DivisionService {
     public List<DivisionDto> getAllDivision() {
         Sort sort = Sort.by(Sort.Direction.ASC, "code");
         List<Division> divisions = EntityUtil.getAllEntities(divisionRepo, sort, "division");
+        if (divisions == null) {
+            return null;
+        }
         List<DivisionDto> divisionList = new ArrayList<>();
         for (Division division : divisions) {
             DivisionDto divisionDto = modelMapper.map(division, DivisionDto.class);

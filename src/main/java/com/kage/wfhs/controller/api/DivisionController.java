@@ -44,7 +44,7 @@ public class DivisionController {
 	@PostMapping("/divisionList")
 	public ResponseEntity<?> getAllDivision() {
 		List<DivisionDto> divisionList = divisionService.getAllDivision();
-		if(divisionList.isEmpty()) {
+		if(divisionList == null) {
 			return ResponseEntity.ok(helper.getLastDivisionCode());
 		} else {
 			return ResponseEntity.ok(divisionService.getAllDivision());
