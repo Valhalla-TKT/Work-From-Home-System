@@ -125,116 +125,61 @@ function getAllDepartment() {
 	$('#department-list').empty();
 	var rowCount =0;
 	fetchDepartments()
-				.then(response => {
-					if (response === null || response === undefined) {
-						console.log("Department is null.");
-					} else if (Array.isArray(response)) {
-						if (response.length === 0) {
-							console.log("Response List length is 0.");
-						} else {
-							response.forEach(function(department) {
-								rowCount++;
-								$('#department-list').append(`
-				                      <li class="job-list-item">
-					                      <a class="job-link" rel="nofollow"
-					                          href="#"></a>
-					                      <div class="job-details-container">
-					                          <div class="lazy-avatar company-avatar">
-					                              <img src="/assets/icons/DAT Logo.png" />
-					                          </div>
-					                          <div class="job-title-company-container">
-					                              <div class="job-role">
-					                                  <span class="job-board-job-company">${department.code}</span>
-					                              </div>
-					                              <h4 class="job-title job-board-job-title">
-					                              	${department.name}
-					                              </h4>
-					                              <div class="job-details job-details--mobile">
-					                                  <div class="color-deep-blue-sea-light-40">
-					                                  
-					                                  </div>
-					                              </div>
-					                          </div>
-					                      </div>
-					                      <div class="job-additional-details-container">
-					                          <div class="buttons-container" style="display: flex; flex-direction: row; align-items: center;">
-					                              <button class="form-btn outlined edit-data" data-department-id="${department.id}">Edit </button>
-					                              <button class="form-btn outlined margin-l-12 delete-button" data-department-id="${department.id}" onclick="confirmDelete(${department.id}, '${department.name}')">Delete</button>
-					                          </div>
-					                          <div class="job-details">
-					                              <div class="hide-on-desktop data-detail">
-					                                  <a class="manage-data" href="#" data-target="data-modal-1">
-					                                      <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor" class="bi bi-three-dots" viewBox="0 0 16 16">
-					                                          <path d="M3 9.5a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3m5 0a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3m5 0a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3"/>
-					                                      </svg>
-					                                  </a>
-					                              </div>
-					                          </div>
-					                      </div>
-					                  </li>
-				                  `);
-							});
-						
-						}
-						console.log("row count =", rowCount)
-						document.getElementById('total-count').innerText = rowCount
-					}
-				})
-	$.ajax({
-		url: `api/department/departmentList`,
-		type: 'POST',
-		contentType: 'application/json',
-		success: function(response) {
-			$('#department-list').empty();
-			response.forEach(function(department) {
-				rowCount++;
-				$('#department-list').append(`
-                      <li class="job-list-item">
-	                      <a class="job-link" rel="nofollow"
-	                          href="#"></a>
-	                      <div class="job-details-container">
-	                          <div class="lazy-avatar company-avatar">
-	                              <img src="/assets/icons/DAT Logo.png" />
-	                          </div>
-	                          <div class="job-title-company-container">
-	                              <div class="job-role">
-	                                  <span class="job-board-job-company">${department.code}</span>
-	                              </div>
-	                              <h4 class="job-title job-board-job-title">
-	                              	${department.name}
-	                              </h4>
-	                              <div class="job-details job-details--mobile">
-	                                  <div class="color-deep-blue-sea-light-40">
-	                                  
-	                                  </div>
-	                              </div>
-	                          </div>
-	                      </div>
-	                      <div class="job-additional-details-container">
-	                          <div class="buttons-container">
-	                              <button class="form-btn outlined edit-data" data-department-id="${department.id}">Edit </button>
-	                              <button class="btn2 btn2--tertiary margin-l-12 delete-button" data-department-id="${department.id}" onclick="confirmDelete(${department.id}, '${department.name}')">Delete</button>
-	                          </div>
-	                          <div class="job-details">
-	                              <div class="hide-on-desktop data-detail">
-	                                  <a class="manage-data" href="#" data-target="data-modal-1">
-	                                      <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor" class="bi bi-three-dots" viewBox="0 0 16 16">
-	                                          <path d="M3 9.5a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3m5 0a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3m5 0a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3"/>
-	                                      </svg>
-	                                  </a>
-	                              </div>
-	                          </div>
-	                      </div>
-	                  </li>
-                  `);
-			});
-			console.log("row count =", rowCount)
-			document.getElementById('total-count').innerText = rowCount
-		},
-		error: function(error) {
-			console.error('Error:', error);
-		}
-	});
+		.then(response => {
+			if (response === null || response === undefined) {
+				console.log("Department is null.");
+			} else if (Array.isArray(response)) {
+				if (response.length === 0) {
+					console.log("Response List length is 0.");
+				} else {
+					response.forEach(function(department) {
+						rowCount++;
+						$('#department-list').append(`
+		                      <li class="job-list-item">
+			                      <a class="job-link" rel="nofollow"
+			                          href="#"></a>
+			                      <div class="job-details-container">
+			                          <div class="lazy-avatar company-avatar">
+			                              <img src="/assets/icons/DAT Logo.png" />
+			                          </div>
+			                          <div class="job-title-company-container">
+			                              <div class="job-role">
+			                                  <span class="job-board-job-company">${department.code}</span>
+			                              </div>
+			                              <h4 class="job-title job-board-job-title">
+			                              	${department.name}
+			                              </h4>
+			                              <div class="job-details job-details--mobile">
+			                                  <div class="color-deep-blue-sea-light-40">
+			                                  
+			                                  </div>
+			                              </div>
+			                          </div>
+			                      </div>
+			                      <div class="job-additional-details-container">
+			                          <div class="buttons-container" style="display: flex; flex-direction: row; align-items: center;">
+			                              <button class="form-btn outlined edit-data" data-department-id="${department.id}">Edit </button>
+			                              <button class="form-btn outlined margin-l-12 delete-button" data-department-id="${department.id}" onclick="confirmDelete(${department.id}, '${department.name}')">Delete</button>
+			                          </div>
+			                          <div class="job-details">
+			                              <div class="hide-on-desktop data-detail">
+			                                  <a class="manage-data" href="#" data-target="data-modal-1">
+			                                      <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor" class="bi bi-three-dots" viewBox="0 0 16 16">
+			                                          <path d="M3 9.5a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3m5 0a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3m5 0a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3"/>
+			                                      </svg>
+			                                  </a>
+			                              </div>
+			                          </div>
+			                      </div>
+			                  </li>
+		                  `);
+					});
+				
+				}
+				console.log("row count =", rowCount)
+				document.getElementById('total-count').innerText = rowCount
+			}
+		})	
 }
 
 

@@ -55,6 +55,8 @@ public class DepartmentServiceImplement implements DepartmentService {
     public List<DepartmentDto> getAllDepartment() {
         Sort sort = Sort.by(Sort.Direction.ASC, "code");
         List<Department> departments = EntityUtil.getAllEntities(departmentRepo, sort, "department");
+        if(departments == null)
+        	return null;
         return departments.stream()
                         .map(department -> modelMapper.map(department, DepartmentDto.class))
                         .collect(Collectors.toList());
