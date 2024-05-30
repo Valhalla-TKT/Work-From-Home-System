@@ -14206,7 +14206,6 @@ table.dataTable thead .sorting_desc:before {
 }
 
 .header {
-    z-index: 997;
     display: -webkit-box;
     display: -ms-flexbox;
     display: flex;
