@@ -48,14 +48,12 @@ async function getAllDivision() {
 	var rowCount = 0;
 	const response = await fetchDivisions();
 	console.log(response)
-	if (response === null || response === undefined) {
-		console.log("hellooo");
+	if (response === null || response === undefined || response === "No department found.") {
+		console.log("Division is null.");
 	} else if (Array.isArray(response)) {
 		if (response.length === 0) {
-			console.log("hellooo");
+			console.log("Response List length is 0.");
 		} else {
-			console.log(response);
-			console.log("h");
 
 			response.forEach(function (division) {
 				rowCount++;

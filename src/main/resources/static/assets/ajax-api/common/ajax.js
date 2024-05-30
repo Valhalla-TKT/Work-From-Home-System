@@ -35,15 +35,11 @@ async function createNewDivision(requestData) {
 async function fetchDivisions() {
     try {
         const responseData = await sendRequest(`/api/division/divisionList`, 'POST', {});
-		//const jsonData = await responseData.json();
-		//return jsonData;
         const contentType = responseData.headers.get('content-type');
         if (contentType && contentType.includes('application/json')) {
-            console.log("JSON");
             const jsonData = await responseData.json();
             return jsonData;
         } else {
-            console.log("TEXT");
             const textData = await responseData.text();
             return textData;
         }
@@ -121,8 +117,14 @@ async function createNewDepartment(requestData) {
 async function fetchDepartments() {
     try {
         const responseData = await sendRequest(`/api/department/departmentList`, 'POST', {});
-		const jsonData = await responseData.json();
-		return jsonData;
+		const contentType = responseData.headers.get('content-type');
+        if (contentType && contentType.includes('application/json')) {
+            const jsonData = await responseData.json();
+            return jsonData;
+        } else {
+            const textData = await responseData.text();
+            return textData;
+        }
     } catch (error) {
         console.error('Error:', error);
     }

@@ -39,8 +39,12 @@ public class DepartmentController {
     }
 
 	@PostMapping("/departmentList")
-	public ResponseEntity<List<DepartmentDto>> getAllDepartment() {
-		return ResponseEntity.ok(departmentService.getAllDepartment());
+	public ResponseEntity<?> getAllDepartment() {
+		List<DepartmentDto> departmentList = departmentService.getAllDepartment();
+		if(departmentList == null)
+			return ResponseEntity.ok("No department found."); 
+		else
+			return ResponseEntity.ok(departmentList);
 	}
 
 	@PostMapping("/getDepartmentById")

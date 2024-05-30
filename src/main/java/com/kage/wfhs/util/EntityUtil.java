@@ -2,7 +2,6 @@ package com.kage.wfhs.util;
 
 import com.kage.wfhs.exception.EntityCreationException;
 import com.kage.wfhs.exception.EntityNotFoundException;
-import com.kage.wfhs.exception.EntityRetrievalException;
 
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -21,11 +20,9 @@ public class EntityUtil {
 
     public static <T> List<T> getAllEntities(JpaRepository<T, Long> repository, Sort sort, String entityName) {
         List<T> entities = repository.findAll(sort);
-        if (entities == null || entities.isEmpty()) {
-            if(entityName.equals("division")) {
-                return null;
-            }
-            throw new EntityRetrievalException("No " + entityName + " entities found");
+        if (entities == null || entities.isEmpty()) {            
+            //throw new EntityRetrievalException("No " + entityName + " entities found");
+            return null;
         }
         return entities;
     }
