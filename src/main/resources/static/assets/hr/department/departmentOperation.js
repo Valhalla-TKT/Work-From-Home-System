@@ -159,7 +159,7 @@ function getAllDepartment() {
 			                      <div class="job-additional-details-container">
 			                          <div class="buttons-container" style="display: flex; flex-direction: row; align-items: center;">
 			                              <button class="form-btn outlined edit-data" data-department-id="${department.id}">Edit </button>
-			                              <button class="form-btn outlined margin-l-12 delete-button" data-department-id="${department.id}" onclick="confirmDelete(${department.id}, '${department.name}')">Delete</button>
+			                              <button class="form-btn outlined margin-l-12 delete-button" data-department-id="${department.id}">Delete</button>
 			                          </div>
 			                          <div class="job-details">
 			                              <div class="hide-on-desktop data-detail">
@@ -260,26 +260,7 @@ async function saveChanges() {
 	        });
 	    });	
 }
-function confirmDelete(departmentId, departmentName) {
-	Swal.fire({
-		title: `Are you sure you want to delete ${departmentName}?`,
-		text: "This action cannot be undone!",
-		icon: 'warning',
-		showCancelButton: true,
-		confirmButtonColor: '#3085d6',
-		cancelButtonColor: '#d33',
-		confirmButtonText: 'Yes, delete it!'
-	}).then((result) => {
-		if (result.isConfirmed) {
-			deleteDepartment(departmentId)
-			Swal.fire(
-				'Deleted!',
-				`Department with ID ${departmentId} has been deleted.`,
-				'success'
-			);
-		}
-	});
-}
+
 function confirmDeleteDepartment(departmentId, departmentName) {
 	Swal.fire({
         title: `Are you sure you want to delete ${departmentName}?`,

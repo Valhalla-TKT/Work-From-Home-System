@@ -34,14 +34,17 @@ public class TeamController {
     private final TeamService teamService;
 
     @PostMapping("/")
-    public ResponseEntity<String> createTeam(@RequestBody TeamDto teamDto){
-        teamService.createTeam(teamDto);
-        return ResponseEntity.ok("Team Add Successful...");
+    public ResponseEntity<TeamDto> createTeam(@RequestBody TeamDto teamDto){        
+        return ResponseEntity.ok(teamService.createTeam(teamDto));
     }
 
     @PostMapping("/teamList")
-    public ResponseEntity<List<TeamDto>> getAllTeam(){
-        return ResponseEntity.ok(teamService.getAllTeam());
+    public ResponseEntity<?> getAllTeam(){
+        List<TeamDto> teamList = teamService.getAllTeam();
+        if(teamList == null)
+            return ResponseEntity.ok("No department found."); 
+        else 
+            return ResponseEntity.ok(teamList);
     }
 
     @PostMapping("/getTeamById")

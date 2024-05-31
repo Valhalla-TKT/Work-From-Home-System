@@ -181,10 +181,11 @@ async function createNewTeam(requestData) {
 
 async function fetchTeams() {
     try {
-        const responseData = await sendRequest(`/api/team/teamList`, 'POST', {});
+        const responseData = await sendRequest(`/api/team/teamList`, 'POST', {});        
 		const contentType = responseData.headers.get('content-type');
         if (contentType && contentType.includes('application/json')) {
             const jsonData = await responseData.json();
+            console.log(jsonData);
             return jsonData;
         } else {
             const textData = await responseData.text();

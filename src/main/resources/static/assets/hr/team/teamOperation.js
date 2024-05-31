@@ -74,6 +74,8 @@ async function getAllDepartment() {
             throw new Error('Invalid response format');
         }
 
+        console.table(departmentResponse)
+
         populateSelectBox('#department-name', departmentResponse, 'Department');
         populateSelectBox('#department-filter', departmentResponse, 'Department');
 
@@ -91,6 +93,7 @@ async function createTeam() {
         name: name,
         departmentId: department,
     };
+    console.log(requestData)
     // AJAX call
     await createNewTeam(requestData)
         .then(() => {
@@ -116,64 +119,64 @@ async function createTeam() {
 }
 
 function getAllTeam() {
+    $("#team-list").empty();
     var rowCount = 0;
-    $.ajax({
-        url: `api/team/teamList`,
-        type: "POST",
-        contentType: "application/json",
-        success: function (response) {
-            console.log(response);
-            $("#team-list").empty();
-
-            response.forEach(function (team) {
-                rowCount++;
-                $("#team-list").append(`
-                   <li class="job-list-item">
-                    <a class="job-link" rel="nofollow"
-                        href="#"></a>
-                    <div class="job-details-container">
-                        <div class="lazy-avatar company-avatar">
-                            <img src="/assets/icons/DAT Logo.png" />
-                        </div>
-                        <div class="job-title-company-container">
-                            <div class="job-role">
-                                <span class="job-board-job-company">${team.code}</span>
-                            </div>
-                            <h4 class="job-title job-board-job-title">
-                                ${team.name}
-                            </h4>
-                            <div class="job-details job-details--mobile">
-                                <div class="color-deep-blue-sea-light-40">
-                                
+    fetchTeams()
+        .then(response => {
+            if (response === null || response === undefined) {
+				console.log("Team is null.");
+			} else if (Array.isArray(response)) {
+				if (response.length === 0) {
+					console.log("Response List length is 0.");
+				} else {
+                    response.forEach(function(team) {
+                        console.log(team.code)
+                        rowCount++;
+                        $("#team-list").append(`
+                            <li class="job-list-item">
+                                <a class="job-link" rel="nofollow"
+                                    href="#"></a>
+                                <div class="job-details-container">
+                                    <div class="lazy-avatar company-avatar">
+                                        <img src="/assets/icons/DAT Logo.png" />
+                                    </div>
+                                    <div class="job-title-company-container">
+                                        <div class="job-role">
+                                            <span class="job-board-job-company">${team.code}</span>
+                                        </div>
+                                        <h4 class="job-title job-board-job-title">
+                                            ${team.name}
+                                        </h4>
+                                        <div class="job-details job-details--mobile">
+                                            <div class="color-deep-blue-sea-light-40">
+                                            
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="job-additional-details-container">
-                        <div class="buttons-container">
-                            <button class="form-btn outlined edit-data" data-team-id="${team.id}">Edit </button>
-                            <button class="btn2 btn2--tertiary margin-l-12 delete-button" data-team-id="${team.id}" onclick="confirmDelete(${team.id}, '${team.name}')">Delete</button>
-                        </div>
-                        <div class="job-details">
-                            <div class="hide-on-desktop data-detail">
-                                <a class="manage-data" href="#" data-target="data-modal-1">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor" class="bi bi-three-dots" viewBox="0 0 16 16">
-                                        <path d="M3 9.5a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3m5 0a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3m5 0a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3"/>
-                                    </svg>
-                                </a>
-                            </div>
-                        </div>
-                    </div>
-                </li>
-            `);
-            });
-            console.log("row count =", rowCount);
-            document.getElementById("total-count").innerText = rowCount;
-        },
-        error: function (error) {
-            console.error("Error:", error);
-        },
-    });
+                                <div class="job-additional-details-container">
+                                    <div class="buttons-container" style="display: flex; flex-direction: row; align-items: center;">
+                                        <button class="form-btn outlined edit-data" data-team-id="${team.id}">Edit </button>
+                                        <button class="form-btn outlined margin-l-12 delete-button" data-team-id="${team.id}">Delete</button>
+                                    </div>
+                                    <div class="job-details">
+                                        <div class="hide-on-desktop data-detail">
+                                            <a class="manage-data" href="#" data-target="data-modal-1">
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor" class="bi bi-three-dots" viewBox="0 0 16 16">
+                                                    <path d="M3 9.5a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3m5 0a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3m5 0a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3"/>
+                                                </svg>
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </li>
+                        `);
+                    });
+                }
+                console.log("row count =", rowCount);
+                document.getElementById("total-count").innerText = rowCount;
+            }
+        })
 }
 
 function openEditModal(teamId) {
@@ -186,12 +189,11 @@ function openEditModal(teamId) {
                 .then(departmentResponse => {
                     var selectBox = $("#edit-department-name");
                     selectBox.empty();
-                    // Populate select box with all departments
                     departmentResponse.forEach(function (department) {
                         var option = $("<option>", {
                             value: department.id,
                             text: department.name,
-                            selected: department.id === teamResponse.departmentId, // Automatically select the related division
+                            selected: department.id === teamResponse.departmentId,
                         });
                         selectBox.append(option);                        
                     });
@@ -224,15 +226,16 @@ function closeEditModal() {
 
 async function saveChanges() {
     var editedCode = $("#edit-team-code").val();
-    var editedName = $("#edit-team-name").val();
-    var teamId = $("#teamId").val();
+    var editedName = $("#edit-team-name").val();    
     var editedDepartmentId = $("#edit-department-name").val();
+    var teamId = $("#teamId").val();
     var requestData = {
         code: editedCode,
         name: editedName,
         departmentId: editedDepartmentId,
         id: teamId
     };
+    console.log(requestData);
     await updateTeam(requestData)
 		.then(() => {
 	       $('#edit-data-overlay').hide();
@@ -252,26 +255,7 @@ async function saveChanges() {
 	        });
 	    });
 }
-function confirmDelete(teamId, teamName) {
-    Swal.fire({
-        title: `Are you sure you want to delete ${teamName}?`,
-        text: "This action cannot be undone!",
-        icon: "warning",
-        showCancelButton: true,
-        confirmButtonColor: "#3085d6",
-        cancelButtonColor: "#d33",
-        confirmButtonText: "Yes, delete it!",
-    }).then((result) => {
-        if (result.isConfirmed) {
-            deleteTeam(teamId);
-            Swal.fire(
-                "Deleted!",
-                `Team with ID ${teamId} has been deleted.`,
-                "success"
-            );
-        }
-    });
-}
+
 function confirmDeleteTeam(teamId, teamName) {
     Swal.fire({
         title: `Are you sure you want to delete ${teamName}?`,
@@ -283,39 +267,33 @@ function confirmDeleteTeam(teamId, teamName) {
         confirmButtonText: 'Yes, delete it!'
     }).then(async (result) => {
         if (result.isConfirmed) {
-        	await deleteTeam(teamId)
-			    .then(() => {
-			        Swal.fire(
-			            'Deleted!',
-			            `You've completely deleted '${teamName}' team.`,
-			            'success'
-			        );
-			        $(`#team-list li[data-team-id="${teamId}"]`).remove();
-			        getAllTeam();
-			    })
-			    .catch(error => {
-			        console.error('Error deleting team:', error);
-			        Swal.fire(
-			            'Error!',
-			            'Failed to delete the team.',
-			            'error'
-			        );
-			    });
+            try {
+                $(`#team-list li[data-team-id="${teamId}"]`).remove();
+                
+                await deleteTeam(teamId);
+                
+                Swal.fire(
+                    'Deleted!',
+                    `You've completely deleted '${teamName}' team.`,
+                    'success'
+                );
+
+                getAllTeam();
+            } catch (error) {
+                console.error('Error deleting team:', error);
+                
+                $(`#team-list`).append(`<li data-team-id="${teamId}">${teamName}</li>`);
+                
+                Swal.fire(
+                    'Error!',
+                    'Failed to delete the team.',
+                    'error'
+                );
+            }
         }
     });
-    // $.ajax({
-    //     url: `/api/team/deleteById?id=${teamId}`,
-    //     type: "POST",
-    //     success: function (response) {
-    //         console.log("Team deleted successfully:", response);
-    //         $(`#team-list li[data-team-id="${teamId}"]`).remove();
-    //         getAllTeam();
-    //     },
-    //     error: function (error) {
-    //         console.error("Error deleting team:", error);
-    //     },
-    // });
 }
+
 $(document).on("click", ".delete-button", function () {
     var teamId = $(this).data("teamId");
     var teamName = $(this).closest(".job-list-item").find(".job-board-job-title").text().trim();

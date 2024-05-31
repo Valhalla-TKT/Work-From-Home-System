@@ -36,9 +36,14 @@ public class TeamServiceImplement implements TeamService {
     @Override
     public TeamDto createTeam(TeamDto teamDto) {
         Team team = modelMapper.map(teamDto, Team.class);
-        Department department = departmentRepo.findById(teamDto.getId())
-                .orElseThrow(() -> new EntityNotFoundException("Team not found"));
-        team.setDepartment(department);
+        System.out.println(team);
+        if(teamDto.getDepartmentId() > 0) {
+            Department department = departmentRepo.findById(teamDto.getDepartmentId())
+                .orElseThrow(() -> new EntityNotFoundException("Department not found"));
+            team.setDepartment(department);
+        } else
+            team.setDepartment(null);        
+
         Team savedTeam = EntityUtil.saveEntity(teamRepo, team, "team");
         return modelMapper.map(savedTeam, TeamDto.class);
     }
@@ -50,7 +55,7 @@ public class TeamServiceImplement implements TeamService {
         if(teams == null)
         	return null;
         return teams.stream()
-        		.map(team -> modelMapper.map(teams, TeamDto.class))
+        		.map(team -> modelMapper.map(team, TeamDto.class))
         		.collect(Collectors.toList());
     }
 
@@ -81,11 +86,12 @@ public class TeamServiceImplement implements TeamService {
             if(teamDto.getDepartmentId() == 0) {
                 team.setDepartment(departmentRepo.findByTeamId(teamDto.getId()));                
             } else {
-                Department department = departmentRepo.findById(teamDto.getId())
+                Department department = departmentRepo.findById(teamDto.getDepartmentId())
                         .orElseThrow(() -> new EntityNotFoundException("Department not found"));
                 if(department == null) {
                     throw new EntityNotFoundException("Department not found");
                 }
+                System.out.println(department.getName() +" _________________");
                 team.setDepartment(department);
             }
             teamRepo.save(team);
