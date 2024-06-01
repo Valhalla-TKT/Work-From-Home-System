@@ -20,11 +20,11 @@ import java.util.Set;
 public interface UserRepository extends JpaRepository<User,Long> {
     
     @Query("""
-            SELECT data.staff_id FROM User data WHERE data.gender = :gender
-              AND data.staff_id = (
-                SELECT MAX(user.staff_id) FROM User user WHERE user.gender = :gender GROUP BY user.gender
+            SELECT data.staffId FROM User data WHERE data.gender = :gender
+              AND data.staffId = (
+                SELECT MAX(user.staffId) FROM User user WHERE user.gender = :gender GROUP BY user.gender
               )
-            ORDER BY data.staff_id DESC
+            ORDER BY data.staffId DESC
                                         """)
     String findLastStaffIdByGender(@Param("gender") String gender);
 

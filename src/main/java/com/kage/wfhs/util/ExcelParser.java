@@ -410,7 +410,7 @@ public class ExcelParser {
 				Team team = teamRepo.findByName(teamName)
 		        		.orElseThrow(() -> new EntityNotFoundException("Team not found"));
 				user.setTeam(team);
-				user.setStaff_id(staffId);
+				user.setStaffId(staffId);
 				user.setName(name);
 				user.setGender(gender);
 				String profile = null;
@@ -423,7 +423,7 @@ public class ExcelParser {
 				user.setPosition(positionRepo.findByName(positionName));
 				user.setRole(roleRepo.findByName(roleName));
 				boolean isSingle = maritalStatus.equalsIgnoreCase("Signle");
-				user.setMarital_status(isSingle);
+				user.setMaritalStatus(isSingle);
 				boolean hasParent = parents.equalsIgnoreCase("Yes");
 				user.setParent(hasParent);
 				boolean hasChildern = children.equalsIgnoreCase("Yes");
@@ -441,10 +441,10 @@ public class ExcelParser {
 				} catch (ParseException e) {
 					e.printStackTrace();
 				}
-				user.setJoin_date(joinDateObj);
-				user.setPermanent_date(permanentDateObj);
+				user.setJoinDate(joinDateObj);
+				user.setPermanentDate(permanentDateObj);
 				user.setEnabled(true);
-				user.setPhone_number(null);
+				user.setPhoneNumber(null);
 				user.setPassword(passwordEncoder.encode("password123"));
 				user.setActiveStatus(ActiveStatus.OFFLINE);
 				ApproveRole approveRole = approveRoleRepo.findByName("APPLICANT");

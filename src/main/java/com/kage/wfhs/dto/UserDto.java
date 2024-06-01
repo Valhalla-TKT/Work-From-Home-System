@@ -31,9 +31,9 @@ import org.springframework.web.multipart.MultipartFile;
 
 public class UserDto {
 	private long id, teamId, positionId, approveRoleId, roleId, divisionId, departmentId;
-    private String staff_id, name, email, password, gender, phone_number, teamName, positionName, approveRoleName, roleName, departmentName, divisionName, profile, divisionCode;
-    private boolean isEnabled, marital_status, parent, children;
-    private Date join_date, permanent_date;
+    private String staffId, name, email, password, gender, phoneNumber, teamName, positionName, approveRoleName, roleName, departmentName, divisionName, profile, divisionCode;
+    private boolean isEnabled, maritalStatus, parent, children, isFirstTimeLogin;
+    private Date joinDate, permanentDate;
     private Role role;
     private Team team;
     private Department department;

@@ -20,7 +20,6 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-
 public class ApproveRole implements Serializable {
 	private static final long serialVersionUID = 1L;
 

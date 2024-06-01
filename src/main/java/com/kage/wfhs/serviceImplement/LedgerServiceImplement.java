@@ -38,7 +38,7 @@ public class LedgerServiceImplement implements LedgerService {
 
         ledger.setDepartment(applicant.getDepartment().getName());
         ledger.setTeam(applicant.getTeam().getName());
-        ledger.setStaff_id(applicant.getStaff_id());
+        ledger.setStaffId(applicant.getStaffId());
         ledger.setName(applicant.getName());
         ledger.setEmail(applicant.getName());
         ledger.setApplied_date(registerForm.getSignedDate());

@@ -67,7 +67,7 @@ public class OTPStaffIDExcelGenerator {
             int columnCount = 0;
 
             createCell(row, columnCount++, seqNo++, style);
-            createCell(row, columnCount++, RegisterForm.getApplicant().getStaff_id(), style);
+            createCell(row, columnCount++, RegisterForm.getApplicant().getStaffId(), style);
             createCell(row, columnCount++, RegisterForm.getApplicant().getName(), style);
             createCell(row, columnCount++, RegisterForm.getApplicant().getEmail(), style);
             createCell(row, columnCount++, " ", style);

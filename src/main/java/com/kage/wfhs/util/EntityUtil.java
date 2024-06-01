@@ -34,6 +34,10 @@ public class EntityUtil {
         repository.deleteById(id);
     }
 
+    public static <T> T getEntityById(JpaRepository<T, Long> repository, Long id) {
+        return id > 0 ? repository.findById(id).orElse(null) : null;
+    }
+
     public interface Identifiable {
         Long getId();
     }

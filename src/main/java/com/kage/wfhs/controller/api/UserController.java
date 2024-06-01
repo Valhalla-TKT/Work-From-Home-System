@@ -31,17 +31,14 @@ public class UserController {
     private final WorkFlowOrderService workFlowOrderService;
     @PostMapping("/generateStaffId")
     public ResponseEntity<String> generateStaffId(@RequestBody UserDto userDto){
-        return ResponseEntity.ok(userService.createStaff_id(userDto.getGender()));
+        return ResponseEntity.ok(userService.createstaffId(userDto.getGender()));
     }
 
-    @PostMapping("/create")
+    @PostMapping("/")
     public ResponseEntity<String > createUser(@RequestBody UserDto userDto){
         if(!userService.isDuplicated(userDto)){
             return ResponseEntity.ok("Duplicate User!!!");
-        } else {
-            userDto.setPassword("password123");
-            userDto.setEnabled(true);
-            userDto.setPermanent_date(null);
+        } else {            
             userService.createUser(userDto);
             return ResponseEntity.ok("Add New User Success...");
         }
@@ -77,8 +74,12 @@ public class UserController {
     }
     
     @PostMapping("/userList")
-    public ResponseEntity<List<UserDto>> getAllUser(){
-        return ResponseEntity.ok(userService.getAllUser());
+    public ResponseEntity<?> getAllUser(){
+        List<UserDto> userList = userService.getAllUser();
+        if(userList == null)
+            return ResponseEntity.ok("No User found.");
+        else 
+            return ResponseEntity.ok(userList);
     }
     
   //TEAM

@@ -72,10 +72,24 @@ public class ApproveRoleServiceImplement implements ApproveRoleService {
         approveRoleRepo.deleteById(id);
     }
 
-	@Override
+    @Override
 	public boolean createHRRole() {
 		ApproveRoleDto approveRoleDto = new ApproveRoleDto();
 		approveRoleDto.setName("HR");
+        ApproveRole approveRole = modelMapper.map(approveRoleDto, ApproveRole.class);
+        try {
+        	approveRoleRepo.save(approveRole);
+	        return true;
+	    } catch (Exception e) {
+	        e.printStackTrace();
+	        return false;
+	    }
+	}
+
+	@Override
+	public boolean createAdminRole() {
+		ApproveRoleDto approveRoleDto = new ApproveRoleDto();
+		approveRoleDto.setName("ADMIN");
         ApproveRole approveRole = modelMapper.map(approveRoleDto, ApproveRole.class);
         try {
         	approveRoleRepo.save(approveRole);

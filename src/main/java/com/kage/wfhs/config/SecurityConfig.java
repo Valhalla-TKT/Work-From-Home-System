@@ -23,14 +23,20 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
+import com.kage.wfhs.security.JwtAuthenticationFilter;
 import com.kage.wfhs.security.OurUserDetailService;
+import com.kage.wfhs.util.JwtUtil;
+
+import jakarta.servlet.http.Cookie;
 
 @Configuration
 @EnableWebSecurity
 @RequiredArgsConstructor
 public class SecurityConfig {
     private final OurUserDetailService userDetailService;
+    private final JwtUtil jwtUtil;
 
     @Bean
     public static PasswordEncoder passwordEncoder(){
@@ -43,28 +49,27 @@ public class SecurityConfig {
                 .cors(Customizer.withDefaults())
                 .httpBasic(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/static/**").permitAll()
-                        .requestMatchers("/assets/**").permitAll()
-                        .requestMatchers("/swagger-ui/**").permitAll()
-                        .requestMatchers("/icons/**").permitAll()
-                        .requestMatchers("/formImages/**").permitAll()
-                        .requestMatchers("/images/**").permitAll()
+                        .requestMatchers("/static/**", "/assets/**", "/swagger-ui/**", "/icons/**", "/formImages/**", "/images/**").permitAll()
                         .anyRequest().authenticated()
                 )
-                .exceptionHandling(
-                        (exceptionHandling) -> exceptionHandling
-                                .accessDeniedPage("/accessDenied")
-                )
+                .exceptionHandling(exceptionHandling -> exceptionHandling.accessDeniedPage("/accessDenied"))
+                .addFilterBefore(jwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class)
                 .formLogin(form -> form
                                 .loginPage("/login")
                                 .loginProcessingUrl("/signIn")
                                 .defaultSuccessUrl("/dashboard")
                                 .successHandler(
                                         (((request, response, authentication) -> {
+                                        	String token = jwtUtil.generateToken(authentication.getName());
+                                            Cookie cookie = new Cookie("JWT", token);
+                                            cookie.setHttpOnly(true);
+                                            cookie.setPath("/");
+                                            cookie.setMaxAge(86400); // 1 day
+                                            response.addCookie(cookie);
                                             response.sendRedirect("/dashboard");
                                         }))
                                 )
-                                .failureHandler(authenticationFailureHandler()) // use custom authentication failure handler
+                                .failureHandler(authenticationFailureHandler())
                                 .permitAll()
                 ).logout(
                         logout -> logout
@@ -72,6 +77,11 @@ public class SecurityConfig {
                                 .logoutSuccessUrl("/login")
                                 .logoutSuccessHandler(
                                         (((request, response, authentication) -> {
+                                            Cookie cookie = new Cookie("JWT", null);
+                                            cookie.setHttpOnly(true);
+                                            cookie.setPath("/");
+                                            cookie.setMaxAge(0);
+                                            response.addCookie(cookie);                                
                                             response.sendRedirect("/login");
                                         }))
                                 )
@@ -80,6 +90,12 @@ public class SecurityConfig {
                 );
         return http.build();
     }
+
+    @Bean
+    public JwtAuthenticationFilter jwtAuthenticationFilter() {
+        return new JwtAuthenticationFilter();
+    }
+
     @Bean
     public UserDetailsService userDetailsService(){
         return new OurUserDetailService();
@@ -103,7 +119,8 @@ public class SecurityConfig {
     @Bean
     public AuthenticationFailureHandler authenticationFailureHandler() {
         return (request, response, exception) -> {
-            request.getSession().setAttribute("errorMessage", exception.getMessage());
+            String errorMessage = "Incorrect username or password.";
+            request.getSession().setAttribute("errorMessage", errorMessage);
             response.sendRedirect("/login?error");
         };
     }

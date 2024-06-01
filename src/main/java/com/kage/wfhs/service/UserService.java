@@ -18,10 +18,10 @@ import java.util.Set;
 
 @Service
 public interface UserService {
-	void createUser(UserDto userDto);
+	UserDto createUser(UserDto userDto);
     void updateUser(long id, UserDto userDto);
-    UserDto getUserByStaff_id(String staff_id);
-    String createStaff_id(String gender);
+    UserDto getUserBystaffId(String staffId);
+    String createstaffId(String gender);
     String getLastStaffId(String gender);
     List<UserDto> getAllUser();
     boolean isDuplicated(UserDto userDto);

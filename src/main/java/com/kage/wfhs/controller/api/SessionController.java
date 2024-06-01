@@ -27,7 +27,7 @@ public class SessionController {
     @PostMapping("/user")
     public ResponseEntity<UserDto> getUser(HttpSession session) {
         UserDto currentUser = (UserDto) session.getAttribute("login-user");    
-        UserDto sessionUser = userService.getUserByStaff_id(currentUser.getStaff_id());
+        UserDto sessionUser = userService.getUserBystaffId(currentUser.getStaffId());
         return ResponseEntity.ok(sessionUser);
     }
 }

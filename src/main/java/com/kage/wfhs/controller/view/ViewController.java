@@ -10,6 +10,7 @@ package com.kage.wfhs.controller.view;
 import com.kage.wfhs.dto.ExcelImportDto;
 import com.kage.wfhs.dto.LedgerDto;
 import com.kage.wfhs.dto.UserDto;
+import com.kage.wfhs.model.ApproveRole;
 import com.kage.wfhs.repository.DepartmentRepository;
 import com.kage.wfhs.repository.DivisionRepository;
 import com.kage.wfhs.repository.TeamRepository;
@@ -34,6 +35,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import java.sql.SQLException;
 import java.util.List;
+import java.util.Set;
 
 @Controller
 @AllArgsConstructor
@@ -58,13 +60,13 @@ public class ViewController {
     		if(!isApproveRoleAdded) {
     			return "redirect:/login";
     		} else {
-    			int userCount = userService.getAllUser().size();
-    	    	if(userCount == 0) {
-    	    		boolean isHRAdded = userService.createHR();
+                List<UserDto> userList = userService.getAllUser();
+                if(userList == null) {
+                    boolean isHRAdded = userService.createHR();
     	    		if(!isHRAdded) {
     	    			return "redirect:/login";
     	    		}
-    	    	}
+                }    			
     		}
     	} 
         return "login";
@@ -74,22 +76,31 @@ public class ViewController {
     public String home(HttpSession session, ModelMap model){
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if(authentication != null && authentication.isAuthenticated()){
-            UserDto userDto = userService.getUserByStaff_id(authentication.getName());
-            session.setAttribute("login-user", userDto);            
-        	int notificationTypeCount = notificationTypeService.getAllNotificationTypes().size();
-        	if(notificationTypeCount == 0) {
-        		notificationTypeService.addAllNotificationTypes();
-        	}        	      	
-        	model.addAttribute("divisionCount", divisionRepo.count());
-        	model.addAttribute("departmentCount", departmentRepo.count());
-        	model.addAttribute("teamCount", teamRepo.count());
-        	model.addAttribute("userCount", userRepo.count());
-            return "dashboard";
-        } else {
-            return "redirect:/login";
-        }
-    }
+            UserDto userDto = userService.getUserBystaffId(authentication.getName());
+            session.setAttribute("login-user", userDto);
+            int notificationTypeCount = notificationTypeService.getAllNotificationTypes().size();
+            if(notificationTypeCount == 0) {
+                notificationTypeService.addAllNotificationTypes();
+            }
+            Set<ApproveRole> userApproveRoles = userDto.getApproveRoles();
 
+            for (ApproveRole userApproveRole : userApproveRoles) {
+                if (userApproveRole.getName().equalsIgnoreCase("HR") && userDto.isFirstTimeLogin()) {
+                    return "redirect:/importExcel";
+                } else if (userApproveRole.getName().equalsIgnoreCase("USER") && userDto.isFirstTimeLogin()) {
+                    return "profile";
+                }                 
+            }     
+            if(!userDto.isFirstTimeLogin()) {
+                model.addAttribute("divisionCount", divisionRepo.count());
+                model.addAttribute("departmentCount", departmentRepo.count());
+                model.addAttribute("teamCount", teamRepo.count());
+                model.addAttribute("userCount", userRepo.count());
+                return "dashboard";
+            }                      
+        }
+        return "redirect:/login";        
+    }
 
     @GetMapping("/division")
     public String division(){

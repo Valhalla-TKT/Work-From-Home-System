@@ -82,7 +82,7 @@ public class RegisterFormServiceImplement implements RegisterFormService {
     public RegisterFormDto getRegisterForm(long id) {
     	RegisterForm registerForm = registerFormRepo.findById(id);
     	User formRegistererUser = userRepo.findById(registerForm.getApplicant().getId());
-    	User registerUser = userRepo.findByStaffId(formRegistererUser.getStaff_id());
+    	User registerUser = userRepo.findByStaffId(formRegistererUser.getStaffId());
     	Position formRegistererPosition = positionRepo.findById(formRegistererUser.getPosition().getId());
     	formRegistererUser.setPosition(formRegistererPosition);
     	registerForm.setApplicant(registerUser);
@@ -232,9 +232,7 @@ public class RegisterFormServiceImplement implements RegisterFormService {
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
-		} else {
-			System.out.println("There is no Form List for OTP");
-		}
+		} 
 	}
 
 }

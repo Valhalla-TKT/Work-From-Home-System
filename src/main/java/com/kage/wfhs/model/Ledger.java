@@ -28,7 +28,7 @@ public class Ledger implements Serializable {
     private long id;
     private String department;
     private String team;
-    private String staff_id;
+    private String staffId;
     private String name;
     private String email;
     private Date applied_date;

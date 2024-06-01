@@ -29,5 +29,7 @@ public interface ApproveRoleService {
 
 	boolean createHRRole();
 
+	boolean createAdminRole();
+
     void updateApproveRole(ApproveRoleDto approveRoleDto);
 }

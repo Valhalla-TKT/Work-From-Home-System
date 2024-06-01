@@ -47,7 +47,7 @@ public class LoginUserDetail implements UserDetails {
 
     @Override
     public String getUsername() {
-        return user.getStaff_id();
+        return user.getStaffId();
     }
 
     @Override

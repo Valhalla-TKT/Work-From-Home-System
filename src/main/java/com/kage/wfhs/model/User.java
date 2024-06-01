@@ -22,29 +22,27 @@ import java.util.Set;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-
-
 public class User implements Serializable {
 	private static final long serialVersionUID = 1L;
 	
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
-    private String staff_id;
+    private String staffId;
     private String name;
     @Column(unique=true)
     private String email;
-    private String phone_number;
+    private String phoneNumber;
     private String password;
     private boolean enabled;
     private String gender;
     @Column(columnDefinition = "TEXT")
     private String profile;
-    private boolean marital_status;
+    private boolean maritalStatus;
     private boolean parent;
     private boolean children;
-    private Date join_date;
-    private Date permanent_date;
+    private Date joinDate;
+    private Date permanentDate;
     private String signature;
     private ActiveStatus activeStatus;
 
@@ -117,8 +115,10 @@ public class User implements Serializable {
 	@ToString.Exclude
     private Set<ApproveRole> approveRoles;
 
-
-
-
+    private boolean isFirstTimeLogin;
+    @PrePersist
+    protected void onCreate() {
+        isFirstTimeLogin = true;
+    }
 }
 
