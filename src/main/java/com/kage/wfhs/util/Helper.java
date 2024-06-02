@@ -127,7 +127,7 @@ public class Helper {
         String lastCode = (lastDivision != null) ? lastDivision.getCode() : null;
 
         if (lastCode == null || lastCode.isEmpty()) {
-            return "001-001";
+            return "000-001";
         } else {
             return incrementDivisionCode(lastCode);
         }

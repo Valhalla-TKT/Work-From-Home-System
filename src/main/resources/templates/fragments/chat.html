@@ -1,41 +1,36 @@
 <!DOCTYPE html>
-
 <html xmlns:th="http://www.thymeleaf.org">
-
 <head>
-<title>WorkHub</title>
+    <title>WorkHub</title>
+    <link rel="stylesheet" href="/css/main.css" />
 </head>
-
 <body>
-	<!-- ============================================================== -->
-	<!-- ChatBox header -->
-	<!-- You can find style sheets file and JavaScript in static/assets/chat/... -->
-	<!-- ============================================================== -->
-	<div th:fragment="chat" id="test-noti">
-        <button class="chatbot-toggler">
-      <span class="material-symbols-rounded">mode_comment</span>
-      <span class="material-symbols-outlined">close</span>
+<!-- ============================================================== -->
+<!-- ChatBox header -->
+<!-- ============================================================== -->
+<div th:fragment="chat" id="test-noti">
+    <button class="chatbot-toggler">
+        <span class="material-symbols-rounded">mode_comment</span>
+        <span class="material-symbols-outlined">close</span>
     </button>
     <div class="chatbot">
-      <header>
-        <h2>Customer Support</h2>
-        <span class="close-btn material-symbols-outlined">close</span>
-      </header>
-      <ul class="chatbox">
-        <li class="chat incoming">
-          <span class="material-symbols-outlined">smart_toy</span>
-          <p>Hi there 👋<br>How can I help you today?</p>
-        </li>
-      </ul>
-      <div class="chat-input">
-        <textarea placeholder="Enter a message..." spellcheck="false" required></textarea>
-        <span id="send-btn" class="material-symbols-rounded">send</span>
-      </div>
+        <header>
+            <h2>Customer Support</h2>
+            <span class="close-btn material-symbols-outlined">close</span>
+        </header>
+        <div class="connecting">Connecting...</div>
+        <ul class="chatbox"></ul>
+        <div class="chat-input">
+            <textarea placeholder="Enter a message..." id="message" spellcheck="false" required></textarea>
+            <span id="send-btn" class="material-symbols-rounded">send</span>
+        </div>
     </div>
-
-    </div>
-	<!-- ============================================================== -->
-	<!-- ChatBox End -->
-	<!-- ============================================================== -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.1.4/sockjs.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"></script>
+    <script src="/js/chat.js"></script>
+</div>
+<!-- ============================================================== -->
+<!-- ChatBox End -->
+<!-- ============================================================== -->
 </body>
 </html>

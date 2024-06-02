@@ -13,32 +13,65 @@ function populateSelectBox(selector, data, dataName) {
 }
 
 document.addEventListener('DOMContentLoaded', function () {
-    document.querySelector('.add-data').addEventListener('click', function () {
-        document.getElementById('add-data-overlay').style.display = 'block';
-        document.getElementById('add-data-modal').style.display = 'block';
-    });
-    document.querySelector('#add-data-overlay .close').addEventListener('click', function () {
-        document.getElementById('add-data-overlay').style.display = 'none';
-        document.getElementById('add-data-modal').style.display = 'none';
-    });
+    const addDataButton = document.querySelector('.add-data');
+    const addDataOverlay = document.getElementById('add-data-overlay');
+    const addDataModal = document.getElementById('add-data-modal');
+    const addDataOverlayClose = document.querySelector('#add-data-overlay .close');
+    const editDataButton = document.querySelector('.edit-data');
+    const editDataOverlay = document.getElementById('edit-data-overlay');
+    const editDataModal = document.getElementById('edit-data-modal');
+    const editDataOverlayClose = document.querySelector('#edit-data-overlay .close');
+    const manageDataButtons = document.querySelectorAll('.manage-data');
 
-    document.querySelector('.edit-data').addEventListener('click', function () {
-        document.getElementById('edit-data-overlay').style.display = 'block';
-        document.getElementById('edit-data-modal').style.display = 'block';
-    });
-
-    document.querySelector('#edit-data-overlay .close').addEventListener('click', function () {
-        document.getElementById('edit-data-overlay').style.display = 'none';
-        document.getElementById('edit-data-modal').style.display = 'none';
-    });
-
-    document.querySelectorAll('.manage-data').forEach(item => {
-        item.addEventListener('click', event => {
-            const targetId = event.currentTarget.getAttribute('data-target');
-            const modal = document.getElementById(targetId);
-            if (modal) {
-                modal.style.display = modal.style.display === 'none' ? 'block' : 'none';
-            }
+    if (addDataButton) {
+        addDataButton.addEventListener('click', function () {
+            addDataOverlay.style.display = 'block';
+            addDataModal.style.display = 'block';
         });
-    });
+    }// else {
+    //     console.error("Element with class 'add-data' not found.");
+    // }
+
+    if (addDataOverlayClose) {
+        addDataOverlayClose.addEventListener('click', function () {
+            addDataOverlay.style.display = 'none';
+            addDataModal.style.display = 'none';
+        });
+    }// else {
+    //     console.error("Element with selector '#add-data-overlay .close' not found.");
+    // }
+
+    if (editDataButton) {
+        editDataButton.addEventListener('click', function () {
+            editDataOverlay.style.display = 'block';
+            editDataModal.style.display = 'block';
+        });
+    }// else {
+    //     console.error("Element with class 'edit-data' not found.");
+    // }
+
+    if (editDataOverlayClose) {
+        editDataOverlayClose.addEventListener('click', function () {
+            editDataOverlay.style.display = 'none';
+            editDataModal.style.display = 'none';
+        });
+    }// else {
+    //     console.error("Element with selector '#edit-data-overlay .close' not found.");
+    // }
+
+    if (manageDataButtons.length > 0) {
+        manageDataButtons.forEach(item => {
+            item.addEventListener('click', event => {
+                const targetId = event.currentTarget.getAttribute('data-target');
+                const modal = document.getElementById(targetId);
+                if (modal) {
+                    modal.style.display = modal.style.display === 'none' ? 'block' : 'none';
+                } else {
+                    console.error(`Modal with id '${targetId}' not found.`);
+                }
+            });
+        });
+    }// else {
+    //     console.error("Elements with class 'manage-data' not found.");
+    // }
 });

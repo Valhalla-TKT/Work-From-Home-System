@@ -56,8 +56,9 @@ public class ViewController {
     public String login(){
     	int approveRoleCount = approveRoleService.getAllApproveRole().size();
     	if(approveRoleCount == 0) {
-    		boolean isApproveRoleAdded = approveRoleService.createHRRole();
-    		if(!isApproveRoleAdded) {
+    		boolean isHRRoleAdded = approveRoleService.createApproveRole("HR");
+    		boolean isApplicantRoleAdded = approveRoleService.createApproveRole("APPLICANT");
+    		if(!isHRRoleAdded && !isApplicantRoleAdded) {
     			return "redirect:/login";
     		} else {
                 List<UserDto> userList = userService.getAllUser();
@@ -66,7 +67,7 @@ public class ViewController {
     	    		if(!isHRAdded) {
     	    			return "redirect:/login";
     	    		}
-                }    			
+                }
     		}
     	} 
         return "login";
@@ -83,13 +84,12 @@ public class ViewController {
                 notificationTypeService.addAllNotificationTypes();
             }
             Set<ApproveRole> userApproveRoles = userDto.getApproveRoles();
-
             for (ApproveRole userApproveRole : userApproveRoles) {
                 if (userApproveRole.getName().equalsIgnoreCase("HR") && userDto.isFirstTimeLogin()) {
                     return "redirect:/importExcel";
-                } else if (userApproveRole.getName().equalsIgnoreCase("USER") && userDto.isFirstTimeLogin()) {
+                } else if (userApproveRole.getName().equalsIgnoreCase("APPLICANT") && userDto.isFirstTimeLogin()) {
                     return "profile";
-                }                 
+                }
             }     
             if(!userDto.isFirstTimeLogin()) {
                 model.addAttribute("divisionCount", divisionRepo.count());

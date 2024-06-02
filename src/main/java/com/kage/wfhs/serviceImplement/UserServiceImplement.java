@@ -366,7 +366,7 @@ public class UserServiceImplement implements UserService {
 		userDto.setPassword(passwordEncoder.encode("123@dirace"));
 		userDto.setEnabled(true);
 		User HR = modelMapper.map(userDto, User.class);
-		ApproveRole approveRole = approveRoleRepo.findById(1);
+		ApproveRole approveRole = approveRoleRepo.findByName("HR");
 	    if (approveRole == null) {
 	        return false;
 	    }
@@ -374,11 +374,19 @@ public class UserServiceImplement implements UserService {
 	    approveRoles.add(approveRole);
 	    HR.setApproveRoles(approveRoles);
 	    try {
-	        userRepo.save(HR);
-	        return true;
+	    	User savedUser = EntityUtil.saveEntity(userRepo, HR, "user");
+	    	return savedUser != null;   
 	    } catch (Exception e) {
 	        e.printStackTrace();
 	        return false;
 	    }
+	}
+
+	@Override
+	public boolean changeFirstHRFirstLoginStatus() {
+		User user = userRepo.findByStaffId("00-00001");
+		user.setFirstTimeLogin(false);
+		User savedUser = EntityUtil.saveEntity(userRepo, user, "user");
+		return savedUser != null;
 	}
 }

@@ -51,4 +51,5 @@ public interface UserService {
 	
 	// Create HR
 	boolean createHR();
+	boolean changeFirstHRFirstLoginStatus();
 }

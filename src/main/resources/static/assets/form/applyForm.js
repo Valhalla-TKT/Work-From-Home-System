@@ -168,7 +168,7 @@ $(document).ready(function() {
     var currentUserId = currentUser.id;
     console.log(currentUserId)
 	nameInputBox.val(currentUser.name);
-	updateStaffIdFields(currentUser.staff_id);
+	updateStaffIdFields(currentUser.staffId);
 	positionInputBox.val(currentUser.positionName);	
 	teamInputBox.val(currentUser.teamName);
 	departmentInputBox.val(currentUser.departmentName);
@@ -209,7 +209,7 @@ $(document).ready(function() {
 	        $('#name-input-container').show();
 	        applyForm[0].reset();
 	        nameInputBox.val(currentUser.name);
-			updateStaffIdFields(currentUser.staff_id);
+			updateStaffIdFields(currentUser.staffId);
 			positionInputBox.val(currentUser.positionName);	
 			teamInputBox.val(currentUser.teamName);
 			departmentInputBox.val(currentUser.departmentName);
@@ -706,7 +706,7 @@ if (!isNaN(toDateObj.getTime())) {
                         var option = $('<option>', {
                             value: response[i].id,
                             text: response[i].name,
-                            'data-staff-id': response[i].staff_id,
+                            'data-staff-id': response[i].staffId,
                             'data-position-name': response[i].position.name,
                             'data-team-name': response[i].team.name,
                             'data-department-name': response[i].department.name
