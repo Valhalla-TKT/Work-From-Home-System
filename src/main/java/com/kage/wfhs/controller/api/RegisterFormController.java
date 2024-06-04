@@ -14,13 +14,7 @@ import com.kage.wfhs.dto.WorkFlowStatusDto;
 import com.kage.wfhs.model.ApproveRole;
 import com.kage.wfhs.model.WorkFlowStatus;
 import com.kage.wfhs.repository.WorkFlowStatusRepository;
-import com.kage.wfhs.service.ApproveRoleService;
-import com.kage.wfhs.service.CaptureService;
-import com.kage.wfhs.service.RegisterFormService;
-import com.kage.wfhs.service.UserService;
-import com.kage.wfhs.service.WorkFlowOrderService;
-import com.kage.wfhs.service.WorkFlowStatusService;
-import com.kage.wfhs.util.ExcelParser;
+import com.kage.wfhs.service.*;
 import com.kage.wfhs.util.Helper;
 
 import jakarta.servlet.http.HttpServletResponse;
@@ -77,7 +71,7 @@ public class RegisterFormController {
     
     private final WorkFlowStatusRepository workFlowStatusRepo;
     
-    private final ExcelParser excelService;
+    private final ExcelService excelService;
 
     @PostMapping("/create")
     public ResponseEntity<String> createForm(
@@ -160,6 +154,10 @@ public class RegisterFormController {
             registerFormDtoList = registerFormService.getAllFormSpecificTeam(approveRoleId, status,teamId);
             responseData.put("forms", registerFormDtoList);
         }
+        return getMapResponseEntity(responseData, registerFormDtoList, applicantList, requesterList);
+    }
+
+    private ResponseEntity<Map<String, Object>> getMapResponseEntity(Map<String, Object> responseData, List<RegisterFormDto> registerFormDtoList, List<UserDto> applicantList, List<UserDto> requesterList) {
         for(RegisterFormDto registerFormdto : registerFormDtoList) {
             applicantList.add(modelMapper.map(userService.getUserById(registerFormdto.getApplicant().getId()), UserDto.class));
             requesterList.add(modelMapper.map(userService.getUserById(registerFormdto.getRequester().getId()), UserDto.class));
@@ -167,9 +165,9 @@ public class RegisterFormController {
 
         responseData.put("applicants", applicantList);
         responseData.put("requesters", requesterList);
-        return new ResponseEntity<>(responseData,HttpStatus.OK);
+        return new ResponseEntity<>(responseData, HttpStatus.OK);
     }
-    
+
     @PostMapping("/getDepartmentWithStatus")
     public ResponseEntity<Map<String, Object>> getDepartmentWithStatus(
             @RequestParam(value = "status") String status,
@@ -190,14 +188,7 @@ public class RegisterFormController {
             registerFormDtoList = registerFormService.getAllFormSpecificDepartment(approveRoleId, status,departmentId);
             responseData.put("forms", registerFormDtoList);
         }
-        for(RegisterFormDto registerFormdto : registerFormDtoList) {
-            applicantList.add(modelMapper.map(userService.getUserById(registerFormdto.getApplicant().getId()), UserDto.class));
-            requesterList.add(modelMapper.map(userService.getUserById(registerFormdto.getRequester().getId()), UserDto.class));
-        }
-
-        responseData.put("applicants", applicantList);
-        responseData.put("requesters", requesterList);
-        return new ResponseEntity<>(responseData,HttpStatus.OK);
+        return getMapResponseEntity(responseData, registerFormDtoList, applicantList, requesterList);
     }
     
     @PostMapping("/getDivisionWithStatus")
@@ -220,14 +211,7 @@ public class RegisterFormController {
             registerFormDtoList = registerFormService.getAllFormSpecificDivision(approveRoleId, status,divisionId);
             responseData.put("forms", registerFormDtoList);
         }
-        for(RegisterFormDto registerFormdto : registerFormDtoList) {
-            applicantList.add(modelMapper.map(userService.getUserById(registerFormdto.getApplicant().getId()), UserDto.class));
-            requesterList.add(modelMapper.map(userService.getUserById(registerFormdto.getRequester().getId()), UserDto.class));
-        }
-
-        responseData.put("applicants", applicantList);
-        responseData.put("requesters", requesterList);
-        return new ResponseEntity<>(responseData,HttpStatus.OK);
+        return getMapResponseEntity(responseData, registerFormDtoList, applicantList, requesterList);
     }
     
     @PostMapping("/getAllForms")
@@ -249,17 +233,8 @@ public class RegisterFormController {
             registerFormDtoList = registerFormService.getAllForm(approveRoleId, status);
             responseData.put("forms", registerFormDtoList);
         }
-        
-        for(RegisterFormDto registerFormdto : registerFormDtoList) {
-            applicantList.add(modelMapper.map(userService.getUserById(registerFormdto.getApplicant().getId()), UserDto.class));
-            requesterList.add(modelMapper.map(userService.getUserById(registerFormdto.getRequester().getId()), UserDto.class));
-//            WorkFlowStatus workFlowStatus = workFlowStatusService.getWorkFlowStatusByRegisterFormId(registerFormDto.getId());
-//            registerFormdto.setWorkFlowStatus(workFlowStatus);
-        }
 
-        responseData.put("applicants", applicantList);
-        responseData.put("requesters", requesterList);                
-        return new ResponseEntity<>(responseData,HttpStatus.OK);
+        return getMapResponseEntity(responseData, registerFormDtoList, applicantList, requesterList);
     }
     
     

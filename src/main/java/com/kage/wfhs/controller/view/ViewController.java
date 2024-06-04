@@ -19,7 +19,6 @@ import com.kage.wfhs.service.ApproveRoleService;
 import com.kage.wfhs.service.LedgerService;
 import com.kage.wfhs.service.NotificationTypeService;
 import com.kage.wfhs.service.UserService;
-import com.kage.wfhs.util.ExcelParser;
 
 import jakarta.servlet.http.HttpSession;
 import lombok.AllArgsConstructor;
@@ -42,8 +41,7 @@ import java.util.Set;
 @RequestMapping("/")
 public class ViewController {
 
-    private final UserService userService;    
-    private final ExcelParser excelParser;
+    private final UserService userService;
     private final LedgerService ledgerService;
     private final ApproveRoleService approveRoleService;
     private final NotificationTypeService notificationTypeService;
@@ -184,17 +182,5 @@ public class ViewController {
     @GetMapping("/help")
     public String helpPage(){
         return "help";
-    }
-    @GetMapping("/viewCloneTable")
-    private String tables(ModelMap model, @ModelAttribute("currentSheetName") String currentSheetName) throws SQLException {
-
-
-        List<String> headers = excelParser.getTableHeaders("01");
-        List<List<String>> rows = excelParser.getTableRows("01");
-
-        model.addAttribute("headers", headers);
-        model.addAttribute("rows", rows);
-
-        return "hr/cloneTable";
     }
 }

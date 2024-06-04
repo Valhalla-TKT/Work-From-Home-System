@@ -30,10 +30,16 @@ public class Department implements Serializable {
     @Column(name = "name", length = 50, nullable = false)
     private String name;
 
+    @Column(name = "created_at", nullable = false, updatable = false)
+    private long createdAt;
+
     @ManyToOne
     @JoinColumn(name = "division_id")
     private Division division;
     
     @OneToMany(mappedBy = "department", cascade = CascadeType.ALL)
     private List<User> users;
+
+    @PrePersist
+    protected void onCreate() {createdAt = System.currentTimeMillis();}
 }

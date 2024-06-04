@@ -35,12 +35,6 @@ public class UserServiceImplement implements UserService {
 	private final UserRepository userRepo;
 
 	@Autowired
-	private final RoleRepository roleRepo;
-
-	@Autowired
-	private final PositionRepository positionRepo;
-
-	@Autowired
 	private final TeamRepository teamRepo;
 	
 	@Autowired
@@ -67,31 +61,24 @@ public class UserServiceImplement implements UserService {
 
 			String encodePassword = passwordEncoder.encode("123@dirace");
 			user.setEnabled(true);
-			user.setPermanentDate(null);
 
 			String profile = determineProfile(userDto.getGender());
         	user.setProfile(profile);
 			user.setPassword(encodePassword);
 
-			user.setPosition(EntityUtil.getEntityById(positionRepo, userDto.getPositionId()));
-        	user.setRole(EntityUtil.getEntityById(roleRepo, userDto.getRoleId()));
-
 			if (userDto.getTeamId() > 0) {
-				Team team = teamRepo.findById(userDto.getTeamId())
-						.orElseThrow(() -> new EntityNotFoundException("Team not found"));
+				Team team = EntityUtil.getEntityById(teamRepo, userDto.getTeamId());
 				user.setTeam(team);
 				user.setDepartment(team.getDepartment());
 				user.setDivision(team.getDepartment().getDivision());
 			}
 			if (userDto.getDepartmentId() > 0) {
-				Department department = departmentRepo.findById(userDto.getId())
-					.orElseThrow(() -> new EntityNotFoundException("Department not found"));
+				Department department = EntityUtil.getEntityById(departmentRepo, userDto.getDepartmentId());
 				user.setDepartment(department);
 				user.setDivision(department.getDivision());
 			}
 			if (userDto.getDivisionId() > 0) {
-				Division division = divisionRepo.findById(userDto.getDivisionId())
-						.orElseThrow(() -> new EntityNotFoundException("Division not found"));
+				Division division = EntityUtil.getEntityById(divisionRepo, userDto.getDivisionId());
 				user.setDivision(division);
 			}
 			// ApproveRole approveRole = approveRoleRepo.findById(userDto.getApproveRoleId());

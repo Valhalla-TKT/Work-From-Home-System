@@ -44,7 +44,7 @@ public class DivisionServiceImplement implements DivisionService {
 
     @Override
     public List<DivisionDto> getAllDivision() {
-        Sort sort = Sort.by(Sort.Direction.ASC, "code");
+        Sort sort = Sort.by(Sort.Direction.ASC, "name");
         List<Division> divisions = EntityUtil.getAllEntities(divisionRepo, sort, "division");
         if (divisions == null) {
             return null;
@@ -52,7 +52,6 @@ public class DivisionServiceImplement implements DivisionService {
         List<DivisionDto> divisionList = new ArrayList<>();
         for (Division division : divisions) {
             DivisionDto divisionDto = modelMapper.map(division, DivisionDto.class);
-            divisionDto.setLastCode(helper.getLastDivisionCode());
             divisionList.add(divisionDto);
         }
         return divisionList;
@@ -60,8 +59,7 @@ public class DivisionServiceImplement implements DivisionService {
 
 	@Override
     public DivisionDto getDivisionById(long id) {
-        Division division = divisionRepo.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("Division not found"));
+        Division division = EntityUtil.getEntityById(divisionRepo, id);
         return modelMapper.map(division, DivisionDto.class);
     }
 
@@ -74,8 +72,7 @@ public class DivisionServiceImplement implements DivisionService {
 
     @Override
     public void updateDivision(DivisionDto divisionDto) {
-        Division division = divisionRepo.findById(divisionDto.getId())
-                .orElseThrow(() -> new EntityNotFoundException("Division not found"));
+        Division division = EntityUtil.getEntityById(divisionRepo, divisionDto.getId());
         modelMapper.map(divisionDto, division);
         divisionRepo.save(division);
     }

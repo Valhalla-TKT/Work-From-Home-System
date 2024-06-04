@@ -50,7 +50,7 @@ public class TeamServiceImplement implements TeamService {
 
     @Override
     public List<TeamDto> getAllTeam() {
-    	Sort sort = Sort.by(Sort.Direction.ASC, "code");
+    	Sort sort = Sort.by(Sort.Direction.ASC, "name");
         List<Team> teams =  EntityUtil.getAllEntities(teamRepo, sort, "team");
         if(teams == null)
         	return null;
@@ -77,25 +77,15 @@ public class TeamServiceImplement implements TeamService {
 
     @Override
     public void updateTeam(TeamDto teamDto){
-    	Team team = teamRepo.findById(teamDto.getId())
-        		.orElseThrow(() -> new EntityNotFoundException("Team not found"));
-        if(team == null) {
-            throw new EntityNotFoundException("Team not found");
+    	Team team = EntityUtil.getEntityById(teamRepo, teamDto.getId());
+        modelMapper.map(teamDto, team);
+        if(teamDto.getDepartmentId() == 0) {
+            team.setDepartment(departmentRepo.findByTeamId(teamDto.getId()));
         } else {
-            modelMapper.map(teamDto, team);
-            if(teamDto.getDepartmentId() == 0) {
-                team.setDepartment(departmentRepo.findByTeamId(teamDto.getId()));                
-            } else {
-                Department department = departmentRepo.findById(teamDto.getDepartmentId())
-                        .orElseThrow(() -> new EntityNotFoundException("Department not found"));
-                if(department == null) {
-                    throw new EntityNotFoundException("Department not found");
-                }
-                System.out.println(department.getName() +" _________________");
-                team.setDepartment(department);
-            }
-            teamRepo.save(team);
+            Department department = EntityUtil.getEntityById(departmentRepo ,teamDto.getDepartmentId());
+            team.setDepartment(department);
         }
+        teamRepo.save(team);
     }
 
     @Override

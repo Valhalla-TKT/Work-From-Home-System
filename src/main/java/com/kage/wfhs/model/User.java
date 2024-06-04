@@ -23,8 +23,7 @@ import java.util.Set;
 @AllArgsConstructor
 @ToString
 public class User implements Serializable {
-	private static final long serialVersionUID = 1L;
-	
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
@@ -40,6 +39,12 @@ public class User implements Serializable {
     
     @Column(name = "password", length = 30, nullable = false)
     private String password;
+
+    @Column(name = "gender", length = 6, nullable = false, columnDefinition = "varchar(6) default 'male'")
+    private String gender;
+
+    @Column(name = "created_at", nullable = false, updatable = false)
+    private long createdAt;
     
     // for security
     private boolean enabled;
@@ -110,6 +115,7 @@ public class User implements Serializable {
     @PrePersist
     protected void onCreate() {
         isFirstTimeLogin = true;
+        createdAt = System.currentTimeMillis();
     }
 }
 

@@ -11,4 +11,6 @@ import java.text.ParseException;
 @Service
 public interface ExcelService {
     boolean readExcelAndInsertIntoDatabase(InputStream inputStream, String sheetName, Workbook workbook) throws SQLException, ParseException;
+
+    void readAndSendEmail(InputStream inputStream, String sheetName, Workbook workbook);
 }

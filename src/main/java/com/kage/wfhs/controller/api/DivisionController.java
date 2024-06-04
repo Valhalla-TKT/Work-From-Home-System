@@ -45,7 +45,7 @@ public class DivisionController {
 	public ResponseEntity<?> getAllDivision() {
 		List<DivisionDto> divisionList = divisionService.getAllDivision();
 		if(divisionList == null) {
-			return ResponseEntity.ok(helper.getLastDivisionCode());
+			return ResponseEntity.ok("No Division Found");
 		} else {
 			return ResponseEntity.ok(divisionService.getAllDivision());
 		}

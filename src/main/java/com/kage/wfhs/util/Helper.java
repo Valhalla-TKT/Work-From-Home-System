@@ -110,37 +110,14 @@ public class Helper {
         return storageFileName;
     }
 
-
     public ApproveRole getMaxOrder(Set<ApproveRole> approveRoles){
         ApproveRole maxApproveRole = Collections.max(approveRoles, Comparator.comparingLong(ApproveRole::getId));
-        WorkFlowOrder workFlowOrder =   maxApproveRole.getWorkFlowOrders().get(0);
-        WorkFlowOrder getApprover = workFlowOrderRepo.findOrderId(workFlowOrder.getId());
-        if (getApprover == null) {
+        WorkFlowOrder workFlowOrder = maxApproveRole.getWorkFlowOrders().get(0);
+        WorkFlowOrder approves = workFlowOrderRepo.findOrderId(workFlowOrder.getId());
+        if (approves == null) {
         	return approveRoleRepo.findById(1);
         } else {
-        	return getApprover.getApproveRole();
+        	return approves.getApproveRole();
         }
-    }
-    
-    public String getLastDivisionCode() {
-        Division lastDivision = divisionRepo.findLastDivision();
-        String lastCode = (lastDivision != null) ? lastDivision.getCode() : null;
-
-        if (lastCode == null || lastCode.isEmpty()) {
-            return "000-001";
-        } else {
-            return incrementDivisionCode(lastCode);
-        }
-    }
-
-    private String incrementDivisionCode(String lastCode) {
-        String[] parts = lastCode.split("-");
-        if (parts.length != 2) {
-            throw new IllegalArgumentException("Invalid code format");
-        }
-        int mainPart = Integer.parseInt(parts[0]);
-        int subPart = Integer.parseInt(parts[1]);
-        subPart++;
-        return String.format("%03d-%03d", mainPart, subPart);
     }
 }

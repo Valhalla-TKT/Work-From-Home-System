@@ -5,8 +5,9 @@ import java.sql.*;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
-import java.util.Date;
 
+import com.kage.wfhs.util.EmailSenderService;
+import com.kage.wfhs.util.Message;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.apache.poi.ss.usermodel.*;
@@ -37,9 +38,9 @@ public class ExcelServiceImplement implements ExcelService {
     private final TeamRepository teamRepository;
     private final ApproveRoleRepository approveRoleRepository;
     private final UserRepository userRepository;
-    private final PositionRepository positionRepository;
     private final RoleRepository roleRepository;
     private final PasswordEncoder passwordEncoder;
+    private final EmailSenderService emailService;
     
     @Override
     public boolean readExcelAndInsertIntoDatabase(InputStream inputStream, String sheetName, Workbook workbook) throws SQLException, ParseException {
@@ -53,11 +54,11 @@ public class ExcelServiceImplement implements ExcelService {
     }
 
     private void createTableFromSheet(Sheet sheet) throws SQLException {
-        Row headerRow = sheet.getRow(2);
+        Row headerRow = sheet.getRow(3);
         List<String> columnNames = new ArrayList<>();
         for (Cell cell : headerRow) {
             if (cell.getCellType() == CellType.STRING) {
-                String columnName = cell.getStringCellValue().replaceAll("[^a-zA-Z0-9]", "_");
+                String columnName = cell.getStringCellValue().replaceAll("[^a-zA-Z0-9]", "");
                 columnNames.add(columnName);
             } else if (cell.getCellType() == CellType.NUMERIC) {
                 columnNames.add("COLUMN_" + cell.getColumnIndex());
@@ -86,7 +87,7 @@ public class ExcelServiceImplement implements ExcelService {
         try (Connection connection = DriverManager.getConnection(dbUrl, dbUsername, dbPassword);
              Statement statement = connection.createStatement()) {
 
-            Row headerRow = sheet.getRow(2);
+            Row headerRow = sheet.getRow(3);
             if (headerRow == null) {
                 throw new IllegalArgumentException("Header row is missing in the sheet.");
             }
@@ -99,7 +100,7 @@ public class ExcelServiceImplement implements ExcelService {
             }
 
             for (Row row : sheet) {
-                if (row.getRowNum() <= 2) {
+                if (row.getRowNum() <= 3) {
                     continue;
                 }
 
@@ -121,7 +122,7 @@ public class ExcelServiceImplement implements ExcelService {
                     String columnValue;
                     switch (cell.getCellType()) {
                         case STRING:
-                            columnValue = "'" + cell.getStringCellValue() + "'";
+                            columnValue = "'" + cell.getStringCellValue().replace("'", "''") + "'";
                             break;
                         case NUMERIC:
                             if (DateUtil.isCellDateFormatted(cell)) {
@@ -227,8 +228,8 @@ public class ExcelServiceImplement implements ExcelService {
                 String columnName = metaData.getColumnName(i);
                 columnIndices.put(columnName, i);
             }
-        } catch (SQLException e) {
-            e.printStackTrace();
+        } catch (SQLException ignored) {
+
         }
 
         return columnIndices;
@@ -243,16 +244,13 @@ public class ExcelServiceImplement implements ExcelService {
             List<Integer> departmentIndices = getColumnIndicesContainingKeyword(columnIndices, "Dept");
             List<Integer> teamIndices = getColumnIndicesContainingKeyword(columnIndices, "Team");
             List<Integer> staffIDIndices = getColumnIndicesContainingKeyword(columnIndices, "Staff");
-            List<Integer> nameIndices = getColumnIndicesContainingKeyword(columnIndices, "Name");        
-            List<Integer> roleIndices = getColumnIndicesContainingKeyword(columnIndices, "Role");
-            List<Integer> positionIndices = getColumnIndicesContainingKeyword(columnIndices, "Position");
+            List<Integer> nameIndices = getColumnIndicesContainingKeyword(columnIndices, "Name");
             List<Integer> genderIndices = getColumnIndicesContainingKeyword(columnIndices, "Gender");
             List<Integer> maritalStatusIndices = getColumnIndicesContainingKeyword(columnIndices, "Marital");
             List<Integer> parentIndices = getColumnIndicesContainingKeyword(columnIndices, "Parent");
             List<Integer> joinDateIndices = getColumnIndicesContainingKeyword(columnIndices, "Join");
             List<Integer> permanentDateIndices = getColumnIndicesContainingKeyword(columnIndices, "Permanent");
             List<Integer> emailIndices = getColumnIndicesContainingKeyword(columnIndices, "Email");
-            List<Integer> phoneIndices = getColumnIndicesContainingKeyword(columnIndices, "Phone");
 
             for (List<String> row : rows) {
                 if (!row.isEmpty()) {
@@ -314,28 +312,6 @@ public class ExcelServiceImplement implements ExcelService {
                     for (Integer nameIndex : nameIndices) {
                         user.setName(row.get(nameIndex));
                     }
-
-                    for (Integer roleIndex : roleIndices) {
-                        String roleName = row.get(roleIndex);
-                        Role role = roleRepository.findByName(roleName);
-                        if(role == null) {
-                        	Role newRole = new Role();
-                        	newRole.setName(roleName);
-                            roleRepository.save(newRole);
-                        }
-                        user.setRole(role);
-                    }
-                    
-                    for (Integer positionIndex : positionIndices) {
-                        String positionName = row.get(positionIndex);
-                        Position position = positionRepository.findByName(positionName);
-                        if(position == null) {
-                        	Position newPosition = new Position();
-                        	newPosition.setName(positionName);
-                            positionRepository.save(newPosition);
-                        }
-                        user.setPosition(position);
-                    }
                     
                     for (Integer genderIndex : genderIndices) {
                         user.setGender(row.get(genderIndex));
@@ -345,10 +321,6 @@ public class ExcelServiceImplement implements ExcelService {
                         user.setEmail(row.get(emailIndex));
                     }
                     
-                    for (Integer phoneIndex : phoneIndices) {
-                        user.setPhoneNumber(row.get(phoneIndex));
-                    }
-                    
                     String profile = null;
     				if ("M".equals(user.getGender())) {
     					profile = "default-male.png";
@@ -356,35 +328,6 @@ public class ExcelServiceImplement implements ExcelService {
     					profile = "default-female.jfif";
     				}
     				user.setProfile(profile);
-    				
-    				for (Integer maritalStatusIndex : maritalStatusIndices) {
-    					String maritalStatus = row.get(maritalStatusIndex);
-    					boolean isSingle = maritalStatus.equalsIgnoreCase("Yes");
-    					user.setMaritalStatus(isSingle);
-                    }
-    				
-    				for (Integer parentIndex : parentIndices) {
-    					String parent = row.get(parentIndex);
-    					boolean hasParent = parent.equalsIgnoreCase("Yes");
-    					user.setParent(hasParent);
-                    }
-    				
-    				SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-    				Date joinDateObj = null;				
-    				for (Integer joinDateIndex : joinDateIndices) {
-    					if (joinDateIndex != null) {
-    						joinDateObj = dateFormat.parse(row.get(joinDateIndex));
-    					}					
-    					user.setJoinDate(joinDateObj);
-                    }
-    				
-    				Date permanentDateObj = null;				
-    				for (Integer permanentDateIndex : permanentDateIndices) {
-    					if (permanentDateIndex != null) {
-    						permanentDateObj = dateFormat.parse(row.get(permanentDateIndex));
-    					}					
-    					user.setPermanentDate(permanentDateObj);
-                    }
     								                
                     user.setPassword(passwordEncoder.encode("123@dirace"));
                     user.setActiveStatus(ActiveStatus.OFFLINE);
@@ -400,9 +343,43 @@ public class ExcelServiceImplement implements ExcelService {
             }
             return true;
     	} catch (Exception e) {
-            e.printStackTrace();
             return false;
         }        
     }
+
+    public void readAndSendEmail(InputStream inputStream, String sheetName, Workbook workbook) {
+		Sheet sheet = workbook.getSheet(sheetName);
+		Set<String> uniqueEmailAndOTPInfo = new HashSet<>();
+
+		for (int i = 1; i <= sheet.getLastRowNum(); i++) {
+			Row row = sheet.getRow(i);
+			if (row != null) {
+				Cell emailCell = row.getCell(3);
+				Cell otpCell = row.getCell(4);
+
+				if (emailCell != null && otpCell != null) {
+					String email = emailCell.toString().trim();
+					String otp = otpCell.toString().trim();
+
+					String emailOTPInfo = email + "_" + otp;
+
+					uniqueEmailAndOTPInfo.add(emailOTPInfo);
+				}
+			}
+		}
+		for (String teamInfo : uniqueEmailAndOTPInfo) {
+			String[] parts = teamInfo.split("_");
+			if (parts.length == 2) {
+				String email = parts[0];
+				String otp = parts[1];
+				String emailBodyForOTPPart1 = Message.emailBodyForOTPPart1;
+				String emailBodyForOTPPart2 = Message.emailBodyForOTPPart2;
+				String emailSubjectForOtp = Message.emailSubjectForOtp;
+
+				emailService.sendMail(email, emailSubjectForOtp, emailBodyForOTPPart1 + otp + "\n" + emailBodyForOTPPart2);
+			}
+		}
+
+	}
 
 }

@@ -9,12 +9,10 @@ package com.kage.wfhs.serviceImplement;
 
 import com.kage.wfhs.dto.RegisterFormDto;
 import com.kage.wfhs.model.Capture;
-import com.kage.wfhs.model.Position;
 import com.kage.wfhs.model.RegisterForm;
 import com.kage.wfhs.model.Status;
 import com.kage.wfhs.model.User;
 import com.kage.wfhs.repository.CaptureRepository;
-import com.kage.wfhs.repository.PositionRepository;
 import com.kage.wfhs.repository.RegisterFormRepository;
 import com.kage.wfhs.repository.UserRepository;
 import com.kage.wfhs.service.NotificationService;
@@ -41,8 +39,8 @@ public class RegisterFormServiceImplement implements RegisterFormService {
     @Autowired
     private final UserRepository userRepo;
     
-    @Autowired
-    private final PositionRepository positionRepo;
+//    @Autowired
+//    private final PositionRepository positionRepo;
     
     @Autowired
     private final ModelMapper modelMapper;
@@ -65,6 +63,10 @@ public class RegisterFormServiceImplement implements RegisterFormService {
 
         long formId = registerFormRepo.findLastId();
         Capture capture = new Capture();
+        checkOsTypeAndSave(registerFormDto, formId, capture);
+    }
+
+    private void checkOsTypeAndSave(RegisterFormDto registerFormDto, long formId, Capture capture) {
         capture.setOs_type(registerFormDto.getOs_type());
         if(capture.getOs_type().equalsIgnoreCase("window")){
 	        capture.setAntivirusPattern(ImageUtil.convertImageToBase64(registerFormDto.getAntivirusPatternInput()));
@@ -73,7 +75,7 @@ public class RegisterFormServiceImplement implements RegisterFormService {
         capture.setOperationSystem(ImageUtil.convertImageToBase64(registerFormDto.getOperationSystemInput()));
         capture.setAntivirusSoftware(ImageUtil.convertImageToBase64(registerFormDto.getAntivirusSoftwareInput()));
         capture.setSecurityPatch(ImageUtil.convertImageToBase64(registerFormDto.getSecurityPatchInput()));
-        
+
         capture.setRegisterForm(formId > 0 ? registerFormRepo.findById(formId) : null);
         captureRepo.save(capture);
     }
@@ -83,8 +85,8 @@ public class RegisterFormServiceImplement implements RegisterFormService {
     	RegisterForm registerForm = registerFormRepo.findById(id);
     	User formRegistererUser = userRepo.findById(registerForm.getApplicant().getId());
     	User registerUser = userRepo.findByStaffId(formRegistererUser.getStaffId());
-    	Position formRegistererPosition = positionRepo.findById(formRegistererUser.getPosition().getId());
-    	formRegistererUser.setPosition(formRegistererPosition);
+//    	Position formRegistererPosition = positionRepo.findById(formRegistererUser.getPosition().getId());
+//    	formRegistererUser.setPosition(formRegistererPosition);
     	registerForm.setApplicant(registerUser);
         return modelMapper.map(registerForm, RegisterFormDto.class);
     }
@@ -205,34 +207,20 @@ public class RegisterFormServiceImplement implements RegisterFormService {
         registerFormRepo.save(form);
 
         Capture capture = captureRepo.findByRegisterFormId(formId);
-        capture.setOs_type(registerFormDto.getOs_type());
-        if(capture.getOs_type().equalsIgnoreCase("window")){
-	        capture.setAntivirusPattern(ImageUtil.convertImageToBase64(registerFormDto.getAntivirusPatternInput()));
-	        capture.setAntivirusFullScan(ImageUtil.convertImageToBase64(registerFormDto.getAntivirusFullScanInput()));
-        }
-        capture.setOperationSystem(ImageUtil.convertImageToBase64(registerFormDto.getOperationSystemInput()));
-        capture.setAntivirusSoftware(ImageUtil.convertImageToBase64(registerFormDto.getAntivirusSoftwareInput()));
-        capture.setSecurityPatch(ImageUtil.convertImageToBase64(registerFormDto.getSecurityPatchInput()));
-        
-        capture.setRegisterForm(formId > 0 ? registerFormRepo.findById(formId) : null);
-        captureRepo.save(capture);
+        checkOsTypeAndSave(registerFormDto, formId, capture);
     }
 
 	@Override
 	public void exportStaffIdsForOTP(List<Long> formIds, HttpServletResponse response) {
 		List<RegisterForm> formList = registerFormRepo.findAllById(formIds);
-		if (formList != null) {
-			OTPStaffIDExcelGenerator generator = new OTPStaffIDExcelGenerator(formList);
-			for (RegisterForm form : formList) {
-				//form.setCompleteStatus(3);
-				this.registerFormRepo.save(form);
-			}
-			try {
-				generator.export(response);
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-		} 
-	}
+        OTPStaffIDExcelGenerator generator = new OTPStaffIDExcelGenerator(formList);
+        //form.setCompleteStatus(3);
+        this.registerFormRepo.saveAll(formList);
+        try {
+            generator.export(response);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 
 }

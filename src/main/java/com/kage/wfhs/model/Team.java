@@ -29,10 +29,16 @@ public class Team implements Serializable {
     @Column(name = "name", length = 50, nullable = false)
     private String name;
 
+    @Column(name = "created_at", nullable = false, updatable = false)
+    private long createdAt;
+
     @ManyToOne
     @JoinColumn(name = "department_id")
     private Department department;
 
     @OneToMany(mappedBy = "team", cascade = CascadeType.ALL)
     private List<User> users;
+
+    @PrePersist
+    protected void onCreate() {createdAt = System.currentTimeMillis();}
 }
