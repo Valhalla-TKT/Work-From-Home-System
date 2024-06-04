@@ -26,11 +26,12 @@ public class ApproveRole implements Serializable {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private long id;
+	
+	@Column(name = "name", nullable = false)
 	private String name;
 
 	@ManyToMany(mappedBy = "approveRoles")
 	@JsonIgnore
-	@ToString.Exclude
 	private List<User> users;
 
 	@OneToMany(mappedBy = "approveRole", cascade = CascadeType.ALL)

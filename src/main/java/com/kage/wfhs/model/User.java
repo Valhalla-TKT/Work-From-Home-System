@@ -12,7 +12,6 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.io.Serializable;
-import java.util.Date;
 import java.util.List;
 import java.util.Set;
 
@@ -22,35 +21,48 @@ import java.util.Set;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
+@ToString
 public class User implements Serializable {
 	private static final long serialVersionUID = 1L;
 	
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
+    
+    @Column(name = "staff_id", length = 8, nullable = false)
     private String staffId;
+    
+    @Column(name = "name", length = 30, nullable = false)
     private String name;
-    @Column(unique=true)
+    
+    @Column(name = "email", length = 50, nullable = false, unique = true)
     private String email;
-    private String phoneNumber;
+    
+    @Column(name = "password", length = 30, nullable = false)
     private String password;
+    
+    // for security
     private boolean enabled;
-    private String gender;
+    
     @Column(columnDefinition = "TEXT")
     private String profile;
-    private boolean maritalStatus;
-    private boolean parent;
-    private boolean children;
-    private Date joinDate;
-    private Date permanentDate;
+    
+    @Column(columnDefinition = "TEXT")
     private String signature;
-    private ActiveStatus activeStatus;
 
     @ManyToOne
-    @JoinColumn(name = "role_id")
-    @JsonIgnore
-	@ToString.Exclude
-    private Role role;
+    @JoinColumn(name = "team_id")
+    private Team team;
+
+    @ManyToOne
+    @JoinColumn(name = "department_id")
+    private Department department;
+
+    @ManyToOne
+    @JoinColumn(name = "division_id")
+    private Division division;
+    
+    private ActiveStatus activeStatus;
 
     @OneToMany(mappedBy = "sender", cascade = CascadeType.ALL)
     @ToString.Exclude
@@ -68,12 +80,6 @@ public class User implements Serializable {
     @ToString.Exclude
     private List<Notification> receivedNotifications;
 
-    @ManyToOne
-    @JoinColumn(name = "position_id")
-    @ToString.Exclude
-    @JsonIgnore
-    private Position position;
-
     @OneToMany(mappedBy = "applicant", cascade = CascadeType.ALL)
     @ToString.Exclude
     @JsonIgnore
@@ -88,24 +94,6 @@ public class User implements Serializable {
     @JsonIgnore
 	@ToString.Exclude
     private List<WorkFlowStatus> workFlowStatuses;
-
-    @ManyToOne
-    @JoinColumn(name = "team_id")
-    @ToString.Exclude
-    @JsonIgnore
-    private Team team;
-
-    @ManyToOne
-    @JoinColumn(name = "department_id")
-    @ToString.Exclude
-    @JsonIgnore
-    private Department department;
-
-    @ManyToOne
-    @JoinColumn(name = "division_id")
-    @ToString.Exclude
-    @JsonIgnore
-    private Division division;
     
     @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinTable(name = "user_has_approve_role",
@@ -116,6 +104,9 @@ public class User implements Serializable {
     private Set<ApproveRole> approveRoles;
 
     private boolean isFirstTimeLogin;
+    
+    private int loginCount;
+    
     @PrePersist
     protected void onCreate() {
         isFirstTimeLogin = true;

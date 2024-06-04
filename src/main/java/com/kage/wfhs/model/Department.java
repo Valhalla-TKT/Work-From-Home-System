@@ -13,8 +13,6 @@ import lombok.*;
 import java.io.Serializable;
 import java.util.List;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-
 @Entity
 @Table(name = "department")
 @Getter
@@ -28,22 +26,14 @@ public class Department implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
-    private String code;
+
+    @Column(name = "name", length = 50, nullable = false)
     private String name;
 
     @ManyToOne
     @JoinColumn(name = "division_id")
-    @JsonIgnore
-    @ToString.Exclude
     private Division division;
-
-    @OneToMany(mappedBy = "department", cascade = CascadeType.ALL)
-    @JsonIgnore
-    @ToString.Exclude
-    private List<Team> teams;
     
     @OneToMany(mappedBy = "department", cascade = CascadeType.ALL)
-    @JsonIgnore
-    @ToString.Exclude
     private List<User> users;
 }
