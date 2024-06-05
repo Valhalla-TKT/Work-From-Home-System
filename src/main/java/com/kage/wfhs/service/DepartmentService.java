@@ -19,11 +19,11 @@ public interface DepartmentService {
 
 	List<DepartmentDto> getAllDepartment();
 
-	DepartmentDto getDepartmentById(long id);
+	DepartmentDto getDepartmentById(Long id);
 
 	void updateDepartment(DepartmentDto departmentDto);
 
-	void deleteDepartmentById(long id);
+	void deleteDepartmentById(Long id);
 
 	DepartmentDto getDepartmentByName(String name);
 }

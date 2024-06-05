@@ -16,13 +16,13 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import com.kage.wfhs.dto.DivisionDto;
+import com.kage.wfhs.exception.EntityNotFoundException;
 import com.kage.wfhs.model.Division;
 import com.kage.wfhs.repository.DivisionRepository;
 import com.kage.wfhs.service.DivisionService;
 import com.kage.wfhs.util.EntityUtil;
 import com.kage.wfhs.util.Helper;
 
-import com.kage.wfhs.exception.EntityNotFoundException;
 import lombok.AllArgsConstructor;
 
 @Service
@@ -31,9 +31,6 @@ public class DivisionServiceImplement implements DivisionService {
     @Autowired
     private final DivisionRepository divisionRepo;
     private final ModelMapper modelMapper;
-    
-    @Autowired
-    private final Helper helper;
 
     @Override
     public DivisionDto createDivision(DivisionDto divisionDto) {
@@ -44,7 +41,7 @@ public class DivisionServiceImplement implements DivisionService {
 
     @Override
     public List<DivisionDto> getAllDivision() {
-        Sort sort = Sort.by(Sort.Direction.ASC, "name");
+        Sort sort = Sort.by(Sort.Direction.ASC, "createdAt");
         List<Division> divisions = EntityUtil.getAllEntities(divisionRepo, sort, "division");
         if (divisions == null) {
             return null;
@@ -52,13 +49,14 @@ public class DivisionServiceImplement implements DivisionService {
         List<DivisionDto> divisionList = new ArrayList<>();
         for (Division division : divisions) {
             DivisionDto divisionDto = modelMapper.map(division, DivisionDto.class);
+            divisionDto.setCreatedAtDate(Helper.formatDate(divisionDto.getCreatedAt()));
             divisionList.add(divisionDto);
         }
         return divisionList;
     }
 
 	@Override
-    public DivisionDto getDivisionById(long id) {
+    public DivisionDto getDivisionById(Long id) {
         Division division = EntityUtil.getEntityById(divisionRepo, id);
         return modelMapper.map(division, DivisionDto.class);
     }
@@ -78,7 +76,7 @@ public class DivisionServiceImplement implements DivisionService {
     }
 
     @Override
-    public void deleteDivisionById(long id) {
+    public void deleteDivisionById(Long id) {
         EntityUtil.deleteEntity(divisionRepo, id, "Division");
     }
 }

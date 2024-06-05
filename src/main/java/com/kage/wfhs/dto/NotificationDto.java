@@ -18,7 +18,7 @@ import lombok.*;
 @AllArgsConstructor
 @ToString
 public class NotificationDto {
-    private long id;
+    private Long id;
     private User sender, receiver;    
     private NotificationType notificationType;
     private RegisterForm registerForm;

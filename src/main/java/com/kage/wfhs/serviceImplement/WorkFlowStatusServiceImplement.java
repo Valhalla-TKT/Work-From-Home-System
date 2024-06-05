@@ -13,6 +13,7 @@ import com.kage.wfhs.repository.*;
 import com.kage.wfhs.service.LedgerService;
 import com.kage.wfhs.service.NotificationService;
 import com.kage.wfhs.service.WorkFlowStatusService;
+import com.kage.wfhs.util.EntityUtil;
 import com.kage.wfhs.util.Helper;
 import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
@@ -48,10 +49,10 @@ public class WorkFlowStatusServiceImplement implements WorkFlowStatusService {
     private final LedgerService ledgerService;
 
     @Override
-    public void createWorkFlowStatus(long userId, long formId) throws Exception {
-        User applicant = userRepo.findById(userId);
+    public void createWorkFlowStatus(Long userId, Long formId) throws Exception {
+        User applicant = EntityUtil.getEntityById(userRepo, userId);
         Set<ApproveRole> approveRoles = applicant.getApproveRoles();
-        RegisterForm registerForm = registerFormRepo.findById(formId);
+        RegisterForm registerForm = EntityUtil.getEntityById(registerFormRepo, formId);
         boolean hasCEO = false;
         boolean hasSERVICE_DESK = false;
         for(ApproveRole approveRole : approveRoles) {
@@ -76,7 +77,7 @@ public class WorkFlowStatusServiceImplement implements WorkFlowStatusService {
             for (User user : approvers) {
                 WorkFlowStatus workFlowStatus = new WorkFlowStatus();
                 workFlowStatus.setStatus(Status.PENDING);
-                workFlowStatus.setRegisterForm(formId > 0 ? registerFormRepo.findById(formId) : null);
+                workFlowStatus.setRegisterForm(formId > 0 ? EntityUtil.getEntityById(registerFormRepo, formId) : null);
                 workFlowStatus.setUser(user);
                 workFlowStatus.setApproveRole(approveRole);
                 workFlowStatusRepo.save(workFlowStatus);
@@ -113,12 +114,12 @@ public class WorkFlowStatusServiceImplement implements WorkFlowStatusService {
 
 
     @Override
-    public WorkFlowStatusDto getWorkFlowStatus(long id) {
+    public WorkFlowStatusDto getWorkFlowStatus(Long id) {
         return modelMapper.map(workFlowStatusRepo.findById(id), WorkFlowStatusDto.class);
     }
 
     @Override
-    public List<WorkFlowStatusDto> getWorkFlowStatusWithForm(long id) {
+    public List<WorkFlowStatusDto> getWorkFlowStatusWithForm(Long id) {
         List<WorkFlowStatus> workFlowStatuses = workFlowStatusRepo.findByRegisterFormId(id);
         List<WorkFlowStatusDto> workFlowStatusList = new ArrayList<>();
         for (WorkFlowStatus workFlowStatus : workFlowStatuses){
@@ -131,8 +132,8 @@ public class WorkFlowStatusServiceImplement implements WorkFlowStatusService {
 
 
     @Override
-    public void updateStatus(long id, WorkFlowStatusDto workFlowStatusDto) throws Exception {
-    	WorkFlowStatus workFlowStatus = workFlowStatusRepo.findById(id);      
+    public void updateStatus(Long id, WorkFlowStatusDto workFlowStatusDto) throws Exception {
+    	WorkFlowStatus workFlowStatus = EntityUtil.getEntityById(workFlowStatusRepo, id);      
         RegisterForm form = registerFormRepo.findByWorkFlowStatusId(id);
 
         WorkFlowStatus cisoApprove = workFlowStatusRepo.findByApproveRoleNameAndFormId(form.getId(), "CISO");
@@ -150,7 +151,7 @@ public class WorkFlowStatusServiceImplement implements WorkFlowStatusService {
         workFlowStatusRepo.save(workFlowStatus);
             String userRole = getUserRole(workFlowStatus);
             if(!workFlowStatusDto.isState() && !Objects.equals(userRole, "CISO") && !Objects.equals(userRole, "SERVICE_DESK") ){
-                RegisterForm registerForm = registerFormRepo.findById(workFlowStatusDto.getRegisterFormId());
+                RegisterForm registerForm = EntityUtil.getEntityById(registerFormRepo, workFlowStatusDto.getRegisterFormId());
                 registerForm.setStatus(Status.REJECT);
                 registerFormRepo.save(registerForm);
                 notificationService.sendPendingApproveRejectNotificationToServiceDesk(registerForm.getId(), registerForm.getApplicant().getId(), registerForm.getRequester().getId(), registerForm.getStatus().name());
@@ -169,7 +170,7 @@ public class WorkFlowStatusServiceImplement implements WorkFlowStatusService {
                 }
             } else if (Objects.equals(userRole, "CEO") && workFlowStatusDto.isState()) {
                 createApproval(workFlowStatusDto.getRegisterFormId(), "SERVICE_DESK");
-                RegisterForm registerForm = registerFormRepo.findById(workFlowStatusDto.getRegisterFormId());
+                RegisterForm registerForm = EntityUtil.getEntityById(registerFormRepo, workFlowStatusDto.getRegisterFormId());
                 registerForm.setStatus(Status.APPROVE);
                 registerFormRepo.save(registerForm);
                 ledgerService.createLedger(registerForm.getId());
@@ -185,15 +186,15 @@ public class WorkFlowStatusServiceImplement implements WorkFlowStatusService {
     }
 
     @Override
-    public WorkFlowStatusDto getWorkFlowStatusWithApprover(long id) {
+    public WorkFlowStatusDto getWorkFlowStatusWithApprover(Long id) {
         WorkFlowStatus workFlowStatus = workFlowStatusRepo.findByUserId(id);
         return modelMapper.map(workFlowStatus, WorkFlowStatusDto.class);
     }
 
-    private void createApproval(long registerFormId, String roleName) {       
+    private void createApproval(Long registerFormId, String roleName) {       
         WorkFlowStatus workFlowStatus = new WorkFlowStatus();
         workFlowStatus.setStatus(Status.PENDING);
-        workFlowStatus.setRegisterForm(registerFormRepo.findById(registerFormId));
+        workFlowStatus.setRegisterForm(EntityUtil.getEntityById(registerFormRepo, registerFormId));
         workFlowStatus.setUser(userRepo.findByApproveRoles_Name(roleName));
         workFlowStatus.setApproveRole(approveRoleRepo.findByName(roleName));
         workFlowStatusRepo.save(workFlowStatus);
@@ -218,7 +219,7 @@ public class WorkFlowStatusServiceImplement implements WorkFlowStatusService {
         return null;
     }
     @Override
-    public WorkFlowStatusDto getByUserIdAndFormId(long userId, long formId) {
+    public WorkFlowStatusDto getByUserIdAndFormId(Long userId, Long formId) {
         WorkFlowStatus workFlowStatus = workFlowStatusRepo.findByUserIdAndRegisterFormId(userId, formId);
         if (workFlowStatus != null) {
             return modelMapper.map(workFlowStatus, WorkFlowStatusDto.class);

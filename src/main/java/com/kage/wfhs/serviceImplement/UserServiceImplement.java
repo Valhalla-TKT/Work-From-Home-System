@@ -7,26 +7,37 @@
  */
 package com.kage.wfhs.serviceImplement;
 
-import com.kage.wfhs.dto.UserDto;
-import com.kage.wfhs.exception.EntityCreationException;
-import com.kage.wfhs.model.*;
-import com.kage.wfhs.repository.*;
-import com.kage.wfhs.service.UserService;
-import com.kage.wfhs.util.EntityUtil;
-import com.kage.wfhs.util.Helper;
-
-import jakarta.persistence.EntityNotFoundException;
-import lombok.RequiredArgsConstructor;
-import org.modelmapper.ModelMapper;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Sort;
-import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
+
+import org.modelmapper.ModelMapper;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Service;
+
+import com.kage.wfhs.dto.UserDto;
+import com.kage.wfhs.exception.EntityCreationException;
+import com.kage.wfhs.model.ActiveStatus;
+import com.kage.wfhs.model.ApproveRole;
+import com.kage.wfhs.model.Department;
+import com.kage.wfhs.model.Division;
+import com.kage.wfhs.model.Team;
+import com.kage.wfhs.model.User;
+import com.kage.wfhs.model.WorkFlowOrder;
+import com.kage.wfhs.repository.ApproveRoleRepository;
+import com.kage.wfhs.repository.DepartmentRepository;
+import com.kage.wfhs.repository.DivisionRepository;
+import com.kage.wfhs.repository.TeamRepository;
+import com.kage.wfhs.repository.UserRepository;
+import com.kage.wfhs.service.UserService;
+import com.kage.wfhs.util.EntityUtil;
+import com.kage.wfhs.util.Helper;
+
+import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor
@@ -112,9 +123,9 @@ public class UserServiceImplement implements UserService {
 		return null;
 	}
 
-	private void setApprovalRoles(User user, long approveRoleId) {
+	private void setApprovalRoles(User user, Long approveRoleId) {
 		if (approveRoleId > 0) {
-			ApproveRole approveRole = approveRoleRepo.findById(approveRoleId);
+			ApproveRole approveRole = EntityUtil.getEntityById(approveRoleRepo, approveRoleId);
 			if (approveRole != null) {
 				Set<ApproveRole> approveRoles = new HashSet<>();
 				approveRoles.add(approveRole);
@@ -124,7 +135,7 @@ public class UserServiceImplement implements UserService {
 	}
 
 	@Override
-	public void updateUser(long id, UserDto userDto) {
+	public void updateUser(Long id, UserDto userDto) {
 		// need to implement
 	}
 
@@ -194,7 +205,7 @@ public class UserServiceImplement implements UserService {
 	}
 
 	@Override
-	public List<UserDto> getAllTeamMember(long id) {
+	public List<UserDto> getAllTeamMember(Long id) {
 		List<User> users = userRepo.findByTeamId(id);
 		List<UserDto> userList = new ArrayList<>();
 		for (User user : users) {
@@ -205,7 +216,7 @@ public class UserServiceImplement implements UserService {
 	}
 
 	@Override
-	public List<UserDto> getAllDepartmentMember(long id) {
+	public List<UserDto> getAllDepartmentMember(Long id) {
 		List<User> users = userRepo.findByTeamDepartmentId(id);
 		List<UserDto> userList = new ArrayList<>();
 		for (User user : users) {
@@ -216,7 +227,7 @@ public class UserServiceImplement implements UserService {
 	}
 
 	@Override
-	public List<UserDto> getAllDivisionMember(long id) {
+	public List<UserDto> getAllDivisionMember(Long id) {
 		List<User> users = userRepo.findByTeamDepartmentDivisionId(id);
 		List<UserDto> userList = new ArrayList<>();
 		for (User user : users) {
@@ -227,13 +238,13 @@ public class UserServiceImplement implements UserService {
 	}
 
 	@Override
-	public Set<ApproveRole> getApproveRoleByUserId(long id) {
+	public Set<ApproveRole> getApproveRoleByUserId(Long id) {
 
 		return null;
 	}
 
 	@Override
-	public Team getTeamIdByUserId(long id) {
+	public Team getTeamIdByUserId(Long id) {
 		return userRepo.findTeamByUserId(id);
 	}
 
@@ -246,7 +257,7 @@ public class UserServiceImplement implements UserService {
 
 	@Override
 	public void disconnect(User user) {
-		var storedUser = userRepo.findById(user.getId());
+		var storedUser = EntityUtil.getEntityById(userRepo, user.getId());
 		if (storedUser != null) {
 			storedUser.setActiveStatus(ActiveStatus.OFFLINE);
 			userRepo.save(user);
@@ -265,13 +276,13 @@ public class UserServiceImplement implements UserService {
 	}
 
 	@Override
-	public UserDto getUserById(long id) {
-		User user = userRepo.findById(id);
+	public UserDto getUserById(Long id) {
+		User user = EntityUtil.getEntityById(userRepo, id);
 		return modelMapper.map(user, UserDto.class);
 	}
 	
 	@Override
-    public List<UserDto> getUpperRole(long workFlowStatusId) {
+    public List<UserDto> getUpperRole(Long workFlowStatusId) {
         List<User> users = userRepo.findUpperRoleUser(workFlowStatusId);
         List<UserDto> userList = new ArrayList<>();
         for (User user : users) {
@@ -352,6 +363,7 @@ public class UserServiceImplement implements UserService {
 		userDto.setPhoneNumber("000 000 000");
 		userDto.setPassword(passwordEncoder.encode("123@dirace"));
 		userDto.setEnabled(true);
+		userDto.setGender("Male");
 		User HR = modelMapper.map(userDto, User.class);
 		ApproveRole approveRole = approveRoleRepo.findByName("HR");
 	    if (approveRole == null) {

@@ -26,7 +26,7 @@ public class WorkFlowStatus implements Serializable {
 	
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
+    private Long id;
     @Enumerated(EnumType.STRING)
     private Status status;
     @Column(columnDefinition = "TEXT")

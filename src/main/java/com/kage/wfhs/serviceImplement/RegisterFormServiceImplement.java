@@ -17,6 +17,7 @@ import com.kage.wfhs.repository.RegisterFormRepository;
 import com.kage.wfhs.repository.UserRepository;
 import com.kage.wfhs.service.NotificationService;
 import com.kage.wfhs.service.RegisterFormService;
+import com.kage.wfhs.util.EntityUtil;
 import com.kage.wfhs.util.ImageUtil;
 import com.kage.wfhs.util.OTPStaffIDExcelGenerator;
 
@@ -54,19 +55,19 @@ public class RegisterFormServiceImplement implements RegisterFormService {
     @Override
     public void createRegisterForm(RegisterFormDto registerFormDto) throws Exception {    	 
         RegisterForm registerForm = modelMapper.map(registerFormDto, RegisterForm.class);
-        registerForm.setApplicant(registerFormDto.getApplicantId() > 0 ? userRepo.findById(registerFormDto.getApplicantId()) : null);
-        registerForm.setRequester(registerFormDto.getRequesterId() > 0 ? userRepo.findById(registerFormDto.getRequesterId()) : null);
+        registerForm.setApplicant(registerFormDto.getApplicantId() > 0 ? EntityUtil.getEntityById(userRepo, registerFormDto.getApplicantId()) : null);
+        registerForm.setRequester(registerFormDto.getRequesterId() > 0 ? EntityUtil.getEntityById(userRepo, registerFormDto.getRequesterId()) : null);
         registerForm.setSignature(ImageUtil.convertImageToBase64(registerFormDto.getSignatureInput()));
         registerForm.setStatus(Status.PENDING);
         registerFormRepo.save(registerForm);
         notificationService.savePendingNotification(registerForm.getStatus().name());
 
-        long formId = registerFormRepo.findLastId();
+        Long formId = registerFormRepo.findLastId();
         Capture capture = new Capture();
         checkOsTypeAndSave(registerFormDto, formId, capture);
     }
 
-    private void checkOsTypeAndSave(RegisterFormDto registerFormDto, long formId, Capture capture) {
+    private void checkOsTypeAndSave(RegisterFormDto registerFormDto, Long formId, Capture capture) {
         capture.setOs_type(registerFormDto.getOs_type());
         if(capture.getOs_type().equalsIgnoreCase("window")){
 	        capture.setAntivirusPattern(ImageUtil.convertImageToBase64(registerFormDto.getAntivirusPatternInput()));
@@ -76,14 +77,14 @@ public class RegisterFormServiceImplement implements RegisterFormService {
         capture.setAntivirusSoftware(ImageUtil.convertImageToBase64(registerFormDto.getAntivirusSoftwareInput()));
         capture.setSecurityPatch(ImageUtil.convertImageToBase64(registerFormDto.getSecurityPatchInput()));
 
-        capture.setRegisterForm(formId > 0 ? registerFormRepo.findById(formId) : null);
+        capture.setRegisterForm(formId > 0 ? EntityUtil.getEntityById(registerFormRepo, formId) :  null);
         captureRepo.save(capture);
     }
 
     @Override
-    public RegisterFormDto getRegisterForm(long id) {
-    	RegisterForm registerForm = registerFormRepo.findById(id);
-    	User formRegistererUser = userRepo.findById(registerForm.getApplicant().getId());
+    public RegisterFormDto getRegisterForm(Long id) {
+    	RegisterForm registerForm = EntityUtil.getEntityById(registerFormRepo, id);
+    	User formRegistererUser = EntityUtil.getEntityById(userRepo, registerForm.getApplicant().getId());
     	User registerUser = userRepo.findByStaffId(formRegistererUser.getStaffId());
 //    	Position formRegistererPosition = positionRepo.findById(formRegistererUser.getPosition().getId());
 //    	formRegistererUser.setPosition(formRegistererPosition);
@@ -103,12 +104,12 @@ public class RegisterFormServiceImplement implements RegisterFormService {
     }
 
     @Override
-    public long getFormLastId() {
+    public Long getFormLastId() {
         return registerFormRepo.findLastId();
     }
     
     @Override
-    public List<RegisterFormDto> getAllFormSpecificTeam(long approveRoleId,String status, long teamId) {
+    public List<RegisterFormDto> getAllFormSpecificTeam(Long approveRoleId,String status, Long teamId) {
 
         List<RegisterForm> registerForms = registerFormRepo.findRegisterFormByTeam(approveRoleId,status, teamId);
         List<RegisterFormDto> registerFormList = new ArrayList<>();
@@ -121,7 +122,7 @@ public class RegisterFormServiceImplement implements RegisterFormService {
     }
 
     @Override
-    public List<RegisterFormDto> getAllFormSpecificDepartment(long approveRoleId,String status, long teamId) {
+    public List<RegisterFormDto> getAllFormSpecificDepartment(Long approveRoleId,String status, Long teamId) {
 
         List<RegisterForm> registerForms = registerFormRepo.findRegisterFormByDepartment(approveRoleId,status, teamId);
         List<RegisterFormDto> registerFormList = new ArrayList<>();
@@ -133,7 +134,7 @@ public class RegisterFormServiceImplement implements RegisterFormService {
     }
 
     @Override
-    public List<RegisterFormDto> getAllFormSpecificDivision(long approveRoleId,String status, long teamId) {
+    public List<RegisterFormDto> getAllFormSpecificDivision(Long approveRoleId,String status, Long teamId) {
 
         List<RegisterForm> registerForms = registerFormRepo.findRegisterFormByDivision(approveRoleId,status, teamId);
         List<RegisterFormDto> registerFormList = new ArrayList<>();
@@ -145,7 +146,7 @@ public class RegisterFormServiceImplement implements RegisterFormService {
     }
 
     @Override
-    public List<RegisterFormDto> getAllFormSpecificTeamAll(long approveRoleId, long teamId) {
+    public List<RegisterFormDto> getAllFormSpecificTeamAll(Long approveRoleId, Long teamId) {
         List<RegisterForm> registerForms = registerFormRepo.findRegisterFormByTeamAll(approveRoleId, teamId);
         List<RegisterFormDto> registerFormList = new ArrayList<>();
         for (RegisterForm registerForm : registerForms){
@@ -156,7 +157,7 @@ public class RegisterFormServiceImplement implements RegisterFormService {
     }
 
     @Override
-    public List<RegisterFormDto> getAllFormSpecificDepartmentAll(long approveRoleId, long departmentId) {
+    public List<RegisterFormDto> getAllFormSpecificDepartmentAll(Long approveRoleId, Long departmentId) {
         List<RegisterForm> registerForms = registerFormRepo.findRegisterFormByDepartmentAll(approveRoleId, departmentId);
         List<RegisterFormDto> registerFormList = new ArrayList<>();
         for (RegisterForm registerForm : registerForms){
@@ -167,7 +168,7 @@ public class RegisterFormServiceImplement implements RegisterFormService {
     }
 
     @Override
-    public List<RegisterFormDto> getAllFormSpecificDivisionAll(long approveRoleId, long divisionId) {
+    public List<RegisterFormDto> getAllFormSpecificDivisionAll(Long approveRoleId, Long divisionId) {
         List<RegisterForm> registerForms = registerFormRepo.findRegisterFormByDivisionAll(approveRoleId, divisionId);
         List<RegisterFormDto> registerFormList = new ArrayList<>();
         for (RegisterForm registerForm : registerForms){
@@ -178,7 +179,7 @@ public class RegisterFormServiceImplement implements RegisterFormService {
     }
     
     @Override
-    public List<RegisterFormDto> getAllForm(long approveRoleId, String status) {
+    public List<RegisterFormDto> getAllForm(Long approveRoleId, String status) {
         List<RegisterForm> registerForms = registerFormRepo.findRegisterForm(approveRoleId, status);
         List<RegisterFormDto> registerFormList = new ArrayList<>();
         for (RegisterForm registerForm : registerForms){
@@ -189,7 +190,7 @@ public class RegisterFormServiceImplement implements RegisterFormService {
     }
     
     @Override
-    public List<RegisterFormDto> getFormAll(long approveRoleId) {
+    public List<RegisterFormDto> getFormAll(Long approveRoleId) {
         List<RegisterForm> registerForms = registerFormRepo.findRegisterFormAll(approveRoleId);
         List<RegisterFormDto> registerFormList = new ArrayList<>();
         for (RegisterForm registerForm : registerForms){
@@ -200,8 +201,8 @@ public class RegisterFormServiceImplement implements RegisterFormService {
     }
     
     @Override
-    public void upgradeRegisterForm(long formId, RegisterFormDto registerFormDto) {
-        RegisterForm form = registerFormRepo.findById(formId);
+    public void upgradeRegisterForm(Long formId, RegisterFormDto registerFormDto) {
+        RegisterForm form = EntityUtil.getEntityById(registerFormRepo, formId);
         modelMapper.map(registerFormDto, form);
 
         registerFormRepo.save(form);

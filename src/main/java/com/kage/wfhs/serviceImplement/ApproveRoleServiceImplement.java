@@ -11,6 +11,7 @@ import com.kage.wfhs.dto.ApproveRoleDto;
 import com.kage.wfhs.model.ApproveRole;
 import com.kage.wfhs.repository.ApproveRoleRepository;
 import com.kage.wfhs.service.ApproveRoleService;
+import com.kage.wfhs.util.EntityUtil;
 import com.kage.wfhs.util.Helper;
 
 import jakarta.persistence.EntityNotFoundException;
@@ -40,8 +41,8 @@ public class ApproveRoleServiceImplement implements ApproveRoleService {
     }
 
     @Override
-    public ApproveRoleDto getApproveRoleById(long id) {
-        ApproveRole approveRole = approveRoleRepo.findById(id);
+    public ApproveRoleDto getApproveRoleById(Long id) {
+        ApproveRole approveRole = EntityUtil.getEntityById(approveRoleRepo, id);
         return modelMapper.map(approveRole, ApproveRoleDto.class);
     }
 
@@ -63,12 +64,12 @@ public class ApproveRoleServiceImplement implements ApproveRoleService {
     }
     
     @Override
-    public long getIdByWorkFlowOrderId(long workFlowOrderId) {
+    public Long getIdByWorkFlowOrderId(Long workFlowOrderId) {
         return approveRoleRepo.findByWorkFlowOrderId(workFlowOrderId);
     }
     
     @Override
-    public void deleteApproverById(long id) {
+    public void deleteApproverById(Long id) {
         approveRoleRepo.deleteById(id);
     }
     
@@ -116,7 +117,7 @@ public class ApproveRoleServiceImplement implements ApproveRoleService {
 
     @Override
     public void updateApproveRole(ApproveRoleDto approveRoleDto) {        
-        ApproveRole approveRole = approveRoleRepo.findById(approveRoleDto.getId());
+        ApproveRole approveRole = EntityUtil.getEntityById(approveRoleRepo, approveRoleDto.getId());
         if (approveRole == null) {
             throw new EntityNotFoundException("Approve Role not found");
         }

@@ -6,7 +6,7 @@ import org.springframework.stereotype.Service;
 public interface AuthService {
 	boolean emailExists(String email);
 
-	boolean validateCurrentPassword(long userId, String currentPassword);
+	boolean validateCurrentPassword(Long userId, String currentPassword);
 
 	void sendPasswordResetLink(String email);
 

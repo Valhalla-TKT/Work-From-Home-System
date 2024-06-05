@@ -22,7 +22,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.kage.wfhs.dto.DivisionDto;
 import com.kage.wfhs.service.DivisionService;
-import com.kage.wfhs.util.Helper;
 
 import lombok.AllArgsConstructor;
 
@@ -32,8 +31,6 @@ import lombok.AllArgsConstructor;
 public class DivisionController {
 
 	private final DivisionService divisionService;
-	
-	private final Helper helper;
 
 	@PostMapping("/")
 	public ResponseEntity<String> createdivision(@RequestBody DivisionDto divisionDto) {

@@ -63,6 +63,7 @@ public class ViewController {
                 if(userList == null) {
                     boolean isHRAdded = userService.createHR();
     	    		if(!isHRAdded) {
+    	    			System.out.println("done");
     	    			return "redirect:/login";
     	    		}
                 }

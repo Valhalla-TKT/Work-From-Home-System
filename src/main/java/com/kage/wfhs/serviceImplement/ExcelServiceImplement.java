@@ -38,7 +38,6 @@ public class ExcelServiceImplement implements ExcelService {
     private final TeamRepository teamRepository;
     private final ApproveRoleRepository approveRoleRepository;
     private final UserRepository userRepository;
-    private final RoleRepository roleRepository;
     private final PasswordEncoder passwordEncoder;
     private final EmailSenderService emailService;
     
@@ -245,11 +244,7 @@ public class ExcelServiceImplement implements ExcelService {
             List<Integer> teamIndices = getColumnIndicesContainingKeyword(columnIndices, "Team");
             List<Integer> staffIDIndices = getColumnIndicesContainingKeyword(columnIndices, "Staff");
             List<Integer> nameIndices = getColumnIndicesContainingKeyword(columnIndices, "Name");
-            List<Integer> genderIndices = getColumnIndicesContainingKeyword(columnIndices, "Gender");
-            List<Integer> maritalStatusIndices = getColumnIndicesContainingKeyword(columnIndices, "Marital");
-            List<Integer> parentIndices = getColumnIndicesContainingKeyword(columnIndices, "Parent");
-            List<Integer> joinDateIndices = getColumnIndicesContainingKeyword(columnIndices, "Join");
-            List<Integer> permanentDateIndices = getColumnIndicesContainingKeyword(columnIndices, "Permanent");
+            List<Integer> genderIndices = getColumnIndicesContainingKeyword(columnIndices, "Gender");           
             List<Integer> emailIndices = getColumnIndicesContainingKeyword(columnIndices, "Email");
 
             for (List<String> row : rows) {

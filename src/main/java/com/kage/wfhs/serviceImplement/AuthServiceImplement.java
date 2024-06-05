@@ -1,8 +1,5 @@
 package com.kage.wfhs.serviceImplement;
 
-import java.util.Optional;
-import java.util.UUID;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -10,6 +7,7 @@ import org.springframework.stereotype.Service;
 import com.kage.wfhs.model.User;
 import com.kage.wfhs.repository.UserRepository;
 import com.kage.wfhs.service.AuthService;
+import com.kage.wfhs.util.EntityUtil;
 
 import lombok.AllArgsConstructor;
 
@@ -29,8 +27,8 @@ public class AuthServiceImplement implements AuthService {
 	}
 
 	@Override
-	public boolean validateCurrentPassword(long userId, String currentPassword) {
-		User user = userRepository.findById(userId);
+	public boolean validateCurrentPassword(Long userId, String currentPassword) {
+		User user = EntityUtil.getEntityById(userRepository, userId);
         if (user != null) {
             return passwordEncoder.matches(currentPassword, user.getPassword());
         }

@@ -17,7 +17,7 @@ import java.util.Date;
 @AllArgsConstructor
 @ToString
 public class LedgerDto {
-    private long id;
+    private Long id;
     private String department, team, staffId, name, email, workcation, reason_for_wfh, project_manager_approve, department_head_approve, division_head_approve, ciso_approve, ceo_approve, use_own_facilities, computer, monitor, ups, phone, other,environment_facilities;
     private Date applied_date, from_date, to_date, signed_pledge_letter_date;
     private double request_percent;

@@ -17,15 +17,15 @@ import java.util.List;
 public interface ApproveRoleService {
 	void createApproveRole(ApproveRoleDto approveRoleDto);
 
-	ApproveRoleDto getApproveRoleById(long id);
+	ApproveRoleDto getApproveRoleById(Long id);
 
 	ApproveRoleDto getApproveRoleByName(String name);
 
 	List<ApproveRoleDto> getAllApproveRole();
 
-	long getIdByWorkFlowOrderId(long orderId);
+	Long getIdByWorkFlowOrderId(Long orderId);
 
-	void deleteApproverById(long id);
+	void deleteApproverById(Long id);
 
 	boolean createHRRole();
 

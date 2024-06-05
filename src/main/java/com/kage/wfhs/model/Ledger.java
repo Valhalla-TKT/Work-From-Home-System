@@ -25,7 +25,7 @@ public class Ledger implements Serializable {
 	
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
+    private Long id;
     private String department;
     private String team;
     private String staffId;

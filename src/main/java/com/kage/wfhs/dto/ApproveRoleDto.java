@@ -19,7 +19,7 @@ import lombok.*;
 @AllArgsConstructor
 @ToString
 public class ApproveRoleDto {
-    private long id;
+    private Long id;
     private String name;
     private List<WorkFlowOrder> workFlowOrders;
 }

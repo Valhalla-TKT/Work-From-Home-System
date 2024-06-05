@@ -19,8 +19,6 @@ import java.util.Optional;
 public interface DivisionRepository extends JpaRepository<Division,Long> {    
     
     Optional<Division> findByName(String name);
-    
-    Division findByCode(String code);
 
     @Query(value="SELECT * FROM Division ORDER BY id DESC LIMIT 1", nativeQuery = true)
     Division findLastDivision();

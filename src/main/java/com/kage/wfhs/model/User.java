@@ -23,10 +23,11 @@ import java.util.Set;
 @AllArgsConstructor
 @ToString
 public class User implements Serializable {
+	private static final long serialVersionUID = 1L;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
+    private Long id;
     
     @Column(name = "staff_id", length = 8, nullable = false)
     private String staffId;
@@ -37,10 +38,10 @@ public class User implements Serializable {
     @Column(name = "email", length = 50, nullable = false, unique = true)
     private String email;
     
-    @Column(name = "password", length = 30, nullable = false)
+    @Column(name = "password", nullable = false)
     private String password;
 
-    @Column(name = "gender", length = 6, nullable = false, columnDefinition = "varchar(6) default 'male'")
+    @Column(name = "gender", length = 6, nullable = false)
     private String gender;
 
     @Column(name = "created_at", nullable = false, updatable = false)

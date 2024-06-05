@@ -60,7 +60,7 @@ public class TeamServiceImplement implements TeamService {
     }
 
     @Override
-    public TeamDto getTeamById(long id){
+    public TeamDto getTeamById(Long id){
         Team team = teamRepo.findById(id)
         		.orElseThrow(() -> new EntityNotFoundException("Team not found"));
         if(team.getDepartment() == null)
@@ -89,7 +89,7 @@ public class TeamServiceImplement implements TeamService {
     }
 
     @Override
-    public void  deleteTeamById(long id) {
+    public void  deleteTeamById(Long id) {
         EntityUtil.deleteEntity(teamRepo, id, "Team");
     }
 }

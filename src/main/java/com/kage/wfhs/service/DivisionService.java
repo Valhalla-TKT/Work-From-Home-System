@@ -15,11 +15,11 @@ import java.util.List;
 @Service
 public interface DivisionService {
 	DivisionDto createDivision(DivisionDto division);
-    DivisionDto getDivisionById(long id);
+    DivisionDto getDivisionById(Long id);
     DivisionDto getDivisionByName(String name);
     
     void updateDivision(DivisionDto divisionDto);
-    void deleteDivisionById(long id);
+    void deleteDivisionById(Long id);
 
     List<DivisionDto> getAllDivision();
 }

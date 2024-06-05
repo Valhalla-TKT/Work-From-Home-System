@@ -17,7 +17,6 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface TeamRepository extends JpaRepository<Team,Long> {
-	Team deleteById(long id);
-	List<Team> findAllByOrderByCodeAsc();
+	void deleteById(Long id);
 	Optional<Team> findByName(String name);
 }

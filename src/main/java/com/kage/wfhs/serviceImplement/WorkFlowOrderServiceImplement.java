@@ -12,6 +12,8 @@ import com.kage.wfhs.model.WorkFlowOrder;
 import com.kage.wfhs.repository.ApproveRoleRepository;
 import com.kage.wfhs.repository.WorkFlowOrderRepository;
 import com.kage.wfhs.service.WorkFlowOrderService;
+import com.kage.wfhs.util.EntityUtil;
+
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
@@ -31,7 +33,7 @@ public class WorkFlowOrderServiceImplement implements WorkFlowOrderService {
     @Override
     public void addWorkFlowOrder(WorkFlowOrderDto workFlowOrderDto) {
         WorkFlowOrder workFlowOrder = modelMapper.map(workFlowOrderDto, WorkFlowOrder.class);
-        workFlowOrder.setApproveRole(workFlowOrderDto.getApproveRoleId() > 0 ? approveRoleRepo.findById(workFlowOrderDto.getApproveRoleId()) : null);
+        workFlowOrder.setApproveRole(workFlowOrderDto.getApproveRoleId() > 0 ? EntityUtil.getEntityById(approveRoleRepo, workFlowOrderDto.getApproveRoleId()) : null);
         workFlowOrderRepo.save(workFlowOrder);
     }
 
@@ -77,13 +79,13 @@ public class WorkFlowOrderServiceImplement implements WorkFlowOrderService {
     }
 
     @Override
-    public WorkFlowOrderDto getWorkFlowOrderByApproveRoleId(long approveRoleId) {
+    public WorkFlowOrderDto getWorkFlowOrderByApproveRoleId(Long approveRoleId) {
         WorkFlowOrder workFlowOrder = workFlowOrderRepo.findByApproveRole_Id(approveRoleId);
         return modelMapper.map(workFlowOrder, WorkFlowOrderDto.class);
     }
 
     @Override
-    public WorkFlowOrderDto getWorkFlowOrderByUserId(long userId) {
+    public WorkFlowOrderDto getWorkFlowOrderByUserId(Long userId) {
         WorkFlowOrder workFlowOrder = workFlowOrderRepo.findByUserId(userId);
         return modelMapper.map(workFlowOrder, WorkFlowOrderDto.class);
     }

@@ -7,27 +7,27 @@
  */
 package com.kage.wfhs.util;
 
-import com.kage.wfhs.model.ApproveRole;
-import com.kage.wfhs.model.Division;
-import com.kage.wfhs.model.WorkFlowOrder;
-import com.kage.wfhs.repository.ApproveRoleRepository;
-import com.kage.wfhs.repository.DivisionRepository;
-import com.kage.wfhs.repository.WorkFlowOrderRepository;
-
-import lombok.AllArgsConstructor;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
 import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
+import java.text.SimpleDateFormat;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.Set;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
+
+import com.kage.wfhs.model.ApproveRole;
+import com.kage.wfhs.model.WorkFlowOrder;
+import com.kage.wfhs.repository.ApproveRoleRepository;
+import com.kage.wfhs.repository.WorkFlowOrderRepository;
+
+import lombok.AllArgsConstructor;
 
 @AllArgsConstructor
 @Service
@@ -40,9 +40,6 @@ public class Helper {
     
     @Autowired
     private final ApproveRoleRepository approveRoleRepo;
-    
-    @Autowired
-    private final DivisionRepository divisionRepo;
     
     public static String changeToSmallLetter(String text) {
         return text.toLowerCase();
@@ -115,9 +112,16 @@ public class Helper {
         WorkFlowOrder workFlowOrder = maxApproveRole.getWorkFlowOrders().get(0);
         WorkFlowOrder approves = workFlowOrderRepo.findOrderId(workFlowOrder.getId());
         if (approves == null) {
-        	return approveRoleRepo.findById(1);
+        	//return approveRoleRepo.findById(1);
+        	return EntityUtil.getEntityById(approveRoleRepo, 1L);
         } else {
         	return approves.getApproveRole();
         }
+    }
+    
+    public static String formatDate(long milliseconds) {
+        Date date = new Date(milliseconds);
+        SimpleDateFormat dateFormat = new SimpleDateFormat("MMM dd yyyy");
+        return dateFormat.format(date);
     }
 }

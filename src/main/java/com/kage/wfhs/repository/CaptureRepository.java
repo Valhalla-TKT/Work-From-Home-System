@@ -13,5 +13,5 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface CaptureRepository extends JpaRepository<Capture,Long> {
-	Capture findByRegisterFormId(long id);
+	Capture findByRegisterFormId(Long id);
 }

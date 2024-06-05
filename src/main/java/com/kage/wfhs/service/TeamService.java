@@ -18,13 +18,13 @@ public interface TeamService {
 
 	TeamDto createTeam(TeamDto teamDto);
 	
-	TeamDto getTeamById(long id);
+	TeamDto getTeamById(Long id);
 	
 	List<TeamDto> getAllTeam();
 
 	void updateTeam(TeamDto teamDto);
 
-	void deleteTeamById(long id);
+	void deleteTeamById(Long id);
 
 	TeamDto getTeamByName(String name);
 }

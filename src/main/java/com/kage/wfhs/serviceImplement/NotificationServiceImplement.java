@@ -25,6 +25,7 @@ import com.kage.wfhs.repository.NotificationTypeRepository;
 import com.kage.wfhs.repository.RegisterFormRepository;
 import com.kage.wfhs.repository.UserRepository;
 import com.kage.wfhs.service.NotificationService;
+import com.kage.wfhs.util.EntityUtil;
 
 import lombok.RequiredArgsConstructor;
 
@@ -54,11 +55,11 @@ public class NotificationServiceImplement implements NotificationService {
 	public void updatePendingNotificationCount() throws Exception {
 		//Thread.sleep(500);		
 		List<Notification> pendingNotificationList = notificationRepo.findByNotificationType_Name("PENDING");
-		int approveNotificationCount = pendingNotificationList.size();
+		long approveNotificationCount = pendingNotificationList.size();
 		broadcastPendingNotificationCount(approveNotificationCount);
 	}
 	
-	private void broadcastPendingNotificationCount(long approveNotificationCount) {
+	private void broadcastPendingNotificationCount(Long approveNotificationCount) {
 		messagingTemplate.convertAndSend("/topic/pendingNotificationCount", approveNotificationCount);
 	}
 	
@@ -67,11 +68,11 @@ public class NotificationServiceImplement implements NotificationService {
 	public void updateApproveNotificationCount() throws Exception {
 		//Thread.sleep(500);		
 		List<Notification> approveNotificationList = notificationRepo.findByNotificationType_Name("APPROVE");
-		int approveNotificationCount = approveNotificationList.size();
+		long approveNotificationCount = approveNotificationList.size();
 		broadcastApproveNotificationCount(approveNotificationCount);
 	}
 	
-	private void broadcastApproveNotificationCount(long approveNotificationCount) {
+	private void broadcastApproveNotificationCount(Long approveNotificationCount) {
 		messagingTemplate.convertAndSend("/topic/approveNotificationCount", approveNotificationCount);
 	}
 	
@@ -80,11 +81,11 @@ public class NotificationServiceImplement implements NotificationService {
 	public void updateRejectNotificationCount() throws Exception {
 		//Thread.sleep(500);		
 		List<Notification> rejectNotificationList = notificationRepo.findByNotificationType_Name("REJECT");
-		int approveNotificationCount = rejectNotificationList.size();
+		long approveNotificationCount = rejectNotificationList.size();
 		broadcastRejectNotificationCount(approveNotificationCount);
 	}
 	
-	private void broadcastRejectNotificationCount(long approveNotificationCount) {
+	private void broadcastRejectNotificationCount(Long approveNotificationCount) {
 		messagingTemplate.convertAndSend("/topic/rejectNotificationCount", approveNotificationCount);
 	}
 	
@@ -103,13 +104,13 @@ public class NotificationServiceImplement implements NotificationService {
 	
 	@Override
 	@MessageMapping("/approveRejectNotification")
-	public void sendPendingApproveRejectNotificationToServiceDesk(long formId, long senderId, long receiverId, String name) throws Exception {
+	public void sendPendingApproveRejectNotificationToServiceDesk(Long formId, Long senderId, Long receiverId, String name) throws Exception {
 		Notification notification = new Notification();
 		NotificationType notificationType = notificationTypeRepo.findByName(name); 
 		notification.setNotificationType(notificationType);
-		notification.setSender(userRepo.findById(senderId));
-		notification.setReceiver(userRepo.findById(receiverId));
-		notification.setRegisterForm(registerFormRepo.findById(formId));
+		notification.setSender(EntityUtil.getEntityById(userRepo, senderId));
+		notification.setReceiver(EntityUtil.getEntityById(userRepo, receiverId));
+		notification.setRegisterForm(EntityUtil.getEntityById(registerFormRepo, formId));
 		notificationRepo.save(notification);
 		
 		JSONObject jsonObject = new JSONObject();
@@ -137,7 +138,7 @@ public class NotificationServiceImplement implements NotificationService {
 	}
 
 	@Override
-	public void sendApproveRejectNotificationToServiceDesk(long id, long id2, String name) {
+	public void sendApproveRejectNotificationToServiceDesk(Long id, Long id2, String name) {
 		
 	}
 }

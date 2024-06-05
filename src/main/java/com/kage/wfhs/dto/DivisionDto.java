@@ -15,6 +15,6 @@ import lombok.*;
 @AllArgsConstructor
 @ToString
 public class DivisionDto {
-    private long id;
-    private String code, name, lastCode;
+    private Long id, createdAt;
+    private String name, createdAtDate;
 }

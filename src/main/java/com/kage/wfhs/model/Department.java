@@ -25,17 +25,20 @@ public class Department implements Serializable {
 	
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
+    private Long id;
 
     @Column(name = "name", length = 50, nullable = false)
     private String name;
 
     @Column(name = "created_at", nullable = false, updatable = false)
-    private long createdAt;
+    private Long createdAt;
 
     @ManyToOne
     @JoinColumn(name = "division_id")
     private Division division;
+    
+    @OneToMany(mappedBy = "department", cascade = CascadeType.ALL)
+    private List<Team> teams;
     
     @OneToMany(mappedBy = "department", cascade = CascadeType.ALL)
     private List<User> users;

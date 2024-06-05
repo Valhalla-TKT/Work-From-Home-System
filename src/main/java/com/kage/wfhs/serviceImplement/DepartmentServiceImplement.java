@@ -63,7 +63,7 @@ public class DepartmentServiceImplement implements DepartmentService {
 
 
     @Override
-    public DepartmentDto getDepartmentById(long id) {
+    public DepartmentDto getDepartmentById(Long id) {
         Department department = EntityUtil.getEntityById(departmentRepo ,id);
         if(department.getDivision() == null) {
             department.setDivision(divisionRepo.findByDepartmentId(id));
@@ -92,7 +92,7 @@ public class DepartmentServiceImplement implements DepartmentService {
     }
 	
 	@Override
-    public void deleteDepartmentById(long id) {
+    public void deleteDepartmentById(Long id) {
         EntityUtil.deleteEntity(departmentRepo, id, "Department");
     }
 }

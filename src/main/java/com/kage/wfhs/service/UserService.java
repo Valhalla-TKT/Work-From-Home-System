@@ -19,24 +19,24 @@ import java.util.Set;
 @Service
 public interface UserService {
 	UserDto createUser(UserDto userDto);
-    void updateUser(long id, UserDto userDto);
+    void updateUser(Long id, UserDto userDto);
     UserDto getUserBystaffId(String staffId);
     String createstaffId(String gender);
     String getLastStaffId(String gender);
     List<UserDto> getAllUser();
     boolean isDuplicated(UserDto userDto);
-    List<UserDto> getAllTeamMember(long id);
-    List<UserDto> getAllDepartmentMember(long id);
-    List<UserDto> getAllDivisionMember(long id);
-    Set<ApproveRole> getApproveRoleByUserId(long id);
-    Team getTeamIdByUserId(long id);
-    UserDto getUserById(long id);
+    List<UserDto> getAllTeamMember(Long id);
+    List<UserDto> getAllDepartmentMember(Long id);
+    List<UserDto> getAllDivisionMember(Long id);
+    Set<ApproveRole> getApproveRoleByUserId(Long id);
+    Team getTeamIdByUserId(Long id);
+    UserDto getUserById(Long id);
     
     // codes for live chat between Service Desk and User
 	void setUserOnline(User user);
 	void disconnect(User user);
 	List<UserDto> findConnectedUsers();
-	List<UserDto> getUpperRole(long l);
+	List<UserDto> getUpperRole(Long l);
 	List<Object[]> getUserRequestByTeamId(Long teamId);
 	List<Object[]> getTotalStaffRequestByTeamId(String teamId);
 	Object[] getTeamRegistrationInfo(Long teamId);

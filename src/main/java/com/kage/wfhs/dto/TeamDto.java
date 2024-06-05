@@ -16,7 +16,7 @@ import lombok.*;
 @AllArgsConstructor
 @ToString
 public class TeamDto {
-    private long id, departmentId;
+    private Long id, departmentId, createdAt;
     private String code, name, departmentName;
     private Department department;
 

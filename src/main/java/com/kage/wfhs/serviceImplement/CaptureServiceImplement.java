@@ -29,12 +29,12 @@ public class CaptureServiceImplement implements CaptureService {
     }
 
     @Override
-    public CaptureDto getCaptureById(long id) {
+    public CaptureDto getCaptureById(Long id) {
         return modelMapper.map(captureRepo.findById(id), CaptureDto.class);
     }
 
     @Override
-    public CaptureDto getCaptureByRegisterForm(long id) {
+    public CaptureDto getCaptureByRegisterForm(Long id) {
         return modelMapper.map(captureRepo.findByRegisterFormId(id), CaptureDto.class);
     }
 }
