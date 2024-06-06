@@ -58,14 +58,17 @@ public class User implements Serializable {
 
     @ManyToOne
     @JoinColumn(name = "team_id")
+    @JsonIgnore
     private Team team;
 
     @ManyToOne
     @JoinColumn(name = "department_id")
+    @JsonIgnore
     private Department department;
 
     @ManyToOne
     @JoinColumn(name = "division_id")
+    @JsonIgnore
     private Division division;
     
     private ActiveStatus activeStatus;

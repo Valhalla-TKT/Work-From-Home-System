@@ -77,7 +77,7 @@ public class ViewController {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if(authentication != null && authentication.isAuthenticated()){
             UserDto userDto = userService.getUserBystaffId(authentication.getName());
-            session.setAttribute("login-user", userDto);
+            //session.setAttribute("login-user", userDto);
             int notificationTypeCount = notificationTypeService.getAllNotificationTypes().size();
             if(notificationTypeCount == 0) {
                 notificationTypeService.addAllNotificationTypes();

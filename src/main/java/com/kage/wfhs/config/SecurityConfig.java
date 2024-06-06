@@ -7,7 +7,10 @@
  */
 package com.kage.wfhs.config;
 
+import com.kage.wfhs.dto.UserDto;
+import com.kage.wfhs.dto.auth.CurrentLoginUserDto;
 import com.kage.wfhs.security.FirstTimeLoginFilter;
+import com.kage.wfhs.service.UserService;
 import lombok.RequiredArgsConstructor;
 
 import org.springframework.context.annotation.Bean;
@@ -39,6 +42,7 @@ public class SecurityConfig {
     private final OurUserDetailService userDetailService;
     private final JwtUtil jwtUtil;
     private final FirstTimeLoginFilter firstTimeLoginFilter;
+    private final UserService userService;
 
     @Bean
     public static PasswordEncoder passwordEncoder(){
@@ -69,7 +73,10 @@ public class SecurityConfig {
                                             cookie.setPath("/");
                                             cookie.setMaxAge(86400); // 1 day
                                             response.addCookie(cookie);
+                                            UserDto userDto = userService.getLoginUserBystaffId(authentication.getName());
+                                            request.getSession().setAttribute("login-user", userDto);
                                             response.sendRedirect("/dashboard");
+
                                         }))
                                 )
                                 .failureHandler(authenticationFailureHandler())

@@ -7,6 +7,7 @@
  */
 package com.kage.wfhs.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -34,9 +35,11 @@ public class Division implements Serializable {
     private Long createdAt;
 
     @OneToMany(mappedBy = "division", cascade = CascadeType.ALL)
+    @JsonIgnore
     private List<Department> departments;
     
     @OneToMany(mappedBy = "division", cascade = CascadeType.ALL)
+    @JsonIgnore
     private List<User> users;
 
     @PrePersist

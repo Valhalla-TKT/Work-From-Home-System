@@ -13,6 +13,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import com.kage.wfhs.dto.auth.CurrentLoginUserDto;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
@@ -146,19 +147,20 @@ public class UserServiceImplement implements UserService {
 		List<ApproveRole> approveRoles = new ArrayList<>(user.getApproveRoles());
 	    List<WorkFlowOrder> workFlowOrders = new ArrayList<>();
 	    for (ApproveRole approveRole : approveRoles) {
-			if(approveRole.getWorkFlowOrders() != null) {
-				workFlowOrders.addAll(approveRole.getWorkFlowOrders());
-			} else {
-				break;
-			}
-
+			workFlowOrders.addAll(approveRole.getWorkFlowOrders());
 	    }
 
 		UserDto userDto = modelMapper.map(user, UserDto.class);
-		if (!workFlowOrders.isEmpty()) {
-			userDto.setWorkFlowOrders(workFlowOrders);
-		}
+		userDto.setWorkFlowOrders(workFlowOrders);
+
 		return userDto;
+	}
+
+	@Override
+	public UserDto getLoginUserBystaffId(String staffId) {
+		User user = userRepo.findByStaffId(staffId);
+
+        return modelMapper.map(user, UserDto.class);
 	}
 
 	@Override

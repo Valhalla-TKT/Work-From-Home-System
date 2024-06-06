@@ -7,6 +7,7 @@
  */
 package com.kage.wfhs.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -35,12 +36,15 @@ public class Department implements Serializable {
 
     @ManyToOne
     @JoinColumn(name = "division_id")
+    @JsonIgnore
     private Division division;
     
     @OneToMany(mappedBy = "department", cascade = CascadeType.ALL)
+    @JsonIgnore
     private List<Team> teams;
     
     @OneToMany(mappedBy = "department", cascade = CascadeType.ALL)
+    @JsonIgnore
     private List<User> users;
 
     @PrePersist

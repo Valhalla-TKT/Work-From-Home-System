@@ -8,6 +8,7 @@
 package com.kage.wfhs.service;
 
 import com.kage.wfhs.dto.UserDto;
+import com.kage.wfhs.dto.auth.CurrentLoginUserDto;
 import com.kage.wfhs.model.ApproveRole;
 import com.kage.wfhs.model.Team;
 import com.kage.wfhs.model.User;
@@ -21,7 +22,10 @@ public interface UserService {
 	UserDto createUser(UserDto userDto);
     void updateUser(Long id, UserDto userDto);
     UserDto getUserBystaffId(String staffId);
-    String createstaffId(String gender);
+
+	UserDto getLoginUserBystaffId(String staffId);
+
+	String createstaffId(String gender);
     String getLastStaffId(String gender);
     List<UserDto> getAllUser();
     boolean isDuplicated(UserDto userDto);

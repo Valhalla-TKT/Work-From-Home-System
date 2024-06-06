@@ -62,7 +62,8 @@ async function sendRequestWithTwoParams(url, method, param1Name, param1, param2N
         });
 
         if (!response.ok) {
-            throw new Error('Request failed');
+            const errorMessage = await response.text();
+            throw new Error(errorMessage || 'Request failed');
         }
 
         return response;
@@ -83,7 +84,8 @@ async function sendRequestWithThreeParams(url, method, param1Name, param1, param
         });
 
         if (!response.ok) {
-            throw new Error('Request failed');
+            const errorMessage = await response.text();
+            throw new Error(errorMessage || 'Request failed');
         }
 
         return response;

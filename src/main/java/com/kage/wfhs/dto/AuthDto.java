@@ -15,6 +15,6 @@ import lombok.*;
 @AllArgsConstructor
 @ToString
 public class AuthDto {
-    private String staffId, password;
+    private String staffId, password, newPassword;
 
 }
