@@ -146,11 +146,18 @@ public class UserServiceImplement implements UserService {
 		List<ApproveRole> approveRoles = new ArrayList<>(user.getApproveRoles());
 	    List<WorkFlowOrder> workFlowOrders = new ArrayList<>();
 	    for (ApproveRole approveRole : approveRoles) {
-	        workFlowOrders.addAll(approveRole.getWorkFlowOrders());
+			if(approveRole.getWorkFlowOrders() != null) {
+				workFlowOrders.addAll(approveRole.getWorkFlowOrders());
+			} else {
+				break;
+			}
+
 	    }
 
 		UserDto userDto = modelMapper.map(user, UserDto.class);
-		userDto.setWorkFlowOrders(workFlowOrders);
+		if (!workFlowOrders.isEmpty()) {
+			userDto.setWorkFlowOrders(workFlowOrders);
+		}
 		return userDto;
 	}
 

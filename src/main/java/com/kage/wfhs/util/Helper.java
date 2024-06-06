@@ -121,7 +121,7 @@ public class Helper {
     
     public static String formatDate(long milliseconds) {
         Date date = new Date(milliseconds);
-        SimpleDateFormat dateFormat = new SimpleDateFormat("MMM dd yyyy");
+        SimpleDateFormat dateFormat = new SimpleDateFormat("MMMM dd, yyyy");
         return dateFormat.format(date);
     }
 }

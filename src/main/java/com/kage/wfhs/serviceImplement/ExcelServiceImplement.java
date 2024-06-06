@@ -83,8 +83,7 @@ public class ExcelServiceImplement implements ExcelService {
 
     public void insertDataIntoTable(Sheet sheet) throws SQLException {
         String tableName = "clone";
-        try (Connection connection = DriverManager.getConnection(dbUrl, dbUsername, dbPassword);
-             Statement statement = connection.createStatement()) {
+        try (Connection connection = DriverManager.getConnection(dbUrl, dbUsername, dbPassword)) {
 
             Row headerRow = sheet.getRow(3);
             if (headerRow == null) {
@@ -98,78 +97,76 @@ public class ExcelServiceImplement implements ExcelService {
                 columnMap.put(columnName, columnType);
             }
 
-            for (Row row : sheet) {
-                if (row.getRowNum() <= 3) {
-                    continue;
-                }
+            StringBuilder insertQuery = new StringBuilder("INSERT INTO ").append(tableName).append(" VALUES (");
+            for (int i = 0; i < headerRow.getLastCellNum(); i++) {
+                insertQuery.append("?, ");
+            }
+            insertQuery.setLength(insertQuery.length() - 2);
+            insertQuery.append(")");
 
-                boolean isEmptyRow = true;
-                for (int i = 0; i < row.getLastCellNum(); i++) {
-                    Cell cell = row.getCell(i, Row.MissingCellPolicy.CREATE_NULL_AS_BLANK);
-                    if (cell != null && cell.getCellType() != CellType.BLANK) {
-                        isEmptyRow = false;
+            try (PreparedStatement preparedStatement = connection.prepareStatement(insertQuery.toString())) {
+                for (Row row : sheet) {
+                    if (row.getRowNum() <= 3) {
+                        continue;
+                    }
+
+                    boolean isEmptyRow = true;
+                    for (int i = 0; i < row.getLastCellNum(); i++) {
+                        Cell cell = row.getCell(i, Row.MissingCellPolicy.CREATE_NULL_AS_BLANK);
+                        if (cell != null && cell.getCellType() != CellType.BLANK) {
+                            isEmptyRow = false;
+                            break;
+                        }
+                    }
+                    if (isEmptyRow) {
                         break;
                     }
-                }
-                if (isEmptyRow) {
-                    break;
-                }
 
-                StringBuilder insertQuery = new StringBuilder("INSERT INTO ").append(tableName).append(" VALUES (");
-                for (int i = 0; i < row.getLastCellNum(); i++) {
-                    Cell cell = row.getCell(i, Row.MissingCellPolicy.CREATE_NULL_AS_BLANK);
-                    String columnValue;
-                    switch (cell.getCellType()) {
-                        case STRING:
-                            columnValue = "'" + cell.getStringCellValue().replace("'", "''") + "'";
-                            break;
-                        case NUMERIC:
-                            if (DateUtil.isCellDateFormatted(cell)) {
-                                SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-                                columnValue = "'" + dateFormat.format(cell.getDateCellValue()) + "'";
-                            } else {
-                                double numericValue = cell.getNumericCellValue();
-                                columnValue = numericValue == (int) numericValue ? String.valueOf((int) numericValue) : String.valueOf(numericValue);
-                            }
-                            break;
-                        case BOOLEAN:
-                            columnValue = String.valueOf(cell.getBooleanCellValue());
-                            break;
-                        case FORMULA:
-                            FormulaEvaluator evaluator = cell.getSheet().getWorkbook().getCreationHelper().createFormulaEvaluator();
-                            CellValue cellValue = evaluator.evaluate(cell);
-                            switch (cellValue.getCellType()) {
-                                case NUMERIC:
-                                    double numericValue = cellValue.getNumberValue();
-                                    columnValue = numericValue == (int) numericValue ? String.valueOf((int) numericValue) : String.valueOf(numericValue);
-                                    break;
-                                case STRING:
-                                    columnValue = "'" + cellValue.getStringValue() + "'";
-                                    break;
-                                case BOOLEAN:
-                                    columnValue = String.valueOf(cellValue.getBooleanValue());
-                                    break;
-                                default:
-                                    columnValue = "''";
-                                    break;
-                            }
-                            break;
-                        default:
-                            
-                            continue;
+                    for (int i = 0; i < row.getLastCellNum(); i++) {
+                        Cell cell = row.getCell(i, Row.MissingCellPolicy.CREATE_NULL_AS_BLANK);
+                        switch (cell.getCellType()) {
+                            case STRING:
+                                preparedStatement.setString(i + 1, cell.getStringCellValue());
+                                break;
+                            case NUMERIC:
+                                if (DateUtil.isCellDateFormatted(cell)) {
+                                    preparedStatement.setDate(i + 1, new java.sql.Date(cell.getDateCellValue().getTime()));
+                                } else {
+                                    preparedStatement.setDouble(i + 1, cell.getNumericCellValue());
+                                }
+                                break;
+                            case BOOLEAN:
+                                preparedStatement.setBoolean(i + 1, cell.getBooleanCellValue());
+                                break;
+                            case FORMULA:
+                                FormulaEvaluator evaluator = cell.getSheet().getWorkbook().getCreationHelper().createFormulaEvaluator();
+                                CellValue cellValue = evaluator.evaluate(cell);
+                                switch (cellValue.getCellType()) {
+                                    case NUMERIC:
+                                        preparedStatement.setDouble(i + 1, cellValue.getNumberValue());
+                                        break;
+                                    case STRING:
+                                        preparedStatement.setString(i + 1, cellValue.getStringValue());
+                                        break;
+                                    case BOOLEAN:
+                                        preparedStatement.setBoolean(i + 1, cellValue.getBooleanValue());
+                                        break;
+                                    default:
+                                        preparedStatement.setNull(i + 1, Types.NULL);
+                                        break;
+                                }
+                                break;
+                            default:
+                                preparedStatement.setNull(i + 1, Types.NULL);
+                                break;
+                        }
                     }
-                    insertQuery.append(columnValue).append(", ");
+                    preparedStatement.executeUpdate();
                 }
-
-                insertQuery.setLength(insertQuery.length() - 2);
-                insertQuery.append(")");
-
-                System.out.println(insertQuery.toString());
-
-                statement.executeUpdate(insertQuery.toString());
             }
         }
     }
+
 
 
     public List<List<String>> getTableRows(String currentSheetName) {
@@ -244,7 +241,6 @@ public class ExcelServiceImplement implements ExcelService {
             List<Integer> teamIndices = getColumnIndicesContainingKeyword(columnIndices, "Team");
             List<Integer> staffIDIndices = getColumnIndicesContainingKeyword(columnIndices, "Staff");
             List<Integer> nameIndices = getColumnIndicesContainingKeyword(columnIndices, "Name");
-            List<Integer> genderIndices = getColumnIndicesContainingKeyword(columnIndices, "Gender");           
             List<Integer> emailIndices = getColumnIndicesContainingKeyword(columnIndices, "Email");
 
             for (List<String> row : rows) {
@@ -301,29 +297,32 @@ public class ExcelServiceImplement implements ExcelService {
                     }
 
                     for (Integer staffIDIndex : staffIDIndices) {
-                        user.setStaffId(row.get(staffIDIndex));
+                        String staffId = row.get(staffIDIndex);
+                        user.setStaffId(staffId);
+
+                        if (staffId.startsWith("25")) {
+                            user.setGender("male");
+                        } else if (staffId.startsWith("26")) {
+                            user.setGender("female");
+                        } else { user.setGender("male"); };
                     }
 
                     for (Integer nameIndex : nameIndices) {
                         user.setName(row.get(nameIndex));
                     }
                     
-                    for (Integer genderIndex : genderIndices) {
-                        user.setGender(row.get(genderIndex));
-                    }
-                    
                     for (Integer emailIndex : emailIndices) {
                         user.setEmail(row.get(emailIndex));
                     }
-                    
+
                     String profile = null;
-    				if ("M".equals(user.getGender())) {
+    				if ("male".equals(user.getGender())) {
     					profile = "default-male.png";
-    				} else if ("F".equals(user.getGender())) {
+    				} else if ("female".equals(user.getGender())) {
     					profile = "default-female.jfif";
     				}
     				user.setProfile(profile);
-    								                
+
                     user.setPassword(passwordEncoder.encode("123@dirace"));
                     user.setActiveStatus(ActiveStatus.OFFLINE);
                     user.setEnabled(true);

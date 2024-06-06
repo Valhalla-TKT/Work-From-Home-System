@@ -89,7 +89,7 @@ public class ViewController {
                 } else if (userApproveRole.getName().equalsIgnoreCase("APPLICANT") && userDto.isFirstTimeLogin()) {
                     return "profile";
                 }
-            }     
+            }
             if(!userDto.isFirstTimeLogin()) {
                 model.addAttribute("divisionCount", divisionRepo.count());
                 model.addAttribute("departmentCount", departmentRepo.count());

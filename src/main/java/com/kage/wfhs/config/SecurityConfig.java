@@ -7,6 +7,7 @@
  */
 package com.kage.wfhs.config;
 
+import com.kage.wfhs.security.FirstTimeLoginFilter;
 import lombok.RequiredArgsConstructor;
 
 import org.springframework.context.annotation.Bean;
@@ -37,6 +38,7 @@ import jakarta.servlet.http.Cookie;
 public class SecurityConfig {
     private final OurUserDetailService userDetailService;
     private final JwtUtil jwtUtil;
+    private final FirstTimeLoginFilter firstTimeLoginFilter;
 
     @Bean
     public static PasswordEncoder passwordEncoder(){
@@ -54,6 +56,7 @@ public class SecurityConfig {
                 )
                 .exceptionHandling(exceptionHandling -> exceptionHandling.accessDeniedPage("/accessDenied"))
                 .addFilterBefore(jwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class)
+                .addFilterAfter(firstTimeLoginFilter, JwtAuthenticationFilter.class)
                 .formLogin(form -> form
                                 .loginPage("/login")
                                 .loginProcessingUrl("/signIn")
