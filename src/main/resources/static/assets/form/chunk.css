@@ -747,8 +747,9 @@ label[data-v-63278824] {
 .user-form-container[data-v-741dde45] {
   margin-bottom: 32px;
   padding: 40px var(--nav-v2-gutter);
+  border: 1px solid black;
   border-radius: 8px;
-  background: linear-gradient(90deg, #f7e9f3 0%, #e0dffc 100%);
+  background: #fff;
   box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
 }
 
@@ -759,7 +760,8 @@ label[data-v-63278824] {
   margin-bottom: 32px;
   padding: 40px var(--nav-v2-gutter);
   border-radius: 8px;
-  background: linear-gradient(90deg, #f7e9f3 0%, #e0dffc 100%);
+  background: white;
+  border: 1px solid black;
   box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
 }
 
@@ -1538,6 +1540,7 @@ hr[data-v-115a39aa] {
     -webkit-box-direction: normal;
     -webkit-box-pack: center;
     background-color: #fff;
+    border: 1px solid black;
     padding: 20px;
     display: flex;
     flex-direction: column;
@@ -1570,18 +1573,19 @@ hr[data-v-115a39aa] {
     border: 2px dashed blue;
   }
   .inner-header{
+    display: flex;
   width:54%;
   }
   .go-back {
   	justify-content: flex-start;
   	margin-right: auto;
+    padding-right: 10px;
   }
   .go-back button {
   	color:black;
   	background: transparent;
   	border: none;
   	cursor: pointer !important;
-  	margin-bottom: 20px;
   }
   .go-back button svg{
    	width: 30px;
