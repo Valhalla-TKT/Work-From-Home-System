@@ -21,6 +21,7 @@ import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -56,6 +57,13 @@ public class SecurityConfig {
                 .httpBasic(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/static/**", "/assets/**", "/swagger-ui/**", "/icons/**", "/formImages/**", "/images/**", "/ws/**").permitAll()
+                        .requestMatchers("/admin/**").access((authentication, context) -> {
+                            Authentication authen = authentication.get();
+                            boolean isApplicant = authen.getAuthorities().stream()
+                                    .anyMatch(grantedAuthority -> grantedAuthority.getAuthority().equals("APPLICANT"));
+                            return isApplicant ? new org.springframework.security.authorization.AuthorizationDecision(false)
+                                    : new org.springframework.security.authorization.AuthorizationDecision(true);
+                        })
                         .anyRequest().authenticated()
                 )
                 .exceptionHandling(exceptionHandling -> exceptionHandling.accessDeniedPage("/accessDenied"))
@@ -91,7 +99,7 @@ public class SecurityConfig {
                                             cookie.setHttpOnly(true);
                                             cookie.setPath("/");
                                             cookie.setMaxAge(0);
-                                            response.addCookie(cookie);                                
+                                            response.addCookie(cookie);
                                             response.sendRedirect("/login");
                                         }))
                                 )

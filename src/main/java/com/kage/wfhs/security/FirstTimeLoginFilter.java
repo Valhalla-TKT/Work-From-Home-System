@@ -36,7 +36,7 @@ public class FirstTimeLoginFilter extends OncePerRequestFilter {
 
         // Allow requests to static resources and specific endpoints
         if (requestURI.startsWith("/static/") || requestURI.startsWith("/assets/") ||
-                requestURI.startsWith("/api/session/") || requestURI.startsWith("/swagger-ui/") ||
+                requestURI.startsWith("/api/session/") || requestURI.startsWith("/swagger-ui/") || requestURI.startsWith("/api/password/") ||
                 requestURI.startsWith("/icons/") || requestURI.startsWith("/formImages/") ||
                 requestURI.startsWith("/images/") || requestURI.startsWith("/ws/") ||
                 requestURI.equals("/login") || requestURI.equals("/profile") || requestURI.equals("/importExcel")) {

@@ -83,10 +83,12 @@ public class User implements Serializable {
 
     @OneToMany(mappedBy = "sender", cascade = CascadeType.ALL)
     @ToString.Exclude
+    @JsonIgnore
     private List<Notification> sentNotifications;
     
     @OneToMany(mappedBy = "receiver", cascade = CascadeType.ALL)
     @ToString.Exclude
+    @JsonIgnore
     private List<Notification> receivedNotifications;
 
     @OneToMany(mappedBy = "applicant", cascade = CascadeType.ALL)

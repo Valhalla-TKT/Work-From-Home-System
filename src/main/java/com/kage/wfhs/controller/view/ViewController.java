@@ -7,8 +7,6 @@
  */
 package com.kage.wfhs.controller.view;
 
-import com.kage.wfhs.dto.ExcelImportDto;
-import com.kage.wfhs.dto.LedgerDto;
 import com.kage.wfhs.dto.UserDto;
 import com.kage.wfhs.model.ApproveRole;
 import com.kage.wfhs.repository.DepartmentRepository;
@@ -76,7 +74,7 @@ public class ViewController {
     public String home(HttpSession session, ModelMap model){
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if(authentication != null && authentication.isAuthenticated()){
-            UserDto userDto = userService.getUserBystaffId(authentication.getName());
+            UserDto userDto = userService.getLoginUserBystaffId(authentication.getName());
             //session.setAttribute("login-user", userDto);
             int notificationTypeCount = notificationTypeService.getAllNotificationTypes().size();
             if(notificationTypeCount == 0) {
@@ -101,87 +99,18 @@ public class ViewController {
         return "redirect:/login";        
     }
 
-    @GetMapping("/division")
-    public String division(){
-        return "hr/division";
-    }
-
-    @GetMapping("/department")
-    public String department(){
-        return "hr/department";
-    }
-
-    @GetMapping("/team")
-    public String team(){
-        return "hr/team";
-    }
-
-    @GetMapping("/role")
-    public String role(){
-        return "hr/role";
-    }
-    @GetMapping("/position")
-    public String position(){
-        return "hr/position";
-    }
-
-    @GetMapping("/approveRole")
-    public String approveRole(){
-        return "hr/approver";
-    }
-
-    @GetMapping("/user")
-    public String addUser(){
-        return "hr/user";
-    }
-    
-    @GetMapping("/approveRoleSwitch")
-    public String approveRoleSwitch(){
-        return "approveRoleSwitch";
-    }
-    
     @GetMapping("/profile")
     public String viewProfile(){
         return "profile";
     }
 
-    @GetMapping("/viewFormList")
-    public String viewForm(){
-        return "formList";
-    }
-    
-    @GetMapping("/viewFormDetailsById")
-    public String viewFormDetailsById(){
-        return "viewFormDetailsById";
-    }
-    
-    @GetMapping("/applyForm")
-    public String applyForm(){
-        return "applyForm";
-    }
-    @GetMapping("/historyForm")
-    public String historyForm(){
-        return "form";
-    }
-    @GetMapping("/ledger")
-    public String ledgerPage(Model model){
-    	List<LedgerDto> ledgerList = ledgerService.getAllLedger();
-	    model.addAttribute("ledgerList", ledgerList);
-    
-        return "hr/ledger";
-    }    
-	    
-    @GetMapping("/importExcel")
-    public String importExcel(ModelMap model){
-        model.addAttribute("dto", new ExcelImportDto());
-        return "hr/importExcel";
-    }
-    @GetMapping("/permission")
-    public String permission(){
-        return "hr/permission";
-    }
     @GetMapping("/help")
     public String helpPage(){
         return "help";
+    }
+
+    @GetMapping("/accessDenied")
+    public String accessDeniedPage(){
+        return "accessDenied";
     }
 }

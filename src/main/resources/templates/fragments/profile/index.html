@@ -11,11 +11,11 @@
 <div id="wrap" th:fragment="content" class="warp">
 	<section class="profile-pro-masthead">
           <div class="container-large">
-              <div class="masthead-content show-profile-is-null">
+              <div class="masthead-content show-profile-is-null male">
                   <div class="masthead-avatar">
-                      <img alt="user" src="/assets/profile/default-male-avatar-profile.jpg" class="avatar male" />
+                      <img alt="user" th:alt="male" src="/assets/profile/default-male-avatar-profile.jpg" class="avatar male" />
                   </div>
-                  <div class="masthead-avatar show-profile-is-null">
+                  <div class="masthead-avatar show-profile-is-null female">
                       <img alt="user" src="/assets/profile/default-female-avatar-profile.jpg" class="avatar female" />
                   </div>
                   <div class="masthead-avatar show-profile-is-not-null">
@@ -40,7 +40,7 @@
       </section>
       <div class="container-large">
           <div class="change-password-form" id="changePasswordForm">  	
-              <form class="form-fields" action="" accept-charset="UTF-8" method="post">
+              <form class="form-fields" action="" accept-charset="UTF-8">
                   <div>
                       <fieldset>
                           <label for="currentPassword" class="password">Current Password </label>
@@ -55,7 +55,7 @@
                         <input type="password" name="password" id="confirmPassword" value="" tabindex="1" class="text-input" data-cypress="password">
                     </fieldset>
                   </div>
-                  <input class="btn2 margin-t-20 profile-btn" type="submit" value="Confirm" tabindex="3"/>
+                  <input class="btn2 margin-t-20 profile-btn" type="submit" value="Confirm" tabindex="3" style="width: 100px;"/>
               </form>
           </div>
       </div>

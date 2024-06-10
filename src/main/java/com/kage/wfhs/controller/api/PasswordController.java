@@ -33,6 +33,7 @@ public class PasswordController {
 
     @PostMapping("/changePassword")
     public ResponseEntity<?> changePassword(@RequestParam("staffId") String staffId, @RequestParam("currentPassword") String currentPassword, @RequestParam("newPassword") String newPassword) {
+        System.out.println("Hello change password");
         try {
             authService.changePassword(staffId, currentPassword, newPassword);
             return ResponseEntity.ok().build();
