@@ -39,6 +39,7 @@ import com.kage.wfhs.util.EntityUtil;
 import com.kage.wfhs.util.Helper;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
@@ -364,6 +365,7 @@ public class UserServiceImplement implements UserService {
     }
 
 	@Override
+	@Transactional
 	public boolean createHR() {
 		UserDto userDto = new UserDto();
 		userDto.setStaffId("00-00001");
@@ -383,7 +385,7 @@ public class UserServiceImplement implements UserService {
 	    HR.setApproveRoles(approveRoles);
 	    try {
 	    	User savedUser = EntityUtil.saveEntity(userRepo, HR, "user");
-	    	return savedUser != null;   
+	    	return savedUser != null;
 	    } catch (Exception e) {
 	        e.printStackTrace();
 	        return false;

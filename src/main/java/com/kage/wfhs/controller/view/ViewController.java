@@ -50,23 +50,6 @@ public class ViewController {
     
     @GetMapping("/login")
     public String login(){
-    	int approveRoleCount = approveRoleService.getAllApproveRole().size();
-    	if(approveRoleCount == 0) {
-    		boolean isHRRoleAdded = approveRoleService.createApproveRole("HR");
-    		boolean isApplicantRoleAdded = approveRoleService.createApproveRole("APPLICANT");
-    		if(!isHRRoleAdded && !isApplicantRoleAdded) {
-    			return "redirect:/login";
-    		} else {
-                List<UserDto> userList = userService.getAllUser();
-                if(userList == null) {
-                    boolean isHRAdded = userService.createHR();
-    	    		if(!isHRAdded) {
-    	    			System.out.println("done");
-    	    			return "redirect:/login";
-    	    		}
-                }
-    		}
-    	} 
         return "login";
     }
    

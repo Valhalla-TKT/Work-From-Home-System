@@ -15,23 +15,31 @@ import java.util.List;
 
 @Service
 public interface ApproveRoleService {
-	void createApproveRole(ApproveRoleDto approveRoleDto);
+    void createApproveRole(ApproveRoleDto approveRoleDto);
 
-	ApproveRoleDto getApproveRoleById(Long id);
+    ApproveRoleDto getApproveRoleById(Long id);
 
-	ApproveRoleDto getApproveRoleByName(String name);
+    ApproveRoleDto getApproveRoleByName(String name);
 
-	List<ApproveRoleDto> getAllApproveRole();
+    List<ApproveRoleDto> getAllApproveRole();
 
-	Long getIdByWorkFlowOrderId(Long orderId);
+    Long getIdByWorkFlowOrderId(Long orderId);
 
-	void deleteApproverById(Long id);
+    void deleteApproverById(Long id);
 
-	boolean createHRRole();
+    boolean createHRRole();
 
-	boolean createAdminRole();
+    boolean createAdminRole();
 
     void updateApproveRole(ApproveRoleDto approveRoleDto);
 
-	boolean createApproveRole(String name);
+    boolean createApproveRole(String name);
+
+    /**
+     * Initializes roles by creating them if they do not exist in the database.
+     *
+     * @param roles a list of role names to be initialized.
+     * @throws Exception if an error occurs during the initialization process.
+     */
+    void initializeRoles(List<String> roles) throws Exception;
 }
