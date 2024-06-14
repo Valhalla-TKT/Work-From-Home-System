@@ -64,7 +64,7 @@ public class ImportExcelController {
 			if (excelService.readExcelAndInsertIntoDatabase(inputStream, sheetName, workbook)) {
 				boolean changeSuccess = userService.changeFirstHRFirstLoginStatus();
 				if (changeSuccess) {
-					return "redirect:/dashboard";
+					return "redirect:/signOut";
 				} else {
 					model.addAttribute("message", "Failed to change the first HR login status.");
 					model.addAttribute("dto", new ExcelImportDto());
