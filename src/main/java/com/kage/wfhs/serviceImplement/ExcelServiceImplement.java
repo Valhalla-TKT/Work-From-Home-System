@@ -40,6 +40,7 @@ public class ExcelServiceImplement implements ExcelService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final EmailSenderService emailService;
+    private final Message message;
     
     @Override
     public boolean readExcelAndInsertIntoDatabase(InputStream inputStream, String sheetName, Workbook workbook) throws SQLException, ParseException {
@@ -366,11 +367,11 @@ public class ExcelServiceImplement implements ExcelService {
 			if (parts.length == 2) {
 				String email = parts[0];
 				String otp = parts[1];
-				String emailBodyForOTPPart1 = Message.emailBodyForOTPPart1;
-				String emailBodyForOTPPart2 = Message.emailBodyForOTPPart2;
-				String emailSubjectForOtp = Message.emailSubjectForOtp;
+				String emailBodyForOTPByServiceDeskPart1 = message.getEmailBodyForOTPByServiceDeskPart1();
+				String emailBodyForOTPByServiceDeskPart2 = message.getEmailBodyForOTPByServiceDeskPart2();
+				String emailSubjectForOtpByServiceDesk = message.getEmailSubjectForOtpByServiceDesk();
 
-				emailService.sendMail(email, emailSubjectForOtp, emailBodyForOTPPart1 + otp + "\n" + emailBodyForOTPPart2);
+				emailService.sendMail(email, emailSubjectForOtpByServiceDesk, emailBodyForOTPByServiceDeskPart1 + otp + "\n" + emailBodyForOTPByServiceDeskPart2);
 			}
 		}
 

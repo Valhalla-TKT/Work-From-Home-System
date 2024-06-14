@@ -1,6 +1,6 @@
 async function sendRequest(url, method, requestData) {
     try {
-        const response = await fetch(url, {
+        const response = await fetch(`http://localhost:8080${url}`, {
             method: method,
             headers: {
                 'Content-Type': 'application/json'
@@ -11,7 +11,6 @@ async function sendRequest(url, method, requestData) {
         if (!response.ok) {
             throw new Error('Request failed');
         }
-
         return response;
     } catch (error) {
         throw new Error('Error sending request: ' + error.message);

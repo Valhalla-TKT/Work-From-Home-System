@@ -113,4 +113,14 @@ public class ViewController {
     public String accessDeniedPage(){
         return "accessDenied";
     }
+
+    @GetMapping("/applyForm")
+    public String applyForm() {
+        return "applyForm";
+    }
+
+    @GetMapping("/historyForm")
+    public String historyForm() {
+        return "form";
+    }
 }

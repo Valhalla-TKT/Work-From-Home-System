@@ -34,7 +34,7 @@ public class ImportExcelController {
 	private final ExcelService excelService;
 	private final UserService userService;
 
-	@PostMapping("/importExcel")
+	@PostMapping("/admin/importExcel")
 	public String uploadFile(@RequestParam("file") MultipartFile file, @RequestParam("sheetName") String sheetName,
 			ModelMap model) throws ParseException {
 		try {

@@ -1,8 +1,6 @@
 package com.kage.wfhs.controller.api;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -33,7 +31,6 @@ public class PasswordController {
 
     @PostMapping("/changePassword")
     public ResponseEntity<?> changePassword(@RequestParam("staffId") String staffId, @RequestParam("currentPassword") String currentPassword, @RequestParam("newPassword") String newPassword) {
-        System.out.println("Hello change password");
         try {
             authService.changePassword(staffId, currentPassword, newPassword);
             return ResponseEntity.ok().build();

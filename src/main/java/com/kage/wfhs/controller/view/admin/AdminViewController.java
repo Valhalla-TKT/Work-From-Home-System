@@ -65,16 +65,6 @@ public class AdminViewController {
         return "viewFormDetailsById";
     }
 
-    @GetMapping("/applyForm")
-    public String applyForm() {
-        return "applyForm";
-    }
-
-    @GetMapping("/historyForm")
-    public String historyForm() {
-        return "form";
-    }
-
     @GetMapping("/ledger")
     public String ledgerPage(Model model) {
         List<LedgerDto> ledgerList = ledgerService.getAllLedger();

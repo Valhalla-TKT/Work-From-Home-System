@@ -39,7 +39,7 @@ public class FirstTimeLoginFilter extends OncePerRequestFilter {
                 requestURI.startsWith("/api/session/") || requestURI.startsWith("/swagger-ui/") || requestURI.startsWith("/api/password/") ||
                 requestURI.startsWith("/icons/") || requestURI.startsWith("/formImages/") ||
                 requestURI.startsWith("/images/") || requestURI.startsWith("/ws/") ||
-                requestURI.equals("/login") || requestURI.equals("/profile") || requestURI.equals("/importExcel")) {
+                requestURI.equals("/login") || requestURI.equals("/profile") || requestURI.equals("/admin/importExcel")) {
             filterChain.doFilter(request, response);
             return;
         }
@@ -57,7 +57,7 @@ public class FirstTimeLoginFilter extends OncePerRequestFilter {
                 Set<String> roles = userDto.getApproveRoles().stream().map(ApproveRole::getName).collect(Collectors.toSet());
                 if (roles.contains("HR")) {
                     logger.debug("Redirecting to /importExcel");
-                    response.sendRedirect("/importExcel");
+                    response.sendRedirect("/admin/importExcel");
                     return;
                 } else if (roles.contains("APPLICANT")) {
                     logger.debug("Redirecting to /profile");

@@ -2,7 +2,7 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org" id="fullscreen-body">
 
-<head th:replace="fragments/header :: header">
+<head th:replace="~{fragments/header :: header}">
 <title>WorkHub</title>
 </head>
 
@@ -11,7 +11,7 @@
 
 
 	<!-- header -->
-	<div th:replace="fragments/navigation :: navigation"></div>
+	<div th:replace="~{fragments/navigation :: navigation}"></div>
 	<!-- header -->
 
 	<div id="g_id_onload"
@@ -19,7 +19,7 @@
 		data-login_uri="index.html" data-ux_mode="redirect"></div>
 
 	<div th:if="${formType == 'apply'}"
-		th:replace="fragments/hr/user :: content"></div>
+		th:replace="~{fragments/hr/user :: content}"></div>
 	<!-- main -->
 	
 
@@ -190,7 +190,7 @@ function createUser(){
       gender:gender
     };
     $.ajax({
-      url: `api/user/generateStaffId`,
+      url: `http://localhost:8080/api/user/generateStaffId`,
       type: 'POST',
       contentType: 'application/json',
       data: JSON.stringify(requestData),
@@ -213,7 +213,7 @@ function createUser(){
 
   function getAllTeam() {
     $.ajax({
-      url: `api/team/teamList`,
+      url: `http://localhost:8080/api/team/teamList`,
       type: 'POST',
       contentType: 'application/json',
       success: function (response) {
@@ -247,7 +247,7 @@ function createUser(){
   }
   function getAllDepartment() {
         $.ajax({
-            url: `api/department/departmentList`,
+            url: `http://localhost:8080/api/department/departmentList`,
             type: 'POST',
             contentType: 'application/json',
             success: function (response) {var selectBox = $('#department-name');
@@ -280,7 +280,7 @@ function createUser(){
     }
     function getAllDivision() {
         $.ajax({
-            url: `api/division/divisionList`,
+            url: `http://localhost:8080/api/division/divisionList`,
             type: 'POST',
             contentType: 'application/json',
             success: function (response) {
@@ -314,7 +314,7 @@ function createUser(){
     }
   function getAllRole() {
     $.ajax({
-      url: `api/role/roleList`,
+      url: `http://localhost:8080/api/role/roleList`,
       type: 'POST',
       contentType: 'application/json',
       success: function (response) {
@@ -348,7 +348,7 @@ function createUser(){
   }
   function getAllPosition() {
     $.ajax({
-      url: `api/position/positionList`,
+      url: `http://localhost:8080/api/position/positionList`,
       type: 'POST',
       contentType: 'application/json',
       success: function (response) {
@@ -384,7 +384,7 @@ function createUser(){
   function getAllUser() {
     var rowCount = 0;
       $.ajax({
-      	url: `api/user/userList`,
+      	url: `http://localhost:8080/api/user/userList`,
           type: 'POST',
           contentType: 'application/json',
           success: function (response) {
@@ -441,7 +441,7 @@ function createUser(){
   }
   function getAllApproveRole() {
     $.ajax({
-      url: `api/approveRole/approveRoleList`,
+      url: `http://localhost:8080/api/approveRole/approveRoleList`,
       type: 'POST',
       contentType: 'application/json',
       success: function (response) {
