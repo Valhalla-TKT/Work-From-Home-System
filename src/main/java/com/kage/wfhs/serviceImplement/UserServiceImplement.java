@@ -13,7 +13,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import com.kage.wfhs.dto.auth.CurrentLoginUserDto;
+import com.kage.wfhs.exception.EntityNotFoundException;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
@@ -268,11 +268,9 @@ public class UserServiceImplement implements UserService {
 	@Override
 	public void disconnect(User user) {
 		var storedUser = EntityUtil.getEntityById(userRepo, user.getId());
-		if (storedUser != null) {
-			storedUser.setActiveStatus(ActiveStatus.OFFLINE);
-			userRepo.save(user);
-		}
-	}
+        storedUser.setActiveStatus(ActiveStatus.OFFLINE);
+        userRepo.save(user);
+    }
 
 	@Override
 	public List<UserDto> findConnectedUsers() {
@@ -366,37 +364,34 @@ public class UserServiceImplement implements UserService {
 
 	@Override
 	@Transactional
-	public boolean createHR() {
-		UserDto userDto = new UserDto();
-		userDto.setStaffId("00-00001");
-		userDto.setName("HR");
-		userDto.setEmail("hr@gmail.com");
-		userDto.setPhoneNumber("000 000 000");
-		userDto.setPassword(passwordEncoder.encode("123@dirace"));
-		userDto.setEnabled(true);
-		userDto.setGender("Male");
-		User HR = modelMapper.map(userDto, User.class);
-		ApproveRole approveRole = approveRoleRepo.findByName("HR");
-	    if (approveRole == null) {
-	        return false;
-	    }
-	    Set<ApproveRole> approveRoles = new HashSet<>();
-	    approveRoles.add(approveRole);
-	    HR.setApproveRoles(approveRoles);
-	    try {
-	    	User savedUser = EntityUtil.saveEntity(userRepo, HR, "user");
-	    	return savedUser != null;
-	    } catch (Exception e) {
-	        e.printStackTrace();
-	        return false;
-	    }
-	}
+	public void createHR() {
+		User user = userRepo.findByEmail("hr@gmail.com");
+		if(user == null) {
+			UserDto userDto = new UserDto();
+			userDto.setStaffId("00-00001");
+			userDto.setName("HR");
+			userDto.setEmail("hr@gmail.com");
+			userDto.setPhoneNumber("000 000 000");
+			userDto.setPassword(passwordEncoder.encode("123@dirace"));
+			userDto.setEnabled(true);
+			userDto.setGender("Male");
+			User HR = modelMapper.map(userDto, User.class);
+			ApproveRole approveRole = approveRoleRepo.findByName("HR");
+			if (approveRole == null) {
+				throw new EntityNotFoundException("HR role not found");
+			}
+			Set<ApproveRole> approveRoles = new HashSet<>();
+			approveRoles.add(approveRole);
+			HR.setApproveRoles(approveRoles);
+			User savedUser = EntityUtil.saveEntity(userRepo, HR, "user");
+		}
+    }
 
 	@Override
 	public boolean changeFirstHRFirstLoginStatus() {
 		User user = userRepo.findByStaffId("00-00001");
 		user.setFirstTimeLogin(false);
 		User savedUser = EntityUtil.saveEntity(userRepo, user, "user");
-		return savedUser != null;
+		return true;
 	}
 }

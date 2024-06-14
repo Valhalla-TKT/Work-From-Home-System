@@ -54,6 +54,6 @@ public interface UserService {
 	List<Object[]> getTotalStaffRequest();
 	
 	// Create HR
-	boolean createHR();
+	void createHR();
 	boolean changeFirstHRFirstLoginStatus();
 }
