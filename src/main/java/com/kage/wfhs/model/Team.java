@@ -35,10 +35,12 @@ public class Team implements Serializable {
 
     @ManyToOne
     @JoinColumn(name = "department_id")
+    @ToString.Exclude
     @JsonIgnore
     private Department department;
 
     @OneToMany(mappedBy = "team", cascade = CascadeType.ALL)
+    @ToString.Exclude
     @JsonIgnore
     private List<User> users;
 

@@ -301,6 +301,34 @@ async function deleteUser(value) {
     }
 }
 
+async function fetehUsersByTeamId(teamId) {
+    try {
+        const responseData = await sendRequestWithOneParam(`/api/user/getAllUserByTeamId`, 'POST', 'teamId', teamId);
+        const contentType = responseData.headers.get('content-type');
+        if (contentType && contentType.includes('application/json')) {
+            return await responseData.json();
+        } else {
+            return await responseData.text();
+        }
+    } catch (error) {
+        console.error('Error:', error);
+    }
+}
+
+async function fetehUsersByDepartmentId(departmentId) {
+    try {
+        const responseData = await sendRequestWithOneParam(`/api/user/getAllUserByDepartmentId`, 'POST', 'departmentId', departmentId);
+        const contentType = responseData.headers.get('content-type');
+        if (contentType && contentType.includes('application/json')) {
+            return await responseData.json();
+        } else {
+            return await responseData.text();
+        }
+    } catch (error) {
+        console.error('Error:', error);
+    }
+}
+
 // Cookie JWT
 async function fetchCookie(url) {
     const token = getCookie("JWT");

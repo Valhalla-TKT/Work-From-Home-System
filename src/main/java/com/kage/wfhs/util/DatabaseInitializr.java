@@ -2,6 +2,7 @@ package com.kage.wfhs.util;
 
 import com.kage.wfhs.service.ApproveRoleService;
 import com.kage.wfhs.service.UserService;
+import com.kage.wfhs.service.WorkFlowOrderService;
 import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
@@ -19,9 +20,11 @@ public class DatabaseInitializr {
 
     private final UserService userService;
 
+    private final WorkFlowOrderService workFlowOrderService;
+
     /**
      * Initializes roles in the system.
-     * <p>
+     *
      * This method is called after the bean has been constructed and is used to ensure
      * that the necessary approve roles ("APPLICANT", "HR", "PROJECT_MANAGER", "DEPARTMENT_HEAD", "DIVISION_HEAD", "CISO", "CEO" and "SERVICE_DESK") are present in the system and create an admin HR account.
      *
@@ -31,5 +34,6 @@ public class DatabaseInitializr {
     public void init() throws Exception {
         approveRoleService.initializeRoles(Arrays.asList("APPLICANT", "HR", "PROJECT_MANAGER", "DEPARTMENT_HEAD", "DIVISION_HEAD", "CISO", "CEO", "SERVICE_DESK"));
         userService.createHR();
+        workFlowOrderService.createDefaultWorkFlowOrder();
     }
 }

@@ -242,7 +242,7 @@ $(document).ready(function() {
     	var selectedOption = $(this).find('option:selected');
         var selectedStaffId = selectedOption.attr('data-staff-id');
         updateStaffIdFields(selectedStaffId);
-        var selectedPositionName = selectedOption.attr('data-position-name');        
+        var selectedPositionName = selectedOption.attr('data-position-name');
         positionInputBox.val(selectedPositionName);
         var selectedTeamName = selectedOption.attr('data-team-name');
         teamInputBox.val(selectedTeamName)
@@ -729,7 +729,7 @@ if (!isNaN(toDateObj.getTime())) {
     function getTeamMemberById(formData) {
         console.log(formData + "hello")
         $.ajax({
-            url: 'api/user/getAllTeamMember',
+            url: 'http://localhost:8080/api/user/getAllTeamMember',
           type: 'POST',
             data: formData,
           contentType: false,
@@ -746,7 +746,7 @@ if (!isNaN(toDateObj.getTime())) {
                             value: response[i].id,
                             text: response[i].name,
                             'data-staff-id': response[i].staffId,
-                            'data-position-name': response[i].position.name,
+                            //'data-position-name': response[i].position.name,
                             'data-team-name': response[i].team.name,
                             'data-department-name': response[i].department.name
                         });

@@ -35,10 +35,12 @@ public class Division implements Serializable {
     private Long createdAt;
 
     @OneToMany(mappedBy = "division", cascade = CascadeType.ALL)
+    @ToString.Exclude
     @JsonIgnore
     private List<Department> departments;
     
     @OneToMany(mappedBy = "division", cascade = CascadeType.ALL)
+    @ToString.Exclude
     @JsonIgnore
     private List<User> users;
 
