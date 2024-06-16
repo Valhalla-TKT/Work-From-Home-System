@@ -16,7 +16,6 @@ async function createUser() {
         }
 
         const responseData = await response.text();
-        console.log("Successful:", responseData);
         handleResponse(response, '/vinnet/login');
     } catch (error) {
         console.error('Error:', error);
@@ -37,11 +36,9 @@ async function fetchDivisions() {
         const responseData = await sendRequest(`/api/division/divisionList`, 'POST', {});
         const contentType = responseData.headers.get('content-type');
         if (contentType && contentType.includes('application/json')) {
-            const jsonData = await responseData.json();
-            return jsonData;
+            return await responseData.json();
         } else {
-            const textData = await responseData.text();
-            return textData;
+            return await responseData.text();
         }
     } catch (error) {
         console.error('Error:', error);
@@ -51,14 +48,12 @@ async function fetchDivisions() {
 async function setDivisionCode() {
     try {
         let divisionResponse = await fetchDivisions();
-        console.log(divisionResponse);
 
         if (Array.isArray(divisionResponse) && divisionResponse.length !== 0) {
 
             document.getElementById("division-code").value = divisionResponse[0].lastCode;
         } else {
-            document.getElementById("division-code").value = divisionResponse;
-            console.log("Division response is empty or not an array");
+            document.getElementById("division-code").value = divisionResponse;;
         }
     } catch (error) {
         console.error('Error:', error);
@@ -71,12 +66,9 @@ async function searchDivision(value) {
             const responseData = await sendRequestWithOneParam('/api/division/', 'GET', 'divisionId', value);
             const contentType = responseData.headers.get('content-type');
             if (contentType && contentType.includes('application/json')) {
-                const searchResults = await responseData.json();
-                console.log(searchResults)
-                return searchResults;
+                return await responseData.json();
             } else {
-                const textData = await responseData.text();
-                return textData;
+                return await responseData.text();
             }
         } catch (error) {
             console.error('Error:', error);
@@ -150,12 +142,9 @@ async function searchDepartment(value) {
             const responseData = await sendRequestWithOneParam('/api/department/', 'GET', 'departmentId', value);
             const contentType = responseData.headers.get('content-type');
             if (contentType && contentType.includes('application/json')) {
-                const searchResults = await responseData.json();
-                console.log(searchResults)
-                return searchResults;
+                return await responseData.json();
             } else {
-                const textData = await responseData.text();
-                return textData;
+                return await responseData.text();
             }
         } catch (error) {
             console.error('Error:', error);
@@ -198,12 +187,9 @@ async function fetchTeams() {
         const responseData = await sendRequest(`/api/team/teamList`, 'POST', {});        
 		const contentType = responseData.headers.get('content-type');
         if (contentType && contentType.includes('application/json')) {
-            const jsonData = await responseData.json();
-            console.log(jsonData);
-            return jsonData;
+            return await responseData.json();
         } else {
-            const textData = await responseData.text();
-            return textData;
+            return await responseData.text();
         }
     } catch (error) {
         console.error('Error:', error);
@@ -244,12 +230,9 @@ async function searchTeam(value) {
             const responseData = await sendRequestWithOneParam('/api/team/', 'GET', 'teamId', value);
             const contentType = responseData.headers.get('content-type');
             if (contentType && contentType.includes('application/json')) {
-                const searchResults = await responseData.json();
-                console.log(searchResults)
-                return searchResults;
+                return await responseData.json();
             } else {
-                const textData = await responseData.text();
-                return textData;
+                return await responseData.text();
             }
         } catch (error) {
             console.error('Error:', error);
@@ -292,9 +275,7 @@ async function fetchUsers() {
         const responseData = await sendRequest(`/api/user/userList`, 'POST', {});        
 		const contentType = responseData.headers.get('content-type');
         if (contentType && contentType.includes('application/json')) {
-            const jsonData = await responseData.json();
-            console.log(jsonData);
-            return jsonData;
+            return await responseData.json();
         } else {
             const textData = await responseData.text();
             return textData;
@@ -310,12 +291,9 @@ async function searchUser(value) {
             const responseData = await sendRequestWithOneParam('/api/user/', 'GET', 'teamId', value);
             const contentType = responseData.headers.get('content-type');
             if (contentType && contentType.includes('application/json')) {
-                const searchResults = await responseData.json();
-                console.log(searchResults)
-                return searchResults;
+                return await responseData.json();
             } else {
-                const textData = await responseData.text();
-                return textData;
+                return await responseData.text();
             }
         } catch (error) {
             console.error('Error:', error);
@@ -407,7 +385,6 @@ async function fetchCookie(url) {
         }
 
         const data = await response.json();
-        console.log(data);
     } catch (error) {
         console.error('Error fetching data:', error);
     }
