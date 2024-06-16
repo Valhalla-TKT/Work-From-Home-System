@@ -68,7 +68,7 @@ public class UserController {
 
     @PostMapping("/getAllUserByTeamId")
     public ResponseEntity<List<UserDto>> getAllUserByTeamId(
-            @RequestParam("teamId") long teamId
+            @RequestParam("teamId") Long teamId
     ){
         List<UserDto> userList = userService.getAllTeamMember(teamId);
         return ResponseEntity.ok(userList);
@@ -81,7 +81,7 @@ public class UserController {
 
     @PostMapping("/getAllUserByDepartmentId")
     public ResponseEntity<List<UserDto>> getAllUserByDepartmentId(
-            @RequestParam("departmentId") long departmentId
+            @RequestParam("departmentId") Long departmentId
     ){
         List<UserDto> userList = userService.getAllDepartmentMember(departmentId);
         return ResponseEntity.ok(userList);
@@ -90,6 +90,11 @@ public class UserController {
     @PostMapping("/getAllDivisionMember")
     public ResponseEntity<List<UserDto>> divisionmember(@RequestBody UserDto userDto){
         return ResponseEntity.ok(userService.getAllDivisionMember(userDto.getDivisionId()));
+    }
+
+    @PostMapping("/division/{divisionId}")
+    public ResponseEntity<List<UserDto>> getAllUserByDivisionId(@PathVariable("divisionId") Long divisionId){
+        return ResponseEntity.ok(userService.getAllDivisionMember(divisionId));
     }
     
     @PostMapping("/userList")

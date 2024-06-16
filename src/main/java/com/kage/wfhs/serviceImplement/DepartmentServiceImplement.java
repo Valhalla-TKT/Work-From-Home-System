@@ -13,6 +13,7 @@ import com.kage.wfhs.model.Department;
 import com.kage.wfhs.model.Division;
 import com.kage.wfhs.repository.DepartmentRepository;
 import com.kage.wfhs.service.DepartmentService;
+import com.kage.wfhs.util.DtoUtil;
 import com.kage.wfhs.util.EntityUtil;
 
 import lombok.AllArgsConstructor;
@@ -94,5 +95,11 @@ public class DepartmentServiceImplement implements DepartmentService {
 	@Override
     public void deleteDepartmentById(Long id) {
         EntityUtil.deleteEntity(departmentRepo, id, "Department");
+    }
+
+    @Override
+    public List<DepartmentDto> getDepartmentByDivisionId(Long divisionId) {
+        List<Department> departments = departmentRepo.findAllByDivisionId(divisionId);
+        return DtoUtil.mapList(departments, DepartmentDto.class, modelMapper);
     }
 }

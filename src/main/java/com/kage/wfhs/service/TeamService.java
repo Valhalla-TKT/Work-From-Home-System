@@ -27,4 +27,8 @@ public interface TeamService {
 	void deleteTeamById(Long id);
 
 	TeamDto getTeamByName(String name);
+
+	List<TeamDto> getTeamByDepartmentId(Long departmentId);
+
+    List<TeamDto> getTeamByDivisionId(Long divisionId);
 }

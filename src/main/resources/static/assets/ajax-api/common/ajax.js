@@ -130,6 +130,20 @@ async function fetchDepartments() {
     }
 }
 
+async function fetchDepartmentsByDivisionId(divisionId) {
+    try {
+        const responseData = await sendRequestWithOneParam(`/api/department/division/${divisionId}`, 'POST', 'divisionId', divisionId);
+        const contentType = responseData.headers.get('content-type');
+        if (contentType && contentType.includes('application/json')) {
+            return await responseData.json();
+        } else {
+            return await responseData.text();
+        }
+    } catch (error) {
+        console.error('Error:', error);
+    }
+}
+
 async function searchDepartment(value) {
     try {
 		try {
@@ -190,6 +204,34 @@ async function fetchTeams() {
         } else {
             const textData = await responseData.text();
             return textData;
+        }
+    } catch (error) {
+        console.error('Error:', error);
+    }
+}
+
+async function fetchTeamsByDepartmentId(departmentId) {
+    try {
+        const responseData = await sendRequestWithOneParam(`/api/team/department/${departmentId}`, 'POST', 'departmentId', departmentId);
+        const contentType = responseData.headers.get('content-type');
+        if (contentType && contentType.includes('application/json')) {
+            return await responseData.json();
+        } else {
+            return await responseData.text();
+        }
+    } catch (error) {
+        console.error('Error:', error);
+    }
+}
+
+async function fetchTeamsByDivisionId(divisionId) {
+    try {
+        const responseData = await sendRequestWithOneParam(`/api/team/division/${divisionId}`, 'POST', 'divisionId', divisionId);
+        const contentType = responseData.headers.get('content-type');
+        if (contentType && contentType.includes('application/json')) {
+            return await responseData.json();
+        } else {
+            return await responseData.text();
         }
     } catch (error) {
         console.error('Error:', error);
@@ -301,7 +343,7 @@ async function deleteUser(value) {
     }
 }
 
-async function fetehUsersByTeamId(teamId) {
+async function fetchUsersByTeamId(teamId) {
     try {
         const responseData = await sendRequestWithOneParam(`/api/user/getAllUserByTeamId`, 'POST', 'teamId', teamId);
         const contentType = responseData.headers.get('content-type');
@@ -315,9 +357,23 @@ async function fetehUsersByTeamId(teamId) {
     }
 }
 
-async function fetehUsersByDepartmentId(departmentId) {
+async function fetchUsersByDepartmentId(departmentId) {
     try {
         const responseData = await sendRequestWithOneParam(`/api/user/getAllUserByDepartmentId`, 'POST', 'departmentId', departmentId);
+        const contentType = responseData.headers.get('content-type');
+        if (contentType && contentType.includes('application/json')) {
+            return await responseData.json();
+        } else {
+            return await responseData.text();
+        }
+    } catch (error) {
+        console.error('Error:', error);
+    }
+}
+
+async function fetchUsersByDivisionId(divisionId) {
+    try {
+        const responseData = await sendRequestWithOneParam(`/api/user/division/${divisionId}`, 'POST', 'divisionId', divisionId);
         const contentType = responseData.headers.get('content-type');
         if (contentType && contentType.includes('application/json')) {
             return await responseData.json();

@@ -4,19 +4,21 @@ $(document).ready(function(){
     $('#join-date').dateDropper({
         format: 'd-m-Y',
     });
-    getAllTeam(), getAllRole(), getAllDepartment(), getAllDivision(), getAllApproveRole()
+    getAllTeam(), getAllDepartment(), getAllDivision(), getAllApproveRole()
     $('#team-filter').on('change', getAllUser);
-    $('#department-filter').on('change', getAllUser);
-    $('#division-filter').on('change', getAllUser);
+    $('#department-filter').on('change', async function() {
+        await updateTeamsByDepartment();
+        await getAllUser();
+    });
+    $('#division-filter').on('change', async function() {
+        await updateDepartmentsByDivision();
+        await updateTeamsByDivision();
+        await getAllUser();
+    });
     $('#gender-filter').on('change', getAllUser);
 
-    if('#gender') {
-        console.log('#gender')
-    }
     $('#gender').change(function() {
         var selectedGender = $(this).val();
-        console.log(selectedGender)
-        console.log(selectedGender)
         generateStaffId(selectedGender);
     });
 
@@ -111,7 +113,6 @@ $(document).ready(function(){
     }
 
     function generateStaffId(gender) {
-        console.log("In function : " , gender)
         var requestData = {
             gender:gender
         };
@@ -122,7 +123,6 @@ $(document).ready(function(){
             data: JSON.stringify(requestData),
             dataType: 'text',
             success: function (response) {
-                console.log('Response:', response);
                 var textBox = $('#staff-id');
                 textBox.empty();
                 textBox.val(response);
@@ -137,12 +137,9 @@ $(document).ready(function(){
         });
     }
 
-    function getAllTeam() {
-        $.ajax({
-            url: `http://localhost:8080/api/team/teamList`,
-            type: 'POST',
-            contentType: 'application/json',
-            success: function (response) {
+    async function getAllTeam() {
+        await fetchTeams()
+            .then(response => {
                 var selectBox = $('#team-name');
                 selectBox.empty();
                 selectBox.append('<option value="" disabled selected>Select Team Name</option>');
@@ -156,7 +153,7 @@ $(document).ready(function(){
                 }
                 var selectBox = $('#team-filter');
                 selectBox.empty();
-                selectBox.append('<option value="" disabled selected>Select Team Name</option>');
+                selectBox.append('<option value="all" selected>Select Team Name</option>');
                 for (var i = 0; i < response.length; i++) {
                     var option = $('<option>', {
                         value: response[i].id,
@@ -165,18 +162,44 @@ $(document).ready(function(){
                     });
                     selectBox.append(option);
                 }
-            },
-            error: function (error) {
+            })
+            .catch(error => {
                 console.error('Error:', error);
-            }
-        });
+            })
     }
-    function getAllDepartment() {
-        $.ajax({
-            url: `http://localhost:8080/api/department/departmentList`,
-            type: 'POST',
-            contentType: 'application/json',
-            success: function (response) {var selectBox = $('#department-name');
+
+    async function updateTeamsByDepartment() {
+        try {
+            var departmentId = $('#department-filter').val();
+            var teams = [];
+
+            if (departmentId !== 'all') {
+                teams = await getTeamsByDepartmentId(departmentId);
+            } else {
+                teams = await fetchTeams();
+            }
+
+            var selectBox = $('#team-filter');
+            selectBox.empty();
+            selectBox.append('<option value="all" selected>Select Team Name</option>');
+
+            teams.forEach(team => {
+                var option = $('<option>', {
+                    value: team.id,
+                    text: team.name,
+                    'data-code': team.code
+                });
+                selectBox.append(option);
+            });
+        } catch (error) {
+            console.error('Error:', error);
+        }
+    }
+
+    async function getAllDepartment() {
+        await fetchDepartments()
+            .then(response => {
+                var selectBox = $('#department-name');
                 selectBox.empty();
                 selectBox.append('<option value="" disabled selected>Select Department Name</option>');
                 for (var i = 0; i < response.length; i++) {
@@ -189,7 +212,7 @@ $(document).ready(function(){
                 }
                 var selectBox = $('#department-filter');
                 selectBox.empty();
-                selectBox.append('<option value="" disabled selected>Select Department Name</option>');
+                selectBox.append('<option value="all" selected>Select Department Name</option>');
                 for (var i = 0; i < response.length; i++) {
                     var option = $('<option>', {
                         value: response[i].id,
@@ -198,18 +221,71 @@ $(document).ready(function(){
                     });
                     selectBox.append(option);
                 }
-            },
-            error: function (error) {
+            })
+            .catch(error => {
                 console.error('Error:', error);
-            }
-        });
+            })
     }
-    function getAllDivision() {
-        $.ajax({
-            url: `http://localhost:8080/api/division/divisionList`,
-            type: 'POST',
-            contentType: 'application/json',
-            success: function (response) {
+
+    async function updateDepartmentsByDivision() {
+        try {
+            var divisionId = $('#division-filter').val();
+            var departments = [];
+
+            if (divisionId !== 'all') {
+                departments = await getDepartmentsByDivisionId(divisionId);
+            } else {
+                departments = await fetchDepartments();
+            }
+
+            var selectBox = $('#department-filter');
+            selectBox.empty();
+            selectBox.append('<option value="all" selected>Select Department Name</option>');
+
+            departments.forEach(department => {
+                var option = $('<option>', {
+                    value: department.id,
+                    text: department.name,
+                    'data-code': department.code
+                });
+                selectBox.append(option);
+            });
+        } catch (error) {
+            console.error('Error:', error);
+        }
+    }
+
+    async function updateTeamsByDivision() {
+        try {
+            var divisionId = $('#division-filter').val();
+            var teams = [];
+
+            if (divisionId !== 'all') {
+                teams = await getTeamsByDivisionId(divisionId);
+            } else {
+                teams = await fetchTeams();
+            }
+
+            var selectBox = $('#team-filter');
+            selectBox.empty();
+            selectBox.append('<option value="all" selected>Select Team Name</option>');
+
+            teams.forEach(team => {
+                var option = $('<option>', {
+                    value: team.id,
+                    text: team.name,
+                    'data-code': team.code
+                });
+                selectBox.append(option);
+            });
+        } catch (error) {
+            console.error('Error:', error);
+        }
+    }
+
+    async function getAllDivision() {
+        await fetchDivisions()
+            .then(response => {
                 var selectBox = $('#division-name');
                 selectBox.empty();
                 selectBox.append('<option value="" disabled selected>Select Division Name</option>');
@@ -223,7 +299,7 @@ $(document).ready(function(){
                 }
                 var selectBox = $('#division-filter');
                 selectBox.empty();
-                selectBox.append('<option value="" disabled selected>Select Division Name</option>');
+                selectBox.append('<option value="all" selected>Select Division Name</option>');
                 for (var i = 0; i < response.length; i++) {
                     var option = $('<option>', {
                         value: response[i].id,
@@ -232,46 +308,12 @@ $(document).ready(function(){
                     });
                     selectBox.append(option);
                 }
-            },
-            error: function (error) {
+            })
+            .catch(error => {
                 console.error('Error:', error);
-            }
-        });
+            })
     }
-    function getAllRole() {
-        $.ajax({
-            url: `http://localhost:8080/api/role/roleList`,
-            type: 'POST',
-            contentType: 'application/json',
-            success: function (response) {
-                var selectBox = $('#role-name');
-                selectBox.empty();
-                selectBox.append('<option value="" disabled selected>Select Role Name</option>');
-                for (var i = 0; i < response.length; i++) {
-                    var option = $('<option>', {
-                        value: response[i].id,
-                        text: response[i].name,
-                        'data-code': response[i].code
-                    });
-                    selectBox.append(option);
-                }
-                var selectBox = $('#role-filter');
-                selectBox.empty();
-                selectBox.append('<option value="" disabled selected>Select Role Name</option>');
-                for (var i = 0; i < response.length; i++) {
-                    var option = $('<option>', {
-                        value: response[i].id,
-                        text: response[i].name,
-                        'data-code': response[i].code
-                    });
-                    selectBox.append(option);
-                }
-            },
-            error: function (error) {
-                console.error('Error:', error);
-            }
-        });
-    }
+
     function getAllPosition() {
         $.ajax({
             url: `http://localhost:8080/api/position/positionList`,
@@ -314,14 +356,13 @@ $(document).ready(function(){
         var selectedDepartmentId = $('#department-filter').val();
         var selectedDivisionId = $('#division-filter').val();
         var selectedGender = $('#gender-filter').val();
-        console.log(selectedGender)
         let response;
-        if (selectedTeamId) {
+        if (selectedTeamId && selectedTeamId !== "all") {
             response = await getUsersByTeamId(selectedTeamId);
-        } else if (selectedDepartmentId) {
+        } else if (selectedDepartmentId && selectedDepartmentId !== "all") {
             response = await getUsersByDepartmentId(selectedDepartmentId);
-        } else if (selectedDivisionId) {
-            //response = await getUsersByDivisionId(selectedDivisionId); // assuming this function exists
+        } else if (selectedDivisionId && selectedDivisionId !== "all") {
+            response = await getUsersByDivisionId(selectedDivisionId);
         } else {
             response = await fetchUsers();
         }
@@ -333,15 +374,10 @@ $(document).ready(function(){
                 console.log("Response List length is 0.");
             } else {
                 response.forEach(function (user){
-                    // if (selectedGender && selectedGender !== "all" && user.gender !== selectedGender) {
-                    //     return;
-                    // }
-                    rowCount++;
-                    if(user.gender === "M") {
-                        user.gender = "Male"
-                    } else {
-                        user.gender = "Female"
+                    if (selectedGender && selectedGender !== "all" && user.gender !== selectedGender) {
+                        return;
                     }
+                    rowCount++;
                     $('#staff-list').append(`
                       <a href="detail"
                                         class="js-resume-card resume-card  designer-search-card resume-card-sections-hidden  js-user-row-6234">
@@ -373,7 +409,6 @@ $(document).ready(function(){
                       `);
                 });
             }
-            console.log("row count =", rowCount);
             document.getElementById("total-count").innerText = rowCount;
         }
 
@@ -402,9 +437,21 @@ $(document).ready(function(){
         });
     }
     async function getUsersByTeamId(teamId) {
-        return await fetehUsersByTeamId(teamId)
+        return await fetchUsersByTeamId(teamId)
     }
     async function getUsersByDepartmentId(departmentId) {
-        return await fetehUsersByDepartmentId(departmentId)
+        return await fetchUsersByDepartmentId(departmentId)
+    }
+    async function getUsersByDivisionId(divisionId) {
+        return await fetchUsersByDivisionId(divisionId)
+    }
+    async function getTeamsByDepartmentId(departmentId) {
+        return await fetchTeamsByDepartmentId(departmentId)
+    }
+    async function getDepartmentsByDivisionId(divisionId) {
+        return await fetchDepartmentsByDivisionId(divisionId)
+    }
+    async function getTeamsByDivisionId(divisionId) {
+        return await fetchTeamsByDivisionId(divisionId)
     }
 })

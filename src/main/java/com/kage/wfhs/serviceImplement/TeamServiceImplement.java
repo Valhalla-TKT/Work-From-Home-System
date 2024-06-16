@@ -10,6 +10,7 @@ package com.kage.wfhs.serviceImplement;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import com.kage.wfhs.util.DtoUtil;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
@@ -91,5 +92,15 @@ public class TeamServiceImplement implements TeamService {
     @Override
     public void  deleteTeamById(Long id) {
         EntityUtil.deleteEntity(teamRepo, id, "Team");
+    }
+
+    public List<TeamDto> getTeamByDepartmentId(Long departmentId) {
+        List<Team> teams = teamRepo.findAllByDepartmentId(departmentId);
+        return DtoUtil.mapList(teams, TeamDto.class, modelMapper);
+    }
+
+    public List<TeamDto> getTeamByDivisionId(Long divisionId) {
+        List<Team> teams = teamRepo.findAllByDivisionId(divisionId);
+        return DtoUtil.mapList(teams, TeamDto.class, modelMapper);
     }
 }
