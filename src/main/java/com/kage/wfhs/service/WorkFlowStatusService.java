@@ -15,10 +15,10 @@ import com.kage.wfhs.dto.WorkFlowStatusDto;
 
 @Service
 public interface WorkFlowStatusService {
-	void createWorkFlowStatus(long userId, long formId) throws Exception;
-    WorkFlowStatusDto getWorkFlowStatus(long id);
-    List<WorkFlowStatusDto> getWorkFlowStatusWithForm(long id);
-    void updateStatus(long id, WorkFlowStatusDto workFlowStatusDto) throws Exception;
-    WorkFlowStatusDto getWorkFlowStatusWithApprover(long id);
-    WorkFlowStatusDto getByUserIdAndFormId(long userId, long formId);
+	void createWorkFlowStatus(Long userId, Long formId) throws Exception;
+    WorkFlowStatusDto getWorkFlowStatus(Long id);
+    List<WorkFlowStatusDto> getWorkFlowStatusWithForm(Long id);
+    void updateStatus(Long id, WorkFlowStatusDto workFlowStatusDto) throws Exception;
+    WorkFlowStatusDto getWorkFlowStatusWithApprover(Long id);
+    WorkFlowStatusDto getByUserIdAndFormId(Long userId, Long formId);
 }

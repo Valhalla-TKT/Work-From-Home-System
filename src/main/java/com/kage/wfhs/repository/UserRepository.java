@@ -14,47 +14,48 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 
 @Repository
 public interface UserRepository extends JpaRepository<User,Long> {
     
     @Query("""
-            SELECT data.staff_id FROM User data WHERE data.gender = :gender
-              AND data.staff_id = (
-                SELECT MAX(user.staff_id) FROM User user WHERE user.gender = :gender GROUP BY user.gender
+            SELECT data.staffId FROM User data WHERE data.gender = :gender
+              AND data.staffId = (
+                SELECT MAX(user.staffId) FROM User user WHERE user.gender = :gender GROUP BY user.gender
               )
-            ORDER BY data.staff_id DESC
+            ORDER BY data.staffId DESC
                                         """)
     String findLastStaffIdByGender(@Param("gender") String gender);
 
     @Query(value = "SELECT * FROM User WHERE staff_id = :staffId", nativeQuery = true)
     User findByStaffId(@Param("staffId") String staffId);
     User findByEmail(String email);
-    User findById(long id);
-    List<User> findByTeamId(long id);
-    List<User> findByTeamDepartmentId(long id);
-    List<User> findByTeamDepartmentDivisionId(long id);
+    Optional<User> findById(Long id);
+    List<User> findByTeamId(Long id);
+    List<User> findByTeamDepartmentId(Long id);
+    List<User> findByTeamDepartmentDivisionId(Long id);
     @Query("SELECT u.approveRoles FROM User u WHERE u.id = :userId")
     Set<ApproveRole> findApproveRolesByUserId(Long userId);
-    User findUserByTeamId(long id);
+    User findUserByTeamId(Long id);
     @Query("SELECT u.team FROM User u WHERE u.id = :userId")
-    Team findTeamByUserId(@Param("userId") long userId);
+    Team findTeamByUserId(@Param("userId") Long userId);
     @Query("SELECT u.team.department FROM User u WHERE u.id = :userId")
-    Department findDepartmentByUserId(@Param("userId") long userId);
+    Department findDepartmentByUserId(@Param("userId") Long userId);
     @Query("SELECT u.team.department.division FROM User u WHERE u.id = :userId")
-    Division findDivisionByUserId(@Param("userId") long userId);
+    Division findDivisionByUserId(@Param("userId") Long userId);
     @Query("SELECT u FROM User u JOIN u.team t JOIN u.approveRoles ar WHERE t.id = :teamId AND ar.id = :approveRoleId")
-    List<User> findByTeamAndApproveRole(@Param("teamId") long teamId, @Param("approveRoleId") long approveRoleId);
+    List<User> findByTeamAndApproveRole(@Param("teamId") Long teamId, @Param("approveRoleId") Long approveRoleId);
     
     @Query("SELECT u FROM User u JOIN u.team t JOIN t.department d JOIN u.approveRoles ar WHERE d.id = :departmentId AND ar.id = :approveRoleId")
-    List<User> findByDepartmentAndApproveRole(@Param("departmentId") long departmentId, @Param("approveRoleId") long approveRoleId);
+    List<User> findByDepartmentAndApproveRole(@Param("departmentId") Long departmentId, @Param("approveRoleId") Long approveRoleId);
 
     @Query("SELECT u FROM User u JOIN u.team t JOIN t.department d JOIN d.division dv JOIN u.approveRoles ar WHERE dv.id = :divisionId AND ar.id = :approveRoleId")
-    List<User> findByDivisionAndApproveRole(@Param("divisionId") long divisionId, @Param("approveRoleId") long approveRoleId);
+    List<User> findByDivisionAndApproveRole(@Param("divisionId") Long divisionId, @Param("approveRoleId") Long approveRoleId);
 
     @Query("SELECT u FROM User u JOIN u.approveRoles ar WHERE ar.id = :approveRoleId")
-    List<User> findByApproveRole(@Param("approveRoleId") long approveRoleId);
+    List<User> findByApproveRole(@Param("approveRoleId") Long approveRoleId);
     @Query("SELECT u FROM User u JOIN u.approveRoles ar WHERE ar.name = :CISO")
     List<User> findCISO();
 
@@ -71,7 +72,7 @@ public interface UserRepository extends JpaRepository<User,Long> {
 	        WHERE  wfo.id = :workFlowOrderId
 
 	         """ , nativeQuery = true)
-	    List<User> findUpperRoleUser(long workFlowOrderId);
+	    List<User> findUpperRoleUser(Long workFlowOrderId);
 	//TEAM
 
     @Query("SELECT u.name AS username, COALESCE(r.request_percent, 0.0) AS requestPercent " +

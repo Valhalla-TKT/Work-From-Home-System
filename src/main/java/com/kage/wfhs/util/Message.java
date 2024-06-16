@@ -6,7 +6,9 @@
  * @Contact      : tktvalhalla@gmail.com
  */
 package com.kage.wfhs.util;
-// This class is Message Class for Service Desk Mail
+// This class is Message Class for all email process
+
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import lombok.AllArgsConstructor;
@@ -14,11 +16,25 @@ import lombok.Getter;
 import lombok.Setter;
 
 @Service
-@AllArgsConstructor
 @Getter
 @Setter
 public class Message {
-	public static final String emailSubjectForOtp = "Radius OTP of DAT 0A VDI For March 2024";
-	public static final String emailBodyForOTPPart1 = "Dear All,\n\nWe Would like to send Radius OTP as following of DAT OA VDI environment external access.\n";
-	public static final String emailBodyForOTPPart2 = "Please type this OTP for external login access of DAT OA VDI.\nPlease let us know if you have any issue.\n\nBest Regards,\nDAT Service Desk";
+
+    @Value("${email.subject.otp.service.desk}")
+    private String emailSubjectForOtpByServiceDesk;
+
+    @Value("${email.body.otp.service.desk.part1}")
+    private String emailBodyForOTPByServiceDeskPart1;
+
+    @Value("${email.body.otp.service.desk.part2}")
+    private String emailBodyForOTPByServiceDeskPart2;
+
+    @Value("${email.subject.otp.forget.password}")
+    private String emailSubjectForOtpInForgetPasswordProcess;
+
+    @Value("${email.body.otp.forget.password.part1}")
+    private String emailBodyForOtpInForgetPasswordProcessPart1;
+
+    @Value("${email.body.otp.forget.password.part2}")
+    private String emailBodyForOtpInForgetPasswordProcessPart2;
 }

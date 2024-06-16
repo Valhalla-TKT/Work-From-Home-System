@@ -23,7 +23,7 @@ public class Chat implements Serializable {
 	
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
+    private Long id;
     @Column(columnDefinition = "TEXT")
     private String message;
 

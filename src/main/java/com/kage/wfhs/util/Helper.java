@@ -7,43 +7,39 @@
  */
 package com.kage.wfhs.util;
 
-import com.kage.wfhs.model.ApproveRole;
-import com.kage.wfhs.model.Division;
-import com.kage.wfhs.model.WorkFlowOrder;
-import com.kage.wfhs.repository.ApproveRoleRepository;
-import com.kage.wfhs.repository.DivisionRepository;
-import com.kage.wfhs.repository.WorkFlowOrderRepository;
-
-import lombok.AllArgsConstructor;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
 import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.Date;
-import java.util.Set;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+import java.text.SimpleDateFormat;
+import java.util.*;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
+
+import com.kage.wfhs.model.ApproveRole;
+import com.kage.wfhs.model.WorkFlowOrder;
+import com.kage.wfhs.repository.ApproveRoleRepository;
+import com.kage.wfhs.repository.WorkFlowOrderRepository;
+
+import lombok.AllArgsConstructor;
 
 @AllArgsConstructor
 @Service
 public class Helper {
 
     private static final String uploadDir = "src/main/resources/static/assets/formImages/";
-    
+
     @Autowired
     private final WorkFlowOrderRepository workFlowOrderRepo;
-    
+
     @Autowired
     private final ApproveRoleRepository approveRoleRepo;
-    
-    @Autowired
-    private final DivisionRepository divisionRepo;
-    
+
     public static String changeToSmallLetter(String text) {
         return text.toLowerCase();
     }
@@ -53,28 +49,28 @@ public class Helper {
     }
 
     public static String changeSpaceToUnderScore(String text) {
-        return text.replace(" ","_");
+        return text.replace(" ", "_");
     }
 
 
     public static String saveImage(MultipartFile file) {
         String storageFileName = null;
-        if(file != null) {
-        		
+        if (file != null) {
+
             Date createdAt = new Date();
-            storageFileName =createdAt.getTime() + "_" + file.getOriginalFilename();
+            storageFileName = createdAt.getTime() + "_" + file.getOriginalFilename();
 
             try {
                 Path uploadPath = Paths.get(uploadDir);
                 if (!Files.exists(uploadPath)) {
                     Files.createDirectories(uploadPath);
                 }
-                try (InputStream inputStream= file.getInputStream()){
-                    Files.copy(inputStream,Paths.get(uploadDir + storageFileName),
+                try (InputStream inputStream = file.getInputStream()) {
+                    Files.copy(inputStream, Paths.get(uploadDir + storageFileName),
                             StandardCopyOption.REPLACE_EXISTING);
                 }
             } catch (Exception ex) {
-            	
+
                 System.out.println("Exception : " + ex.getMessage());
             }
         }
@@ -84,7 +80,7 @@ public class Helper {
 
     public static String updateImage(MultipartFile newFile, String oldImage) {
         String storageFileName = null;
-        if(newFile != null) {
+        if (newFile != null) {
             try {
                 if (!newFile.isEmpty()) {
                     Date createdAt = new Date();
@@ -94,7 +90,7 @@ public class Helper {
                                 StandardCopyOption.REPLACE_EXISTING);
                     }
                     if (oldImage != null) {
-                        if(oldImage.equals("default-female.jfif") || oldImage.equals("default-male.png")){
+                        if (oldImage.equals("default-female.jfif") || oldImage.equals("default-male.png")) {
                         } else {
                             Path oldImagePath = Paths.get(uploadDir + oldImage);
                             Files.delete(oldImagePath);
@@ -110,37 +106,45 @@ public class Helper {
         return storageFileName;
     }
 
+    public static String generateOTP(String email, String staffID) {
+        try {
+            String combined = email + staffID;
 
-    public ApproveRole getMaxOrder(Set<ApproveRole> approveRoles){
+            MessageDigest digest = MessageDigest.getInstance("SHA-256");
+            byte[] hash = digest.digest(combined.getBytes());
+
+            StringBuilder hexString = new StringBuilder();
+            for (byte b : hash) {
+                String hex = Integer.toHexString(0xff & b);
+                if (hex.length() == 1) hexString.append('0');
+                hexString.append(hex);
+            }
+
+            String uuid = UUID.randomUUID().toString();
+
+            String combinedWithUUID = hexString.toString() + uuid;
+
+            return combinedWithUUID.substring(0, 6).toUpperCase();
+        } catch (NoSuchAlgorithmException e) {
+            throw new RuntimeException("Error generating OTP", e);
+        }
+    }
+
+    public ApproveRole getMaxOrder(Set<ApproveRole> approveRoles) {
         ApproveRole maxApproveRole = Collections.max(approveRoles, Comparator.comparingLong(ApproveRole::getId));
-        WorkFlowOrder workFlowOrder =   maxApproveRole.getWorkFlowOrders().get(0);
-        WorkFlowOrder getApprover = workFlowOrderRepo.findOrderId(workFlowOrder.getId());
-        if (getApprover == null) {
-        	return approveRoleRepo.findById(1);
+        WorkFlowOrder workFlowOrder = maxApproveRole.getWorkFlowOrders().get(0);
+        WorkFlowOrder approves = workFlowOrderRepo.findOrderId(workFlowOrder.getId());
+        if (approves == null) {
+            //return approveRoleRepo.findById(1);
+            return EntityUtil.getEntityById(approveRoleRepo, 1L);
         } else {
-        	return getApprover.getApproveRole();
-        }
-    }
-    
-    public String getLastDivisionCode() {
-        Division lastDivision = divisionRepo.findLastDivision();
-        String lastCode = (lastDivision != null) ? lastDivision.getCode() : null;
-
-        if (lastCode == null || lastCode.isEmpty()) {
-            return "001-001";
-        } else {
-            return incrementDivisionCode(lastCode);
+            return approves.getApproveRole();
         }
     }
 
-    private String incrementDivisionCode(String lastCode) {
-        String[] parts = lastCode.split("-");
-        if (parts.length != 2) {
-            throw new IllegalArgumentException("Invalid code format");
-        }
-        int mainPart = Integer.parseInt(parts[0]);
-        int subPart = Integer.parseInt(parts[1]);
-        subPart++;
-        return String.format("%03d-%03d", mainPart, subPart);
+    public static String formatDate(long milliseconds) {
+        Date date = new Date(milliseconds);
+        SimpleDateFormat dateFormat = new SimpleDateFormat("MMMM dd, yyyy");
+        return dateFormat.format(date);
     }
 }

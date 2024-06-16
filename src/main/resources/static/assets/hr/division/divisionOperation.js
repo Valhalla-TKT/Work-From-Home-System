@@ -14,10 +14,8 @@ $('#saveChangesBtn').click(function () {
 });
 
 async function createDivision() {
-	var code = $('#division-code').val();
 	var name = $('#division-name').val();
 	var requestData = {
-		code: code,
 		name: name
 	};
 	// AJAX call
@@ -30,7 +28,6 @@ async function createDivision() {
 				icon: "success"
 			});
 			getAllDivision();
-			$('#division-code').val('');
 			$('#division-name').val('');
 		})
 		.catch(error => {
@@ -48,7 +45,7 @@ async function getAllDivision() {
 	var rowCount = 0;
 	const response = await fetchDivisions();
 	console.log(response)
-	if (response === null || response === undefined || response === "No department found.") {
+	if (response === null || response === undefined || response === "No Division found.") {
 		console.log("Division is null.");
 	} else if (Array.isArray(response)) {
 		if (response.length === 0) {
@@ -67,7 +64,7 @@ async function getAllDivision() {
 							  </div>
 							  <div class="job-title-company-container">
 								  <div class="job-role">
-									  <span class="job-board-job-company">${division.code}</span>
+									  <span class="job-board-job-company">${division.createdAtDate}</span>
 								  </div>
 								  <h4 class="job-title job-board-job-title">
 									  ${division.name}
@@ -100,7 +97,7 @@ async function getAllDivision() {
 			console.log("row count =", rowCount)
 		}
 	} else if (typeof response === 'object' && Object.keys(response).length === 0) {
-		$(".division-code").val(response)
+		console.log("This is not list")
 	}
 
 	document.getElementById('total-count').innerText = rowCount
@@ -109,7 +106,6 @@ async function getAllDivision() {
 async function openEditModal(divisionId) {
 	searchDivision(divisionId)
 		.then(response => {
-			$('#edit-division-code').val(response.code);
 			$('#edit-division-name').val(response.name);
 			$('#divisionId').val(divisionId);
 			$('#edit-data-modal').show();
@@ -131,12 +127,10 @@ function closeEditModal() {
 }
 
 async function saveChanges() {
-	var editedCode = $("#edit-division-code").val();
 	var editedName = $("#edit-division-name").val();
 	var divisionId = $('#divisionId').val();
 	var requestData = {
 		id: divisionId,
-		code: editedCode,
 		name: editedName,
 	};
 

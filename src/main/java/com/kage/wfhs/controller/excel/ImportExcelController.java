@@ -8,7 +8,8 @@
 package com.kage.wfhs.controller.excel;
 
 import com.kage.wfhs.dto.ExcelImportDto;
-import com.kage.wfhs.util.ExcelParser;
+import com.kage.wfhs.service.ExcelService;
+import com.kage.wfhs.service.UserService;
 
 import lombok.AllArgsConstructor;
 import org.apache.poi.EmptyFileException;
@@ -20,54 +21,69 @@ import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.sql.SQLException;
+import java.text.ParseException;
 
 @Controller
 @AllArgsConstructor
 public class ImportExcelController {
-    private final ExcelParser excelService;
-    @PostMapping("/importExcel")
-    public String uploadFile(@RequestParam("file") MultipartFile file, @RequestParam("sheetName") String sheetName,
-                             RedirectAttributes redirectAttributes, ModelMap model) {
-        try {
-            InputStream inputStream = file.getInputStream();
+//    private final ExcelParser excelService;
+	private final ExcelService excelService;
+	private final UserService userService;
 
-            if (file.isEmpty()) {
-                model.addAttribute("message", "Uploaded file is empty.");
-                model.addAttribute("dto", new ExcelImportDto());
-                return "hr/importExcel";
-            }
+	@PostMapping("/admin/importExcel")
+	public String uploadFile(@RequestParam("file") MultipartFile file, @RequestParam("sheetName") String sheetName,
+			ModelMap model) throws ParseException {
+		try {
+			InputStream inputStream = file.getInputStream();
 
-            if (sheetName == null || sheetName.trim().isEmpty()) {
-                model.addAttribute("message", "Sheet name cannot be null or empty.");
-                model.addAttribute("dto", new ExcelImportDto());
-                return "hr/importExcel";
-            }
+			if (file.isEmpty()) {
+				model.addAttribute("message", "Uploaded file is empty.");
+				model.addAttribute("dto", new ExcelImportDto());
+				return "hr/importExcel";
+			}
 
-            Workbook workbook = WorkbookFactory.create(inputStream);
-            Sheet sheet = workbook.getSheet(sheetName);
+			if (sheetName == null || sheetName.trim().isEmpty()) {
+				model.addAttribute("message", "Sheet name cannot be null or empty.");
+				model.addAttribute("dto", new ExcelImportDto());
+				return "hr/importExcel";
+			}
 
-            if (sheet == null) {
-                model.addAttribute("message", "No sheet found with the name: " + sheetName);
-                model.addAttribute("dto", new ExcelImportDto());
-                return "hr/importExcel";
-            }
+			Workbook workbook = WorkbookFactory.create(inputStream);
+			Sheet sheet = workbook.getSheet(sheetName);
 
-            excelService.parse(inputStream, sheetName, workbook);
-            redirectAttributes.addFlashAttribute("message", "File uploaded successfully!");
-            redirectAttributes.addFlashAttribute("currentSheetName", sheetName);
-        } catch (IOException | SQLException | EmptyFileException e) {
-            if (e instanceof EmptyFileException) {
-                model.addAttribute("message", "Uploaded file is empty.");
-            } else {
-                e.printStackTrace();
-                model.addAttribute("message", "Error uploading file: " + e.getMessage());
-            }
-        }
-        return "redirect:/dashboard";
-    }
+			if (sheet == null) {
+				model.addAttribute("message", "No sheet found with the name: " + sheetName);
+				model.addAttribute("dto", new ExcelImportDto());
+				return "hr/importExcel";
+			}
+
+			if (excelService.readExcelAndInsertIntoDatabase(inputStream, sheetName, workbook)) {
+				boolean changeSuccess = userService.changeFirstHRFirstLoginStatus();
+				if (changeSuccess) {
+					return "redirect:/signOut";
+				} else {
+					model.addAttribute("message", "Failed to change the first HR login status.");
+					model.addAttribute("dto", new ExcelImportDto());
+					return "hr/importExcel";
+				}
+			} else {
+				model.addAttribute("message", "Failed to read Excel and insert into database.");
+				model.addAttribute("dto", new ExcelImportDto());
+				return "hr/importExcel";
+			}
+
+		} catch (IOException | SQLException | EmptyFileException e) {
+			if (e instanceof EmptyFileException) {
+				model.addAttribute("message", "Uploaded file is empty.");
+			} else {
+				e.printStackTrace();
+				model.addAttribute("message", "Error uploading file: " + e.getMessage());
+			}
+			return "hr/importExcel";
+		}
+	}
 }

@@ -20,18 +20,18 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-
 public class ApproveRole implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private long id;
+	private Long id;
+	
+	@Column(name = "name", nullable = false)
 	private String name;
 
 	@ManyToMany(mappedBy = "approveRoles")
 	@JsonIgnore
-	@ToString.Exclude
 	private List<User> users;
 
 	@OneToMany(mappedBy = "approveRole", cascade = CascadeType.ALL)

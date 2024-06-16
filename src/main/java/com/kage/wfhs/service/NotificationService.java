@@ -19,8 +19,8 @@ public interface NotificationService {
 	void updateApproveNotificationCount() throws Exception;
 	void updateRejectNotificationCount() throws Exception;
 	void savePendingNotification(String name) throws Exception;
-	void sendPendingApproveRejectNotificationToServiceDesk(long formId, long senderId, long receiverId, String name) throws Exception;	
+	void sendPendingApproveRejectNotificationToServiceDesk(Long formId, Long senderId, Long receiverId, String name) throws Exception;	
 	void sendFormCountNotification(int formCount) throws Exception;
 	List<NotificationDto> getAllNotification();
-	void sendApproveRejectNotificationToServiceDesk(long id, long id2, String name);
+	void sendApproveRejectNotificationToServiceDesk(Long id, Long id2, String name);
 }

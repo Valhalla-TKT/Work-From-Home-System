@@ -130,7 +130,6 @@ function getAllTeam() {
 					console.log("Response List length is 0.");
 				} else {
                     response.forEach(function(team) {
-                        console.log(team.code)
                         rowCount++;
                         $("#team-list").append(`
                             <li class="job-list-item">

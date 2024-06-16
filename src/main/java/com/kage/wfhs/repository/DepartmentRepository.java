@@ -20,9 +20,10 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface DepartmentRepository extends JpaRepository<Department,Long> {	
 	Optional<Department> findByName(String name);
-	Department deleteById(long id);
-	List<Department> findAllByOrderByCodeAsc();
+	void deleteById(Long id);
 
 	@Query("SELECT d FROM Department d JOIN d.teams t WHERE t.id = :teamId")
     Department findByTeamId(@Param("teamId") Long teamId);
+
+    List<Department> findAllByDivisionId(Long divisionId);
 }

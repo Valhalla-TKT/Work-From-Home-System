@@ -3,7 +3,7 @@ $(document).ready(function() {
 
 	function getSessionUser() {
 	        $.ajax({
-	            url: '/api/session/user',
+	            url: 'http://localhost:8080/api/session/user',
 	            type: 'POST',
 	            contentType: 'application/json',
 	            success: function(response) {
@@ -25,9 +25,9 @@ $(document).ready(function() {
 	        if(currentUserPosition)
 	       		var positionName = currentUserPosition.name;
 	       	var email = currentUser.email;
-	       	var staffId = currentUser.staff_id;
-	       	if(currentUser.department) {
-				var departmentName = currentUser.department.name;		      	
+	       	var staffId = currentUser.staffId;
+	       	if(currentUser.team) {
+				var departmentName = currentUser.team.name;
 		}
 	      	
 	      	
@@ -178,18 +178,18 @@ $(document).ready(function() {
 	        $('#position_page_department_name').text(departmentName);
 	        $('#profile_page_role_name').text(userRole);
 	        if (currentUser.profile && currentUser.profile.length) {
-		        $('.show-profile-is-null').hide();
-		        $('.show-profile-is-not-null').show();
-		        if (currentUser.gender === "M") {
-		            $('.avatar.male').show();
-		            $('.avatar.female').hide();
-		        } else if (currentUser.gender === "F") {
-		            $('.avatar.male').hide();
-		            $('.avatar.female').show();
+				console.log("Hii")
+		        $('.show-profile-is-not-null').hide();
+		        if (currentUser.gender === "male") {
+		            $('.show-profile-is-null.male').show();
+					$('.show-profile-is-null.female').hide();
+		        } else if (currentUser.gender === "female") {
+					$('.show-profile-is-null.male').hide();
+					$('.show-profile-is-null.female').show();
 		        }
 		    } else {
 		        $('.show-profile-is-null').show();
-		        $('.show-profile-is-not-null').hide();
+		        $('.show-profile-is-not-null').show();
 		    }
 	        
 	        //$('#profile-page-image').attr('src', currentUser.profile).attr('alt', currentUser.name);

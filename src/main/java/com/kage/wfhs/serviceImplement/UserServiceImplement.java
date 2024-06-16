@@ -7,34 +7,45 @@
  */
 package com.kage.wfhs.serviceImplement;
 
-import com.kage.wfhs.dto.UserDto;
-import com.kage.wfhs.model.*;
-import com.kage.wfhs.repository.*;
-import com.kage.wfhs.service.UserService;
-import com.kage.wfhs.util.Helper;
-
-import jakarta.persistence.EntityNotFoundException;
-import lombok.RequiredArgsConstructor;
-import org.modelmapper.ModelMapper;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
+
+import com.kage.wfhs.exception.EntityNotFoundException;
+import org.modelmapper.ModelMapper;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Service;
+
+import com.kage.wfhs.dto.UserDto;
+import com.kage.wfhs.exception.EntityCreationException;
+import com.kage.wfhs.model.ActiveStatus;
+import com.kage.wfhs.model.ApproveRole;
+import com.kage.wfhs.model.Department;
+import com.kage.wfhs.model.Division;
+import com.kage.wfhs.model.Team;
+import com.kage.wfhs.model.User;
+import com.kage.wfhs.model.WorkFlowOrder;
+import com.kage.wfhs.repository.ApproveRoleRepository;
+import com.kage.wfhs.repository.DepartmentRepository;
+import com.kage.wfhs.repository.DivisionRepository;
+import com.kage.wfhs.repository.TeamRepository;
+import com.kage.wfhs.repository.UserRepository;
+import com.kage.wfhs.service.UserService;
+import com.kage.wfhs.util.EntityUtil;
+import com.kage.wfhs.util.Helper;
+
+import lombok.RequiredArgsConstructor;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
 public class UserServiceImplement implements UserService {
 	@Autowired
 	private final UserRepository userRepo;
-
-	@Autowired
-	private final RoleRepository roleRepo;
-
-	@Autowired
-	private final PositionRepository positionRepo;
 
 	@Autowired
 	private final TeamRepository teamRepo;
@@ -55,70 +66,106 @@ public class UserServiceImplement implements UserService {
 	private final PasswordEncoder passwordEncoder;
 
 	@Override
-    public void createUser(UserDto userDto) {
-        User user = modelMapper.map(userDto, User.class);
-        String encodePassword = passwordEncoder.encode(userDto.getPassword());
-        String profile = null;
+    public UserDto createUser(UserDto userDto) {
+		try {
+			validateUserDto(userDto);
 
-        if ("male".equals(userDto.getGender())) {
-            profile = "default-male.png";
-        } else if ("female".equals(userDto.getGender())) {
-            profile = "default-female.jfif";
-        }
-        user.setProfile(profile);
-        user.setPassword(encodePassword != null ? encodePassword : user.getPassword());
-        user.setPosition(userDto.getPositionId() > 0 ? positionRepo.findById(userDto.getPositionId()) : null);
-        user.setRole(userDto.getRoleId() > 0 ? roleRepo.findById(userDto.getRoleId()) : null);
-        if (userDto.getTeamId() > 0) {
-        	Team team = teamRepo.findById(userDto.getTeamId())
-            		.orElseThrow(() -> new EntityNotFoundException("Team not found"));
-            user.setTeam(team);
-            user.setDepartment(team.getDepartment());
-            user.setDivision(team.getDepartment().getDivision());
-        }
-        if (userDto.getDepartmentId() > 0) {
-			Department department = departmentRepo.findById(userDto.getId())
-                .orElseThrow(() -> new EntityNotFoundException("Department not found"));
-            user.setDepartment(department);
-            user.setDivision(department.getDivision());
-        }
-        if (userDto.getDivisionId() > 0) {
-            // Division division = divisionRepo.findById(userDto.getDivisionId());
-			Division division = divisionRepo.findById(userDto.getDivisionId())
-                    .orElseThrow(() -> new EntityNotFoundException("Division not found"));
-            user.setDivision(division);
-        }
-        ApproveRole approveRole = approveRoleRepo.findById(userDto.getApproveRoleId());
-        Set<ApproveRole> approveRoles = new HashSet<ApproveRole>();
-        approveRoles.add(approveRole);
-        if (approveRole != null) {
-            user.setApproveRoles(approveRoles);
-        }
-        userRepo.save(user);
+			User user = modelMapper.map(userDto, User.class);
+
+			String encodePassword = passwordEncoder.encode("123@dirace");
+			user.setEnabled(true);
+
+			String profile = determineProfile(userDto.getGender());
+        	user.setProfile(profile);
+			user.setPassword(encodePassword);
+
+			if (userDto.getTeamId() > 0) {
+				Team team = EntityUtil.getEntityById(teamRepo, userDto.getTeamId());
+				user.setTeam(team);
+				user.setDepartment(team.getDepartment());
+				user.setDivision(team.getDepartment().getDivision());
+			}
+			if (userDto.getDepartmentId() > 0) {
+				Department department = EntityUtil.getEntityById(departmentRepo, userDto.getDepartmentId());
+				user.setDepartment(department);
+				user.setDivision(department.getDivision());
+			}
+			if (userDto.getDivisionId() > 0) {
+				Division division = EntityUtil.getEntityById(divisionRepo, userDto.getDivisionId());
+				user.setDivision(division);
+			}
+			// ApproveRole approveRole = approveRoleRepo.findById(userDto.getApproveRoleId());
+			// Set<ApproveRole> approveRoles = new HashSet<ApproveRole>();
+			// approveRoles.add(approveRole);
+			// if (approveRole != null) {
+			// 	user.setApproveRoles(approveRoles);
+			// }
+			setApprovalRoles(user, userDto.getApproveRoleId());
+			
+			User savedUser = EntityUtil.saveEntity(userRepo, user, "user");
+			return modelMapper.map(savedUser, UserDto.class);
+		} catch (Exception e) {
+			System.err.println("Error creating user: " + e.getMessage());
+        	throw new EntityCreationException("Error creating user " + e);
+		}        
     }
 
+	private void validateUserDto(UserDto userDto) {
+		if (userDto == null) {
+			throw new IllegalArgumentException("UserDto cannot be null");
+		}
+	}
+
+	private String determineProfile(String gender) {
+		if ("male".equalsIgnoreCase(gender)) {
+			return "default-male.png";
+		} else if ("female".equalsIgnoreCase(gender)) {
+			return "default-female.jfif";
+		}
+		return null;
+	}
+
+	private void setApprovalRoles(User user, Long approveRoleId) {
+		if (approveRoleId > 0) {
+			ApproveRole approveRole = EntityUtil.getEntityById(approveRoleRepo, approveRoleId);
+			if (approveRole != null) {
+				Set<ApproveRole> approveRoles = new HashSet<>();
+				approveRoles.add(approveRole);
+				user.setApproveRoles(approveRoles);
+			}
+		}
+	}
+
 	@Override
-	public void updateUser(long id, UserDto userDto) {
+	public void updateUser(Long id, UserDto userDto) {
 		// need to implement
 	}
 
 	@Override
-	public UserDto getUserByStaff_id(String staff_id) {
-		User user = userRepo.findByStaffId(staff_id);
+	public UserDto getUserBystaffId(String staffId) {
+		User user = userRepo.findByStaffId(staffId);
 
 		List<ApproveRole> approveRoles = new ArrayList<>(user.getApproveRoles());
 	    List<WorkFlowOrder> workFlowOrders = new ArrayList<>();
 	    for (ApproveRole approveRole : approveRoles) {
-	        workFlowOrders.addAll(approveRole.getWorkFlowOrders());
+			workFlowOrders.addAll(approveRole.getWorkFlowOrders());
 	    }
 
 		UserDto userDto = modelMapper.map(user, UserDto.class);
 		userDto.setWorkFlowOrders(workFlowOrders);
+
 		return userDto;
 	}
 
 	@Override
-	public String createStaff_id(String gender) {
+	public UserDto getLoginUserBystaffId(String staffId) {
+		User user = userRepo.findByStaffId(staffId);
+
+        return modelMapper.map(user, UserDto.class);
+	}
+
+	@Override
+	public String createstaffId(String gender) {
 		String lastId = getLastStaffId(gender);
 
 		if (lastId == null || lastId.equals("")) {
@@ -152,23 +199,23 @@ public class UserServiceImplement implements UserService {
 
 	@Override
 	public List<UserDto> getAllUser() {
-		List<User> users = userRepo.findAll();
-		List<UserDto> userList = new ArrayList<>();
-		for (User user : users) {
-			UserDto userDto = modelMapper.map(user, UserDto.class);
-			userList.add(userDto);
-		}
-		return userList;
+		Sort sort = Sort.by(Sort.Direction.ASC, "staffId");
+		List<User> users = EntityUtil.getAllEntities(userRepo, sort, "user");
+		if(users == null)
+			return null;		
+		return users.stream()
+					.map(user -> modelMapper.map(user, UserDto.class))
+					.collect(Collectors.toList());
 	}
 
 	@Override
 	public boolean isDuplicated(UserDto userDto) {
-		return userRepo.findByStaffId(userDto.getStaff_id()) == null
+		return userRepo.findByStaffId(userDto.getStaffId()) == null
 				&& userRepo.findByEmail(userDto.getEmail()) == null;
 	}
 
 	@Override
-	public List<UserDto> getAllTeamMember(long id) {
+	public List<UserDto> getAllTeamMember(Long id) {
 		List<User> users = userRepo.findByTeamId(id);
 		List<UserDto> userList = new ArrayList<>();
 		for (User user : users) {
@@ -179,7 +226,7 @@ public class UserServiceImplement implements UserService {
 	}
 
 	@Override
-	public List<UserDto> getAllDepartmentMember(long id) {
+	public List<UserDto> getAllDepartmentMember(Long id) {
 		List<User> users = userRepo.findByTeamDepartmentId(id);
 		List<UserDto> userList = new ArrayList<>();
 		for (User user : users) {
@@ -190,7 +237,7 @@ public class UserServiceImplement implements UserService {
 	}
 
 	@Override
-	public List<UserDto> getAllDivisionMember(long id) {
+	public List<UserDto> getAllDivisionMember(Long id) {
 		List<User> users = userRepo.findByTeamDepartmentDivisionId(id);
 		List<UserDto> userList = new ArrayList<>();
 		for (User user : users) {
@@ -201,13 +248,13 @@ public class UserServiceImplement implements UserService {
 	}
 
 	@Override
-	public Set<ApproveRole> getApproveRoleByUserId(long id) {
+	public Set<ApproveRole> getApproveRoleByUserId(Long id) {
 
 		return null;
 	}
 
 	@Override
-	public Team getTeamIdByUserId(long id) {
+	public Team getTeamIdByUserId(Long id) {
 		return userRepo.findTeamByUserId(id);
 	}
 
@@ -220,12 +267,10 @@ public class UserServiceImplement implements UserService {
 
 	@Override
 	public void disconnect(User user) {
-		var storedUser = userRepo.findById(user.getId());
-		if (storedUser != null) {
-			storedUser.setActiveStatus(ActiveStatus.OFFLINE);
-			userRepo.save(user);
-		}
-	}
+		var storedUser = EntityUtil.getEntityById(userRepo, user.getId());
+        storedUser.setActiveStatus(ActiveStatus.OFFLINE);
+        userRepo.save(user);
+    }
 
 	@Override
 	public List<UserDto> findConnectedUsers() {
@@ -239,13 +284,13 @@ public class UserServiceImplement implements UserService {
 	}
 
 	@Override
-	public UserDto getUserById(long id) {
-		User user = userRepo.findById(id);
+	public UserDto getUserById(Long id) {
+		User user = EntityUtil.getEntityById(userRepo, id);
 		return modelMapper.map(user, UserDto.class);
 	}
 	
 	@Override
-    public List<UserDto> getUpperRole(long workFlowStatusId) {
+    public List<UserDto> getUpperRole(Long workFlowStatusId) {
         List<User> users = userRepo.findUpperRoleUser(workFlowStatusId);
         List<UserDto> userList = new ArrayList<>();
         for (User user : users) {
@@ -318,28 +363,35 @@ public class UserServiceImplement implements UserService {
     }
 
 	@Override
-	public boolean createHR() {
-		UserDto userDto = new UserDto();
-		userDto.setStaff_id("00-00001");
-		userDto.setName("HR");
-		userDto.setEmail("hr@gmail.com");
-		userDto.setPhone_number("000 000 000");
-		userDto.setPassword(passwordEncoder.encode("HR"));
-		userDto.setEnabled(true);
-		User HR = modelMapper.map(userDto, User.class);
-		ApproveRole approveRole = approveRoleRepo.findById(1);
-	    if (approveRole == null) {
-	        return false;
-	    }
-	    Set<ApproveRole> approveRoles = new HashSet<>();
-	    approveRoles.add(approveRole);
-	    HR.setApproveRoles(approveRoles);
-	    try {
-	        userRepo.save(HR);
-	        return true;
-	    } catch (Exception e) {
-	        e.printStackTrace();
-	        return false;
-	    }
+	@Transactional
+	public void createHR() {
+		User user = userRepo.findByEmail("hr@gmail.com");
+		if(user == null) {
+			UserDto userDto = new UserDto();
+			userDto.setStaffId("00-00001");
+			userDto.setName("HR");
+			userDto.setEmail("hr@gmail.com");
+			userDto.setPhoneNumber("000 000 000");
+			userDto.setPassword(passwordEncoder.encode("123@dirace"));
+			userDto.setEnabled(true);
+			userDto.setGender("Male");
+			User HR = modelMapper.map(userDto, User.class);
+			ApproveRole approveRole = approveRoleRepo.findByName("HR");
+			if (approveRole == null) {
+				throw new EntityNotFoundException("HR role not found");
+			}
+			Set<ApproveRole> approveRoles = new HashSet<>();
+			approveRoles.add(approveRole);
+			HR.setApproveRoles(approveRoles);
+			User savedUser = EntityUtil.saveEntity(userRepo, HR, "user");
+		}
+    }
+
+	@Override
+	public boolean changeFirstHRFirstLoginStatus() {
+		User user = userRepo.findByStaffId("00-00001");
+		user.setFirstTimeLogin(false);
+		User savedUser = EntityUtil.saveEntity(userRepo, user, "user");
+		return true;
 	}
 }

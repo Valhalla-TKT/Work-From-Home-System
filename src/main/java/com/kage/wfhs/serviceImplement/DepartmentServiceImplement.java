@@ -13,6 +13,7 @@ import com.kage.wfhs.model.Department;
 import com.kage.wfhs.model.Division;
 import com.kage.wfhs.repository.DepartmentRepository;
 import com.kage.wfhs.service.DepartmentService;
+import com.kage.wfhs.util.DtoUtil;
 import com.kage.wfhs.util.EntityUtil;
 
 import lombok.AllArgsConstructor;
@@ -40,8 +41,7 @@ public class DepartmentServiceImplement implements DepartmentService {
         Department department = modelMapper.map(departmentDto, Department.class);
 
         if (departmentDto.getDivisionId() > 0) {
-            Division division = divisionRepo.findById(departmentDto.getDivisionId())
-                    .orElseThrow(() -> new EntityNotFoundException("Division not found"));
+            Division division = EntityUtil.getEntityById(divisionRepo, departmentDto.getDivisionId());
             department.setDivision(division);
         } else {
             department.setDivision(null);
@@ -53,7 +53,7 @@ public class DepartmentServiceImplement implements DepartmentService {
 
     @Override
     public List<DepartmentDto> getAllDepartment() {
-        Sort sort = Sort.by(Sort.Direction.ASC, "code");
+        Sort sort = Sort.by(Sort.Direction.ASC, "name");
         List<Department> departments = EntityUtil.getAllEntities(departmentRepo, sort, "department");
         if(departments == null)
         	return null;
@@ -64,9 +64,8 @@ public class DepartmentServiceImplement implements DepartmentService {
 
 
     @Override
-    public DepartmentDto getDepartmentById(long id) {
-    	Department department = departmentRepo.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("Department not found"));
+    public DepartmentDto getDepartmentById(Long id) {
+        Department department = EntityUtil.getEntityById(departmentRepo ,id);
         if(department.getDivision() == null) {
             department.setDivision(divisionRepo.findByDepartmentId(id));
         }
@@ -82,28 +81,25 @@ public class DepartmentServiceImplement implements DepartmentService {
 
     @Override
 	public void updateDepartment(DepartmentDto departmentDto) {
-		Department department = departmentRepo.findById(departmentDto.getId())
-                .orElseThrow(() -> new EntityNotFoundException("Department not found"));
-        if(department == null) {
-            throw new EntityNotFoundException("Department not found");
+        Department department = EntityUtil.getEntityById(departmentRepo ,departmentDto.getId());
+        modelMapper.map(departmentDto, department);
+        if(departmentDto.getDivisionId() == 0) {
+            department.setDivision(divisionRepo.findByDepartmentId(departmentDto.getId()));
         } else {
-            modelMapper.map(departmentDto, department);
-            if(departmentDto.getDivisionId() == 0) { 
-                department.setDivision(divisionRepo.findByDepartmentId(departmentDto.getId()));
-            } else {
-                Division division = divisionRepo.findById(departmentDto.getDivisionId())
-                        .orElseThrow(() -> new EntityNotFoundException("Division not found"));
-                if (division == null) {
-                    throw new EntityNotFoundException("Division not found");
-                }
-                department.setDivision(division);
-            }            
-            departmentRepo.save(department);
+            Division division = EntityUtil.getEntityById(divisionRepo, departmentDto.getDivisionId());
+            department.setDivision(division);
         }
-	}
+        departmentRepo.save(department);
+    }
 	
 	@Override
-    public void deleteDepartmentById(long id) {
+    public void deleteDepartmentById(Long id) {
         EntityUtil.deleteEntity(departmentRepo, id, "Department");
+    }
+
+    @Override
+    public List<DepartmentDto> getDepartmentByDivisionId(Long divisionId) {
+        List<Department> departments = departmentRepo.findAllByDivisionId(divisionId);
+        return DtoUtil.mapList(departments, DepartmentDto.class, modelMapper);
     }
 }

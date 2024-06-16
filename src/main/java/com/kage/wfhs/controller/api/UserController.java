@@ -31,17 +31,14 @@ public class UserController {
     private final WorkFlowOrderService workFlowOrderService;
     @PostMapping("/generateStaffId")
     public ResponseEntity<String> generateStaffId(@RequestBody UserDto userDto){
-        return ResponseEntity.ok(userService.createStaff_id(userDto.getGender()));
+        return ResponseEntity.ok(userService.createstaffId(userDto.getGender()));
     }
 
-    @PostMapping("/create")
+    @PostMapping("/")
     public ResponseEntity<String > createUser(@RequestBody UserDto userDto){
         if(!userService.isDuplicated(userDto)){
             return ResponseEntity.ok("Duplicate User!!!");
-        } else {
-            userDto.setPassword("password123");
-            userDto.setEnabled(true);
-            userDto.setPermanent_date(null);
+        } else {            
             userService.createUser(userDto);
             return ResponseEntity.ok("Add New User Success...");
         }
@@ -59,26 +56,54 @@ public class UserController {
     @PostMapping("/getAllTeamMember")
     public ResponseEntity<List<UserDto>> teamMember(@RequestParam("teamId") long teamId,
                                                     @RequestParam("userId") long userId){
-        WorkFlowOrderDto upperRole = workFlowOrderService.getWorkFlowOrderByUserId(userId);
+        System.out.println("teamId = " + teamId + " userId = " + userId);
         List<UserDto> userList = new ArrayList<>();
+        WorkFlowOrderDto upperRole = workFlowOrderService.getWorkFlowOrderByUserId(userId);
         List<UserDto> memberList = userService.getAllTeamMember(teamId);
         List<UserDto> upperUserList = userService.getUpperRole(upperRole.getId() -1);
         userList.addAll(upperUserList);
         userList.addAll(memberList);
         return ResponseEntity.ok(userList);
     }
+
+    @PostMapping("/getAllUserByTeamId")
+    public ResponseEntity<List<UserDto>> getAllUserByTeamId(
+            @RequestParam("teamId") Long teamId
+    ){
+        List<UserDto> userList = userService.getAllTeamMember(teamId);
+        return ResponseEntity.ok(userList);
+    }
+
     @PostMapping("/getAllDepartmentMember")
     public ResponseEntity<List<UserDto>> departmentmember(@RequestBody UserDto userDto){    	
         return ResponseEntity.ok(userService.getAllDepartmentMember(userDto.getDepartmentId()));
     }
+
+    @PostMapping("/getAllUserByDepartmentId")
+    public ResponseEntity<List<UserDto>> getAllUserByDepartmentId(
+            @RequestParam("departmentId") Long departmentId
+    ){
+        List<UserDto> userList = userService.getAllDepartmentMember(departmentId);
+        return ResponseEntity.ok(userList);
+    }
+
     @PostMapping("/getAllDivisionMember")
     public ResponseEntity<List<UserDto>> divisionmember(@RequestBody UserDto userDto){
         return ResponseEntity.ok(userService.getAllDivisionMember(userDto.getDivisionId()));
     }
+
+    @PostMapping("/division/{divisionId}")
+    public ResponseEntity<List<UserDto>> getAllUserByDivisionId(@PathVariable("divisionId") Long divisionId){
+        return ResponseEntity.ok(userService.getAllDivisionMember(divisionId));
+    }
     
     @PostMapping("/userList")
-    public ResponseEntity<List<UserDto>> getAllUser(){
-        return ResponseEntity.ok(userService.getAllUser());
+    public ResponseEntity<?> getAllUser(){
+        List<UserDto> userList = userService.getAllUser();
+        if(userList == null)
+            return ResponseEntity.ok("No User found.");
+        else 
+            return ResponseEntity.ok(userList);
     }
     
   //TEAM

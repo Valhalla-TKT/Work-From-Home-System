@@ -19,6 +19,7 @@ public interface WorkFlowOrderService {
 
 	List<String> getOrder(int id);
 
-	WorkFlowOrderDto getWorkFlowOrderByApproveRoleId(long approveRoleId);
-	WorkFlowOrderDto getWorkFlowOrderByUserId(long userId);
+	WorkFlowOrderDto getWorkFlowOrderByApproveRoleId(Long approveRoleId);
+	WorkFlowOrderDto getWorkFlowOrderByUserId(Long userId);
+	void createDefaultWorkFlowOrder();
 }

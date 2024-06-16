@@ -10,6 +10,7 @@ package com.kage.wfhs.serviceImplement;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import com.kage.wfhs.util.DtoUtil;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
@@ -50,7 +51,7 @@ public class TeamServiceImplement implements TeamService {
 
     @Override
     public List<TeamDto> getAllTeam() {
-    	Sort sort = Sort.by(Sort.Direction.ASC, "code");
+    	Sort sort = Sort.by(Sort.Direction.ASC, "name");
         List<Team> teams =  EntityUtil.getAllEntities(teamRepo, sort, "team");
         if(teams == null)
         	return null;
@@ -60,7 +61,7 @@ public class TeamServiceImplement implements TeamService {
     }
 
     @Override
-    public TeamDto getTeamById(long id){
+    public TeamDto getTeamById(Long id){
         Team team = teamRepo.findById(id)
         		.orElseThrow(() -> new EntityNotFoundException("Team not found"));
         if(team.getDepartment() == null)
@@ -77,29 +78,29 @@ public class TeamServiceImplement implements TeamService {
 
     @Override
     public void updateTeam(TeamDto teamDto){
-    	Team team = teamRepo.findById(teamDto.getId())
-        		.orElseThrow(() -> new EntityNotFoundException("Team not found"));
-        if(team == null) {
-            throw new EntityNotFoundException("Team not found");
+    	Team team = EntityUtil.getEntityById(teamRepo, teamDto.getId());
+        modelMapper.map(teamDto, team);
+        if(teamDto.getDepartmentId() == 0) {
+            team.setDepartment(departmentRepo.findByTeamId(teamDto.getId()));
         } else {
-            modelMapper.map(teamDto, team);
-            if(teamDto.getDepartmentId() == 0) {
-                team.setDepartment(departmentRepo.findByTeamId(teamDto.getId()));                
-            } else {
-                Department department = departmentRepo.findById(teamDto.getDepartmentId())
-                        .orElseThrow(() -> new EntityNotFoundException("Department not found"));
-                if(department == null) {
-                    throw new EntityNotFoundException("Department not found");
-                }
-                System.out.println(department.getName() +" _________________");
-                team.setDepartment(department);
-            }
-            teamRepo.save(team);
+            Department department = EntityUtil.getEntityById(departmentRepo ,teamDto.getDepartmentId());
+            team.setDepartment(department);
         }
+        teamRepo.save(team);
     }
 
     @Override
-    public void  deleteTeamById(long id) {
+    public void  deleteTeamById(Long id) {
         EntityUtil.deleteEntity(teamRepo, id, "Team");
+    }
+
+    public List<TeamDto> getTeamByDepartmentId(Long departmentId) {
+        List<Team> teams = teamRepo.findAllByDepartmentId(departmentId);
+        return DtoUtil.mapList(teams, TeamDto.class, modelMapper);
+    }
+
+    public List<TeamDto> getTeamByDivisionId(Long divisionId) {
+        List<Team> teams = teamRepo.findAllByDivisionId(divisionId);
+        return DtoUtil.mapList(teams, TeamDto.class, modelMapper);
     }
 }

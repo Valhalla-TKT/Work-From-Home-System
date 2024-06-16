@@ -15,6 +15,6 @@ import com.kage.wfhs.dto.CaptureDto;
 public interface CaptureService {
 	void createCapture(CaptureDto captureDto);
 
-    CaptureDto getCaptureById(long id);
-    CaptureDto getCaptureByRegisterForm(long id);
+    CaptureDto getCaptureById(Long id);
+    CaptureDto getCaptureByRegisterForm(Long id);
 }

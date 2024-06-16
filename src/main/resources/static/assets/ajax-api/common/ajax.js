@@ -25,7 +25,7 @@ async function createUser() {
 // Division
 async function createNewDivision(requestData) {    
     try {
-        const responseData = await sendRequest(`/api/division/`, 'POST', requestData);
+        const responseData = await sendRequest(`/admin/api/division/`, 'POST', requestData);
         handleResponse(responseData, null);
     } catch (error) {
         console.error('Error:', error);
@@ -130,6 +130,20 @@ async function fetchDepartments() {
     }
 }
 
+async function fetchDepartmentsByDivisionId(divisionId) {
+    try {
+        const responseData = await sendRequestWithOneParam(`/api/department/division/${divisionId}`, 'POST', 'divisionId', divisionId);
+        const contentType = responseData.headers.get('content-type');
+        if (contentType && contentType.includes('application/json')) {
+            return await responseData.json();
+        } else {
+            return await responseData.text();
+        }
+    } catch (error) {
+        console.error('Error:', error);
+    }
+}
+
 async function searchDepartment(value) {
     try {
 		try {
@@ -196,6 +210,34 @@ async function fetchTeams() {
     }
 }
 
+async function fetchTeamsByDepartmentId(departmentId) {
+    try {
+        const responseData = await sendRequestWithOneParam(`/api/team/department/${departmentId}`, 'POST', 'departmentId', departmentId);
+        const contentType = responseData.headers.get('content-type');
+        if (contentType && contentType.includes('application/json')) {
+            return await responseData.json();
+        } else {
+            return await responseData.text();
+        }
+    } catch (error) {
+        console.error('Error:', error);
+    }
+}
+
+async function fetchTeamsByDivisionId(divisionId) {
+    try {
+        const responseData = await sendRequestWithOneParam(`/api/team/division/${divisionId}`, 'POST', 'divisionId', divisionId);
+        const contentType = responseData.headers.get('content-type');
+        if (contentType && contentType.includes('application/json')) {
+            return await responseData.json();
+        } else {
+            return await responseData.text();
+        }
+    } catch (error) {
+        console.error('Error:', error);
+    }
+}
+
 async function searchTeam(value) {
     try {
 		try {
@@ -234,3 +276,141 @@ async function deleteTeam(value) {
         console.error('Error:', error);
     }
 }
+
+// User
+async function createNewUser(requestData) {    
+    try {
+        const responseData = await sendRequest(`/api/user/`, 'POST', requestData);
+        handleResponse(responseData, null);
+    } catch (error) {
+        console.error('Error:', error);
+    }
+}
+
+async function fetchUsers() {
+    try {
+        const responseData = await sendRequest(`/api/user/userList`, 'POST', {});        
+		const contentType = responseData.headers.get('content-type');
+        if (contentType && contentType.includes('application/json')) {
+            const jsonData = await responseData.json();
+            console.log(jsonData);
+            return jsonData;
+        } else {
+            const textData = await responseData.text();
+            return textData;
+        }
+    } catch (error) {
+        console.error('Error:', error);
+    }
+}
+
+async function searchUser(value) {
+    try {
+		try {
+            const responseData = await sendRequestWithOneParam('/api/user/', 'GET', 'teamId', value);
+            const contentType = responseData.headers.get('content-type');
+            if (contentType && contentType.includes('application/json')) {
+                const searchResults = await responseData.json();
+                console.log(searchResults)
+                return searchResults;
+            } else {
+                const textData = await responseData.text();
+                return textData;
+            }
+        } catch (error) {
+            console.error('Error:', error);
+        }
+    } catch (error) {
+        console.error('Error:', error);
+    }
+}
+
+async function updateUser(requestData) {    
+    try {
+        const responseData = await sendRequest(`/api/user/`, 'PUT', requestData);
+        handleResponse(responseData, null);
+    } catch (error) {
+        console.error('Error:', error);
+    }
+}
+
+async function deleteUser(value) {    
+    try {
+        const responseData = await sendRequestWithOneParam('/api/user/', 'DELETE', 'id', value);
+        handleResponse(responseData, null);
+    } catch (error) {
+        console.error('Error:', error);
+    }
+}
+
+async function fetchUsersByTeamId(teamId) {
+    try {
+        const responseData = await sendRequestWithOneParam(`/api/user/getAllUserByTeamId`, 'POST', 'teamId', teamId);
+        const contentType = responseData.headers.get('content-type');
+        if (contentType && contentType.includes('application/json')) {
+            return await responseData.json();
+        } else {
+            return await responseData.text();
+        }
+    } catch (error) {
+        console.error('Error:', error);
+    }
+}
+
+async function fetchUsersByDepartmentId(departmentId) {
+    try {
+        const responseData = await sendRequestWithOneParam(`/api/user/getAllUserByDepartmentId`, 'POST', 'departmentId', departmentId);
+        const contentType = responseData.headers.get('content-type');
+        if (contentType && contentType.includes('application/json')) {
+            return await responseData.json();
+        } else {
+            return await responseData.text();
+        }
+    } catch (error) {
+        console.error('Error:', error);
+    }
+}
+
+async function fetchUsersByDivisionId(divisionId) {
+    try {
+        const responseData = await sendRequestWithOneParam(`/api/user/division/${divisionId}`, 'POST', 'divisionId', divisionId);
+        const contentType = responseData.headers.get('content-type');
+        if (contentType && contentType.includes('application/json')) {
+            return await responseData.json();
+        } else {
+            return await responseData.text();
+        }
+    } catch (error) {
+        console.error('Error:', error);
+    }
+}
+
+// Cookie JWT
+async function fetchCookie(url) {
+    const token = getCookie("JWT");
+    if (!token) {
+        console.error("No JWT token found");
+        return;
+    }
+
+    try {
+        const response = await fetch(url, {
+            method: 'GET',
+            headers: {
+                'Authorization': `Bearer ${token}`,
+                'Content-Type': 'application/json'
+            }
+        });
+
+        if (!response.ok) {
+            throw new Error(`HTTP error! Status: ${response.status}`);
+        }
+
+        const data = await response.json();
+        console.log(data);
+    } catch (error) {
+        console.error('Error fetching data:', error);
+    }
+}
+
+// fetchData('/api/protected-endpoint');

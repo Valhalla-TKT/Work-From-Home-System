@@ -15,9 +15,9 @@ import java.util.List;
 @Service
 public interface LedgerService {
 
-    void createLedger(long formId);
+    void createLedger(Long formId);
     List<LedgerDto> getAllLedger();
 
-    LedgerDto getLedgerById(long id);
+    LedgerDto getLedgerById(Long id);
 
 }

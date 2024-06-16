@@ -15,6 +15,6 @@ import lombok.*;
 @AllArgsConstructor
 @ToString
 public class CaptureDto {
-	private long id, registerFormId;
+	private Long id, registerFormId;
     private String os_type, operationSystem, securityPatch, antivirusSoftware, antivirusPattern, antivirusFullScan;
 }

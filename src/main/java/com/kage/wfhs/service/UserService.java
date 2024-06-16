@@ -8,6 +8,7 @@
 package com.kage.wfhs.service;
 
 import com.kage.wfhs.dto.UserDto;
+import com.kage.wfhs.dto.auth.CurrentLoginUserDto;
 import com.kage.wfhs.model.ApproveRole;
 import com.kage.wfhs.model.Team;
 import com.kage.wfhs.model.User;
@@ -18,25 +19,28 @@ import java.util.Set;
 
 @Service
 public interface UserService {
-	void createUser(UserDto userDto);
-    void updateUser(long id, UserDto userDto);
-    UserDto getUserByStaff_id(String staff_id);
-    String createStaff_id(String gender);
+	UserDto createUser(UserDto userDto);
+    void updateUser(Long id, UserDto userDto);
+    UserDto getUserBystaffId(String staffId);
+
+	UserDto getLoginUserBystaffId(String staffId);
+
+	String createstaffId(String gender);
     String getLastStaffId(String gender);
     List<UserDto> getAllUser();
     boolean isDuplicated(UserDto userDto);
-    List<UserDto> getAllTeamMember(long id);
-    List<UserDto> getAllDepartmentMember(long id);
-    List<UserDto> getAllDivisionMember(long id);
-    Set<ApproveRole> getApproveRoleByUserId(long id);
-    Team getTeamIdByUserId(long id);
-    UserDto getUserById(long id);
+    List<UserDto> getAllTeamMember(Long id);
+    List<UserDto> getAllDepartmentMember(Long id);
+    List<UserDto> getAllDivisionMember(Long id);
+    Set<ApproveRole> getApproveRoleByUserId(Long id);
+    Team getTeamIdByUserId(Long id);
+    UserDto getUserById(Long id);
     
     // codes for live chat between Service Desk and User
 	void setUserOnline(User user);
 	void disconnect(User user);
 	List<UserDto> findConnectedUsers();
-	List<UserDto> getUpperRole(long l);
+	List<UserDto> getUpperRole(Long l);
 	List<Object[]> getUserRequestByTeamId(Long teamId);
 	List<Object[]> getTotalStaffRequestByTeamId(String teamId);
 	Object[] getTeamRegistrationInfo(Long teamId);
@@ -50,5 +54,6 @@ public interface UserService {
 	List<Object[]> getTotalStaffRequest();
 	
 	// Create HR
-	boolean createHR();
+	void createHR();
+	boolean changeFirstHRFirstLoginStatus();
 }

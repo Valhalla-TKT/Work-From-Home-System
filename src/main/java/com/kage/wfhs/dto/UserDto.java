@@ -7,38 +7,37 @@
  */
 package com.kage.wfhs.dto;
 
-import com.kage.wfhs.model.ApproveRole;
-import com.kage.wfhs.model.Department;
-import com.kage.wfhs.model.Division;
-import com.kage.wfhs.model.Position;
-import com.kage.wfhs.model.Role;
-import com.kage.wfhs.model.Team;
-import com.kage.wfhs.model.WorkFlowOrder;
-
-import lombok.*;
-
 import java.util.Date;
 import java.util.List;
 import java.util.Set;
 
 import org.springframework.web.multipart.MultipartFile;
 
+import com.kage.wfhs.model.ApproveRole;
+import com.kage.wfhs.model.Department;
+import com.kage.wfhs.model.Division;
+import com.kage.wfhs.model.Team;
+import com.kage.wfhs.model.WorkFlowOrder;
+
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
+
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @ToString
-
 public class UserDto {
-	private long id, teamId, positionId, approveRoleId, roleId, divisionId, departmentId;
-    private String staff_id, name, email, password, gender, phone_number, teamName, positionName, approveRoleName, roleName, departmentName, divisionName, profile, divisionCode;
-    private boolean isEnabled, marital_status, parent, children;
-    private Date join_date, permanent_date;
-    private Role role;
+	private Long id, teamId, positionId, approveRoleId, roleId, divisionId, departmentId;
+    private String staffId, name, email, password, gender, phoneNumber, teamName, positionName, approveRoleName, roleName, departmentName, divisionName, profile, divisionCode;
+    private boolean isEnabled, maritalStatus, parent, children, isFirstTimeLogin;
+    private Date joinDate, permanentDate;
     private Team team;
     private Department department;
     private Division division;
-    private Position position;
     private Set<ApproveRole> approveRoles;
     private List<WorkFlowOrder> workFlowOrders;
     private MultipartFile profileInput;     

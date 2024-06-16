@@ -20,7 +20,7 @@ public class EntityUtil {
 
     public static <T> List<T> getAllEntities(JpaRepository<T, Long> repository, Sort sort, String entityName) {
         List<T> entities = repository.findAll(sort);
-        if (entities == null || entities.isEmpty()) {            
+        if (entities.isEmpty()) {
             //throw new EntityRetrievalException("No " + entityName + " entities found");
             return null;
         }
@@ -32,6 +32,14 @@ public class EntityUtil {
             throw new EntityNotFoundException(entityName + " not found");
         }
         repository.deleteById(id);
+    }
+
+    public static <T> T getEntityById(JpaRepository<T, Long> repository, Long id) {
+        T entity = id > 0 ? repository.findById(id).orElse(null) : null;
+        if (entity == null) {
+            throw new EntityNotFoundException("Entity not found with ID: " + id);
+        }
+        return entity;
     }
 
     public interface Identifiable {

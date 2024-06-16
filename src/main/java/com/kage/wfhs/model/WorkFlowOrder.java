@@ -26,7 +26,7 @@ public class WorkFlowOrder implements Serializable {
 	
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
+    private Long id;
     private String approve_state;
 
     @ManyToOne

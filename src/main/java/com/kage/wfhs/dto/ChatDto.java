@@ -15,6 +15,6 @@ import lombok.*;
 @AllArgsConstructor
 @ToString
 public class ChatDto {
-    private long id;
+    private Long id;
     private String message;
 }

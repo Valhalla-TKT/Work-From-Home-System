@@ -21,7 +21,7 @@ import java.util.Date;
 @AllArgsConstructor
 @ToString
 public class WorkFlowStatusDto {
-    private long id, approverId, registerFormId;
+    private Long id, approverId, registerFormId;
     private boolean state;
     private Status status;
     private String reason;

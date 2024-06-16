@@ -14,6 +14,8 @@ import com.kage.wfhs.repository.RegisterFormRepository;
 import com.kage.wfhs.repository.UserRepository;
 import com.kage.wfhs.repository.WorkFlowStatusRepository;
 import com.kage.wfhs.service.LedgerService;
+import com.kage.wfhs.util.EntityUtil;
+
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
@@ -31,14 +33,14 @@ public class LedgerServiceImplement implements LedgerService {
     private final WorkFlowStatusRepository workFlowStatusRepo;
     private final ModelMapper modelMapper;
     @Override
-    public void createLedger(long formId) {
-        RegisterForm registerForm = registerFormRepo.findById(formId);
-        User applicant = userRepo.findById(registerForm.getApplicant().getId());
+    public void createLedger(Long formId) {
+        RegisterForm registerForm = EntityUtil.getEntityById(registerFormRepo, formId);
+        User applicant = EntityUtil.getEntityById(userRepo, registerForm.getApplicant().getId());
         Ledger ledger = new Ledger();
 
         ledger.setDepartment(applicant.getDepartment().getName());
         ledger.setTeam(applicant.getTeam().getName());
-        ledger.setStaff_id(applicant.getStaff_id());
+        ledger.setStaffId(applicant.getStaffId());
         ledger.setName(applicant.getName());
         ledger.setEmail(applicant.getName());
         ledger.setApplied_date(registerForm.getSignedDate());
@@ -88,8 +90,8 @@ public class LedgerServiceImplement implements LedgerService {
     }
 
     @Override
-    public LedgerDto getLedgerById(long id) {
-        Ledger ledger = ledgerRepo.findById(id);
+    public LedgerDto getLedgerById(Long id) {
+        Ledger ledger = EntityUtil.getEntityById(ledgerRepo, id);
         return modelMapper.map(ledger, LedgerDto.class);
     }
 }

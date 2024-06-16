@@ -7,13 +7,12 @@
  */
 package com.kage.wfhs.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 
 import java.io.Serializable;
 import java.util.List;
-
-import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
 @Table(name = "department")
@@ -27,23 +26,30 @@ public class Department implements Serializable {
 	
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
-    private String code;
+    private Long id;
+
+    @Column(name = "name", length = 70, nullable = false)
     private String name;
+
+    @Column(name = "created_at", nullable = false, updatable = false)
+    private Long createdAt;
 
     @ManyToOne
     @JoinColumn(name = "division_id")
-    @JsonIgnore
     @ToString.Exclude
+    @JsonIgnore
     private Division division;
-
+    
     @OneToMany(mappedBy = "department", cascade = CascadeType.ALL)
-    @JsonIgnore
     @ToString.Exclude
+    @JsonIgnore
     private List<Team> teams;
     
     @OneToMany(mappedBy = "department", cascade = CascadeType.ALL)
-    @JsonIgnore
     @ToString.Exclude
+    @JsonIgnore
     private List<User> users;
+
+    @PrePersist
+    protected void onCreate() {createdAt = System.currentTimeMillis();}
 }

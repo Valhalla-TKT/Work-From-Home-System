@@ -16,7 +16,7 @@ import lombok.*;
 @AllArgsConstructor
 @ToString
 public class WorkFlowOrderDto {
-    private long id, approveRoleId;
+    private Long id, approveRoleId;
     private String approve_state;
     private ApproveRole approveRole;
 }

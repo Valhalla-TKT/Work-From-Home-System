@@ -71,7 +71,7 @@ $(document).ready(function() {
 
     var regionSelect = $('#region-state-select');
     regionSelect.append('<option value="" disabled selected>Region/State</option>');
-    $.each(regions, function(index, region){		
+    $.each(regions, function(index, region){
         regionSelect.append('<option value="' + region.regionState + '">' + region.regionState + '</option>');
     });
 
@@ -168,7 +168,7 @@ $(document).ready(function() {
     var currentUserId = currentUser.id;
     console.log(currentUserId)
 	nameInputBox.val(currentUser.name);
-	updateStaffIdFields(currentUser.staff_id);
+	updateStaffIdFields(currentUser.staffId);
 	positionInputBox.val(currentUser.positionName);	
 	teamInputBox.val(currentUser.teamName);
 	departmentInputBox.val(currentUser.departmentName);
@@ -209,7 +209,7 @@ $(document).ready(function() {
 	        $('#name-input-container').show();
 	        applyForm[0].reset();
 	        nameInputBox.val(currentUser.name);
-			updateStaffIdFields(currentUser.staff_id);
+			updateStaffIdFields(currentUser.staffId);
 			positionInputBox.val(currentUser.positionName);	
 			teamInputBox.val(currentUser.teamName);
 			departmentInputBox.val(currentUser.departmentName);
@@ -242,7 +242,7 @@ $(document).ready(function() {
     	var selectedOption = $(this).find('option:selected');
         var selectedStaffId = selectedOption.attr('data-staff-id');
         updateStaffIdFields(selectedStaffId);
-        var selectedPositionName = selectedOption.attr('data-position-name');        
+        var selectedPositionName = selectedOption.attr('data-position-name');
         positionInputBox.val(selectedPositionName);
         var selectedTeamName = selectedOption.attr('data-team-name');
         teamInputBox.val(selectedTeamName)
@@ -345,12 +345,23 @@ proseMirrorEditor.addEventListener('input', function() {
         showNextDiv1();
     });
     
+	$('#go-back').click(function(event) {
+        showPreviousDiv();
+    });
+
+	$('#go-back-1').click(function(event) {
+        showPreviousDiv1();
+    });
 	function showNextDiv() {						
 		$("#data-section").hide();
 		$("#capture-section").show();
 		$("#signature-section").hide();
 		$("#go-back").show();
 		$("#go-back-1").hide();
+
+		$("#current-step-1").hide();
+		$("#current-step-2").show();
+		$("#current-step-3").hide();
 		if(checkBoxModalDialog.length) {
 			showCheckBoxDialogModal();	
 		}
@@ -363,6 +374,34 @@ proseMirrorEditor.addEventListener('input', function() {
 		$("#signature-section").show();
 		$("#go-back").hide();
 		$("#go-back-1").show();
+
+		$("#current-step-1").hide();
+		$("#current-step-2").hide();
+		$("#current-step-3").show();
+	}
+
+	function showPreviousDiv() {						
+		$("#data-section").show();
+		$("#capture-section").hide();
+		$("#signature-section").hide();
+		$("#go-back").hide();
+		$("#go-back-1").hide();
+
+		$("#current-step-1").show();
+		$("#current-step-2").hide();
+		$("#current-step-3").hide();
+	}
+
+	function showPreviousDiv1() {						
+		$("#data-section").hide();
+		$("#capture-section").show();
+		$("#signature-section").hide();
+		$("#go-back").show();
+		$("#go-back-1").hide();
+
+		$("#current-step-1").hide();
+		$("#current-step-2").show();
+		$("#current-step-3").hide();
 	}
 	
 	$("#checkbox-dialog-form").submit(function(event) {
@@ -690,7 +729,7 @@ if (!isNaN(toDateObj.getTime())) {
     function getTeamMemberById(formData) {
         console.log(formData + "hello")
         $.ajax({
-            url: 'api/user/getAllTeamMember',
+            url: 'http://localhost:8080/api/user/getAllTeamMember',
           type: 'POST',
             data: formData,
           contentType: false,
@@ -706,8 +745,8 @@ if (!isNaN(toDateObj.getTime())) {
                         var option = $('<option>', {
                             value: response[i].id,
                             text: response[i].name,
-                            'data-staff-id': response[i].staff_id,
-                            'data-position-name': response[i].position.name,
+                            'data-staff-id': response[i].staffId,
+                            //'data-position-name': response[i].position.name,
                             'data-team-name': response[i].team.name,
                             'data-department-name': response[i].department.name
                         });

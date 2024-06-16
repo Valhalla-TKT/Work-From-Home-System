@@ -19,29 +19,29 @@ import jakarta.servlet.http.HttpServletResponse;
 public interface RegisterFormService {
 	void createRegisterForm(RegisterFormDto registerFormDto) throws Exception;
 
-	RegisterFormDto getRegisterForm(long id);
+	RegisterFormDto getRegisterForm(Long id);
 
 	List<RegisterFormDto> getAllRegisterForm();
 
-	long getFormLastId();
+	Long getFormLastId();
 
-	List<RegisterFormDto> getAllFormSpecificTeam(long approveRoleId, String status, long teamId);
+	List<RegisterFormDto> getAllFormSpecificTeam(Long approveRoleId, String status, Long teamId);
 
-	List<RegisterFormDto> getAllFormSpecificDepartment(long approveRoleId, String status, long departmentId);
+	List<RegisterFormDto> getAllFormSpecificDepartment(Long approveRoleId, String status, Long departmentId);
 
-	List<RegisterFormDto> getAllFormSpecificDivision(long approveRoleId, String status, long divisionId);
+	List<RegisterFormDto> getAllFormSpecificDivision(Long approveRoleId, String status, Long divisionId);
 
-	List<RegisterFormDto> getAllFormSpecificTeamAll(long approveRoleId, long teamId);
+	List<RegisterFormDto> getAllFormSpecificTeamAll(Long approveRoleId, Long teamId);
 
-	List<RegisterFormDto> getAllFormSpecificDepartmentAll(long approveRoleId, long departmentId);
+	List<RegisterFormDto> getAllFormSpecificDepartmentAll(Long approveRoleId, Long departmentId);
 
-	List<RegisterFormDto> getAllFormSpecificDivisionAll(long approveRoleId, long divisionId);
+	List<RegisterFormDto> getAllFormSpecificDivisionAll(Long approveRoleId, Long divisionId);
 
-	List<RegisterFormDto> getAllForm(long approveRoleId, String status);
+	List<RegisterFormDto> getAllForm(Long approveRoleId, String status);
 
-	List<RegisterFormDto> getFormAll(long approveRoleId);
+	List<RegisterFormDto> getFormAll(Long approveRoleId);
 
-	void upgradeRegisterForm(long formId, RegisterFormDto registerFormDto);
+	void upgradeRegisterForm(Long formId, RegisterFormDto registerFormDto);
 
 	void exportStaffIdsForOTP(List<Long> formIds, HttpServletResponse response);
 }
