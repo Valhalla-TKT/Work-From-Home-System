@@ -60,7 +60,7 @@ $(document).ready(function() {
 
     function getTeamMembersPendingForm() {        
         $.ajax({
-            url: 'api/registerform/getTeamWithStatus',
+            url: 'http://localhost:8080/api/registerform/getTeamWithStatus',
             type: 'POST',
             data: {
                 status: status,
@@ -71,7 +71,7 @@ $(document).ready(function() {
 				console.log(response)
 				var forms = response.forms;
 				var applicantList = response.applicants;
-                console.log('Success:', response);
+                console.log('Success:', applicantList);
                 $(".form-card-container").empty();
                 forms.forEach(function(form, index) {
 			    var applicant = applicantList[index];

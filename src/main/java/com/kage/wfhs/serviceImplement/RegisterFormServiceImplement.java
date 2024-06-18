@@ -8,16 +8,17 @@
 package com.kage.wfhs.serviceImplement;
 
 import com.kage.wfhs.dto.RegisterFormDto;
-import com.kage.wfhs.model.Capture;
-import com.kage.wfhs.model.RegisterForm;
-import com.kage.wfhs.model.Status;
-import com.kage.wfhs.model.User;
+import com.kage.wfhs.dto.UserDto;
+import com.kage.wfhs.model.*;
 import com.kage.wfhs.repository.CaptureRepository;
 import com.kage.wfhs.repository.RegisterFormRepository;
 import com.kage.wfhs.repository.UserRepository;
+import com.kage.wfhs.service.ApproveRoleService;
 import com.kage.wfhs.service.NotificationService;
 import com.kage.wfhs.service.RegisterFormService;
+import com.kage.wfhs.service.WorkFlowOrderService;
 import com.kage.wfhs.util.EntityUtil;
+import com.kage.wfhs.util.Helper;
 import com.kage.wfhs.util.ImageUtil;
 import com.kage.wfhs.util.OTPStaffIDExcelGenerator;
 
@@ -52,8 +53,20 @@ public class RegisterFormServiceImplement implements RegisterFormService {
     @Autowired
     private final CaptureRepository captureRepo;
 
+    private final WorkFlowOrderService workFlowOrderService;
+
+    @Autowired
+    private final Helper helper;
+
+    private final ApproveRoleService approveRoleService;
+
     @Override
-    public void createRegisterForm(RegisterFormDto registerFormDto) throws Exception {    	 
+    public void createRegisterForm(RegisterFormDto registerFormDto) throws Exception {
+        User applicant = EntityUtil.getEntityById(userRepo, registerFormDto.getApplicantId());
+        if(applicant.getPositionName() == null || applicant.getPositionName().isEmpty()){
+            applicant.setPositionName(registerFormDto.getPositionName());
+            EntityUtil.saveEntity(userRepo, applicant, "User");
+        }
         RegisterForm registerForm = modelMapper.map(registerFormDto, RegisterForm.class);
         registerForm.setApplicant(registerFormDto.getApplicantId() > 0 ? EntityUtil.getEntityById(userRepo, registerFormDto.getApplicantId()) : null);
         registerForm.setRequester(registerFormDto.getRequesterId() > 0 ? EntityUtil.getEntityById(userRepo, registerFormDto.getRequesterId()) : null);
@@ -222,6 +235,27 @@ public class RegisterFormServiceImplement implements RegisterFormService {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    public Map<String, Object> getTeamWithStatus(String status, long teamId, long userId) {
+        //UserDto user = userService.getUserById(userId);
+        User user = EntityUtil.getEntityById(userRepo, userId);
+        ApproveRole approveRole = helper.getMaxOrder(user.getApproveRoles());
+        long orderId = workFlowOrderService.getWorkFlowOrderByApproveRoleId(approveRole.getId()).getId();
+        long approveRoleId = approveRoleService.getIdByWorkFlowOrderId(orderId);
+
+        Map<String, Object> responseData = new HashMap<>();
+        List<RegisterFormDto> registerFormDtoList;
+
+        if (status.equalsIgnoreCase("ALL")) {
+            registerFormDtoList = getAllFormSpecificTeamAll(approveRoleId, teamId);
+        } else {
+            registerFormDtoList = getAllFormSpecificTeam(approveRoleId, status, teamId);
+        }
+
+        responseData.put("forms", registerFormDtoList);
+
+        return responseData;
     }
 
 }

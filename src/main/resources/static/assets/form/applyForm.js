@@ -6,7 +6,7 @@ $(document).ready(function() {
     var otherRequestRadioChecked = false;
     const nameInputBox = $('#name-input-box');
     const teamMemberListSelectBox = $('#team-member-list');
-    const positionInputBox = $('#position-input-box');    
+    const positionInputBox = $('#position-input-box');
     const teamInputBox = $('#team-input-box');
     const departmentInputBox = $('#department-input-box');
     const workingPlaceInputBox = $('#working-input-box');
@@ -39,7 +39,7 @@ $(document).ready(function() {
 	var toDate = new Date(fromDate.getFullYear(), fromDate.getMonth() + 1, 0);
 	
 	// Data to send Backend
-	var applicantId, requesterId, working_place, request_reason, from_date, to_date, os_type, securityPatch, antivirusSoftware, antivirusPattern, antivirusFullScan, signed_date, signature;	
+	var applicantId, requesterId, positionName, working_place, request_reason, from_date, to_date, os_type, securityPatch, antivirusSoftware, antivirusPattern, antivirusFullScan, signed_date, signature;
 	var request_percent = 0.0;
 	var applied_date = new Date();
 	
@@ -169,7 +169,14 @@ $(document).ready(function() {
     console.log(currentUserId)
 	nameInputBox.val(currentUser.name);
 	updateStaffIdFields(currentUser.staffId);
-	positionInputBox.val(currentUser.positionName);	
+	if(currentUser.positionName == null) {
+		positionInputBox.prop('disabled', false);
+		positionInputBox.val('');
+	} else {
+		positionInputBox.prop('disabled', true);
+		positionInputBox.val(currentUser.positionName);
+	}
+
 	teamInputBox.val(currentUser.teamName);
 	departmentInputBox.val(currentUser.departmentName);
 	fromDateInputBox.val(formatDate(fromDate));
@@ -210,7 +217,13 @@ $(document).ready(function() {
 	        applyForm[0].reset();
 	        nameInputBox.val(currentUser.name);
 			updateStaffIdFields(currentUser.staffId);
-			positionInputBox.val(currentUser.positionName);	
+			if(currentUser.positionName == null) {
+				positionInputBox.prop('disabled', false);
+				positionInputBox.val('');
+			} else {
+				positionInputBox.prop('disabled', true);
+				positionInputBox.val(currentUser.positionName);
+			}
 			teamInputBox.val(currentUser.teamName);
 			departmentInputBox.val(currentUser.departmentName);
 			fromDateInputBox.val(formatDate(fromDate));
@@ -280,59 +293,6 @@ $(document).ready(function() {
             console.log(workFromHomePercent);
         }
     });
-/*const proseMirrorEditor = $('.ProseMirror')[0];
-const placeholderElement = $('.ProseMirror p[data-placeholder]')[0];
-
-function hidePlaceholder() {
-    if (placeholderElement) {
-        placeholderElement.style.display = 'none';
-    }
-}
-
-function showPlaceholder() {
-    if (placeholderElement) { 
-        placeholderElement.style.display = 'block';
-    }
-}
-
-// Hide placeholder when the editor is clicked
-proseMirrorEditor.addEventListener('click', function() {
-    hidePlaceholder();
-});
-
-// Mutation observer to handle changes in the editor content
-const observer = new MutationObserver(function(mutations) {
-    mutations.forEach(function(mutation) {
-        if (mutation.type === 'childList' || mutation.type === 'characterData') {
-            const editorContent = proseMirrorEditor.innerText;
-            if (editorContent.trim() === '') {
-                showPlaceholder();
-            } else {
-                hidePlaceholder();
-            }
-        }
-    });
-});
-
-const config = { characterData: true, subtree: true, childList: true };
-
-observer.observe(proseMirrorEditor, config);       
-
-document.body.addEventListener('click', function(event) {
-    if (!proseMirrorEditor.contains(event.target)) {
-        showPlaceholder();
-    }
-});
-
-proseMirrorEditor.addEventListener('input', function() {
-    const editorContent = proseMirrorEditor.innerText;
-    console.log(editorContent)
-    if (editorContent.trim() === '') {
-        showPlaceholder();
-    } else {
-        hidePlaceholder();         
-    }
-});*/
 
     $('#continue-button').click(function(event) {
         event.preventDefault();
@@ -464,6 +424,8 @@ proseMirrorEditor.addEventListener('input', function() {
 			applicantId = selectedTeamMemberId;
 			requesterId = currentUser.id;
 		}
+		positionName = positionInputBox.val();
+		console.log(positionName)
 		if(!workInMyanmarBoolean) {
 			working_place =  workingPlaceInputBox.val();	
 		} if(workInMyanmarBoolean) {
@@ -472,7 +434,7 @@ proseMirrorEditor.addEventListener('input', function() {
 		console.log(workInMyanmar)
 								
 		request_reason = reasonInputBox.val();
-		console.log(request_reason)		
+		console.log(request_reason)
 		request_percent = workFromHomePercent;
 		
 		var formattedFromDate = new Date(fromDateInputBox.val()).toISOString().split('T')[0];
@@ -482,20 +444,17 @@ proseMirrorEditor.addEventListener('input', function() {
 		var toDateValue = toDateInputBox.val();
 		var dateComponents = toDateValue.split('-');
 var day = parseInt(dateComponents[0], 10);
-var month = parseInt(dateComponents[1], 10) - 1; // Months are zero-based (0-11)
+var month = parseInt(dateComponents[1], 10) - 1;
 var year = parseInt(dateComponents[2], 10);
 
-// Create a new Date object using the components
 var toDateObj = new Date(year, month, day);
 
-// Check if the Date object is valid
 if (!isNaN(toDateObj.getTime())) {
-    // If the Date object is valid, you can proceed to format it or use it as needed
     formattedToDate = toDateObj.toISOString().split('T')[0];
 } else {
     console.error('Invalid date string:', toDateValue);
 }
-		/*var formattedToDate = new Date(toDateInputBox.val()).toISOString().split('T')[0];*/
+
 		to_date = formattedToDate;
 		
 		os_type = osTypeInputBox.val();
@@ -645,6 +604,7 @@ if (!isNaN(toDateObj.getTime())) {
 	    var requestData = {
 		   	applicantId: applicantId,
 		    requesterId: requesterId,
+			positionName: positionName,
 		    working_place: working_place,
 		    request_reason: request_reason,
 		    from_date: from_date,
@@ -659,6 +619,7 @@ if (!isNaN(toDateObj.getTime())) {
 	    var formData = new FormData();
 		formData.append('applicantId', applicantId);
         formData.append('requesterId', requesterId);
+		formData.append('positionName', positionName);
         formData.append('working_place', working_place);
         formData.append('request_reason', request_reason);
         formData.append('request_percent', request_percent);

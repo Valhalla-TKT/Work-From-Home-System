@@ -8,6 +8,7 @@
 package com.kage.wfhs.service;
 
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.stereotype.Service;
 
@@ -44,4 +45,6 @@ public interface RegisterFormService {
 	void upgradeRegisterForm(Long formId, RegisterFormDto registerFormDto);
 
 	void exportStaffIdsForOTP(List<Long> formIds, HttpServletResponse response);
+
+	Map<String, Object> getTeamWithStatus(String status, long teamId, long userId);
 }

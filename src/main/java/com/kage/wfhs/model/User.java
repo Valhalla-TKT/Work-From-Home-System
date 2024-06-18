@@ -56,6 +56,8 @@ public class User implements Serializable {
     @Column(columnDefinition = "TEXT")
     private String signature;
 
+    private String positionName;
+
     @ManyToOne
     @JoinColumn(name = "team_id")
     @JsonIgnore

@@ -77,6 +77,7 @@ public class RegisterFormController {
     public ResponseEntity<String> createForm(
     		@RequestParam(value = "applicantId") long applicantId,
             @RequestParam(value = "requesterId") long requesterId,
+            @RequestParam(value = "positionName") String positionName,
             @RequestParam(value = "working_place") String workingPlace,
             @RequestParam(value = "request_reason") String requestReason,
             @RequestParam(value = "request_percent") double requestPercent,
@@ -93,6 +94,7 @@ public class RegisterFormController {
         RegisterFormDto registerFormDto = new RegisterFormDto();
         registerFormDto.setApplicantId(applicantId);
         registerFormDto.setRequesterId(requesterId);
+        registerFormDto.setPositionName(positionName);
         registerFormDto.setWorking_place(workingPlace);
         registerFormDto.setRequest_reason(requestReason);
         registerFormDto.setRequest_percent(requestPercent);
@@ -139,21 +141,13 @@ public class RegisterFormController {
             @RequestParam(value = "status") String status,
             @RequestParam(value = "teamId") long teamId,
             @RequestParam(value = "userId") long userId){
-        UserDto user = userService.getUserById(userId);
-        ApproveRole approveRole = helper.getMaxOrder(user.getApproveRoles());
-        long orderId = workFlowOrderService.getWorkFlowOrderByApproveRoleId(approveRole.getId()).getId();
-        long approveRoleId = approveRoleService.getIdByWorkFlowOrderId(orderId);        
-        Map<String, Object> responseData = new HashMap<>();
-        List<RegisterFormDto> registerFormDtoList =  new ArrayList<>();
+        
+        Map<String, Object> responseData = registerFormService.getTeamWithStatus(status, teamId, userId);
+        List<RegisterFormDto> registerFormDtoList = (List<RegisterFormDto>) responseData.get("forms");
+
         List<UserDto> applicantList = new ArrayList<>();
         List<UserDto> requesterList = new ArrayList<>();
-        if(status.equalsIgnoreCase("ALL")){
-        	registerFormDtoList = registerFormService.getAllFormSpecificTeamAll(approveRoleId,teamId);        	
-            responseData.put("forms", registerFormDtoList);
-        } else {
-            registerFormDtoList = registerFormService.getAllFormSpecificTeam(approveRoleId, status,teamId);
-            responseData.put("forms", registerFormDtoList);
-        }
+
         return getMapResponseEntity(responseData, registerFormDtoList, applicantList, requesterList);
     }
 
