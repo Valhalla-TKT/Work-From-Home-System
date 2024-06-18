@@ -92,3 +92,23 @@ async function sendRequestWithThreeParams(url, method, param1Name, param1, param
         throw new Error('Error sending request: ' + error.message);
     }
 }
+
+async function sendRequestWithoutParam(url, method) {
+    try {
+        const response = await fetch(url, {
+            method: method,
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        });
+
+        if (!response.ok) {
+            const errorMessage = await response.text();
+            throw new Error(errorMessage || 'Request failed');
+        }
+
+        return response;
+    } catch (error) {
+        throw new Error('Error sending request: ' + error.message);
+    }
+}

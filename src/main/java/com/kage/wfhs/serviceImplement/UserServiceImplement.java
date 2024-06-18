@@ -14,6 +14,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 import com.kage.wfhs.exception.EntityNotFoundException;
+import com.kage.wfhs.util.DtoUtil;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
@@ -393,5 +394,29 @@ public class UserServiceImplement implements UserService {
 		user.setFirstTimeLogin(false);
 		User savedUser = EntityUtil.saveEntity(userRepo, user, "user");
 		return true;
+	}
+
+	@Override
+	public List<UserDto> getAllUserByGender(String gender) {
+		List<User> users = userRepo.findAllByGender(gender);
+		return DtoUtil.mapList(users, UserDto.class, modelMapper);
+	}
+
+	@Override
+	public List<UserDto> getAllUserByTeamIdAndGender(Long teamId, String gender) {
+		List<User> users = userRepo.findAllByTeamIdAndGender(teamId, gender);
+		return DtoUtil.mapList(users, UserDto.class, modelMapper);
+	}
+
+	@Override
+	public List<UserDto> getAllUserByDepartmentIdAndGender(Long departmentId, String gender) {
+		List<User> users = userRepo.findAllByDepartmentIdAndGender(departmentId, gender);
+		return DtoUtil.mapList(users, UserDto.class, modelMapper);
+	}
+
+	@Override
+	public List<UserDto> getAllUserByDivisionIdAndGender(Long divisionId, String gender) {
+		List<User> users = userRepo.findAllByDivisionIdAndGender(divisionId, gender);
+		return DtoUtil.mapList(users, UserDto.class, modelMapper);
 	}
 }

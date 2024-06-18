@@ -96,6 +96,26 @@ public class UserController {
     public ResponseEntity<List<UserDto>> getAllUserByDivisionId(@PathVariable("divisionId") Long divisionId){
         return ResponseEntity.ok(userService.getAllDivisionMember(divisionId));
     }
+
+    @PostMapping("/gender")
+    public ResponseEntity<List<UserDto>> getAllUserByGender(@RequestParam("gender") String gender){
+        return ResponseEntity.ok(userService.getAllUserByGender(gender));
+    }
+
+    @PostMapping("/team/{teamId}/gender/{gender}")
+    public ResponseEntity<List<UserDto>> getAllUserByTeamIdAndGender(@PathVariable("teamId") Long teamId, @PathVariable("gender") String gender){
+        return ResponseEntity.ok(userService.getAllUserByTeamIdAndGender(teamId, gender));
+    }
+
+    @PostMapping("/department/{departmentId}/gender/{gender}")
+    public ResponseEntity<List<UserDto>> getUsersByDepartmentIdAndGender(@PathVariable("departmentId") Long departmentId, @PathVariable("gender") String gender){
+        return ResponseEntity.ok(userService.getAllUserByDepartmentIdAndGender(departmentId, gender));
+    }
+
+    @PostMapping("/division/{divisionId}/gender/{gender}")
+    public ResponseEntity<List<UserDto>> getUsersByDivisionIdAndGender(@PathVariable("divisionId") Long divisionId, @PathVariable("gender") String gender){
+        return ResponseEntity.ok(userService.getAllUserByDivisionIdAndGender(divisionId, gender));
+    }
     
     @PostMapping("/userList")
     public ResponseEntity<?> getAllUser(){

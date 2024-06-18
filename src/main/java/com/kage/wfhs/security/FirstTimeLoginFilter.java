@@ -59,7 +59,7 @@ public class FirstTimeLoginFilter extends OncePerRequestFilter {
                     logger.debug("Redirecting to /importExcel");
                     response.sendRedirect("/admin/importExcel");
                     return;
-                } else if (roles.contains("APPLICANT")) {
+                } else  {
                     logger.debug("Redirecting to /profile");
                     response.sendRedirect("/profile");
                     return;

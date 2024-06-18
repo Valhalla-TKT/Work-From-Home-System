@@ -56,4 +56,10 @@ public interface UserService {
 	// Create HR
 	void createHR();
 	boolean changeFirstHRFirstLoginStatus();
+
+    List<UserDto> getAllUserByGender(String gender);
+
+	List<UserDto> getAllUserByTeamIdAndGender(Long teamId, String gender);
+	List<UserDto> getAllUserByDepartmentIdAndGender(Long departmentId, String gender);
+	List<UserDto> getAllUserByDivisionIdAndGender(Long divisionId, String gender);
 }

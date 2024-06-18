@@ -193,4 +193,11 @@ public interface UserRepository extends JpaRepository<User,Long> {
            "  u.registerForms r")
     List<Object[]> getTotalStaffRequest();
 
+    List<User> findAllByGender(String gender);
+
+    List<User> findAllByTeamIdAndGender(Long teamId, String gender);
+
+    List<User> findAllByDepartmentIdAndGender(Long departmentId, String gender);
+
+    List<User> findAllByDivisionIdAndGender(Long divisionId, String gender);
 }

@@ -1,21 +1,25 @@
-$(document).ready(function(){
-    getAllUser();
+$(document).ready( function(){
+     getAllUser(1, true);
     toggleSections();
     $('#join-date').dateDropper({
         format: 'd-m-Y',
     });
     getAllTeam(), getAllDepartment(), getAllDivision(), getAllApproveRole()
-    $('#team-filter').on('change', getAllUser);
+    $('#team-filter').on('change', async function() {
+        await getAllUser(1);
+    });
     $('#department-filter').on('change', async function() {
         await updateTeamsByDepartment();
-        await getAllUser();
+        await getAllUser(1);
     });
     $('#division-filter').on('change', async function() {
         await updateDepartmentsByDivision();
         await updateTeamsByDivision();
-        await getAllUser();
+        await getAllUser(1);
     });
-    $('#gender-filter').on('change', getAllUser);
+    $('#gender-filter').on('change', async function() {
+        await getAllUser(1)
+    });
 
     $('#gender').change(function() {
         var selectedGender = $(this).val();
@@ -171,11 +175,15 @@ $(document).ready(function(){
     async function updateTeamsByDepartment() {
         try {
             var departmentId = $('#department-filter').val();
+            var divisionId = $('#division-filter').val();
             var teams = [];
 
             if (departmentId !== 'all') {
                 teams = await getTeamsByDepartmentId(departmentId);
-            } else {
+            } else if (divisionId !== 'all') {
+                teams = await getTeamsByDivisionId(divisionId);
+            }
+            else {
                 teams = await fetchTeams();
             }
 
@@ -349,70 +357,102 @@ $(document).ready(function(){
         });
     }
 
-    async function getAllUser() {
-        $('#staff-list').empty();
-        var rowCount = 0;
+    var currentPage = 1;
+    var usersPerPage = 10;
+
+    function renderLoadMoreButton(totalCount, currentCount) {
+        console.log("totalCount = ", totalCount, ", currentCount = ", currentCount)
+        if (currentCount < totalCount) {
+            $('#load-more').show();
+        } else {
+            $('#load-more').hide();
+        }
+    }
+
+    async function getAllUser(page = 1, appendData = false) {
         var selectedTeamId = $('#team-filter').val();
         var selectedDepartmentId = $('#department-filter').val();
         var selectedDivisionId = $('#division-filter').val();
         var selectedGender = $('#gender-filter').val();
         let response;
-        if (selectedTeamId && selectedTeamId !== "all") {
-            response = await getUsersByTeamId(selectedTeamId);
-        } else if (selectedDepartmentId && selectedDepartmentId !== "all") {
-            response = await getUsersByDepartmentId(selectedDepartmentId);
-        } else if (selectedDivisionId && selectedDivisionId !== "all") {
-            response = await getUsersByDivisionId(selectedDivisionId);
-        } else {
-            response = await fetchUsers();
+
+        // Clear staff list based on filter
+        if (!appendData) {
+            $('#staff-list').empty();
         }
 
-        if (response === null || response === undefined) {
-            console.log("User is null.");
-        } else if (Array.isArray(response)) {
-            if (response.length === 0) {
-                console.log("Response List length is 0.");
+        try {
+            if (selectedGender === "all") {
+                if (selectedTeamId && selectedTeamId !== "all") {
+                    response = await getUsersByTeamId(selectedTeamId);
+                } else if (selectedDepartmentId && selectedDepartmentId !== "all") {
+                    response = await getUsersByDepartmentId(selectedDepartmentId);
+                } else if (selectedDivisionId && selectedDivisionId !== "all") {
+                    response = await getUsersByDivisionId(selectedDivisionId);
+                } else {
+                    response = await fetchUsers();
+                }
             } else {
-                response.forEach(function (user){
-                    if (selectedGender && selectedGender !== "all" && user.gender !== selectedGender) {
-                        return;
-                    }
-                    rowCount++;
-                    $('#staff-list').append(`
-                      <a href="detail"
-                                        class="js-resume-card resume-card  designer-search-card resume-card-sections-hidden  js-user-row-6234">
-                        <div class="resume-card-header resume-section-padding  ">
-                          <div class="resume-card-header-designer">
-                            <img class="resume-card-avatar" alt="Halo UI/UX" width="62" height="62"
-                              src="/assets/icons/DAT Logo.png" />
-                            <div class="resume-card-header-details">
-                              <div class="resume-card-title">
-                                <h3 class="resume-card-designer-name user-select-none">
-                                  ${user.name}
-                                </h3>
-                                <span class="badge badge-pro">${user.staffId}</span>
-                              </div>
-    
-                              <span class="resume-card-header-text">
-                                <p>
-                                  <span class="resume-card-location">${user.divisionName}</span>                                      
-                                </p>
-                              </span>               
-                            </div>
-    
-    
-                          </div>
-    
-                        </div>
-    
-                      </a>
-                      `);
-                });
+                if (selectedTeamId && selectedTeamId !== "all") {
+                    response = await getUsersByTeamIdAndGender(selectedTeamId, selectedGender);
+                } else if (selectedDepartmentId && selectedDepartmentId !== "all") {
+                    response = await getUsersByDepartmentIdAndGender(selectedDepartmentId, selectedGender);
+                } else if (selectedDivisionId && selectedDivisionId !== "all") {
+                    response = await getUsersByDivisionIdAndGender(selectedDivisionId, selectedGender);
+                } else {
+                    response = await getUsersByGender(selectedGender);
+                }
             }
-            document.getElementById("total-count").innerText = rowCount;
-        }
 
+            var totalUsers = response.length;
+            var start = (page - 1) * usersPerPage;
+            var end = start + usersPerPage;
+            var usersToShow = response.slice(start, end);
+
+            console.log(usersToShow)
+            usersToShow.forEach(user => {
+                // if (selectedGender && selectedGender !== "all" && user.gender !== selectedGender) {
+                //     return; // Skip this user if gender doesn't match the filter
+                // }
+
+                // Append user to staff list
+                $('#staff-list').append(`
+                <a href="detail" class="js-resume-card resume-card designer-search-card resume-card-sections-hidden js-user-row-6234">
+                    <div class="resume-card-header resume-section-padding">
+                        <div class="resume-card-header-designer">
+                            <img class="resume-card-avatar" alt="Halo UI/UX" width="62" height="62"
+                                src="/assets/icons/DAT Logo.png" />
+                            <div class="resume-card-header-details">
+                                <div class="resume-card-title">
+                                    <h3 class="resume-card-designer-name user-select-none">
+                                        ${user.name}
+                                    </h3>
+                                    <span class="badge badge-pro">${user.staffId}</span>
+                                </div>
+                                <span class="resume-card-header-text">
+                                    <p>
+                                        <span class="resume-card-location">${user.divisionName}</span>
+                                    </p>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </a>
+            `);
+            });
+
+            console.log("hi")
+            renderLoadMoreButton(totalUsers, $('#staff-list').children().length);
+        } catch (error) {
+            console.error('Error in getAllUser:', error);
+        }
     }
+
+
+    $('#load-more').on('click', async function() {
+        currentPage++;
+        await getAllUser(currentPage, true);
+    });
     function getAllApproveRole() {
         $.ajax({
             url: `http://localhost:8080/api/approveRole/approveRoleList`,
@@ -444,6 +484,18 @@ $(document).ready(function(){
     }
     async function getUsersByDivisionId(divisionId) {
         return await fetchUsersByDivisionId(divisionId)
+    }
+    async function getUsersByGender(gender) {
+        return await fetchUsersByGender(gender)
+    }
+    async function getUsersByTeamIdAndGender(teamId, gender) {
+        return await fetchUsersByTeamIdAndGender(teamId, gender)
+    }
+    async function getUsersByDepartmentIdAndGender(departmentId, gender) {
+        return await fetchUsersByDepartmentIdAndGender(departmentId, gender)
+    }
+    async function getUsersByDivisionIdAndGender(divisionId, gender) {
+        return await fetchUsersByDivisionIdAndGender(divisionId, gender)
     }
     async function getTeamsByDepartmentId(departmentId) {
         return await fetchTeamsByDepartmentId(departmentId)

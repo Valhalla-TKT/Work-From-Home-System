@@ -363,6 +363,62 @@ async function fetchUsersByDivisionId(divisionId) {
     }
 }
 
+async function fetchUsersByGender(gender) {
+    try {
+        const responseData = await sendRequestWithOneParam(`/api/user/gender`, 'POST', 'gender', gender);
+        const contentType = responseData.headers.get('content-type');
+        if (contentType && contentType.includes('application/json')) {
+            return await responseData.json();
+        } else {
+            return await responseData.text();
+        }
+    } catch (error) {
+        console.error('Error:', error);
+    }
+}
+
+async function fetchUsersByTeamIdAndGender(teamId ,gender) {
+    try {
+        const responseData = await sendRequestWithoutParam(`/api/user/team/${teamId}/gender/${gender}`, 'POST');
+        const contentType = responseData.headers.get('content-type');
+        if (contentType && contentType.includes('application/json')) {
+            return await responseData.json();
+        } else {
+            return await responseData.text();
+        }
+    } catch (error) {
+        console.error('Error:', error);
+    }
+}
+
+async function fetchUsersByDepartmentIdAndGender(departmentId ,gender) {
+    try {
+        const responseData = await sendRequestWithoutParam(`/api/user/department/${departmentId}/gender/${gender}`, 'POST');
+        const contentType = responseData.headers.get('content-type');
+        if (contentType && contentType.includes('application/json')) {
+            return await responseData.json();
+        } else {
+            return await responseData.text();
+        }
+    } catch (error) {
+        console.error('Error:', error);
+    }
+}
+
+async function fetchUsersByDivisionIdAndGender(divisionId ,gender) {
+    try {
+        const responseData = await sendRequestWithoutParam(`/api/user/division/${divisionId}/gender/${gender}`, 'POST');
+        const contentType = responseData.headers.get('content-type');
+        if (contentType && contentType.includes('application/json')) {
+            return await responseData.json();
+        } else {
+            return await responseData.text();
+        }
+    } catch (error) {
+        console.error('Error:', error);
+    }
+}
+
 // Cookie JWT
 async function fetchCookie(url) {
     const token = getCookie("JWT");
