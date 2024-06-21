@@ -419,6 +419,25 @@ async function fetchUsersByDivisionIdAndGender(divisionId ,gender) {
     }
 }
 
+async function getSessionUser() {
+    return new Promise((resolve, reject) => {
+        $.ajax({
+            url: 'http://localhost:8080/api/session/user',
+            type: 'POST',
+            contentType: 'application/json',
+            success: function(response) {
+                console.log(response);
+                localStorage.setItem('currentUser', JSON.stringify(response));
+                resolve(response);
+            },
+            error: function (error) {
+                console.error('Error:', error);
+                reject(null);
+            }
+        });
+    });
+}
+
 // Cookie JWT
 async function fetchCookie(url) {
     const token = getCookie("JWT");

@@ -64,7 +64,7 @@ public class SecurityConfig {
                             return isApplicant ? new org.springframework.security.authorization.AuthorizationDecision(false)
                                     : new org.springframework.security.authorization.AuthorizationDecision(true);
                         })
-                        .requestMatchers("/api/user/updateApproveRole").permitAll()
+//                        .requestMatchers("/api/admin/importExcel").permitAll()
                         .anyRequest().authenticated()
                 )
                 .exceptionHandling(exceptionHandling -> exceptionHandling.accessDeniedPage("/accessDenied"))

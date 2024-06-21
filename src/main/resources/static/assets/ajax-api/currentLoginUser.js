@@ -1,21 +1,13 @@
-$(document).ready(function() {
-	getSessionUser();
-
-	function getSessionUser() {
-	        $.ajax({
-	            url: 'http://localhost:8080/api/session/user',
-	            type: 'POST',
-	            contentType: 'application/json',
-	            success: function(response) {
-	                console.log(response);
-	                localStorage.setItem('currentUser', JSON.stringify(response));  
-	                getData();              
-	            },
-	            error: function (error) {
-	              console.error('Error:', error);
-	          }
-	        });
+$(document).ready(async function() {
+	try {
+		await getSessionUser();
+		getData();
+	} catch (error) {
+		console.error('Error retrieving user:', error);
+		Swal.fire('Error', 'Could not retrieve user.', 'error');
 	}
+
+
 	function getData() {
 		var currentUser = JSON.parse(localStorage.getItem('currentUser'));
 		console.log(currentUser)
@@ -322,24 +314,26 @@ $(document).ready(function() {
 	        $('#position_page_email').text(email);
 	        $('#position_page_staff_id').text("Staff ID : " + staffId);
 	        $('#position_page_department_name').text(departmentName);
-	        $('#profile_page_role_name').text(userRole);
-	        if (currentUser.profile && currentUser.profile.length) {
-				console.log("Hii")
-		        $('.show-profile-is-not-null').hide();
-		        if (currentUser.gender === "male") {
-		            $('.show-profile-is-null.male').show();
-					$('.show-profile-is-null.female').hide();
-		        } else if (currentUser.gender === "female") {
-					$('.show-profile-is-null.male').hide();
-					$('.show-profile-is-null.female').show();
-		        }
-		    } else {
-		        $('.show-profile-is-null').show();
-		        $('.show-profile-is-not-null').show();
-		    }
-	        
-	        //$('#profile-page-image').attr('src', currentUser.profile).attr('alt', currentUser.name);
-	        console.log($('#profile-page-image'))	      
+	        // $('#profile_page_role_name').text(userRole);
+			console.log(currentUser.profile)
+	        if (currentUser.profile) {
+				// 	console.log("Hii")
+				//     $('.show-profile-is-not-null').hide();
+				//     if (currentUser.gender === "male") {
+				//         $('.show-profile-is-null.male').show();
+				// 		$('.show-profile-is-null.female').hide();
+				//     } else if (currentUser.gender === "female") {
+				// 		$('.show-profile-is-null.male').hide();
+				// 		$('.show-profile-is-null.female').show();
+				//     }
+				// } else {
+				//     $('.show-profile-is-null').show();
+				//     $('.show-profile-is-not-null').show();
+				// }
+				const profileImage = $('#profile-page-image')
+				profileImage.attr('src', `assets/profile/${currentUser.profile}`).attr('alt', currentUser.name);
+				console.log(profileImage)
+			}
 	    }
 	}
 	
