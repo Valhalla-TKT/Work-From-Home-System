@@ -7,6 +7,9 @@
  */
 package com.kage.wfhs.dto;
 
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 import lombok.*;
 
 @Getter
@@ -15,6 +18,12 @@ import lombok.*;
 @AllArgsConstructor
 @ToString
 public class AuthDto {
+
     private String staffId, password, newPassword;
+
+    @NotNull(message = "Email is required")
+    @Size(min = 10, max = 100, message = "Email must be between 10 and 100 characters.")
+    @Email(message = "Email should ve valid")
+    private String email;
 
 }

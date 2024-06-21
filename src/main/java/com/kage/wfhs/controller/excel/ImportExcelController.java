@@ -34,7 +34,7 @@ public class ImportExcelController {
 	private final ExcelService excelService;
 	private final UserService userService;
 
-	@PostMapping("/importExcel")
+	@PostMapping("/admin/importExcel")
 	public String uploadFile(@RequestParam("file") MultipartFile file, @RequestParam("sheetName") String sheetName,
 			ModelMap model) throws ParseException {
 		try {
@@ -64,7 +64,7 @@ public class ImportExcelController {
 			if (excelService.readExcelAndInsertIntoDatabase(inputStream, sheetName, workbook)) {
 				boolean changeSuccess = userService.changeFirstHRFirstLoginStatus();
 				if (changeSuccess) {
-					return "redirect:/dashboard";
+					return "redirect:/signOut";
 				} else {
 					model.addAttribute("message", "Failed to change the first HR login status.");
 					model.addAttribute("dto", new ExcelImportDto());

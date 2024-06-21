@@ -36,17 +36,17 @@
 
 							<ul class="nav-v2-sub">
 								<li class="nav-v2-sub__item hide-applicant-only hide-hr-only">
-									<a class="nav-v2-sub__link" data-nav-event-clicked="Designer Search" href="/viewFormList"> View request list 
+									<a class="nav-v2-sub__link" data-nav-event-clicked="Designer Search" href="/admin/viewFormList"> View request list
 										<span class="nav-v2-sub__subtitle">Quickly view work from home form</span>
 									</a>
 								</li>
 								<li class="nav-v2-sub__item visible-hr-only">
-									<a class="nav-v2-sub__link" data-nav-event-clicked="Designer Search" href="/ledger"> Ledger 
+									<a class="nav-v2-sub__link" data-nav-event-clicked="Designer Search" href="/admin/ledger"> Ledger
 										<span class="nav-v2-sub__subtitle">Fully view the WFH ledger</span>
 									</a>
 								</li>
 								<li class="nav-v2-sub__item ">
-									<a class="nav-v2-sub__link" data-nav-event-clicked="Post a Job" href="/applyForm"> Apply form now 
+									<a class="nav-v2-sub__link" data-nav-event-clicked="Post a Job" href="/applyForm"> Apply form now
 										<span class="nav-v2-sub__subtitle">Swiftly apply for remote work</span>
 									</a>
 								</li>
@@ -58,52 +58,41 @@
 							</ul>
 						</li>
 						
-						<li class="nav-v2-main__item nav-v2-main__item--sub-nav visible-hr-only"><a data-nav-event-clicked="Hire Designers" href="#">Manage</a>
+						<li class="nav-v2-main__item nav-v2-main__item--sub-nav hide-applicant-only"><a data-nav-event-clicked="Hire Designers" href="#">Manage</a>
 
 							<ul class="nav-v2-sub">
-								<li class="nav-v2-sub__item">
-								    <a class="nav-v2-sub__link" data-nav-event-clicked="Approve Role" href="/approveRole"> Approver 
+								<li class="nav-v2-sub__item visible-hr-only">
+								    <a class="nav-v2-sub__link" data-nav-event-clicked="Approve Role" href="/admin/approveRole"> Approver
 								        <span class="nav-v2-sub__subtitle">Administrate approval permissions Role</span>
 								    </a>
 								</li>
 							    <li class="nav-v2-sub__item">
-							        <a class="nav-v2-sub__link" data-nav-event-clicked="Add Division" href="/division"> Division 
+							        <a class="nav-v2-sub__link" data-nav-event-clicked="Add Division" href="/admin/division"> Division
 							            <span class="nav-v2-sub__subtitle">Manage divisions</span>
 							        </a>
 							    </li>
 							    <li class="nav-v2-sub__item">
-							        <a class="nav-v2-sub__link" data-nav-event-clicked="Add Department" href="/department">Department 
+							        <a class="nav-v2-sub__link" data-nav-event-clicked="Add Department" href="/admin/department">Department
 							            <span class="nav-v2-sub__subtitle">Supervise departments</span>
 							        </a>
 							    </li>
 							    <li class="nav-v2-sub__item">
-							        <a class="nav-v2-sub__link" data-nav-event-clicked="Add Team" href="/team">Team 
+							        <a class="nav-v2-sub__link" data-nav-event-clicked="Add Team" href="/admin/team">Team
 							            <span class="nav-v2-sub__subtitle">Oversee teams</span>
 							        </a>
 							    </li>
-							    
 							    <li class="nav-v2-sub__item">
-							        <a class="nav-v2-sub__link" data-nav-event-clicked="Add Position" href="/position">Position 
-							            <span class="nav-v2-sub__subtitle">Direct positions</span>
-							        </a>
-							    </li>
-								<li class="nav-v2-sub__item">
-							        <a class="nav-v2-sub__link" data-nav-event-clicked="Add Role" href="/role"> Role 
-							            <span class="nav-v2-sub__subtitle">Administrate roles</span>
-							        </a>
-							    </li>
-							    <li class="nav-v2-sub__item">
-							        <a class="nav-v2-sub__link" data-nav-event-clicked="Add User" href="/user">User 
+							        <a class="nav-v2-sub__link" data-nav-event-clicked="Add User" href="/admin/user">User
 							            <span class="nav-v2-sub__subtitle">Control users</span>
 							        </a>
 							    </li>				
 								<li class="nav-v2-sub__item visible-hr-only">
-							        <a class="nav-v2-sub__link" data-nav-event-clicked="Add User" href="/importExcel">Import 
+							        <a class="nav-v2-sub__link" data-nav-event-clicked="Add User" href="/admin/importExcel">Import
 							            <span class="nav-v2-sub__subtitle">Import Excel Here</span>
 							        </a>
 							    </li>
 							    <li class="nav-v2-sub__item visible-hr-only">
-							        <a class="nav-v2-sub__link" data-nav-event-clicked="Add User" href="/approveRoleSwitch">Switch 
+							        <a class="nav-v2-sub__link" data-nav-event-clicked="Add User" href="/admin/approveRoleSwitch">Switch
 							            <span class="nav-v2-sub__subtitle">Switch Approve Role Here</span>
 							        </a>
 							    </li>		
@@ -127,7 +116,7 @@
 			</nav>
 
 			<a class="nav-v2-logo" th:href="@{/department}" data-nav-event-clicked="Logo" aria-label="Back to home page">
-				<strong style="letter-spacing: 1px; font-size: 26px;">WorkHub</strong>
+				<strong style="letter-spacing: 1px; font-size: 26px;">WFHS</strong>
 			</a>
 
 

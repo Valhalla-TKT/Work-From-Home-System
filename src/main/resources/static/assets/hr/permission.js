@@ -157,7 +157,7 @@ $(document).ready(function() {
                     var dataList = $('<datalist>', {
                         id: dataListId
                     });
-                    console.log(dataList)
+                    //console.log(dataList)
 
                     $('#approveRoleSelectBoxContainer').append(dataList);
 

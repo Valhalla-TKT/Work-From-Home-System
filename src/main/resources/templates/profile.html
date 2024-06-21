@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org" id="fullscreen-body">
 
-<head th:replace="fragments/header :: header">
+<head th:replace="~{fragments/header :: header}">
     <title>WorkHub</title>
 </head>
 
@@ -9,7 +9,7 @@
 
 
 <!-- header -->
-<div th:replace="fragments/navigation :: navigation"></div>
+<div th:replace="~{fragments/navigation :: navigation}"></div>
 <!-- header -->
 
 <div
@@ -22,11 +22,11 @@
 
 
 <!-- main -->
-<main th:replace="fragments/profile/index :: content"></main>
+<main th:replace="~{fragments/profile/index :: content}"></main>
 <!-- main -->
 
 
-<div th:replace="fragments/footer :: footer"></div>
+<div th:replace="~{fragments/footer :: footer}"></div>
 <div id="signup-overlay" class="overlay ">
     <div class="lightbox">
         <a href="#" class="close" aria-label="close">
@@ -83,11 +83,11 @@
 
 
 <script src="/assets/shots-manifest-774f346db3e5e419264b407a465002836f193c259e06bfa2eeff0b6b981a532f.js"></script>
-
-</body>
 <div id="site-notifications"></div>
 
-<div th:replace="fragments/chat :: chat"></div>
+<div th:replace="~{fragments/chat :: chat}"></div>
 
 <script src="/assets/welcome/fullscreen.js"></script>
+</body>
+
 </html>

@@ -1,6 +1,6 @@
 async function sendRequest(url, method, requestData) {
     try {
-        const response = await fetch(url, {
+        const response = await fetch(`http://localhost:8080${url}`, {
             method: method,
             headers: {
                 'Content-Type': 'application/json'
@@ -11,7 +11,6 @@ async function sendRequest(url, method, requestData) {
         if (!response.ok) {
             throw new Error('Request failed');
         }
-
         return response;
     } catch (error) {
         throw new Error('Error sending request: ' + error.message);
@@ -77,6 +76,26 @@ async function sendRequestWithThreeParams(url, method, param1Name, param1, param
         const fullUrl = `${url}?${param1Name}=${param1}&${param2Name}=${param2}&${param3Name}=${param3}`;
 
         const response = await fetch(fullUrl, {
+            method: method,
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        });
+
+        if (!response.ok) {
+            const errorMessage = await response.text();
+            throw new Error(errorMessage || 'Request failed');
+        }
+
+        return response;
+    } catch (error) {
+        throw new Error('Error sending request: ' + error.message);
+    }
+}
+
+async function sendRequestWithoutParam(url, method) {
+    try {
+        const response = await fetch(url, {
             method: method,
             headers: {
                 'Content-Type': 'application/json'

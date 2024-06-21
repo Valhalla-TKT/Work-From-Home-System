@@ -22708,13 +22708,54 @@ div.rsvp-mod {
 }
 
 .resume-card {
+    box-shadow : 0 1px 3px rgba(0, 0, 0, .3), 0 0 0 1px rgba(0, 0, 0, .04);
     flex: 0 0 calc(45% - 20px) !important;
-    margin: 10px !important;
+    margin: 25px !important;
     border-radius: 30px;
     background: #f9f9fa;
+    cursor: pointer;
     padding-top: 24px;
-    padding-bottom: 24px
+    padding-bottom: 24px;
+    transition: box-shadow 0.3s ease;
 }
+
+.resume-card.shadow {
+    box-shadow: 0px 0px 10px 1px rgba(192, 66, 255, 0.7) !important;
+}
+
+.resume-card:hover, .resume-card.shadow:hover {
+    box-shadow: 0px 0px 10px 1px #c042ff !important;
+    /*animation: rotBGimg 3s linear infinite;*/
+}
+
+.view-form-detail {
+    display: none;
+    transition: opacity 0.3s ease;
+    font-family: "Mona Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
+    font-size: 16px;
+    font-weight: 500;
+    margin-top: 3px;
+    line-height: 22px;
+    color: #0972d3;
+}
+
+.resume-card:hover .view-form-detail {
+    display: block;
+    pointer-events: auto;
+    opacity: 1;
+}
+
+.resume-card-checkbox {
+    display: none;
+}
+
+/*@keyframes rotBGimg {*/
+/*    from {*/
+/*        transform: rotate(0deg);*/
+/*    } to {*/
+/*        transform: rotate(360deg);*/
+/*          }*/
+/*}*/
 
 .resume-card button {
     padding: 0;
@@ -23743,7 +23784,6 @@ div.rsvp-mod {
     }
 }
 
-body.no-hiring .designer-search-container .resume-card-header-designer a,
 body.no-hiring .designer-search-container a.shot-thumbnail-link {
     pointer-events: none
 }

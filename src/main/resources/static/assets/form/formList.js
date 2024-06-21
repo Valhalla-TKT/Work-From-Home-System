@@ -1,7 +1,8 @@
 $(document).ready(function() {
 	
 	var selectedValues = [];
-	var currentUser = JSON.parse(sessionStorage.getItem('currentUser'));
+	var currentUser = JSON.parse(localStorage.getItem('currentUser'));
+	const formListTitle = $("#form-list-title")
 	var approveRoles = currentUser.approveRoles;
    	var userRole;
    	approveRoles.forEach(function(approveRole) {
@@ -26,6 +27,7 @@ $(document).ready(function() {
 	console.log(userRole)
 	// role
 	if(userRole === 'PROJECT_MANAGER') {
+		formListTitle.text(`${currentUser.teamName} Team Form List`)
 		getTeamMembersPendingForm();
 	}
 	if(userRole === 'DEPARTMENT_HEAD') {
@@ -60,7 +62,7 @@ $(document).ready(function() {
 
     function getTeamMembersPendingForm() {        
         $.ajax({
-            url: 'api/registerform/getTeamWithStatus',
+            url: 'http://localhost:8080/api/registerform/getTeamWithStatus',
             type: 'POST',
             data: {
                 status: status,
@@ -71,12 +73,12 @@ $(document).ready(function() {
 				console.log(response)
 				var forms = response.forms;
 				var applicantList = response.applicants;
-                console.log('Success:', response);
+                console.log('Success:', applicantList);
                 $(".form-card-container").empty();
                 forms.forEach(function(form, index) {
 			    var applicant = applicantList[index];
-			    var $aTag = $("<a>", {
-			        href: "viewFormDetailsById?formId=" + form.id + "&userId=" + currentUser.id,
+			    var $aTag = $("<div>", {
+
 			        class: "js-resume-card resume-card designer-search-card resume-card-sections-hidden js-user-row-" + form.id
 			    });
 			    var $header = $("<div>", {
@@ -85,70 +87,111 @@ $(document).ready(function() {
 			    var $designer = $("<div>", {
 			        class: "resume-card-header-designer"
 			    });
-			    var $avatar = $("<img>", {
-			        class: "resume-card-avatar",
-			        alt: "DAT Logo",
-			        width: "62",
-			        height: "62",
-			        src: "/assets/icons/DAT Logo.png"
-			    });
-			    var $details = $("<div>", {
-			        class: "resume-card-header-details"
-			    });
-			    var $title = $("<div>", {
-			        class: "resume-card-title"
-			    }).append(
-			        $("<h3>", {
-			            class: "resume-card-designer-name user-select-none",
-			            text: applicant.name
-			        }),
-			        $("<span>", {
-			            class: "badge badge-pro",                            
-			            text: form.status
-			        })
-			    );
-			    var $text = $("<span>", {
-			        class: "resume-card-header-text"
-			    }).append(
-			        $("<p>").append(
-			            $("<span>", {
-			                class: "resume-card-location",
-			                text: applicant.positionName
-			            }),
-			            $("<span>", {
-			                class: "resume-card-middot",
-			                text: "•"
-			            }),
-			            $("<span>", {
-			                text: applicant.departmentName
-			            })
-			        ),
-			        $("<input>", {
-			            type: "checkbox",
-			            class: "form-checkbox",
-			            value: form.id
-			        })
-			    );
-			    $details.append($title, $text);
-			    $designer.append($avatar, $details);
+				var $avatar = $("<img>", {
+					class: "resume-card-avatar",
+					alt: `${applicant.name} photo`,
+					src: `/assets/profile/${applicant.profile}`,
+					width: "80",
+					height: "80",
+				});
+				var $details = $("<div>", {
+					class: "resume-card-header-details"
+				});
+				var $title = $("<div>", {
+					class: "resume-card-title"
+				}).append(
+					$("<h3>", {
+						class: "resume-card-designer-name user-select-none",
+						text: applicant.name
+					}),
+					$("<span>", {
+						class: "badge badge-pro",
+						text: form.currentStatus
+					})
+				);
+				var $text = $("<span>", {
+					class: "resume-card-header-text"
+				}).append(
+					$("<p>").append(
+						$("<span>", {
+							class: "resume-card-location",
+							text: applicant.positionName
+						}),
+						$("<span>", {
+							class: "resume-card-middot",
+							text: "•"
+						}),
+						$("<span>", {
+							text: applicant.teamName
+						}),
+						$("<br />", {
+							class: "resume-card-middot",
+							text: "•"
+						}),
+						$("<span>", {
+							text: applicant.departmentName
+						}),
+					),
+					$("<input>", {
+						type: "checkbox",
+						class: "resume-card-checkbox",
+						value: form.id,
+						css: {
+							display: 'none'
+						}
+					})
+				);
+				var $goDetail = $("<span>", {
+					class: "view-form-detail",
+					text: "Double Click to View Detail"
+				});
+			    $details.append($title, $text, $goDetail);
+			    $designer.append($avatar, $details );
 			    $header.append($designer);
 			    $aTag.append($header);
+				$aTag.on('click', function() {
+					var $checkbox = $(this).find(".resume-card-checkbox");
+					if ($checkbox.prop('checked')) {
+						$checkbox.prop('checked', false);
+						$(this).removeClass('shadow');
+					} else {
+						$checkbox.prop('checked', true);
+						$(this).addClass('shadow');
+					}
+					var checkboxValue = $checkbox.val();
+					if ($checkbox.prop('checked')) {
+						selectedValues.push(checkboxValue);
+						console.log(selectedValues)
+					} else {
+						var index = selectedValues.indexOf(checkboxValue);
+						if (index !== -1) {
+							selectedValues.splice(index, 1);
+							console.log(selectedValues)
+						}
+					}
+					console.log("Selected values:", selectedValues);
+				});
+				$aTag.on('dblclick', function() {
+					window.location.href = "form/" + form.id + "/user/" + currentUser.id;
+				});
 			    $(".form-card-container").append($aTag);
 			});
-			$(".form-checkbox").change(function() {
-                    var checkboxValue = $(this).val();
-                    if ($(this).prop('checked')) {
-                        selectedValues.push(checkboxValue);
-                        console.log("Checkbox value checked:", checkboxValue);
-                    } else {
-                        var index = selectedValues.indexOf(checkboxValue);
-                        if (index !== -1) {
-                            selectedValues.splice(index, 1);
-                        }
-                    }
-                    console.log("Selected values:", selectedValues);
-                });
-
+			// $(".form-checkbox").change(function() {
+            //         var checkboxValue = $(this).val();
+            //         if ($(this).prop('checked')) {
+            //             selectedValues.push(checkboxValue);
+			// 			$('.resume-card').addClass('shadow');
+            //             console.log("Checkbox value checked:", checkboxValue);
+            //         } else {
+            //             var index = selectedValues.indexOf(checkboxValue);
+            //             if (index !== -1) {
+            //                 selectedValues.splice(index, 1);
+            //             }
+			// 			$('.resume-card').removeClass('shadow');
+            //         }
+            //         console.log("Selected values:", selectedValues);
+            //     });
+			//
             },
             error: function(xhr, status, error) {
                 console.error('Error:', error);
@@ -159,94 +202,120 @@ $(document).ready(function() {
     
     function getTeamsPendingForm() {        
         $.ajax({
-            url: 'api/registerform/getDepartmentWithStatus',
+            url: 'http://localhost:8080/api/registerform/getDepartmentWithStatus',
             type: 'POST',
             data: {
                 status: status,
                 departmentId: departmentId,
                 userId: userId
             },
-            success: function(response) {
+			success: function(response) {
 				console.log(response)
 				var forms = response.forms;
 				var applicantList = response.applicants;
-                console.log('Success:', response);
-                $(".form-card-container").empty();
-                forms.forEach(function(form, index) {
-			    var applicant = applicantList[index];
-			    var $aTag = $("<a>", {
-			        href: "viewFormDetailsById?formId=" + form.id + "&userId=" + currentUser.id,
-			        class: "js-resume-card resume-card designer-search-card resume-card-sections-hidden js-user-row-" + form.id
-			    });
-			    var $header = $("<div>", {
-			        class: "resume-card-header resume-section-padding"
-			    });
-			    var $designer = $("<div>", {
-			        class: "resume-card-header-designer"
-			    });
-			    var $avatar = $("<img>", {
-			        class: "resume-card-avatar",
-			        alt: "DAT Logo",
-			        width: "62",
-			        height: "62",
-			        src: "/assets/icons/DAT Logo.png"
-			    });
-			    var $details = $("<div>", {
-			        class: "resume-card-header-details"
-			    });
-			    var $title = $("<div>", {
-			        class: "resume-card-title"
-			    }).append(
-			        $("<h3>", {
-			            class: "resume-card-designer-name user-select-none",
-			            text: applicant.name
-			        }),
-			        $("<span>", {
-			            class: "badge badge-pro",                            
-			            text: form.status
-			        })
-			    );
-			    var $text = $("<span>", {
-			        class: "resume-card-header-text"
-			    }).append(
-			        $("<p>").append(
-			            $("<span>", {
-			                class: "resume-card-location",
-			                text: applicant.positionName
-			            }),
-			            $("<span>", {
-			                class: "resume-card-middot",
-			                text: "•"
-			            }),
-			            $("<span>", {
-			                text: applicant.departmentName
-			            })
-			        ),
-			        $("<input>", {
-			            type: "checkbox",
-			            class: "form-checkbox",
-			            value: form.id
-			        })
-			    );
-			    $details.append($title, $text);
-			    $designer.append($avatar, $details);
-			    $header.append($designer);
-			    $aTag.append($header);
-			    $(".form-card-container").append($aTag);
+				console.log('Success:', applicantList);
+				$(".form-card-container").empty();
+				forms.forEach(function(form, index) {
+				var applicant = applicantList[index];
+				var $aTag = $("<div>", {
+
+					class: "js-resume-card resume-card designer-search-card resume-card-sections-hidden js-user-row-" + form.id
+				});
+				var $header = $("<div>", {
+					class: "resume-card-header resume-section-padding"
+				});
+				var $designer = $("<div>", {
+					class: "resume-card-header-designer"
+				});
+				var $avatar = $("<img>", {
+					class: "resume-card-avatar",
+					alt: `${applicant.name} photo`,
+					src: `/assets/profile/${applicant.profile}`,
+					width: "80",
+					height: "80",
+				});
+				var $details = $("<div>", {
+					class: "resume-card-header-details"
+				});
+				var $title = $("<div>", {
+					class: "resume-card-title"
+				}).append(
+					$("<h3>", {
+						class: "resume-card-designer-name user-select-none",
+						text: applicant.name
+					}),
+					$("<span>", {
+						class: "badge badge-pro",
+						text: form.currentStatus
+					})
+				);
+				var $text = $("<span>", {
+					class: "resume-card-header-text"
+				}).append(
+					$("<p>").append(
+						$("<span>", {
+							class: "resume-card-location",
+							text: applicant.positionName
+						}),
+						$("<span>", {
+							class: "resume-card-middot",
+							text: "•"
+						}),
+						$("<span>", {
+							text: applicant.teamName
+						}),
+						$("<br />", {
+							class: "resume-card-middot",
+							text: "•"
+						}),
+						$("<span>", {
+							text: applicant.departmentName
+						}),
+					),
+					$("<input>", {
+						type: "checkbox",
+						class: "resume-card-checkbox",
+						value: form.id,
+						css: {
+							display: 'none'
+						}
+					})
+				);
+				var $goDetail = $("<span>", {
+					class: "view-form-detail",
+					text: "Double Click to View Detail"
+				});
+				$details.append($title, $text, $goDetail);
+				$designer.append($avatar, $details );
+				$header.append($designer);
+				$aTag.append($header);
+				$aTag.on('click', function() {
+					var $checkbox = $(this).find(".resume-card-checkbox");
+					if ($checkbox.prop('checked')) {
+						$checkbox.prop('checked', false);
+						$(this).removeClass('shadow');
+					} else {
+						$checkbox.prop('checked', true);
+						$(this).addClass('shadow');
+					}
+					var checkboxValue = $checkbox.val();
+					if ($checkbox.prop('checked')) {
+						selectedValues.push(checkboxValue);
+						console.log(selectedValues)
+					} else {
+						var index = selectedValues.indexOf(checkboxValue);
+						if (index !== -1) {
+							selectedValues.splice(index, 1);
+							console.log(selectedValues)
+						}
+					}
+					console.log("Selected values:", selectedValues);
+				});
+				$aTag.on('dblclick', function() {
+					window.location.href = "form/" + form.id + "/user/" + currentUser.id;
+				});
+				$(".form-card-container").append($aTag);
 			});
-			$(".form-checkbox").change(function() {
-                    var checkboxValue = $(this).val();
-                    if ($(this).prop('checked')) {
-                        selectedValues.push(checkboxValue);
-                        console.log("Checkbox value checked:", checkboxValue);
-                    } else {
-                        var index = selectedValues.indexOf(checkboxValue);
-                        if (index !== -1) {
-                            selectedValues.splice(index, 1);
-                        }
-                    }
-                    console.log("Selected values:", selectedValues);
-                });
 
             },
             error: function(xhr, status, error) {
@@ -258,96 +327,122 @@ $(document).ready(function() {
     
     function getDepartmentsPendingForm() {        
         $.ajax({
-            url: 'api/registerform/getDivisionWithStatus',
+            url: 'http://localhost:8080/api/registerform/getDivisionWithStatus',
             type: 'POST',
             data: {
                 status: status,
                 divisionId: divisionId,
                 userId: userId
             },
-            success: function(response) {
+			success: function(response) {
 				console.log(response)
 				var forms = response.forms;
 				var applicantList = response.applicants;
-                console.log('Success:', response);
-                $(".form-card-container").empty();
-                forms.forEach(function(form, index) {
-			    var applicant = applicantList[index];
-			    var $aTag = $("<a>", {
-			        href: "viewFormDetailsById?formId=" + form.id + "&userId=" + currentUser.id,
-			        class: "js-resume-card resume-card designer-search-card resume-card-sections-hidden js-user-row-" + form.id
-			    });
-			    var $header = $("<div>", {
-			        class: "resume-card-header resume-section-padding"
-			    });
-			    var $designer = $("<div>", {
-			        class: "resume-card-header-designer"
-			    });
-			    var $avatar = $("<img>", {
-			        class: "resume-card-avatar",
-			        alt: "DAT Logo",
-			        width: "62",
-			        height: "62",
-			        src: "/assets/icons/DAT Logo.png"
-			    });
-			    var $details = $("<div>", {
-			        class: "resume-card-header-details"
-			    });
-			    var $title = $("<div>", {
-			        class: "resume-card-title"
-			    }).append(
-			        $("<h3>", {
-			            class: "resume-card-designer-name user-select-none",
-			            text: applicant.name
-			        }),
-			        $("<span>", {
-			            class: "badge badge-pro",                            
-			            text: form.status
-			        })
-			    );
-			    var $text = $("<span>", {
-			        class: "resume-card-header-text"
-			    }).append(
-			        $("<p>").append(
-			            $("<span>", {
-			                class: "resume-card-location",
-			                text: applicant.positionName
-			            }),
-			            $("<span>", {
-			                class: "resume-card-middot",
-			                text: "•"
-			            }),
-			            $("<span>", {
-			                text: applicant.departmentName
-			            })
-			        ),
-			        $("<input>", {
-			            type: "checkbox",
-			            class: "form-checkbox",
-			            value: form.id
-			        })
-			    );
-			    $details.append($title, $text);
-			    $designer.append($avatar, $details);
-			    $header.append($designer);
-			    $aTag.append($header);
-			    $(".form-card-container").append($aTag);
-			});
-			$(".form-checkbox").change(function() {
-                    var checkboxValue = $(this).val();
-                    if ($(this).prop('checked')) {
-                        selectedValues.push(checkboxValue);
-                        console.log("Checkbox value checked:", checkboxValue);
-                    } else {
-                        var index = selectedValues.indexOf(checkboxValue);
-                        if (index !== -1) {
-                            selectedValues.splice(index, 1);
-                        }
-                    }
-                    console.log("Selected values:", selectedValues);
-                });
+				console.log('Success:', applicantList);
+				$(".form-card-container").empty();
+				forms.forEach(function(form, index) {
+					var applicant = applicantList[index];
+					var $aTag = $("<div>", {
 
-            },
+						class: "js-resume-card resume-card designer-search-card resume-card-sections-hidden js-user-row-" + form.id
+					});
+					var $header = $("<div>", {
+						class: "resume-card-header resume-section-padding"
+					});
+					var $designer = $("<div>", {
+						class: "resume-card-header-designer"
+					});
+					var $avatar = $("<img>", {
+						class: "resume-card-avatar",
+						alt: `${applicant.name} photo`,
+						src: `/assets/profile/${applicant.profile}`,
+						width: "80",
+						height: "80",
+					});
+					var $details = $("<div>", {
+						class: "resume-card-header-details"
+					});
+					var $title = $("<div>", {
+						class: "resume-card-title"
+					}).append(
+						$("<h3>", {
+							class: "resume-card-designer-name user-select-none",
+							text: applicant.name
+						}),
+						$("<span>", {
+							class: "badge badge-pro",
+							text: form.currentStatus
+						})
+					);
+					var $text = $("<span>", {
+						class: "resume-card-header-text"
+					}).append(
+						$("<p>").append(
+							$("<span>", {
+								class: "resume-card-location",
+								text: applicant.positionName
+							}),
+							$("<span>", {
+								class: "resume-card-middot",
+								text: "•"
+							}),
+							$("<span>", {
+								text: applicant.teamName
+							}),
+							$("<br />", {
+								class: "resume-card-middot",
+								text: "•"
+							}),
+							$("<span>", {
+								text: applicant.departmentName
+							}),
+						),
+						$("<input>", {
+							type: "checkbox",
+							class: "resume-card-checkbox",
+							value: form.id,
+							css: {
+								display: 'none'
+							}
+						})
+					);
+					var $goDetail = $("<span>", {
+						class: "view-form-detail",
+						text: "Double Click to View Detail"
+					});
+					$details.append($title, $text, $goDetail);
+					$designer.append($avatar, $details );
+					$header.append($designer);
+					$aTag.append($header);
+					$aTag.on('click', function() {
+						var $checkbox = $(this).find(".resume-card-checkbox");
+						if ($checkbox.prop('checked')) {
+							$checkbox.prop('checked', false);
+							$(this).removeClass('shadow');
+						} else {
+							$checkbox.prop('checked', true);
+							$(this).addClass('shadow');
+						}
+						var checkboxValue = $checkbox.val();
+						if ($checkbox.prop('checked')) {
+							selectedValues.push(checkboxValue);
+							console.log(selectedValues)
+						} else {
+							var index = selectedValues.indexOf(checkboxValue);
+							if (index !== -1) {
+								selectedValues.splice(index, 1);
+								console.log(selectedValues)
+							}
+						}
+						console.log("Selected values:", selectedValues);
+					});
+					$aTag.on('dblclick', function() {
+						window.location.href = "form/" + form.id + "/user/" + currentUser.id;
+					});
+					$(".form-card-container").append($aTag);
+				});
+
+			},
             error: function(xhr, status, error) {
                 console.error('Error:', error);
                 console.log('Response:', xhr.responseText);
@@ -358,7 +453,7 @@ $(document).ready(function() {
     function getAllForm() {        
 		console.log("hello")		
         $.ajax({
-            url: 'api/registerform/getAllForms',
+            url: 'http://localhost:8080/api/registerform/getAllForms',
             type: 'POST',
             data: {
                 status: status,
@@ -384,7 +479,7 @@ $(document).ready(function() {
 			    }
 			    
 			    var $aTag = $("<a>", {
-			        href: "viewFormDetailsById?formId=" + form.id + "&userId=" + currentUser.id,
+					href: "form/" + form.id + "/user/" + currentUser.id,
 			        class: "js-resume-card resume-card designer-search-card resume-card-sections-hidden js-user-row-" + form.id
 			    });
 			    var $header = $("<div>", {
@@ -393,50 +488,57 @@ $(document).ready(function() {
 			    var $designer = $("<div>", {
 			        class: "resume-card-header-designer"
 			    });
-			    var $avatar = $("<img>", {
-			        class: "resume-card-avatar",
-			        alt: "DAT Logo",
-			        width: "62",
-			        height: "62",
-			        src: "/assets/icons/DAT Logo.png"
-			    });
-			    var $details = $("<div>", {
-			        class: "resume-card-header-details"
-			    });
-			    var $title = $("<div>", {
-			        class: "resume-card-title"
-			    }).append(
-			        $("<h3>", {
-			            class: "resume-card-designer-name user-select-none",
-			            text: applicant.name
-			        }),
-			        $("<span>", {
-			            class: "badge badge-pro",                            
-			            text: statusText
-			        })
-			    );
-			    var $text = $("<span>", {
-			        class: "resume-card-header-text"
-			    }).append(
-			        $("<p>").append(
-			            $("<span>", {
-			                class: "resume-card-location",
-			                text: applicant.positionName
-			            }),
-			            $("<span>", {
-			                class: "resume-card-middot",
-			                text: "•"
-			            }),
-			            $("<span>", {
-			                text: applicant.departmentName
-			            })
-			        ),
-			        $("<input>", {
-			            type: "checkbox",
-			            class: "form-checkbox hide-service-desk-only",
-			            value: form.id
-			        })
-			    );
+				var $avatar = $("<img>", {
+					class: "resume-card-avatar",
+					alt: `${applicant.name} photo`,
+					src: `/assets/profile/${applicant.profile}`,
+					width: "80",
+					height: "80",
+				});
+				var $details = $("<div>", {
+					class: "resume-card-header-details"
+				});
+				var $title = $("<div>", {
+					class: "resume-card-title"
+				}).append(
+					$("<h3>", {
+						class: "resume-card-designer-name user-select-none",
+						text: applicant.name
+					}),
+					$("<span>", {
+						class: "badge badge-pro",
+						text: form.currentStatus
+					})
+				);
+				var $text = $("<span>", {
+					class: "resume-card-header-text"
+				}).append(
+					$("<p>").append(
+						$("<span>", {
+							class: "resume-card-location",
+							text: applicant.positionName
+						}),
+						$("<span>", {
+							class: "resume-card-middot",
+							text: "•"
+						}),
+						$("<span>", {
+							text: applicant.teamName
+						}),
+						$("<br />", {
+							class: "resume-card-middot",
+							text: "•"
+						}),
+						$("<span>", {
+							text: applicant.departmentName
+						}),
+					),
+					$("<input>", {
+						type: "checkbox",
+						class: "form-checkbox",
+						value: form.id
+					})
+				);
 			    $details.append($title, $text);
 			    $designer.append($avatar, $details);
 			    $header.append($designer);
@@ -511,7 +613,7 @@ $(document).ready(function() {
     
     function bulkApprove(formData) {
 		$.ajax({
-            url: 'api/registerform/bulkApprove',
+            url: 'http://localhost:8080/api/registerform/bulkApprove',
             type: 'POST',
             data: formData,
             processData: false,
@@ -528,7 +630,7 @@ $(document).ready(function() {
     function downloadForms(formData) {
 		console.log(formData)
 		$.ajax({
-            url: 'api/registerform/downloadAllForms',
+            url: 'http://localhost:8080/api/registerform/downloadAllForms',
             type: 'POST',
             data: formData,
             processData: false,
@@ -576,7 +678,7 @@ $(document).ready(function() {
 	    formData.append('file', file);
 	
 	    $.ajax({
-	        url: 'api/registerform/uploadExcelServiceDesk',
+	        url: 'http://localhost:8080/api/registerform/uploadExcelServiceDesk',
 	        type: 'POST',
 	        data: formData,
 	        contentType: false,

@@ -77,6 +77,7 @@ public class RegisterFormController {
     public ResponseEntity<String> createForm(
     		@RequestParam(value = "applicantId") long applicantId,
             @RequestParam(value = "requesterId") long requesterId,
+            @RequestParam(value = "positionName") String positionName,
             @RequestParam(value = "working_place") String workingPlace,
             @RequestParam(value = "request_reason") String requestReason,
             @RequestParam(value = "request_percent") double requestPercent,
@@ -93,6 +94,7 @@ public class RegisterFormController {
         RegisterFormDto registerFormDto = new RegisterFormDto();
         registerFormDto.setApplicantId(applicantId);
         registerFormDto.setRequesterId(requesterId);
+        registerFormDto.setPositionName(positionName);
         registerFormDto.setWorking_place(workingPlace);
         registerFormDto.setRequest_reason(requestReason);
         registerFormDto.setRequest_percent(requestPercent);
@@ -139,21 +141,37 @@ public class RegisterFormController {
             @RequestParam(value = "status") String status,
             @RequestParam(value = "teamId") long teamId,
             @RequestParam(value = "userId") long userId){
-        UserDto user = userService.getUserById(userId);
-        ApproveRole approveRole = helper.getMaxOrder(user.getApproveRoles());
-        long orderId = workFlowOrderService.getWorkFlowOrderByApproveRoleId(approveRole.getId()).getId();
-        long approveRoleId = approveRoleService.getIdByWorkFlowOrderId(orderId);        
-        Map<String, Object> responseData = new HashMap<>();
-        List<RegisterFormDto> registerFormDtoList =  new ArrayList<>();
+        
+        Map<String, Object> responseData = registerFormService.getFormWithStatus(status, teamId, userId, "team");
+        //List<RegisterFormDto> registerFormDtoList = (List<RegisterFormDto>) responseData.get("forms");
+        return getMapResponseEntity(responseData);
+    }
+
+    @PostMapping("/getDepartmentWithStatus")
+    public ResponseEntity<Map<String, Object>> getDepartmentWithStatus(
+            @RequestParam(value = "status") String status,
+            @RequestParam(value = "departmentId") long departmentId,
+            @RequestParam(value = "userId") long userId){
+        Map<String, Object> responseData = registerFormService.getFormWithStatus(status, departmentId, userId, "department");
+        return getMapResponseEntity(responseData);
+    }
+
+    private ResponseEntity<Map<String, Object>> getMapResponseEntity(Map<String, Object> responseData) {
+        Object formsObject = responseData.get("forms");
+        List<RegisterFormDto> registerFormDtoList = new ArrayList<>();
+        if (formsObject instanceof List<?>) {
+            for (Object item : (List<?>) formsObject) {
+                if (item instanceof RegisterFormDto) {
+                    registerFormDtoList.add((RegisterFormDto) item);
+                } else {
+                    throw new ClassCastException("Item in the list is not of type RegisterFormDto");
+                }
+            }
+        } else {
+            throw new ClassCastException("'forms' is not a List");
+        }
         List<UserDto> applicantList = new ArrayList<>();
         List<UserDto> requesterList = new ArrayList<>();
-        if(status.equalsIgnoreCase("ALL")){
-        	registerFormDtoList = registerFormService.getAllFormSpecificTeamAll(approveRoleId,teamId);        	
-            responseData.put("forms", registerFormDtoList);
-        } else {
-            registerFormDtoList = registerFormService.getAllFormSpecificTeam(approveRoleId, status,teamId);
-            responseData.put("forms", registerFormDtoList);
-        }
         return getMapResponseEntity(responseData, registerFormDtoList, applicantList, requesterList);
     }
 
@@ -168,73 +186,54 @@ public class RegisterFormController {
         return new ResponseEntity<>(responseData, HttpStatus.OK);
     }
 
-    @PostMapping("/getDepartmentWithStatus")
-    public ResponseEntity<Map<String, Object>> getDepartmentWithStatus(
-            @RequestParam(value = "status") String status,
-            @RequestParam(value = "departmentId") long departmentId,
-            @RequestParam(value = "userId") long userId){
-        UserDto user = userService.getUserById(userId);
-        ApproveRole approveRole = helper.getMaxOrder(user.getApproveRoles());
-        long orderId = workFlowOrderService.getWorkFlowOrderByApproveRoleId(approveRole.getId()).getId();
-        long approveRoleId = approveRoleService.getIdByWorkFlowOrderId(orderId);        
-        Map<String, Object> responseData = new HashMap<>();
-        List<RegisterFormDto> registerFormDtoList =  new ArrayList<>();
-        List<UserDto> applicantList = new ArrayList<>();
-        List<UserDto> requesterList = new ArrayList<>();
-        if(status.equalsIgnoreCase("ALL")){
-        	registerFormDtoList = registerFormService.getAllFormSpecificDepartmentAll(approveRoleId,departmentId);        	
-            responseData.put("forms", registerFormDtoList);
-        } else {
-            registerFormDtoList = registerFormService.getAllFormSpecificDepartment(approveRoleId, status,departmentId);
-            responseData.put("forms", registerFormDtoList);
-        }
-        return getMapResponseEntity(responseData, registerFormDtoList, applicantList, requesterList);
-    }
-    
     @PostMapping("/getDivisionWithStatus")
     public ResponseEntity<Map<String, Object>> getDivisionWithStatus(
             @RequestParam(value = "status") String status,
             @RequestParam(value = "divisionId") long divisionId,
             @RequestParam(value = "userId") long userId){
-        UserDto user = userService.getUserById(userId);
-        ApproveRole approveRole = helper.getMaxOrder(user.getApproveRoles());
-        long orderId = workFlowOrderService.getWorkFlowOrderByApproveRoleId(approveRole.getId()).getId();
-        long approveRoleId = approveRoleService.getIdByWorkFlowOrderId(orderId);        
-        Map<String, Object> responseData = new HashMap<>();
-        List<RegisterFormDto> registerFormDtoList =  new ArrayList<>();
-        List<UserDto> applicantList = new ArrayList<>();
-        List<UserDto> requesterList = new ArrayList<>();
-        if(status.equalsIgnoreCase("ALL")){
-        	registerFormDtoList = registerFormService.getAllFormSpecificDivisionAll(approveRoleId,divisionId);
-            responseData.put("forms", registerFormDtoList);
-        } else {
-            registerFormDtoList = registerFormService.getAllFormSpecificDivision(approveRoleId, status,divisionId);
-            responseData.put("forms", registerFormDtoList);
-        }
-        return getMapResponseEntity(responseData, registerFormDtoList, applicantList, requesterList);
+        Map<String, Object> responseData = registerFormService.getFormWithStatus(status, divisionId, userId, "division");
+        return getMapResponseEntity(responseData);
+//        UserDto user = userService.getUserById(userId);
+//        ApproveRole approveRole = helper.getMaxOrder(user.getApproveRoles());
+//        long orderId = workFlowOrderService.getWorkFlowOrderByApproveRoleId(approveRole.getId()).getId();
+//        long approveRoleId = approveRoleService.getIdByWorkFlowOrderId(orderId);
+//        Map<String, Object> responseData = new HashMap<>();
+//        List<RegisterFormDto> registerFormDtoList =  new ArrayList<>();
+//        List<UserDto> applicantList = new ArrayList<>();
+//        List<UserDto> requesterList = new ArrayList<>();
+//        if(status.equalsIgnoreCase("ALL")){
+//        	registerFormDtoList = registerFormService.getAllFormSpecificDivisionAll(approveRoleId,divisionId);
+//            responseData.put("forms", registerFormDtoList);
+//        } else {
+//            registerFormDtoList = registerFormService.getAllFormSpecificDivision(approveRoleId, status,divisionId);
+//            responseData.put("forms", registerFormDtoList);
+//        }
+//        return getMapResponseEntity(responseData, registerFormDtoList, applicantList, requesterList);
     }
     
     @PostMapping("/getAllForms")
     public ResponseEntity<Map<String, Object>> getAllForms(
             @RequestParam(value = "status") String status,
             @RequestParam(value = "userId") long userId){
-        UserDto user = userService.getUserById(userId);
-        ApproveRole approveRole = helper.getMaxOrder(user.getApproveRoles());
-        long orderId = workFlowOrderService.getWorkFlowOrderByApproveRoleId(approveRole.getId()).getId();
-        long approveRoleId = approveRoleService.getIdByWorkFlowOrderId(orderId);        
-        Map<String, Object> responseData = new HashMap<>();
-        List<RegisterFormDto> registerFormDtoList =  new ArrayList<>();
-        List<UserDto> applicantList = new ArrayList<>();
-        List<UserDto> requesterList = new ArrayList<>();
-        if(status.equalsIgnoreCase("ALL")){
-        	registerFormDtoList = registerFormService.getFormAll(approveRoleId);
-        	responseData.put("forms", registerFormDtoList);
-        }else {
-            registerFormDtoList = registerFormService.getAllForm(approveRoleId, status);
-            responseData.put("forms", registerFormDtoList);
-        }
-
-        return getMapResponseEntity(responseData, registerFormDtoList, applicantList, requesterList);
+//        UserDto user = userService.getUserById(userId);
+//        ApproveRole approveRole = helper.getMaxOrder(user.getApproveRoles());
+//        long orderId = workFlowOrderService.getWorkFlowOrderByApproveRoleId(approveRole.getId()).getId();
+//        long approveRoleId = approveRoleService.getIdByWorkFlowOrderId(orderId);
+//        Map<String, Object> responseData = new HashMap<>();
+//        List<RegisterFormDto> registerFormDtoList =  new ArrayList<>();
+//        List<UserDto> applicantList = new ArrayList<>();
+//        List<UserDto> requesterList = new ArrayList<>();
+//        if(status.equalsIgnoreCase("ALL")){
+//        	registerFormDtoList = registerFormService.getFormAll(approveRoleId);
+//        	responseData.put("forms", registerFormDtoList);
+//        }else {
+//            registerFormDtoList = registerFormService.getAllForm(approveRoleId, status);
+//            responseData.put("forms", registerFormDtoList);
+//        }
+//
+//        return getMapResponseEntity(responseData, registerFormDtoList, applicantList, requesterList);
+        Map<String, Object> responseData = registerFormService.getFormWithStatus(status, 1L, userId, "user");
+        return getMapResponseEntity(responseData);
     }
     
     

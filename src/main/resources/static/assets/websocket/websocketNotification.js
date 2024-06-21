@@ -85,7 +85,7 @@ function updateNotificationCount(count) {
     approverPendingCount.innerText = count;
 }
 
-var currentUser = JSON.parse(sessionStorage.getItem('currentUser'));
+var currentUser = JSON.parse(localStorage.getItem('currentUser'));
 var userRole;
 var approveRoles = currentUser.approveRoles;
 approveRoles.forEach(function(approveRole) {

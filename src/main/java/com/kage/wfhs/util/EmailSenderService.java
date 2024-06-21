@@ -21,13 +21,12 @@ public class EmailSenderService {
 
     public void sendEmail(String toEmail, String subject, String body){
         SimpleMailMessage message = new SimpleMailMessage();
-        message.setFrom("thanthtoo128@Gmail.com.com");
+        message.setFrom("thanthtoo128@gmail.com");
         message.setTo(toEmail);
         message.setText(body);
         message.setSubject(subject);
         mailSender.send(message);
         log.info("Mail Sent Successfully......");
-
     }
 
     public void sendMail(String toEmail,String subject,String body) {

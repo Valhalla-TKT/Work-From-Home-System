@@ -23,7 +23,7 @@ public interface UserService {
     void updateUser(Long id, UserDto userDto);
     UserDto getUserBystaffId(String staffId);
 
-	UserDto getLoginUserBystaffId(String staffId);
+	CurrentLoginUserDto getLoginUserBystaffId(String staffId);
 
 	String createstaffId(String gender);
     String getLastStaffId(String gender);
@@ -54,6 +54,14 @@ public interface UserService {
 	List<Object[]> getTotalStaffRequest();
 	
 	// Create HR
-	boolean createHR();
+	void createHR();
 	boolean changeFirstHRFirstLoginStatus();
+
+    List<UserDto> getAllUserByGender(String gender);
+
+	List<UserDto> getAllUserByTeamIdAndGender(Long teamId, String gender);
+	List<UserDto> getAllUserByDepartmentIdAndGender(Long departmentId, String gender);
+	List<UserDto> getAllUserByDivisionIdAndGender(Long divisionId, String gender);
+
+    boolean updateApproveRole(long userId, List<Long> approveRoleIdList);
 }

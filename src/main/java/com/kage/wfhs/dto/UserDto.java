@@ -31,10 +31,9 @@ import lombok.ToString;
 @AllArgsConstructor
 @ToString
 public class UserDto {
-	private Long id, teamId, positionId, approveRoleId, roleId, divisionId, departmentId;
-    private String staffId, name, email, password, gender, phoneNumber, teamName, positionName, approveRoleName, roleName, departmentName, divisionName, profile, divisionCode;
-    private boolean isEnabled, maritalStatus, parent, children, isFirstTimeLogin;
-    private Date joinDate, permanentDate;
+	private Long id, teamId, approveRoleId, divisionId, departmentId;
+    private String staffId, name, email, password, gender, phoneNumber, teamName, positionName, approveRoleName, departmentName, divisionName, profile, highestApproveRole;
+    private boolean isEnabled, isFirstTimeLogin;
     private Team team;
     private Department department;
     private Division division;

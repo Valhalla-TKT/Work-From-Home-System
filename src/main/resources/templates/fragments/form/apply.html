@@ -19,7 +19,7 @@
 					<div class="header">
 						<div class="inner-header">
 							<div class="go-back display-none" id="go-back" onclick="goBack()">
-								<button>
+								<button class="go-back-btn">
 									<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
 										fill="currentColor" class="bi bi-arrow-left"
 										viewBox="0 0 16 16">
@@ -45,8 +45,10 @@
 									<h2>Request Work From Home: Complete the Form Below</h2>
 								</div>
 								<div data-v-741dde45="" class="step-counter"
-									style="font-size: 20px">
-									1/<span data-v-741dde45="" class="color-deep-blue-sea-light-40">4</span>
+									style="font-size: 20px; display: flex;">
+									<span data-v-741dde45="" class="color-deep-blue-sea-light-40 " id="current-step-1">1</span>
+									<span data-v-741dde45="" class="color-deep-blue-sea-light-40 display-none" id="current-step-2">2</span>
+									<span data-v-741dde45="" class="color-deep-blue-sea-light-40 display-none" id="current-step-3">3</span>/3
 								</div>
 							</div>
 						</div>
@@ -90,7 +92,7 @@
 					                              </label>
 					                              <div data-v-42dea6db="" class="">
 					                                <span data-v-42dea6db="" class="error-marker">
-					                                  <select data-v-42dea6db="" id="division-name" required="required" step="any" class="select" style="width: 100%"></select>										              
+					                                  <select data-v-42dea6db="" id="division-name" required="required" step="any" class="select" style="width: 100%; border: 1px solid black;"></select>										              
 					                                </span>
 					                              </div>
 					                            </div>
@@ -105,7 +107,7 @@
 					                              </label>
 					                              <div data-v-42dea6db="" class="">
 					                                <span data-v-42dea6db="" class="error-marker">
-					                                  <select data-v-42dea6db="" id="department-name" required="required" step="any" class="select" style="width: 100%"></select>										              
+					                                  <select data-v-42dea6db="" id="department-name" required="required" step="any" class="select" style="width: 100%; border: 1px solid black;"></select>										              
 					                                </span>
 					                              </div>
 					                            </div>
@@ -121,7 +123,7 @@
 					                              </label>
 					                              <div data-v-42dea6db="" class="">
 					                                <span data-v-42dea6db="" class="error-marker">
-					                                  <select data-v-42dea6db="" id="team-member-list" required="required" step="any" class="select" style="width: 100%; color: #0d0c22;" >
+					                                  <select data-v-42dea6db="" id="team-member-list" required="required" step="any" class="select" style="width: 100%; color: #0d0c22; border: 1px solid black;" >
 					                                  	<option selected disabled>Select Name</option>
 					                                  </select>					              
 					                                </span>
@@ -142,7 +144,7 @@
 																<!---->
 																<span data-v-42dea6db="" class="error-marker"> <input
 																	data-v-42dea6db="" type="text" id="name-input-box"
-																	placeholder="e.g. John Smith" style="color: #0d0c22; background: #fff;" disabled
+																	placeholder="e.g. John Smith" style="color: #0d0c22; background: #fff; border: 1px solid black;" disabled
 																	step="any" class="input" />
 																</span>
 																<!---->
@@ -157,17 +159,17 @@
 													<label for="staff-id">Staff ID:</label>
 													<div class="staff-id-input-container">
 														<input type="text" class="input" disabled
-															style="background: #fff;"> <input type="text"
-															class="input" disabled style="background: #fff;">
+															style="background: #fff; border: 1px solid black;"> <input type="text"
+															class="input" disabled style="background: #fff; border: 1px solid black;">
 														<input type="text" class="input" value="-" disabled
-															style="background: #fff;"> <input type="text"
-															class="input" disabled style="background: #fff;">
+															style="background: #fff; border: 1px solid black;"> <input type="text"
+															class="input" disabled style="background: #fff; border: 1px solid black;">
 														<input type="text" class="input" disabled
-															style="background: #fff;"> <input type="text"
-															class="input" disabled style="background: #fff;">
+															style="background: #fff; border: 1px solid black;"> <input type="text"
+															class="input" disabled style="background: #fff; border: 1px solid black;">
 														<input type="text" class="input" disabled
-															style="background: #fff;"> <input type="text"
-															class="input" disabled style="background: #fff;">
+															style="background: #fff; border: 1px solid black;"> <input type="text"
+															class="input" disabled style="background: #fff; border: 1px solid black;">
 													</div>
 												</div>
 
@@ -181,7 +183,7 @@
 																<!---->
 																<span data-v-42dea6db="" class="error-marker"> <input
 																	data-v-42dea6db="" id="position-input-box" type="text"
-																	placeholder="e.g. Senior Developer" style="color: #0d0c22; background: #fff;" disabled
+																	placeholder="e.g. Senior Developer" style="color: #0d0c22; background: #fff; border: 1px solid black;" disabled
 																	step="any" class="input" />
 																</span>
 																<!---->
@@ -202,7 +204,7 @@
 																<!---->
 																<span data-v-42dea6db="" class="error-marker"> <input
 																	data-v-42dea6db="" id="team-input-box" type="text"
-																	placeholder="e.g. HIME" style="color: #0d0c22; background: #fff;" disabled step="any"
+																	placeholder="e.g. HIME" style="color: #0d0c22; background: #fff; border: 1px solid black;" disabled step="any"
 																	class="input" />
 																</span>
 																<!---->
@@ -224,7 +226,7 @@
 																<span data-v-42dea6db="" class="error-marker"> <input
 																	data-v-42dea6db="" id="department-input-box"
 																	type="text" placeholder="e.g. Offshore Department - 2"
-																	style="color: #0d0c22; background: #fff;" disabled step="any" class="input" />
+																	style="color: #0d0c22; background: #fff;  border: 1px solid black;" disabled step="any" class="input" />
 																</span>
 																<!---->
 																<!---->
@@ -246,21 +248,27 @@
 															<label data-v-42dea6db="" for="jobTitle" class="label">
 																Working Place <span data-v-42dea6db=""
 																class="color-lobster">*</span>
-																<span>
-																	<button class="btn2" id="work-in-myanmar-button">Work in Myanmar?</button>
-																	<button class="btn2" id="work-in-others-button">Work in Others?</button>
-																</span>														
 															</label>
-															
+															<span style="cursor: pointer;">
+																<div id="work-in-myanmar-button" style="display: flex;">
+																	<span style="text-decoration: underline; color: red;">Click here! If you want to work in Myanmar.</span>
+																	<span data-v-42dea6db="" class="color-lobster">*</span>
+																</div>
+																<div id="work-in-others-button" style="display: flex;">
+																	<span style="text-decoration: underline; color: red;">Click here! If you want to work from Abroad.</span>
+																	<span data-v-42dea6db="" class="color-lobster">*</span>
+																</div>
+																
+															</span>
 															<div data-v-42dea6db="" class="">
 																<!---->
 																<span data-v-42dea6db="" class="error-marker"> 
 																	<input
 																		id="working-input-box" type="text" autocomplete="off"
-																		placeholder="e.g. MICT Park"  />
-																	<select name="region-state" id="region-state-select" style="width: 100%; background: #fff; color: #0d0c22;">															        	
+																		placeholder="e.g. MICT Park" style="border: 1px solid black;" />
+																	<select name="region-state" id="region-state-select" style="width: 100%; background: #fff; color: #0d0c22; border: 1px solid black;">															        	
 															      	</select>
-															    	<select name="city-township" id="city-township-select" style="width: 100%; margin-top: 10px; color: #0d0c22;">
+															    	<select name="city-township" id="city-township-select" style="width: 100%; margin-top: 10px; color: #0d0c22; border: 1px solid black;">
 															      	</select>
 																</span>
 																<!---->
@@ -322,7 +330,7 @@
 																<!---->
 																<span class="error-marker"> <input id="from-date"
 																	type="text" placeholder="e.g. 1/1/2000"
-																	required="required" step="any" class="input" />
+																	required="required" step="any" class="input" style="border: 1px solid black;"/>
 																</span>
 																<!---->
 															</div>
@@ -341,7 +349,7 @@
 																<!---->
 																<span class="error-marker"> <input id="to-date"
 																	type="text" placeholder="e.g. 1/1/2000"
-																	required="required" step="any" class="input" />
+																	required="required" step="any" class="input" style="border: 1px solid black;"/>
 																</span>
 																<!---->
 															</div>
@@ -376,7 +384,7 @@
 																	</div>
 																</div>
 															</div> -->
-															<textarea style="height: 200px;" placeholder="e.g. I would like to go somewhere"  id="form-request-reason"></textarea>
+															<textarea style="height: 200px; border: 1px solid black;" placeholder="e.g. I would like to go somewhere"  id="form-request-reason"></textarea>
 														</div> <!---->
 													</span>
 												</div>
@@ -752,7 +760,7 @@
 															<!---->
 															<span class="error-marker"> <input id="signed-date"
 																type="text"
-																required="required" step="any" class="input" />
+																required="required" step="any" class="input" style="border: 1px solid black;"/>
 															</span>
 															<!---->
 														</div>

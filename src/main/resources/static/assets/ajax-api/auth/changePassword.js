@@ -1,12 +1,12 @@
 document.addEventListener('DOMContentLoaded', function () {
-    const currentUser = JSON.parse(sessionStorage.getItem('currentUser'));
+    const currentUser = JSON.parse(localStorage.getItem('currentUser'));
     if (!currentUser) {
         Swal.fire('Error', 'User not logged in.', 'error');
         return;
     }
 
     const staffId = currentUser.staffId;
-    console.log(staffId);
+    console.log(staffId)
     const form = document.getElementById('changePasswordForm');
 
     if (form) {
@@ -19,12 +19,15 @@ document.addEventListener('DOMContentLoaded', function () {
 
             if (!response.ok) {
                 const errorMessage = await response.text();
+                console.log(errorMessage)
                 throw new Error(errorMessage);
+            } else {
+                console.log(response)
+                const data = await response.text();
+                console.log('Password validation successful:', data);
+                return data;
             }
 
-            const data = await response.json();
-            console.log('Password validation successful:', data);
-            return data;
         } catch (error) {
             console.error('Password validation failed:', error.message);
             throw error;
@@ -85,7 +88,14 @@ document.addEventListener('DOMContentLoaded', function () {
             await changePassword(staffId, currentPassword, newPassword);
 
             console.log('Password change process completed successfully.');
-            Swal.fire('Success', 'Password changed successfully', 'success');
+            Swal.fire('Success', 'Password changed successfully', 'success')
+                .then((result) => {
+                    if (result.isConfirmed) {
+                        Swal.fire('Please log in again', '', 'info').then(() => {
+                            window.location.href = '/signOut';
+                        });
+                    }
+                });
         } catch (error) {
             console.error('Password change process failed:', error.message);
             Swal.fire('Error', 'Password change failed: ' + error.message, 'error');

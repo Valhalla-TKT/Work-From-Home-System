@@ -4,7 +4,7 @@ import org.springframework.stereotype.Service;
 
 @Service
 public interface AuthService {
-	boolean emailExists(String email);
+	boolean emailExists(String email, boolean forgotPassword);
 
 	boolean validateCurrentPassword(String staffId, String currentPassword);
 

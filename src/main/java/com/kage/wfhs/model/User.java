@@ -56,6 +56,8 @@ public class User implements Serializable {
     @Column(columnDefinition = "TEXT")
     private String signature;
 
+    private String positionName;
+
     @ManyToOne
     @JoinColumn(name = "team_id")
     @JsonIgnore
@@ -83,10 +85,12 @@ public class User implements Serializable {
 
     @OneToMany(mappedBy = "sender", cascade = CascadeType.ALL)
     @ToString.Exclude
+    @JsonIgnore
     private List<Notification> sentNotifications;
     
     @OneToMany(mappedBy = "receiver", cascade = CascadeType.ALL)
     @ToString.Exclude
+    @JsonIgnore
     private List<Notification> receivedNotifications;
 
     @OneToMany(mappedBy = "applicant", cascade = CascadeType.ALL)

@@ -28,18 +28,7 @@ public class WorkFlowOrderController {
 
     @PostMapping("/create")
     public ResponseEntity<String> createWorkFlowOrder(@RequestBody List<Long> approveRoleList) {
-        List<String> approveState = workFlowOrderService.getOrder(approveRoleList.size());
-        
-        WorkFlowOrderDto workFlowOrderDto = new WorkFlowOrderDto();
-
-        for (int i = 0; i < approveState.size(); i++) {
-            String state = approveState.get(i);
-            long roleId = approveRoleList.get(i);
-            workFlowOrderDto.setApprove_state(state);
-            workFlowOrderDto.setApproveRoleId(roleId);
-
-            workFlowOrderService.addWorkFlowOrder(workFlowOrderDto);
-        }
+        workFlowOrderService.createWorkFlowOrderByApproveRoleIdList(approveRoleList);
         return ResponseEntity.ok("Successfully");
     }
 

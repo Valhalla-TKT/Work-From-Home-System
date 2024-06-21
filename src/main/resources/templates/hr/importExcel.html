@@ -9,15 +9,15 @@
     
     
     <!-- header -->
-    <div th:replace="fragments/navigation :: navigation"></div>
+    <div th:replace="~{fragments/navigation :: navigation}"></div>
 
     
 	<!-- main -->
-	<main th:replace="fragments/hr/excelImport :: content"></main>
+	<main th:replace="~{fragments/hr/excelImport :: content}"></main>
 	<!-- main -->
-    
 
-<div th:replace="fragments/footer :: footer"></div>
+
+    <div th:replace="~{fragments/footer :: footer}"></div>
 <div id="signup-overlay" class="overlay ">
   <div class="lightbox">
     <a href="#" class="close" aria-label="close">
@@ -45,9 +45,8 @@
 <script src="/assets/hr/importExcelValidate.js"></script>    
 
 
-<div th:replace="fragments/chat :: chat"></div>
+<div th:replace="~{fragments/chat :: chat}"></div>
 
 <script src="/assets/welcome/fullscreen.js"></script>
-<div th:replace="fragments/footer :: footer"></div>
 </body>
 </html>

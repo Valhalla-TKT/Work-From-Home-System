@@ -8,6 +8,7 @@
 package com.kage.wfhs.serviceImplement;
 
 import com.kage.wfhs.dto.WorkFlowOrderDto;
+import com.kage.wfhs.model.ApproveRole;
 import com.kage.wfhs.model.WorkFlowOrder;
 import com.kage.wfhs.repository.ApproveRoleRepository;
 import com.kage.wfhs.repository.WorkFlowOrderRepository;
@@ -17,8 +18,10 @@ import com.kage.wfhs.util.EntityUtil;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -33,7 +36,8 @@ public class WorkFlowOrderServiceImplement implements WorkFlowOrderService {
     @Override
     public void addWorkFlowOrder(WorkFlowOrderDto workFlowOrderDto) {
         WorkFlowOrder workFlowOrder = modelMapper.map(workFlowOrderDto, WorkFlowOrder.class);
-        workFlowOrder.setApproveRole(workFlowOrderDto.getApproveRoleId() > 0 ? EntityUtil.getEntityById(approveRoleRepo, workFlowOrderDto.getApproveRoleId()) : null);
+        ApproveRole approveRole = EntityUtil.getEntityById(approveRoleRepo, workFlowOrderDto.getApproveRoleId());
+        workFlowOrder.setApproveRole(workFlowOrderDto.getApproveRoleId() > 0 ? approveRole : null);
         workFlowOrderRepo.save(workFlowOrder);
     }
 
@@ -88,5 +92,34 @@ public class WorkFlowOrderServiceImplement implements WorkFlowOrderService {
     public WorkFlowOrderDto getWorkFlowOrderByUserId(Long userId) {
         WorkFlowOrder workFlowOrder = workFlowOrderRepo.findByUserId(userId);
         return modelMapper.map(workFlowOrder, WorkFlowOrderDto.class);
+    }
+
+    @Override
+    @Transactional
+    public void createDefaultWorkFlowOrder() {
+        List<?> workFlowOrderList = workFlowOrderRepo.findAll();
+        if (workFlowOrderList.isEmpty()) {
+            List<Long> defaultApproveRoleIdList = Arrays.asList(2L, 8L, 7L, 6L, 5L, 4L, 3L, 1L);
+            createOrder(defaultApproveRoleIdList);
+        }
+    }
+
+    private void createOrder(List<Long> approveRoleIdList) {
+        List<String> approveState = getOrder(approveRoleIdList.size());
+        WorkFlowOrderDto workFlowOrderDto = new WorkFlowOrderDto();
+
+        for (int i = 0; i < approveState.size(); i++) {
+            String state = approveState.get(i);
+            long roleId = approveRoleIdList.get(i);
+            workFlowOrderDto.setApprove_state(state);
+            workFlowOrderDto.setApproveRoleId(roleId);
+            addWorkFlowOrder(workFlowOrderDto);
+        }
+    }
+
+    @Override
+    public void createWorkFlowOrderByApproveRoleIdList(List<Long> approveRoleList) {
+        workFlowOrderRepo.truncateTable();
+        createOrder(approveRoleList);
     }
 }

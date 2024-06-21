@@ -81,7 +81,7 @@ public class WorkFlowStatusServiceImplement implements WorkFlowStatusService {
                 workFlowStatus.setUser(user);
                 workFlowStatus.setApproveRole(approveRole);
                 workFlowStatusRepo.save(workFlowStatus);
-                notificationService.sendPendingApproveRejectNotificationToServiceDesk(workFlowStatus.getRegisterForm().getId(), applicant.getId(), workFlowStatus.getUser().getId(), workFlowStatus.getStatus().name());
+                //notificationService.sendPendingApproveRejectNotificationToServiceDesk(workFlowStatus.getRegisterForm().getId(), applicant.getId(), workFlowStatus.getUser().getId(), workFlowStatus.getStatus().name());
             }
         }
 

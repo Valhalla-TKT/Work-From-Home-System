@@ -9,6 +9,7 @@ package com.kage.wfhs.repository;
 
 import com.kage.wfhs.model.Department;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -23,4 +24,6 @@ public interface DepartmentRepository extends JpaRepository<Department,Long> {
 
 	@Query("SELECT d FROM Department d JOIN d.teams t WHERE t.id = :teamId")
     Department findByTeamId(@Param("teamId") Long teamId);
+
+    List<Department> findAllByDivisionId(Long divisionId);
 }

@@ -21,4 +21,7 @@ public interface WorkFlowOrderService {
 
 	WorkFlowOrderDto getWorkFlowOrderByApproveRoleId(Long approveRoleId);
 	WorkFlowOrderDto getWorkFlowOrderByUserId(Long userId);
+	void createDefaultWorkFlowOrder();
+
+    void createWorkFlowOrderByApproveRoleIdList(List<Long> approveRoleList);
 }

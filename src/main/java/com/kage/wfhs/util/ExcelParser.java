@@ -535,11 +535,11 @@
 //			if (parts.length == 2) {
 //				String email = parts[0];
 //				String otp = parts[1];
-//				String emailBodyForOTPPart1 = Message.emailBodyForOTPPart1;
-//				String emailBodyForOTPPart2 = Message.emailBodyForOTPPart2;
-//				String emailSubjectForOtp = Message.emailSubjectForOtp;
+//				String emailBodyForOTPByServiceDeskPart1 = Message.emailBodyForOTPByServiceDeskPart1;
+//				String emailBodyForOTPByServiceDeskPart2 = Message.emailBodyForOTPByServiceDeskPart2;
+//				String emailSubjectForOtpByServiceDesk = Message.emailSubjectForOtpByServiceDesk;
 //
-//				emailService.sendMail(email, emailSubjectForOtp, emailBodyForOTPPart1 + otp + "\n" + emailBodyForOTPPart2);
+//				emailService.sendMail(email, emailSubjectForOtpByServiceDesk, emailBodyForOTPByServiceDeskPart1 + otp + "\n" + emailBodyForOTPByServiceDeskPart2);
 //			}
 //		}
 //

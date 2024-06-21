@@ -9,17 +9,11 @@ package com.kage.wfhs.controller.api;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import com.kage.wfhs.dto.DepartmentDto;
 import com.kage.wfhs.service.DepartmentService;
@@ -41,10 +35,12 @@ public class DepartmentController {
 	@PostMapping("/departmentList")
 	public ResponseEntity<?> getAllDepartment() {
 		List<DepartmentDto> departmentList = departmentService.getAllDepartment();
-		if(departmentList == null)
-			return ResponseEntity.ok("No department found."); 
-		else
-			return ResponseEntity.ok(departmentList);
+        return ResponseEntity.ok(Objects.requireNonNullElse(departmentList, "No department found."));
+	}
+
+	@PostMapping("/division/{divisionId}")
+	public ResponseEntity<List<DepartmentDto>> getDepartmentByDivisionId(@PathVariable("divisionId") Long divisionId){
+		return ResponseEntity.ok(departmentService.getDepartmentByDivisionId(divisionId));
 	}
 
 	@PostMapping("/getDepartmentById")

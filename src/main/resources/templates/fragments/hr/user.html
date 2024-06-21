@@ -47,7 +47,7 @@
 										stroke-linecap="round" stroke-linejoin="round"></path>
 								</svg>
 
-								<label for="search-input">
+								<label for="search-by-staff-name">
 									<input type="text" name="search-input" id="search-by-staff-name"
 										placeholder="Search by staff name..."
 										class="js-search-input input-with-outline-only search-input" />
@@ -75,10 +75,13 @@
 							<div class="staff-card-container" id="staff-list" style="margin-top: 50px; display: flex !important; flex-wrap:wrap !important; justify-content: center; align-items:center;">
 
 							</div>
+							<div id="pagination-controls" style="text-align: center;">
+								<button id="load-more" class="btn2 btn2--large" style="text-align: center; ">Load More</button>
+							</div>
 						</div>
 						<div class="search-filters-container">
 							<div class="search-filters job-board-filters-form js-filters" style="text-align: center;">
-								<span> <img alt="staff" src="assets/icons/staff.png" style="width: 50px">
+								<span> <img alt="staff" src="/assets/icons/staff.png" style="width: 50px">
 								</span> <br>
 								<span>Total Staffs : <span id="total-count"></span></span>
 							</div> <br>
@@ -88,24 +91,20 @@
 									<label for="keyword" class="hide" aria-hidden="true">Filter</label>
 									<input type="text" name="keyword" id="keyword" placeholder="Company, skill, tag…"
 										class="hide js-keyword input-with-outline-only" aria-hidden="true" />
-
-									<label for="role-name">Role</label>
-									<select type="text" name="" id="role-filter" placeholder="Enter Location…" class="js-location input-with-outline-only" style="width: 100%; margin-bottom: 10px;"></select>
 									<label for="role-name">Position</label>
 									<select type="text" name="" id="position-filter" placeholder="Enter Location…" accordionclass="js-location input-with-outline-only" style="width: 100%; margin-bottom: 10px;"></select>
 									<label for="role-name">Gender</label>
 									<select type="text" name="" id="gender-filter" placeholder="Enter Location…" class="js-location input-with-outline-only" style="width: 100%; margin-bottom: 10px;">
 										<option value="all">Select Staff Gender</option>
-										<option value="">Male</option>
-										<option value="">Female</option>
+										<option value="male">Male</option>
+										<option value="female">Female</option>
 									</select>
-									<label for="role-name">Team</label>
-									<select type="text" name="" id="team-filter" placeholder="Enter Location…" class="js-location input-with-outline-only" style="width: 100%; margin-bottom: 10px;"></select>
-									<label for="role-name">Department</label>
-									<select type="text" name="" id="department-filter" placeholder="Enter Location…" class="js-location input-with-outline-only" style="width: 100%; margin-bottom: 10px;"></select>
 									<label for="role-name">Division</label>
 									<select type="text" name="" id="division-filter" placeholder="Enter Location…" class="js-location input-with-outline-only" style="width: 100%; margin-bottom: 10px;"></select>
-									
+									<label for="role-name">Department</label>
+									<select type="text" name="" id="department-filter" placeholder="Enter Location…" class="js-location input-with-outline-only" style="width: 100%; margin-bottom: 10px;"></select>
+									<label for="role-name">Team</label>
+									<select type="text" name="" id="team-filter" placeholder="Enter Location…" class="js-location input-with-outline-only" style="width: 100%; margin-bottom: 10px;"></select>
 
 									<div class="submit submit-container">
 										<input type="submit" value="Filter" class="js-job-submit form-sub w-100"
@@ -128,27 +127,27 @@
 						<span class="close">&times;</span>
 					</div> <br>
 					<form id="addForm">
-						<label for="approver">Choose Permission</label>
+						<label for="approveRoleSelectBox">Choose Permission</label>
 						<select id="approveRoleSelectBox" required="required" style="width: 100%" step="any"></select>
 						<div id="team-data">
-							<label for="team-code">Choose Team He/She Has To Join</label>
+							<label for="team-name">Choose Team He/She Has To Join</label>
 							<select id="team-name" required="required" style="width: 100%" step="any"></select>
 						</div>
 						<div id="department-data">
-							<label for="department-code">Choose department He/She Has To Join</label>
+							<label for="department-name">Choose department He/She Has To Join</label>
 							<select id="department-name" required="required" style="width: 100%" step="any"></select>
 						</div>
 						<div id="division-data">
-							<label for="division-code">Choose division He/She Has To Join</label>
+							<label for="division-name">Choose division He/She Has To Join</label>
 							<select id="division-name" required="required" style="width: 100%" step="any"></select>
 						</div>
-						<label for="id">Staff ID</label>
+						<label for="staff-id">Staff ID</label>
 						<input type="tel" id="staff-id" placeholder="xx-xxxxx" pattern="[0-9]{3}-[0-9]{3}-[0-9]{3}" required="required" step="any" disabled>
 						<label for="name">Staff Name</label>
 						<input type="text" id="name" placeholder="e.g. Thant Htoo Aung" required="required">
 						<label for="email">Email</label>
 						<input type="email" id="email" placeholder="e.g. xxx@gmail.com" required="required">
-						<label for="phone">Phone</label>
+						<label for="phone-number">Phone</label>
 						<input type="tel" id="phone-number" placeholder="e.g. 09 123 456 789" required="required">
 						<label for="join-date">Choose Date he/she joined</label>
 						<input type="text" id="join-date" placeholder="dd-mm-yy" required="required">
@@ -158,9 +157,9 @@
 							<option value="M">Male</option>
 							<option value="F">Female</option>
 						</select>
-						<label for="role">Choose His/Her Role</label>
+						<label for="role-name">Choose His/Her Role</label>
 						<select id="role-name" required="required" style="width: 100%" step="any"></select>
-						<label for="position">Choose His/Her Position</label>
+						<label for="position-name">Choose His/Her Position</label>
 						<select id="position-name" required="required" style="width: 100%" step="any"></select>
 						<label for="parentRadio"> Does he/she Have Parent?  </label>
 						<div data-v-42dea6db="" class="radio-button-container">
@@ -177,7 +176,7 @@
 								</label>
 							</div>
 						</div>
-						<label for="maritalStatusRadio"> His/Her Marital Status?  </label>
+						<label for="maritalStatusRadio1"> His/Her Marital Status?  </label>
 						<div data-v-42dea6db="" class="radio-button-container">
 							<div class="radio-button w-50">
 								<input type="radio" class="radio-button__input" id="maritalStatusRadio1" name="marital_status" value="true">
@@ -192,7 +191,7 @@
 								</label>
 							</div>
 						</div>
-						<label for="childrenRadio"> Does he/she Has Children?  </label>
+						<label for="hasChildren1"> Does he/she Has Children?  </label>
 						<div data-v-42dea6db="" class="radio-button-container">
 							<div class="radio-button w-50">
 								<input type="radio" class="radio-button__input" id="hasChildren1" name="children" value="true">
