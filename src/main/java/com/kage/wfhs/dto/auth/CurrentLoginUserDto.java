@@ -12,12 +12,11 @@ import java.util.Set;
 @AllArgsConstructor
 @ToString
 public class CurrentLoginUserDto {
-    private Long id, teamId, positionId, approveRoleId, roleId, divisionId, departmentId;
-    private String staffId, name, email, gender, teamName, approveRoleName, departmentName, divisionName, profile;
-    private boolean isEnabled, isFirstTimeLogin;
+    private Long id;
+    private String staffId, name, email, gender, positionName, teamName, approveRoleName, departmentName, divisionName, profile;
+    private boolean firstTimeLogin;
+    private Set<ApproveRole> approveRoles;
     private Team team;
     private Department department;
     private Division division;
-    private Set<ApproveRole> approveRoles;
-    private MultipartFile profileInput;
 }

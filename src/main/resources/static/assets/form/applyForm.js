@@ -161,7 +161,7 @@ $(document).ready(function() {
         team: 'Eg. HIME',
         department: 'Eg. Offshore Department-II'
     };
-    var currentUser = JSON.parse(sessionStorage.getItem('currentUser'));
+    var currentUser = JSON.parse(localStorage.getItem('currentUser'));
     $('#name-select-box-container').hide();
     
     // user ID

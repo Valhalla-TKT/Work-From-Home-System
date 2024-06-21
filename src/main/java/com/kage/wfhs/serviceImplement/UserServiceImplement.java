@@ -13,6 +13,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import com.kage.wfhs.dto.auth.CurrentLoginUserDto;
 import com.kage.wfhs.exception.EntityNotFoundException;
 import com.kage.wfhs.util.DtoUtil;
 import org.modelmapper.ModelMapper;
@@ -159,10 +160,9 @@ public class UserServiceImplement implements UserService {
 	}
 
 	@Override
-	public UserDto getLoginUserBystaffId(String staffId) {
+	public CurrentLoginUserDto getLoginUserBystaffId(String staffId) {
 		User user = userRepo.findByStaffId(staffId);
-
-        return modelMapper.map(user, UserDto.class);
+        return modelMapper.map(user, CurrentLoginUserDto.class);
 	}
 
 	@Override
@@ -418,5 +418,19 @@ public class UserServiceImplement implements UserService {
 	public List<UserDto> getAllUserByDivisionIdAndGender(Long divisionId, String gender) {
 		List<User> users = userRepo.findAllByDivisionIdAndGender(divisionId, gender);
 		return DtoUtil.mapList(users, UserDto.class, modelMapper);
+	}
+
+	@Override
+	@Transactional
+	public boolean updateApproveRole(long userId, List<Long> approveRoleIdList) {
+		try {
+			User user = EntityUtil.getEntityById(userRepo, userId);
+			Set<ApproveRole> approveRoles = new HashSet<>(approveRoleRepo.findAllById(approveRoleIdList));
+			user.setApproveRoles(approveRoles);
+			EntityUtil.saveEntity(userRepo, user, "user");
+			return true;
+        } catch (Exception e) {
+			return false;
+		}
 	}
 }

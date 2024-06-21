@@ -420,8 +420,8 @@ $(document).ready( function(){
                 <a href="detail" class="js-resume-card resume-card designer-search-card resume-card-sections-hidden js-user-row-6234">
                     <div class="resume-card-header resume-section-padding">
                         <div class="resume-card-header-designer">
-                            <img class="resume-card-avatar" alt="Halo UI/UX" width="62" height="62"
-                                src="/assets/icons/DAT Logo.png" />
+                            <img class="resume-card-avatar" alt="${user.name}" width="80" height="80"
+                                src="/assets/profile/${user.profile}" />                               
                             <div class="resume-card-header-details">
                                 <div class="resume-card-title">
                                     <h3 class="resume-card-designer-name user-select-none">

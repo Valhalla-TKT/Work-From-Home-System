@@ -8,7 +8,7 @@ $(document).ready(function() {
 	            contentType: 'application/json',
 	            success: function(response) {
 	                console.log(response);
-	                sessionStorage.setItem('currentUser', JSON.stringify(response));  
+	                localStorage.setItem('currentUser', JSON.stringify(response));  
 	                getData();              
 	            },
 	            error: function (error) {
@@ -17,11 +17,11 @@ $(document).ready(function() {
 	        });
 	}
 	function getData() {
-		var currentUser = JSON.parse(sessionStorage.getItem('currentUser'));
+		var currentUser = JSON.parse(localStorage.getItem('currentUser'));
 		console.log(currentUser)
 	    if (currentUser) {
 	        var userName = currentUser.name;
-	        var currentUserPosition = currentUser.position;
+	        var currentUserPosition = currentUser.positionName;
 	        if(currentUserPosition)
 	       		var positionName = currentUserPosition.name;
 	       	var email = currentUser.email;
@@ -87,6 +87,7 @@ $(document).ready(function() {
 				
 				
 				if(userRole === 'PROJECT_MANAGER') {
+					$('.hide-project-manager-only').hide();
 					$('#project-manager-approval-output-section').hide();
 					$('#department-head-approval-output-section').hide();
 					$('#division-head-approval-output-section').hide();
@@ -204,7 +205,7 @@ $(document).ready(function() {
     
     
     function signOut() {
-        sessionStorage.removeItem('currentUser');
+        localStorage.removeItem('currentUser');
     }
     
     getData();

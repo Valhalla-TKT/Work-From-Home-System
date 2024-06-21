@@ -64,6 +64,7 @@ public class SecurityConfig {
                             return isApplicant ? new org.springframework.security.authorization.AuthorizationDecision(false)
                                     : new org.springframework.security.authorization.AuthorizationDecision(true);
                         })
+                        .requestMatchers("/api/user/updateApproveRole").permitAll()
                         .anyRequest().authenticated()
                 )
                 .exceptionHandling(exceptionHandling -> exceptionHandling.accessDeniedPage("/accessDenied"))
@@ -81,7 +82,7 @@ public class SecurityConfig {
                                             cookie.setPath("/");
                                             cookie.setMaxAge(86400); // 1 day
                                             response.addCookie(cookie);
-                                            UserDto userDto = userService.getLoginUserBystaffId(authentication.getName());
+                                            CurrentLoginUserDto userDto = userService.getLoginUserBystaffId(authentication.getName());
                                             request.getSession().setAttribute("login-user", userDto);
                                             response.sendRedirect("/dashboard");
 

@@ -1,9 +1,12 @@
 $(document).ready(function() {
-    var urlParams = new URLSearchParams(window.location.search);
-    var formId = urlParams.get('formId');
-    var userId = urlParams.get('userId');
-    
-    var currentUser = JSON.parse(sessionStorage.getItem('currentUser'));
+    var urlParams = window.location;
+	console.log(urlParams)
+	const url = new URL(urlParams);
+	const path = url.pathname.split('/')
+	var formId = path[path.length - 3]
+	var userId = path[path.length - 1]
+	console.log("formId = ", formId, "userId = ", userId)
+    var currentUser = JSON.parse(localStorage.getItem('currentUser'));
 	var approveRoles = currentUser.approveRoles;
    	var userRole;
    	approveRoles.forEach(function(approveRole) {
@@ -214,7 +217,7 @@ $(document).ready(function() {
                 var capture = response.capture;
                 var applicant = response.applicant;
                 var requester = response.requester;
-                var workFlowStatuses = registerForm.workFlowStatuses;
+                // var workFlowStatuses = registerForm.workFlowStatuses;
                 var workFlowStatuses = registerForm.workFlowStatuses;
             	console.log("Work Flow Statuses:", workFlowStatuses);                	
                 console.log("Form Status:", formStatus);
@@ -233,12 +236,12 @@ $(document).ready(function() {
                 flowStatusId = formStatus.id;
                 console.log("Applicant Name:", applicant.name);                
                 $('#name-display-by-form-id').val(applicant.name)	;
-                $('#position-display-by-form-id').val(applicant.position.name);
+                $('#position-display-by-form-id').val(applicant.positionName);
                 $('#team-display-by-form-id').val(applicant.team.name);
                 $('#department-display-by-form-id').val(applicant.department.name);
                 $('#working-place-display-by-form-id').val(registerForm.working_place);                
                 var requestPercent = registerForm.request_percent;
-                updateStaffIdFieldsForDetailPage(applicant.staff_id);
+                updateStaffIdFieldsForDetailPage(applicant.staffId);
                 $('input[type="radio"][value="' + requestPercent + '"]').prop('checked', true);
                 $('input[type="radio"][value="' + capture.os_type + '"]').prop('checked', true);
                 $('#from-date-display-by-form-id').val(formatDate(registerForm.from_date))
@@ -505,7 +508,7 @@ $(document).ready(function() {
 	
 	function approveForm(formData) {
 		$.ajax({
-		    url: 'api/registerform/update',
+		    url: 'http://localhost:8080/api/registerform/update',
 		    type: 'POST',
 		    data: formData,
 		    processData: false,
@@ -521,7 +524,7 @@ $(document).ready(function() {
 	                timerProgressBar: true,
 	                showConfirmButton: false
 	            }).then(() => {
-	                window.location.href = '/viewFormList';
+	                window.location.href = '/admin/viewFormList';
 	            });
 		    },
 		    error: function(error) {

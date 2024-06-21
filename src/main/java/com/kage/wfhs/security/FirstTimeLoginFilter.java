@@ -1,6 +1,7 @@
 package com.kage.wfhs.security;
 
 import com.kage.wfhs.dto.UserDto;
+import com.kage.wfhs.dto.auth.CurrentLoginUserDto;
 import com.kage.wfhs.model.ApproveRole;
 import com.kage.wfhs.service.UserService;
 import org.springframework.security.core.Authentication;
@@ -46,7 +47,7 @@ public class FirstTimeLoginFilter extends OncePerRequestFilter {
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (authentication != null && authentication.isAuthenticated()) {
-            UserDto userDto = (UserDto) request.getSession().getAttribute("login-user");
+            CurrentLoginUserDto userDto = (CurrentLoginUserDto) request.getSession().getAttribute("login-user");
             if (userDto == null) {
                 logger.debug("Fetching user details from database for: " + authentication.getName());
                 userDto = userService.getLoginUserBystaffId(authentication.getName());

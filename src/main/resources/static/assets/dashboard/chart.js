@@ -8,7 +8,7 @@ document.addEventListener('DOMContentLoaded', function () {
         contentType: 'application/json',
         success: function(response) {
             console.log(response);
-            sessionStorage.setItem('currentUser', JSON.stringify(response));
+            localStorage.setItem('currentUser', JSON.stringify(response));
             // Call getData function to update chart data
             getTeamData();
             getDepartmentData();
@@ -24,7 +24,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
   // Function to fetch data for the chart
   function getTeamData() {
-      var currentUser = JSON.parse(sessionStorage.getItem('currentUser'));
+      var currentUser = JSON.parse(localStorage.getItem('currentUser'));
       console.log(currentUser);
       if (currentUser) {
           var teamId = currentUser.team.id;
@@ -190,7 +190,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // Function to fetch data for the chart
     function getDepartmentData() {
-        var currentUser = JSON.parse(sessionStorage.getItem('currentUser'));
+        var currentUser = JSON.parse(localStorage.getItem('currentUser'));
         console.log(currentUser);
         if (currentUser) {
             var departmentId = currentUser.department.id;
@@ -355,7 +355,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
       // Function to fetch data for the chart
       function getDivisionData() {
-        var currentUser = JSON.parse(sessionStorage.getItem('currentUser'));
+        var currentUser = JSON.parse(localStorage.getItem('currentUser'));
         console.log(currentUser);
         if (currentUser) {
             var divisionId = currentUser.division.id;

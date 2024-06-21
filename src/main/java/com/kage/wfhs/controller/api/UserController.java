@@ -7,6 +7,7 @@
  */
 package com.kage.wfhs.controller.api;
 
+import com.kage.wfhs.dto.ApproveRoleDto;
 import com.kage.wfhs.dto.UserDto;
 import com.kage.wfhs.dto.WorkFlowOrderDto;
 import com.kage.wfhs.service.UserService;
@@ -48,9 +49,16 @@ public class UserController {
     public ResponseEntity<String> updateApproveRole(
     		@RequestParam(value = "userId") long userId,
     		@RequestParam(value = "approveRoleId") List<Long> approveRoleIdList
-    		) {    	
-    	// need to implement
-        return ResponseEntity.ok("Update User Role Success...");    
+    		) {
+        for (Long approveRoleDto : approveRoleIdList) {
+            System.out.println(approveRoleDto + " ");
+        }
+        boolean approveRoleSaved = userService.updateApproveRole(userId, approveRoleIdList);
+        if (approveRoleSaved) {
+            return ResponseEntity.ok("Update Approve Role Success...");
+        } else {
+            return ResponseEntity.status(500).body("Update User Role Failed...");
+        }
     }
     
     @PostMapping("/getAllTeamMember")

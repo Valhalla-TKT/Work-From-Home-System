@@ -32,6 +32,7 @@ public class ApproveRole implements Serializable {
 
 	@ManyToMany(mappedBy = "approveRoles")
 	@JsonIgnore
+	@ToString.Exclude
 	private List<User> users;
 
 	@OneToMany(mappedBy = "approveRole", cascade = CascadeType.ALL)

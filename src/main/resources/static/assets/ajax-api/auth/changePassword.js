@@ -1,5 +1,5 @@
 document.addEventListener('DOMContentLoaded', function () {
-    const currentUser = JSON.parse(sessionStorage.getItem('currentUser'));
+    const currentUser = JSON.parse(localStorage.getItem('currentUser'));
     if (!currentUser) {
         Swal.fire('Error', 'User not logged in.', 'error');
         return;

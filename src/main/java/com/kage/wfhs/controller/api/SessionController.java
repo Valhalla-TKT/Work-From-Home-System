@@ -7,6 +7,7 @@
  */
 package com.kage.wfhs.controller.api;
 
+import com.kage.wfhs.dto.auth.CurrentLoginUserDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -25,9 +26,9 @@ public class SessionController {
 	@Autowired
     private final UserService userService;
     @PostMapping("/user")
-    public ResponseEntity<UserDto> getUser(HttpSession session) {
-        UserDto currentUser = (UserDto) session.getAttribute("login-user");    
-        UserDto sessionUser = userService.getLoginUserBystaffId(currentUser.getStaffId());
+    public ResponseEntity<CurrentLoginUserDto> getUser(HttpSession session) {
+        CurrentLoginUserDto currentUser = (CurrentLoginUserDto) session.getAttribute("login-user");
+        CurrentLoginUserDto sessionUser = userService.getLoginUserBystaffId(currentUser.getStaffId());
         return ResponseEntity.ok(sessionUser);
     }
 }
