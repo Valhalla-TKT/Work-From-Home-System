@@ -11,6 +11,7 @@ import com.kage.wfhs.dto.CaptureDto;
 import com.kage.wfhs.dto.RegisterFormDto;
 import com.kage.wfhs.dto.UserDto;
 import com.kage.wfhs.dto.WorkFlowStatusDto;
+import com.kage.wfhs.dto.form.FormListDto;
 import com.kage.wfhs.model.ApproveRole;
 import com.kage.wfhs.model.WorkFlowStatus;
 import com.kage.wfhs.repository.WorkFlowStatusRepository;
@@ -158,13 +159,13 @@ public class RegisterFormController {
 
     private ResponseEntity<Map<String, Object>> getMapResponseEntity(Map<String, Object> responseData) {
         Object formsObject = responseData.get("forms");
-        List<RegisterFormDto> registerFormDtoList = new ArrayList<>();
+        List<FormListDto> registerFormDtoList = new ArrayList<>();
         if (formsObject instanceof List<?>) {
             for (Object item : (List<?>) formsObject) {
-                if (item instanceof RegisterFormDto) {
-                    registerFormDtoList.add((RegisterFormDto) item);
+                if (item instanceof FormListDto) {
+                    registerFormDtoList.add((FormListDto) item);
                 } else {
-                    throw new ClassCastException("Item in the list is not of type RegisterFormDto");
+                    throw new ClassCastException("Item in the list is not of type FormListDto");
                 }
             }
         } else {
@@ -175,8 +176,8 @@ public class RegisterFormController {
         return getMapResponseEntity(responseData, registerFormDtoList, applicantList, requesterList);
     }
 
-    private ResponseEntity<Map<String, Object>> getMapResponseEntity(Map<String, Object> responseData, List<RegisterFormDto> registerFormDtoList, List<UserDto> applicantList, List<UserDto> requesterList) {
-        for(RegisterFormDto registerFormdto : registerFormDtoList) {
+    private ResponseEntity<Map<String, Object>> getMapResponseEntity(Map<String, Object> responseData, List<FormListDto> registerFormDtoList, List<UserDto> applicantList, List<UserDto> requesterList) {
+        for(FormListDto registerFormdto : registerFormDtoList) {
             applicantList.add(modelMapper.map(userService.getUserById(registerFormdto.getApplicant().getId()), UserDto.class));
             requesterList.add(modelMapper.map(userService.getUserById(registerFormdto.getRequester().getId()), UserDto.class));
         }

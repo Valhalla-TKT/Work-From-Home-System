@@ -215,6 +215,7 @@ $(document).ready(function() {
                 var formStatus = response.formStatus;
                 var registerForm = response.registerForm;
                 var capture = response.capture;
+				capture.operationSystem = response.capture.operationSystem;
                 var applicant = response.applicant;
                 var requester = response.requester;
                 // var workFlowStatuses = registerForm.workFlowStatuses;
@@ -252,9 +253,16 @@ $(document).ready(function() {
 					$('#window').show();
 					$('#mac').hide();
 					$('#linux').hide();
-					var captureImageDataUrl = 'data:image/jpeg;base64,' + capture.operationSystem;
-					$('#window-operating-system-display-by-form-id').attr("src",+ captureImageDataUrl);
+					if(capture.operationSystem) {
+						var operationSystemImg = capture.operationSystem;
+						var captureOSImageDataUrl = 'data:image/png;base64,' + operationSystemImg;
+						$('#window-operating-system-display-by-form-id').attr("src",+ captureOSImageDataUrl);
+						console.log(capture.operationSystem)
+					}
+					
+					
 					var captureSPImageDataUrl = 'data:image/jpeg;base64,' + capture.securityPatch;
+					console.log(capture.securityPatch)
 	                $('#window-securityPatch-display-by-form-id').attr("src", captureSPImageDataUrl);
 	                var captureASImageDataUrl = 'data:image/jpeg;base64,' + capture.antivirusSoftware;
 	                $('#window-antivirusSoftware-display-by-form-id').attr("src",captureASImageDataUrl);
@@ -306,7 +314,7 @@ $(document).ready(function() {
 					$('#project-manager-approval-approve-reason-output').val(workFlowStatuses[0].reason)
 				}
 				// for department head
-                if(departmentHeadApprovalSection.length) {
+                if(departmentHeadApprovalSection.length && workFlowStatuses.length > 1) {
 					if(workFlowStatuses[1].status === 'APPROVE') {						
 	    				$('#dept-head-approval-status input[value="yes"]').prop('checked', true);
 	    				$('#dept-head-approval-status input[value="no"]').prop('checked', false);
@@ -320,7 +328,7 @@ $(document).ready(function() {
 					$('#department-head-approval-approve-reason-output').val(workFlowStatuses[1].reason)
 				}
 				// for division head
-                if(divisionHeadApprovalSection.length) {
+                if(divisionHeadApprovalSection.length && workFlowStatuses.length > 2) {
 					if(workFlowStatuses[2].status === 'APPROVE') {						
 	    				$('#division-head-approval-status input[value="yes"]').prop('checked', true);
 	    				$('#division-head-approval-status input[value="no"]').prop('checked', false);
@@ -334,8 +342,8 @@ $(document).ready(function() {
 					$('#division-head-approval-approve-reason-output').val(workFlowStatuses[2].reason)
 				}
 				// for ciso
-                if(cisoHeadApprovalSection.length) {
-					if(workFlowStatuses[3].status === 'APPROVE') {						
+                if(cisoHeadApprovalSection.length && workFlowStatuses.length > 3) {
+					if(workFlowStatuses[3].status === 'APPROVE') {
 	    				$('#ciso-approval-status input[value="yes"]').prop('checked', true);
 	    				$('#ciso-approval-status input[value="no"]').prop('checked', false);
 					}
@@ -349,7 +357,7 @@ $(document).ready(function() {
 					$('#ciso-approval-approve-reason-output').val(workFlowStatuses[3].reason)
 				}
 				// for ceo
-                if(ceoHeadApprovalSection.length) {
+                if(ceoHeadApprovalSection.length && workFlowStatuses.length > 4) {
 					if(workFlowStatuses[4].status === 'APPROVE') {						
 	    				$('#ceo-approval-status input[value="yes"]').prop('checked', true);
 	    				$('#ceo-approval-status input[value="no"]').prop('checked', false);

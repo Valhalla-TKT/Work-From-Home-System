@@ -8,7 +8,7 @@
 package com.kage.wfhs.serviceImplement;
 
 import com.kage.wfhs.dto.RegisterFormDto;
-import com.kage.wfhs.dto.UserDto;
+import com.kage.wfhs.dto.form.FormListDto;
 import com.kage.wfhs.model.*;
 import com.kage.wfhs.repository.CaptureRepository;
 import com.kage.wfhs.repository.RegisterFormRepository;
@@ -129,16 +129,16 @@ public class RegisterFormServiceImplement implements RegisterFormService {
     }
 
     @Override
-    public List<RegisterFormDto> getAllFormSpecificTeam(Long approveRoleId, String status, Long teamId, Long userId) {
+    public List<FormListDto> getAllFormSpecificTeam(Long approveRoleId, String status, Long teamId, Long userId) {
         List<RegisterForm> registerForms = registerFormRepo.findRegisterFormByTeam(approveRoleId, status, teamId);
         return getRegisterFormDtoList(userId, registerForms);
 
     }
 
-    private List<RegisterFormDto> getRegisterFormDtoList(Long userId, List<RegisterForm> registerForms) {
-        List<RegisterFormDto> registerFormList = new ArrayList<>();
+    private List<FormListDto> getRegisterFormDtoList(Long userId, List<RegisterForm> registerForms) {
+        List<FormListDto> registerFormList = new ArrayList<>();
         for (RegisterForm registerForm : registerForms) {
-            RegisterFormDto registerFormDto = modelMapper.map(registerForm, RegisterFormDto.class);
+            FormListDto registerFormDto = modelMapper.map(registerForm, FormListDto.class);
             registerFormDto.setCurrentStatus(getFormStatusByApproveId(userId, registerFormDto.getId()));
             registerFormList.add(registerFormDto);
         }
@@ -146,13 +146,13 @@ public class RegisterFormServiceImplement implements RegisterFormService {
     }
 
     @Override
-    public List<RegisterFormDto> getAllFormSpecificDepartment(Long approveRoleId, String status, Long departmentId, Long userId) {
+    public List<FormListDto> getAllFormSpecificDepartment(Long approveRoleId, String status, Long departmentId, Long userId) {
         List<RegisterForm> registerForms = registerFormRepo.findRegisterFormByDepartment(approveRoleId, status, departmentId);
         return getRegisterFormDtoList(userId, registerForms);
     }
 
     @Override
-    public List<RegisterFormDto> getAllFormSpecificDivision(Long approveRoleId, String status, Long teamId, Long userId) {
+    public List<FormListDto> getAllFormSpecificDivision(Long approveRoleId, String status, Long teamId, Long userId) {
 
         List<RegisterForm> registerForms = registerFormRepo.findRegisterFormByDivision(approveRoleId, status, teamId);
         return getRegisterFormDtoList(userId, registerForms);
@@ -165,13 +165,13 @@ public class RegisterFormServiceImplement implements RegisterFormService {
     }
 
     @Override
-    public List<RegisterFormDto> getAllFormSpecificTeamAll(Long approveRoleId, Long teamId, Long userId) {
+    public List<FormListDto> getAllFormSpecificTeamAll(Long approveRoleId, Long teamId, Long userId) {
         List<RegisterForm> registerForms = registerFormRepo.findRegisterFormByTeamAll(approveRoleId, teamId);
         return getRegisterFormDtoList(userId, registerForms);
     }
 
     @Override
-    public List<RegisterFormDto> getAllFormSpecificDepartmentAll(Long approveRoleId, Long departmentId, Long userId) {
+    public List<FormListDto> getAllFormSpecificDepartmentAll(Long approveRoleId, Long departmentId, Long userId) {
         List<RegisterForm> registerForms = registerFormRepo.findRegisterFormByDepartmentAll(approveRoleId, departmentId);
         return getRegisterFormDtoList(userId, registerForms);
     }
@@ -181,7 +181,7 @@ public class RegisterFormServiceImplement implements RegisterFormService {
     }
 
     @Override
-    public List<RegisterFormDto> getAllFormSpecificDivisionAll(Long approveRoleId, Long divisionId, Long userId) {
+    public List<FormListDto> getAllFormSpecificDivisionAll(Long approveRoleId, Long divisionId, Long userId) {
         List<RegisterForm> registerForms = registerFormRepo.findRegisterFormByDivisionAll(approveRoleId, divisionId);
         return getRegisterFormDtoList(userId, registerForms);
 //        List<RegisterFormDto> registerFormList = new ArrayList<>();
@@ -245,7 +245,7 @@ public class RegisterFormServiceImplement implements RegisterFormService {
         long approveRoleId = approveRoleService.getIdByWorkFlowOrderId(orderId);
 
         Map<String, Object> responseData = new HashMap<>();
-        List<RegisterFormDto> registerFormDtoList = new ArrayList<>();
+        List<FormListDto> registerFormDtoList = new ArrayList<>();
 
         if ("team".equalsIgnoreCase(entityName)) {
             if (status.equalsIgnoreCase("ALL")) {

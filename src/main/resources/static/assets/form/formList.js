@@ -17,17 +17,19 @@ $(document).ready(function() {
 	}
         
     var divisionId = currentUser.division.id;
-    console.log("Hellooo")    
-    console.log(divisionId)
     const formStatusSelect = $('#form-status-select');
+	const formListSelectedCount = $('#formListSelectedCount')
 
     var status = 'ALL';
 
     formStatusSelect.val(status);
 	console.log(userRole)
+	function updateFormListSelectCount() {
+		formListSelectedCount.text(`Selected (${selectedValues.length})`);
+	}
 	// role
 	if(userRole === 'PROJECT_MANAGER') {
-		formListTitle.text(`${currentUser.teamName} Team Form List`)
+		formListTitle.text(`${currentUser.teamName} Team Form List`);
 		getTeamMembersPendingForm();
 	}
 	if(userRole === 'DEPARTMENT_HEAD') {
@@ -169,6 +171,7 @@ $(document).ready(function() {
 							console.log(selectedValues)
 						}
 					}
+					updateFormListSelectCount();
 					console.log("Selected values:", selectedValues);
 				});
 				$aTag.on('dblclick', function() {
@@ -298,6 +301,7 @@ $(document).ready(function() {
 						$checkbox.prop('checked', true);
 						$(this).addClass('shadow');
 					}
+					updateFormListSelectCount();
 					var checkboxValue = $checkbox.val();
 					if ($checkbox.prop('checked')) {
 						selectedValues.push(checkboxValue);
@@ -571,7 +575,8 @@ $(document).ready(function() {
 		selectedValues = [];
         $("input[type='checkbox']").each(function() {
             selectedValues.push($(this).val());
-            
+			$(this).closest('.resume-card').addClass('shadow');
+			updateFormListSelectCount();
         });
         console.log("All checkboxes selected:", selectedValues);
         $("input[type='checkbox']").prop('checked', true);
