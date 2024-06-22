@@ -20529,3 +20529,10 @@ div.page a:hover {
 .add-data-modal::-webkit-scrollbar {
     display: none;
 }
+
+.add-function {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }

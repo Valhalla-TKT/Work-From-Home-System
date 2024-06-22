@@ -393,6 +393,9 @@ div.dt-container div.dt-info {
 }
 div.dt-container div.dt-paging {
   margin: 0;
+  display: flex;
+  justify-content: end;
+  padding-right: 10px;
 }
 div.dt-container div.dt-paging ul.pagination {
   margin: 2px 0;
@@ -484,4 +487,59 @@ div.table-responsive > div.dt-container > div.row > div[class^=col-]:last-child 
   --dt-row-hover: 255, 255, 255;
   --dt-row-stripe: 255, 255, 255;
   --dt-column-ordering: 255, 255, 255;
+}
+
+.dt-container {
+  margin: 0px 50px 0px 50px;
+}
+
+.dt-buttons {
+  display: flex;
+  justify-content: space-between;
+  padding-right: 20px;
+}
+
+.dt-button {
+  margin: 0px 80px 0px 0px;
+  border-radius: 10px;
+  border: 1px solid black;
+  background: black;
+  color: white;
+  font-weight: bold;
+  height: fit-content;
+  padding: 10px;
+}
+
+.dt-layout-row {
+  display: flex;
+  justify-content: space-between;
+}
+
+.dt-layout-cell{
+  width: 100%;
+}
+.dt-search label {
+  display: none;
+}
+
+.dt-column-title {
+  display: flex;
+  flex-wrap: nowrap;
+}
+
+.dt-layout-table {
+  margin: 30px 0px 30px 0px;
+  border: 1.5px solid #e7e7e9;
+  border-radius: 12px 0px 0px 0px;
+}
+
+.dt-paging-button {
+  width: fit-content;
+  height: fit-content !important;
+  margin: 3px;
+  border: 1.5px solid #e7e7e9;
+  border-radius: 10px;
+  background: black;
+  color: white !important;
+  font-weight: bold;
 }

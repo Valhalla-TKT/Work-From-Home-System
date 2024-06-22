@@ -22708,15 +22708,18 @@ div.rsvp-mod {
 }
 
 .resume-card {
+    display: flex;
+    height: 105px;
     box-shadow : 0 1px 3px rgba(0, 0, 0, .3), 0 0 0 1px rgba(0, 0, 0, .04);
     flex: 0 0 calc(45% - 20px) !important;
-    margin: 25px !important;
-    border-radius: 30px;
-    background: #f9f9fa;
+    margin: 15px !important;
+    border: 1px black solid;
+    border-radius: 15px;
+    background: #fff;
     cursor: pointer;
-    padding-top: 24px;
-    padding-bottom: 24px;
+    padding-top: 12px;
     transition: box-shadow 0.3s ease;
+    align-items: center;
 }
 
 .resume-card.shadow {
@@ -22809,6 +22812,7 @@ div.rsvp-mod {
 .resume-card .resume-card-header {
     display: -ms-flexbox;
     display: flex;
+    flex: 1;
     -ms-flex-align: center;
     align-items: center;
     -ms-flex-pack: justify;
