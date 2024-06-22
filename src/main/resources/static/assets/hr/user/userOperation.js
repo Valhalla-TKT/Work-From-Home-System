@@ -420,7 +420,7 @@ $(document).ready( function(){
                 <a href="detail" class="js-resume-card resume-card designer-search-card resume-card-sections-hidden js-user-row-6234">
                     <div class="resume-card-header resume-section-padding">
                         <div class="resume-card-header-designer">
-                            <img class="resume-card-avatar" alt="${user.name}" width="80" height="80"
+                            <img class="resume-card-avatar" alt="${user.name}" width="70" height="70"
                                 src="/assets/profile/${user.profile}" />                               
                             <div class="resume-card-header-details">
                                 <div class="resume-card-title">
