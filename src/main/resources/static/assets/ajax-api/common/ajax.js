@@ -24,7 +24,7 @@ async function createUser() {
 // Division
 async function createNewDivision(requestData) {    
     try {
-        const responseData = await sendRequest(`/admin/api/division/`, 'POST', requestData);
+        const responseData = await sendRequest(`/api/division/`, 'POST', requestData);
         handleResponse(responseData, null);
     } catch (error) {
         console.error('Error:', error);

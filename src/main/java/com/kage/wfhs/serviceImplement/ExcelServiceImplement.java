@@ -318,9 +318,9 @@ public class ExcelServiceImplement implements ExcelService {
 
                     String profile = null;
     				if ("male".equals(user.getGender())) {
-    					profile = "default-male.png";
+    					profile = "default-male.jpg";
     				} else if ("female".equals(user.getGender())) {
-    					profile = "default-female.jfif";
+    					profile = "default-female.jpg";
     				}
     				user.setProfile(profile);
 
