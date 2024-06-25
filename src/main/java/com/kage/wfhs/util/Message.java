@@ -37,4 +37,10 @@ public class Message {
 
     @Value("${email.body.otp.forget.password.part2}")
     private String emailBodyForOtpInForgetPasswordProcessPart2;
+
+    @Value("${otp.error.message}")
+    private String otpErrorMessage;
+
+    @Value("${error.unexpected}")
+    private String unexpectedError;
 }

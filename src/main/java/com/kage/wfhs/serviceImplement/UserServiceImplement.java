@@ -366,16 +366,16 @@ public class UserServiceImplement implements UserService {
 	@Override
 	@Transactional
 	public void createHR() {
-		User user = userRepo.findByEmail("hr@gmail.com");
+		User user = userRepo.findByEmail("hr@diracetechnology.com");
 		if(user == null) {
 			UserDto userDto = new UserDto();
 			userDto.setStaffId("00-00001");
 			userDto.setName("HR");
-			userDto.setEmail("hr@gmail.com");
+			userDto.setEmail("hr@diracetechnology.com");
 			userDto.setPhoneNumber("000 000 000");
 			userDto.setPassword(passwordEncoder.encode("123@dirace"));
 			userDto.setEnabled(true);
-			userDto.setGender("Male");
+			userDto.setGender("female");
 			User HR = modelMapper.map(userDto, User.class);
 			ApproveRole approveRole = approveRoleRepo.findByName("HR");
 			if (approveRole == null) {

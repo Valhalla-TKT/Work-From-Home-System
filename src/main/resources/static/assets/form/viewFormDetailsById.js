@@ -1,6 +1,5 @@
 $(document).ready(function() {
     var urlParams = window.location;
-	console.log(urlParams)
 	const url = new URL(urlParams);
 	const path = url.pathname.split('/')
 	var formId = path[path.length - 3]

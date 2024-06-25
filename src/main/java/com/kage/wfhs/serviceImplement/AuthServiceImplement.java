@@ -14,6 +14,9 @@ import org.slf4j.LoggerFactory;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.HashMap;
+import java.util.Map;
+
 @Service
 @RequiredArgsConstructor
 public class AuthServiceImplement implements AuthService {
@@ -24,6 +27,7 @@ public class AuthServiceImplement implements AuthService {
     private final PasswordEncoder passwordEncoder;
     private final EmailSenderService emailSenderService;
     private final Message message;
+    private final Map<String, String> otpStore = new HashMap<>();
 
     @Override
     public boolean emailExists(String email, boolean forgotPassword) {
@@ -34,7 +38,12 @@ public class AuthServiceImplement implements AuthService {
         if (exists && forgotPassword) {
             String staffID = user.getStaffId();
             String otp = Helper.generateOTP(email, staffID);
-            String emailBody = message.getEmailBodyForOtpInForgetPasswordProcessPart1() + otp + message.getEmailBodyForOtpInForgetPasswordProcessPart2();
+            otpStore.put(email, otp);
+            String emailBody = "<p>Dear " + user.getName() + ",</p>" +
+                    "<p>" + message.getEmailBodyForOtpInForgetPasswordProcessPart1() + "</p>" +
+                    "<p><strong>" + otp + "</strong></p>" +
+                    "<p>" + message.getEmailBodyForOtpInForgetPasswordProcessPart2() + "</p>" +
+                    "<p>Best Regards,<br>DAT Support Team</p>";
             emailSenderService.sendEmail(
                     email,
                     message.getEmailSubjectForOtpInForgetPasswordProcess(),
@@ -90,6 +99,26 @@ public class AuthServiceImplement implements AuthService {
             throw new IncorrectPasswordException(errorMessage);
         }
         logger.info("Current password validated for staff ID: {}", staffId);
+    }
+
+    @Override
+    public boolean verifyOtp(String email, String otp) {
+        logger.info("Verifying OTP for email: {}", email);
+        String storedOtp = otpStore.get(email);
+        return storedOtp != null && storedOtp.equals(otp);
+    }
+
+    @Override
+    public void resetPassword(String email, String newPassword) {
+        logger.info("Resetting password for email: {}", email);
+        User user = userRepository.findByEmail(email);
+        if (user == null) {
+            throw new EntityNotFoundException("User not found with email: " + email);
+        }
+        user.setPassword(passwordEncoder.encode(newPassword));
+        userRepository.save(user);
+        otpStore.remove(email);
+        logger.info("Password reset successfully for email: {}", email);
     }
 
     private EntityNotFoundException logAndThrowEntityNotFoundException(String staffId) {
