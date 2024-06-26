@@ -151,7 +151,6 @@ $(document).ready( function(){
                     var option = $('<option>', {
                         value: response[i].id,
                         text: response[i].name,
-                        'data-code': response[i].code
                     });
                     selectBox.append(option);
                 }
@@ -162,7 +161,6 @@ $(document).ready( function(){
                     var option = $('<option>', {
                         value: response[i].id,
                         text: response[i].name,
-                        'data-code': response[i].code
                     });
                     selectBox.append(option);
                 }
@@ -195,7 +193,6 @@ $(document).ready( function(){
                 var option = $('<option>', {
                     value: team.id,
                     text: team.name,
-                    'data-code': team.code
                 });
                 selectBox.append(option);
             });
@@ -214,7 +211,6 @@ $(document).ready( function(){
                     var option = $('<option>', {
                         value: response[i].id,
                         text: response[i].name,
-                        'data-code': response[i].code
                     });
                     selectBox.append(option);
                 }
@@ -225,7 +221,6 @@ $(document).ready( function(){
                     var option = $('<option>', {
                         value: response[i].id,
                         text: response[i].name,
-                        'data-code': response[i].code
                     });
                     selectBox.append(option);
                 }
@@ -254,7 +249,6 @@ $(document).ready( function(){
                 var option = $('<option>', {
                     value: department.id,
                     text: department.name,
-                    'data-code': department.code
                 });
                 selectBox.append(option);
             });
@@ -282,7 +276,6 @@ $(document).ready( function(){
                 var option = $('<option>', {
                     value: team.id,
                     text: team.name,
-                    'data-code': team.code
                 });
                 selectBox.append(option);
             });
@@ -301,7 +294,6 @@ $(document).ready( function(){
                     var option = $('<option>', {
                         value: response[i].id,
                         text: response[i].name,
-                        'data-code': response[i].code
                     });
                     selectBox.append(option);
                 }
@@ -312,7 +304,6 @@ $(document).ready( function(){
                     var option = $('<option>', {
                         value: response[i].id,
                         text: response[i].name,
-                        'data-code': response[i].code
                     });
                     selectBox.append(option);
                 }
@@ -335,7 +326,6 @@ $(document).ready( function(){
                     var option = $('<option>', {
                         value: response[i].id,
                         text: response[i].name,
-                        'data-code': response[i].code
                     });
                     selectBox.append(option);
                 }
@@ -346,7 +336,6 @@ $(document).ready( function(){
                     var option = $('<option>', {
                         value: response[i].id,
                         text: response[i].name,
-                        'data-code': response[i].code
                     });
                     selectBox.append(option);
                 }
@@ -417,7 +406,7 @@ $(document).ready( function(){
 
                 // Append user to staff list
                 $('#staff-list').append(`
-                <a href="detail" class="js-resume-card resume-card designer-search-card resume-card-sections-hidden js-user-row-6234">
+                <a href="detail" class="js-resume-card resume-card designer-search-card resume-card-sections-hidden js-user-row-6234" data-user='${JSON.stringify(user)}'>
                     <div class="resume-card-header resume-section-padding">
                         <div class="resume-card-header-designer">
                             <img class="resume-card-avatar" alt="${user.name}" width="70" height="70"
@@ -440,6 +429,7 @@ $(document).ready( function(){
                 </a>
             `);
             });
+            addCardEventListeners();
 
             console.log("hi")
             renderLoadMoreButton(totalUsers, $('#staff-list').children().length);
@@ -447,6 +437,37 @@ $(document).ready( function(){
             console.error('Error in getAllUser:', error);
         }
     }
+
+    function showDetailModal(user) {
+        document.getElementById('staff-id-detail').value = user.staffId;
+        document.getElementById('name-detail').value = user.name;
+        document.getElementById('email-detail').value = user.email;
+        document.getElementById('gender-detail').value = user.gender;
+        document.getElementById('position-name-detail').value = user.positionName;
+        document.getElementById('approveRoleSelectBoxDetail').value = user.permission;
+        document.getElementById('team-name-detail').value = user.teamName;
+        document.getElementById('department-name-detail').value = user.departmentName;
+        document.getElementById('division-name-detail').value = user.divisionName;
+        document.getElementById('detail-data-overlay').style.display = 'block';
+    }
+
+    function addCardEventListeners() {
+        const cards = document.querySelectorAll('.js-resume-card');
+        cards.forEach(card => {
+            card.addEventListener('click', function (event) {
+                event.preventDefault();
+                const user = JSON.parse(card.getAttribute('data-user'));
+                showDetailModal(user);
+            });
+        });
+    }
+
+    document.querySelectorAll('.close').forEach(closeBtn => {
+        closeBtn.addEventListener('click', () => {
+            document.getElementById('detail-data-overlay').style.display = 'none';
+        });
+    });
+
 
 
     $('#load-more').on('click', async function() {
@@ -466,7 +487,6 @@ $(document).ready( function(){
                     var option = $('<option>', {
                         value: response[i].id,
                         text: response[i].name,
-                        'data-code': response[i].code
                     });
                     selectBox.append(option);
                 }
