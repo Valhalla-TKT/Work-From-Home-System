@@ -1,4 +1,5 @@
 $(document).ready( function(){
+    let approveRoles = [];
      getAllUser(1, true);
     toggleSections();
     $('#join-date').dateDropper({
@@ -313,39 +314,6 @@ $(document).ready( function(){
             })
     }
 
-    function getAllPosition() {
-        $.ajax({
-            url: `http://localhost:8080/api/position/positionList`,
-            type: 'POST',
-            contentType: 'application/json',
-            success: function (response) {
-                var selectBox = $('#position-name');
-                selectBox.empty();
-                selectBox.append('<option value="" disabled selected>Select Position Name</option>');
-                for (var i = 0; i < response.length; i++) {
-                    var option = $('<option>', {
-                        value: response[i].id,
-                        text: response[i].name,
-                    });
-                    selectBox.append(option);
-                }
-                var selectBox = $('#position-filter');
-                selectBox.empty();
-                selectBox.append('<option value="" disabled selected>Select Position Name</option>');
-                for (var i = 0; i < response.length; i++) {
-                    var option = $('<option>', {
-                        value: response[i].id,
-                        text: response[i].name,
-                    });
-                    selectBox.append(option);
-                }
-            },
-            error: function (error) {
-                console.error('Error:', error);
-            }
-        });
-    }
-
     var currentPage = 1;
     var usersPerPage = 10;
 
@@ -420,6 +388,8 @@ $(document).ready( function(){
                                 </div>
                                 <span class="resume-card-header-text">
                                     <p>
+                                        <span class="resume-card-location">${user.teamName}</span>
+                                        <span class="resume-card-middot">.</span>
                                         <span class="resume-card-location">${user.divisionName}</span>
                                     </p>
                                 </span>
@@ -444,12 +414,31 @@ $(document).ready( function(){
         document.getElementById('email-detail').value = user.email;
         document.getElementById('gender-detail').value = user.gender;
         document.getElementById('position-name-detail').value = user.positionName;
-        document.getElementById('approveRoleSelectBoxDetail').value = user.permission;
-        document.getElementById('team-name-detail').value = user.teamName;
-        document.getElementById('department-name-detail').value = user.departmentName;
-        document.getElementById('division-name-detail').value = user.divisionName;
+        let userRole = ''
+            user.approveRoles.forEach(role => {
+                userRole = role.name;
+            });
+        const approveRoleSelectBoxDetail = document.getElementById('approveRoleSelectBoxDetail');
+        approveRoleSelectBoxDetail.innerHTML = '';
+        approveRoles.forEach(role => {
+            let option = document.createElement('option');
+            option.value = role.id;
+            option.text = role.name;
+            if (role.name === userRole) {
+                option.selected = true;
+            }
+            approveRoleSelectBoxDetail.appendChild(option);
+        });
+        // document.getElementById('team-name-detail').value = user.teamName;
+        // document.getElementById('department-name-detail').value = user.departmentName;
+        // document.getElementById('division-name-detail').value = user.divisionName;
         document.getElementById('detail-data-overlay').style.display = 'block';
     }
+
+    $('#approveRoleSelectBoxDetail').change(function() {
+        var selectedOption = $(this).find('option:selected').text();
+        toggleSections(selectedOption);
+    });
 
     function addCardEventListeners() {
         const cards = document.querySelectorAll('.js-resume-card');
@@ -480,6 +469,7 @@ $(document).ready( function(){
             type: 'POST',
             contentType: 'application/json',
             success: function (response) {
+                approveRoles = response;
                 var selectBox = $('#approveRoleSelectBox');
                 selectBox.empty();
                 selectBox.append('<option value="" disabled selected>Select Approve Role Name</option>');
@@ -489,6 +479,17 @@ $(document).ready( function(){
                         text: response[i].name,
                     });
                     selectBox.append(option);
+                }
+                var selectBoxDetail = $('#approveRoleSelectBoxDetail');
+                console.log("Select Approve Role Name");
+                selectBoxDetail.empty();
+                selectBoxDetail.append('<option value="" disabled selected>Select Approve Role Name</option>');
+                for (var j = 0; j < response.length; j++) {
+                    var optionJ = $('<option>', {
+                        value: response[j].id,
+                        text: response[j].name,
+                    });
+                    selectBoxDetail.append(optionJ);
                 }
             },
             error: function (error) {
