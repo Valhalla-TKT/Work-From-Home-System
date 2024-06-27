@@ -11,7 +11,7 @@ document.addEventListener('DOMContentLoaded', function () {
         addDataButton.addEventListener('click', async function () {
             addDataOverlay.style.display = 'block';
             addDataModal.style.display = 'block';
-			await setDivisionCode();
+			//await setDivisionCode();
         });
 
         addDataOverlayClose.addEventListener('click', function () {

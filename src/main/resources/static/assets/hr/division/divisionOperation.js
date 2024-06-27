@@ -18,6 +18,7 @@ async function createDivision() {
 	var requestData = {
 		name: name
 	};
+	console.log(requestData)
 	// AJAX call
 	await createNewDivision(requestData)
 		.then(() => {

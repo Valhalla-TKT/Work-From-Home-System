@@ -1,9 +1,11 @@
 $(document).ready(function() {
-    var urlParams = new URLSearchParams(window.location.search);
-    var formId = urlParams.get('formId');
-    var userId = urlParams.get('userId');
-    
-    var currentUser = JSON.parse(sessionStorage.getItem('currentUser'));
+    var urlParams = window.location;
+	const url = new URL(urlParams);
+	const path = url.pathname.split('/')
+	var formId = path[path.length - 3]
+	var userId = path[path.length - 1]
+	console.log("formId = ", formId, "userId = ", userId)
+    var currentUser = JSON.parse(localStorage.getItem('currentUser'));
 	var approveRoles = currentUser.approveRoles;
    	var userRole;
    	approveRoles.forEach(function(approveRole) {
@@ -212,9 +214,10 @@ $(document).ready(function() {
                 var formStatus = response.formStatus;
                 var registerForm = response.registerForm;
                 var capture = response.capture;
+				capture.operationSystem = response.capture.operationSystem;
                 var applicant = response.applicant;
                 var requester = response.requester;
-                var workFlowStatuses = registerForm.workFlowStatuses;
+                // var workFlowStatuses = registerForm.workFlowStatuses;
                 var workFlowStatuses = registerForm.workFlowStatuses;
             	console.log("Work Flow Statuses:", workFlowStatuses);                	
                 console.log("Form Status:", formStatus);
@@ -233,12 +236,12 @@ $(document).ready(function() {
                 flowStatusId = formStatus.id;
                 console.log("Applicant Name:", applicant.name);                
                 $('#name-display-by-form-id').val(applicant.name)	;
-                $('#position-display-by-form-id').val(applicant.position.name);
+                $('#position-display-by-form-id').val(applicant.positionName);
                 $('#team-display-by-form-id').val(applicant.team.name);
                 $('#department-display-by-form-id').val(applicant.department.name);
                 $('#working-place-display-by-form-id').val(registerForm.working_place);                
                 var requestPercent = registerForm.request_percent;
-                updateStaffIdFieldsForDetailPage(applicant.staff_id);
+                updateStaffIdFieldsForDetailPage(applicant.staffId);
                 $('input[type="radio"][value="' + requestPercent + '"]').prop('checked', true);
                 $('input[type="radio"][value="' + capture.os_type + '"]').prop('checked', true);
                 $('#from-date-display-by-form-id').val(formatDate(registerForm.from_date))
@@ -249,9 +252,16 @@ $(document).ready(function() {
 					$('#window').show();
 					$('#mac').hide();
 					$('#linux').hide();
-					var captureImageDataUrl = 'data:image/jpeg;base64,' + capture.operationSystem;
-					$('#window-operating-system-display-by-form-id').attr("src",+ captureImageDataUrl);
+					if(capture.operationSystem) {
+						var operationSystemImg = capture.operationSystem;
+						var captureOSImageDataUrl = 'data:image/png;base64,' + operationSystemImg;
+						$('#window-operating-system-display-by-form-id').attr("src",+ captureOSImageDataUrl);
+						console.log(capture.operationSystem)
+					}
+					
+					
 					var captureSPImageDataUrl = 'data:image/jpeg;base64,' + capture.securityPatch;
+					console.log(capture.securityPatch)
 	                $('#window-securityPatch-display-by-form-id').attr("src", captureSPImageDataUrl);
 	                var captureASImageDataUrl = 'data:image/jpeg;base64,' + capture.antivirusSoftware;
 	                $('#window-antivirusSoftware-display-by-form-id').attr("src",captureASImageDataUrl);
@@ -303,7 +313,7 @@ $(document).ready(function() {
 					$('#project-manager-approval-approve-reason-output').val(workFlowStatuses[0].reason)
 				}
 				// for department head
-                if(departmentHeadApprovalSection.length) {
+                if(departmentHeadApprovalSection.length && workFlowStatuses.length > 1) {
 					if(workFlowStatuses[1].status === 'APPROVE') {						
 	    				$('#dept-head-approval-status input[value="yes"]').prop('checked', true);
 	    				$('#dept-head-approval-status input[value="no"]').prop('checked', false);
@@ -317,7 +327,7 @@ $(document).ready(function() {
 					$('#department-head-approval-approve-reason-output').val(workFlowStatuses[1].reason)
 				}
 				// for division head
-                if(divisionHeadApprovalSection.length) {
+                if(divisionHeadApprovalSection.length && workFlowStatuses.length > 2) {
 					if(workFlowStatuses[2].status === 'APPROVE') {						
 	    				$('#division-head-approval-status input[value="yes"]').prop('checked', true);
 	    				$('#division-head-approval-status input[value="no"]').prop('checked', false);
@@ -331,8 +341,8 @@ $(document).ready(function() {
 					$('#division-head-approval-approve-reason-output').val(workFlowStatuses[2].reason)
 				}
 				// for ciso
-                if(cisoHeadApprovalSection.length) {
-					if(workFlowStatuses[3].status === 'APPROVE') {						
+                if(cisoHeadApprovalSection.length && workFlowStatuses.length > 3) {
+					if(workFlowStatuses[3].status === 'APPROVE') {
 	    				$('#ciso-approval-status input[value="yes"]').prop('checked', true);
 	    				$('#ciso-approval-status input[value="no"]').prop('checked', false);
 					}
@@ -346,7 +356,7 @@ $(document).ready(function() {
 					$('#ciso-approval-approve-reason-output').val(workFlowStatuses[3].reason)
 				}
 				// for ceo
-                if(ceoHeadApprovalSection.length) {
+                if(ceoHeadApprovalSection.length && workFlowStatuses.length > 4) {
 					if(workFlowStatuses[4].status === 'APPROVE') {						
 	    				$('#ceo-approval-status input[value="yes"]').prop('checked', true);
 	    				$('#ceo-approval-status input[value="no"]').prop('checked', false);
@@ -505,7 +515,7 @@ $(document).ready(function() {
 	
 	function approveForm(formData) {
 		$.ajax({
-		    url: 'api/registerform/update',
+		    url: 'http://localhost:8080/api/registerform/update',
 		    type: 'POST',
 		    data: formData,
 		    processData: false,
@@ -521,7 +531,7 @@ $(document).ready(function() {
 	                timerProgressBar: true,
 	                showConfirmButton: false
 	            }).then(() => {
-	                window.location.href = '/viewFormList';
+	                window.location.href = '/admin/viewFormList';
 	            });
 		    },
 		    error: function(error) {

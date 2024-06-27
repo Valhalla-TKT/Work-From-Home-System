@@ -1572,11 +1572,11 @@ body#teams-signup div.notice.success {
 
 h1 span.badge,
 span.badge {
-    padding: 1px 3px;
+    padding: 2px 3px;
     border-radius: 3px;
-    background: #ccc;
+    background: #0d0c22;
     color: #fff;
-    font-size: 10px;
+    font-size: 12px;
     font-weight: bold;
     line-height: 1;
     text-transform: uppercase
@@ -19290,14 +19290,17 @@ div.page a:hover {
     box-sizing: border-box;
     -ms-flex-align: center;
     align-items: center;
+    cursor: pointer;
     -ms-flex-pack: justify;
     justify-content: space-between;
     padding: 8px 12px;
     -webkit-transition: background-color 200ms ease;
     transition: background-color 200ms ease;
+    box-shadow : 0 1px 3px rgba(0, 0, 0, .3), 0 0 0 1px rgba(0, 0, 0, .04);
     border: 1px solid #f3f3f4;
     border-radius: 8px;
-    background: #fff
+    background: #fff;
+    margin-top: 5px;
 }
 
 @media (min-width: 500px) {
@@ -19420,8 +19423,8 @@ div.page a:hover {
 }
 
 .job-list-item:hover {
-    -webkit-box-shadow: 0px 8px 15px 0px rgba(243, 243, 244, 0.65);
-    box-shadow: 0px 8px 15px 0px rgba(243, 243, 244, 0.65)
+    -webkit-box-shadow: 0px 0px 10px 1px rgba(192, 66, 255, 0.7) !important;
+    box-shadow: 0px 0px 10px 1px rgba(192, 66, 255, 0.7) !important;
 }
 
 @media (min-width: 768px) {
@@ -19436,6 +19439,8 @@ div.page a:hover {
 
 .job-list-item .job-link {
     position: absolute;
+    pointer-events: none;
+    cursor: pointer;
     top: 0;
     right: 0;
     bottom: 0;
@@ -20524,3 +20529,10 @@ div.page a:hover {
 .add-data-modal::-webkit-scrollbar {
     display: none;
 }
+
+.add-function {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }

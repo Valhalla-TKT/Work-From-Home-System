@@ -24,7 +24,7 @@ async function createUser() {
 // Division
 async function createNewDivision(requestData) {    
     try {
-        const responseData = await sendRequest(`/admin/api/division/`, 'POST', requestData);
+        const responseData = await sendRequest(`/api/division/`, 'POST', requestData);
         handleResponse(responseData, null);
     } catch (error) {
         console.error('Error:', error);
@@ -361,6 +361,81 @@ async function fetchUsersByDivisionId(divisionId) {
     } catch (error) {
         console.error('Error:', error);
     }
+}
+
+async function fetchUsersByGender(gender) {
+    try {
+        const responseData = await sendRequestWithOneParam(`/api/user/gender`, 'POST', 'gender', gender);
+        const contentType = responseData.headers.get('content-type');
+        if (contentType && contentType.includes('application/json')) {
+            return await responseData.json();
+        } else {
+            return await responseData.text();
+        }
+    } catch (error) {
+        console.error('Error:', error);
+    }
+}
+
+async function fetchUsersByTeamIdAndGender(teamId ,gender) {
+    try {
+        const responseData = await sendRequestWithoutParam(`/api/user/team/${teamId}/gender/${gender}`, 'POST');
+        const contentType = responseData.headers.get('content-type');
+        if (contentType && contentType.includes('application/json')) {
+            return await responseData.json();
+        } else {
+            return await responseData.text();
+        }
+    } catch (error) {
+        console.error('Error:', error);
+    }
+}
+
+async function fetchUsersByDepartmentIdAndGender(departmentId ,gender) {
+    try {
+        const responseData = await sendRequestWithoutParam(`/api/user/department/${departmentId}/gender/${gender}`, 'POST');
+        const contentType = responseData.headers.get('content-type');
+        if (contentType && contentType.includes('application/json')) {
+            return await responseData.json();
+        } else {
+            return await responseData.text();
+        }
+    } catch (error) {
+        console.error('Error:', error);
+    }
+}
+
+async function fetchUsersByDivisionIdAndGender(divisionId ,gender) {
+    try {
+        const responseData = await sendRequestWithoutParam(`/api/user/division/${divisionId}/gender/${gender}`, 'POST');
+        const contentType = responseData.headers.get('content-type');
+        if (contentType && contentType.includes('application/json')) {
+            return await responseData.json();
+        } else {
+            return await responseData.text();
+        }
+    } catch (error) {
+        console.error('Error:', error);
+    }
+}
+
+async function getSessionUser() {
+    return new Promise((resolve, reject) => {
+        $.ajax({
+            url: 'http://localhost:8080/api/session/user',
+            type: 'POST',
+            contentType: 'application/json',
+            success: function(response) {
+                console.log(response);
+                localStorage.setItem('currentUser', JSON.stringify(response));
+                resolve(response);
+            },
+            error: function (error) {
+                console.error('Error:', error);
+                reject(null);
+            }
+        });
+    });
 }
 
 // Cookie JWT

@@ -12,15 +12,19 @@
 	<section class="profile-pro-masthead">
           <div class="container-large">
               <div class="masthead-content show-profile-is-null male">
+<!--                  <div class="masthead-avatar">-->
+<!--                      <img alt="user" src="/assets/profile/default-male.jpg" class="avatar male" />-->
+<!--                  </div>-->
+<!--                  <div class="masthead-avatar show-profile-is-null female">-->
+<!--                      <img alt="user" src="/assets/profile/default-female.jpg" class="avatar female" />-->
+<!--                  </div>-->
                   <div class="masthead-avatar">
-                      <img alt="user" th:alt="male" src="/assets/profile/default-male-avatar-profile.jpg" class="avatar male" />
+                      <img id="profile-page-image" class="avatar" />
                   </div>
-                  <div class="masthead-avatar show-profile-is-null female">
-                      <img alt="user" src="/assets/profile/default-female-avatar-profile.jpg" class="avatar female" />
-                  </div>
-                  <div class="masthead-avatar show-profile-is-not-null">
-                      <img alt="user" src="/assets/profile/default-male-avatar-profile.jpg"/>
-                  </div>
+
+<!--                  <div class="masthead-avatar show-profile-is-not-null">-->
+<!--                      <img alt="user" src="/assets/profile/default-male.jpg"/>-->
+<!--                  </div>-->
                   <div class="masthead-profile-name">
                       <h1 id="profile_page_name"></h1>
                   </div>
@@ -40,7 +44,7 @@
       </section>
       <div class="container-large">
           <div class="change-password-form" id="changePasswordForm">  	
-              <form class="form-fields" action="" accept-charset="UTF-8">
+              <form class="form-fields" accept-charset="UTF-8">
                   <div>
                       <fieldset>
                           <label for="currentPassword" class="password">Current Password </label>

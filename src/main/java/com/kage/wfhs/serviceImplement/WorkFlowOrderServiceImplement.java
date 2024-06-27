@@ -100,17 +100,26 @@ public class WorkFlowOrderServiceImplement implements WorkFlowOrderService {
         List<?> workFlowOrderList = workFlowOrderRepo.findAll();
         if (workFlowOrderList.isEmpty()) {
             List<Long> defaultApproveRoleIdList = Arrays.asList(2L, 8L, 7L, 6L, 5L, 4L, 3L, 1L);
-            List<String> approveState = getOrder(defaultApproveRoleIdList.size());
-            WorkFlowOrderDto workFlowOrderDto = new WorkFlowOrderDto();
-
-            for (int i = 0; i < approveState.size(); i++) {
-                String state = approveState.get(i);
-                long roleId = defaultApproveRoleIdList.get(i);
-                workFlowOrderDto.setApprove_state(state);
-                workFlowOrderDto.setApproveRoleId(roleId);
-
-                addWorkFlowOrder(workFlowOrderDto);
-            }
+            createOrder(defaultApproveRoleIdList);
         }
+    }
+
+    private void createOrder(List<Long> approveRoleIdList) {
+        List<String> approveState = getOrder(approveRoleIdList.size());
+        WorkFlowOrderDto workFlowOrderDto = new WorkFlowOrderDto();
+
+        for (int i = 0; i < approveState.size(); i++) {
+            String state = approveState.get(i);
+            long roleId = approveRoleIdList.get(i);
+            workFlowOrderDto.setApprove_state(state);
+            workFlowOrderDto.setApproveRoleId(roleId);
+            addWorkFlowOrder(workFlowOrderDto);
+        }
+    }
+
+    @Override
+    public void createWorkFlowOrderByApproveRoleIdList(List<Long> approveRoleList) {
+        workFlowOrderRepo.truncateTable();
+        createOrder(approveRoleList);
     }
 }

@@ -1,10 +1,10 @@
 /**
  * 
  */
+
 let valueDisplays = document.querySelectorAll(".num");
 let interval = 4000;
 let isCountingStarted = false;
-
 function isInViewport(element) {
 	let rect = element.getBoundingClientRect();
 	return (
@@ -23,7 +23,7 @@ function startCount() {
 		let counter = setInterval(function() {
 			startValue += 1;
 			valueDisplay.textContent = startValue;
-			if (startValue == endValue) {
+			if (startValue === endValue) {
 				clearInterval(counter);
 			}
 		}, duration);
@@ -34,10 +34,8 @@ window.addEventListener('scroll', function() {
     if (!isCountingStarted) {
         departmentItems.forEach((item) => {
             if (isInViewport(item)) {
-                console.log("Reach here")
                 startCount();
-                isCountingStarted = true; // Set the flag to true to prevent further counting
-                // Remove the scroll event listener after counting starts
+                isCountingStarted = true;
                 window.removeEventListener('scroll', arguments.callee);
             }
         });

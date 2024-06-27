@@ -58,10 +58,10 @@
 							</ul>
 						</li>
 						
-						<li class="nav-v2-main__item nav-v2-main__item--sub-nav visible-hr-only"><a data-nav-event-clicked="Hire Designers" href="#">Manage</a>
+						<li class="nav-v2-main__item nav-v2-main__item--sub-nav hide-applicant-only"><a data-nav-event-clicked="Hire Designers" href="#">Manage</a>
 
 							<ul class="nav-v2-sub">
-								<li class="nav-v2-sub__item">
+								<li class="nav-v2-sub__item visible-hr-only">
 								    <a class="nav-v2-sub__link" data-nav-event-clicked="Approve Role" href="/admin/approveRole"> Approver
 								        <span class="nav-v2-sub__subtitle">Administrate approval permissions Role</span>
 								    </a>
@@ -79,17 +79,6 @@
 							    <li class="nav-v2-sub__item">
 							        <a class="nav-v2-sub__link" data-nav-event-clicked="Add Team" href="/admin/team">Team
 							            <span class="nav-v2-sub__subtitle">Oversee teams</span>
-							        </a>
-							    </li>
-							    
-							    <li class="nav-v2-sub__item">
-							        <a class="nav-v2-sub__link" data-nav-event-clicked="Add Position" href="/admin/position">Position
-							            <span class="nav-v2-sub__subtitle">Direct positions</span>
-							        </a>
-							    </li>
-								<li class="nav-v2-sub__item">
-							        <a class="nav-v2-sub__link" data-nav-event-clicked="Add Role" href="/admin/role"> Role
-							            <span class="nav-v2-sub__subtitle">Administrate roles</span>
 							        </a>
 							    </li>
 							    <li class="nav-v2-sub__item">
@@ -216,15 +205,14 @@
 					<!-- ============================================================== -->
 					<div class="nav-v2-avatar">
 						<a data-nav-v2-avatar="true" title="Open profile" href="">
-							<img class="nav-v2-avatar__image" alt="thant htoo" width="32" height="32" src="/assets/images/phonk.jpg">
+							<img class="nav-v2-avatar__image" width="50px" height="50px" id="nav-profile-img">
 						</a>
 						<div class="nav-v2-profile" data-nav-v2-profile="" data-nav-event-category="Profile">
  							<div class="nav-v2-profile__wrapper" data-nav-v2-profile-wrapper="">
  								<div style="display: flex; align-items: center; flex-direction: row;">
 									<a class="nav-v2-user" title="Open profile" data-nav-event-clicked="Profile" href="/profile">
 										<div style="display: flex; flex-direction: row; align-items: center; column-gap: 10px;">
-											<img class="nav-v2-user__image" alt="thant htoo"
-												src="/assets/images/phonk.jpg">
+											<img class="nav-v2-user__image" id="nav-modal-profile-img">
 											<div style="display: flex; flex-direction: column; row-gap: 5px;">
 												<div class="nav-v2-user__name">
 													

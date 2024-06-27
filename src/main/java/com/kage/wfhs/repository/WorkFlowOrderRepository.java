@@ -16,7 +16,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface WorkFlowOrderRepository extends JpaRepository<WorkFlowOrder, Long> {
+public interface WorkFlowOrderRepository extends JpaRepository<WorkFlowOrder, Long>, WorkFlowOrderRepositoryCustom {
 	Optional<WorkFlowOrder> findById(Long id);
 
     @Query("select order from WorkFlowOrder order where order.id = :id - 1")

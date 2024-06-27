@@ -13,7 +13,9 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import com.kage.wfhs.dto.auth.CurrentLoginUserDto;
 import com.kage.wfhs.exception.EntityNotFoundException;
+import com.kage.wfhs.util.DtoUtil;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
@@ -158,10 +160,9 @@ public class UserServiceImplement implements UserService {
 	}
 
 	@Override
-	public UserDto getLoginUserBystaffId(String staffId) {
+	public CurrentLoginUserDto getLoginUserBystaffId(String staffId) {
 		User user = userRepo.findByStaffId(staffId);
-
-        return modelMapper.map(user, UserDto.class);
+        return modelMapper.map(user, CurrentLoginUserDto.class);
 	}
 
 	@Override
@@ -365,16 +366,16 @@ public class UserServiceImplement implements UserService {
 	@Override
 	@Transactional
 	public void createHR() {
-		User user = userRepo.findByEmail("hr@gmail.com");
+		User user = userRepo.findByEmail("hr@diracetechnology.com");
 		if(user == null) {
 			UserDto userDto = new UserDto();
 			userDto.setStaffId("00-00001");
 			userDto.setName("HR");
-			userDto.setEmail("hr@gmail.com");
+			userDto.setEmail("hr@diracetechnology.com");
 			userDto.setPhoneNumber("000 000 000");
 			userDto.setPassword(passwordEncoder.encode("123@dirace"));
 			userDto.setEnabled(true);
-			userDto.setGender("Male");
+			userDto.setGender("female");
 			User HR = modelMapper.map(userDto, User.class);
 			ApproveRole approveRole = approveRoleRepo.findByName("HR");
 			if (approveRole == null) {
@@ -393,5 +394,43 @@ public class UserServiceImplement implements UserService {
 		user.setFirstTimeLogin(false);
 		User savedUser = EntityUtil.saveEntity(userRepo, user, "user");
 		return true;
+	}
+
+	@Override
+	public List<UserDto> getAllUserByGender(String gender) {
+		List<User> users = userRepo.findAllByGender(gender);
+		return DtoUtil.mapList(users, UserDto.class, modelMapper);
+	}
+
+	@Override
+	public List<UserDto> getAllUserByTeamIdAndGender(Long teamId, String gender) {
+		List<User> users = userRepo.findAllByTeamIdAndGender(teamId, gender);
+		return DtoUtil.mapList(users, UserDto.class, modelMapper);
+	}
+
+	@Override
+	public List<UserDto> getAllUserByDepartmentIdAndGender(Long departmentId, String gender) {
+		List<User> users = userRepo.findAllByDepartmentIdAndGender(departmentId, gender);
+		return DtoUtil.mapList(users, UserDto.class, modelMapper);
+	}
+
+	@Override
+	public List<UserDto> getAllUserByDivisionIdAndGender(Long divisionId, String gender) {
+		List<User> users = userRepo.findAllByDivisionIdAndGender(divisionId, gender);
+		return DtoUtil.mapList(users, UserDto.class, modelMapper);
+	}
+
+	@Override
+	@Transactional
+	public boolean updateApproveRole(long userId, List<Long> approveRoleIdList) {
+		try {
+			User user = EntityUtil.getEntityById(userRepo, userId);
+			Set<ApproveRole> approveRoles = new HashSet<>(approveRoleRepo.findAllById(approveRoleIdList));
+			user.setApproveRoles(approveRoles);
+			EntityUtil.saveEntity(userRepo, user, "user");
+			return true;
+        } catch (Exception e) {
+			return false;
+		}
 	}
 }

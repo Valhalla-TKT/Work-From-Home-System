@@ -7,6 +7,7 @@
  */
 package com.kage.wfhs.controller.api;
 
+import com.kage.wfhs.dto.ApproveRoleDto;
 import com.kage.wfhs.dto.UserDto;
 import com.kage.wfhs.dto.WorkFlowOrderDto;
 import com.kage.wfhs.service.UserService;
@@ -48,9 +49,16 @@ public class UserController {
     public ResponseEntity<String> updateApproveRole(
     		@RequestParam(value = "userId") long userId,
     		@RequestParam(value = "approveRoleId") List<Long> approveRoleIdList
-    		) {    	
-    	// need to implement
-        return ResponseEntity.ok("Update User Role Success...");    
+    		) {
+        for (Long approveRoleDto : approveRoleIdList) {
+            System.out.println(approveRoleDto + " ");
+        }
+        boolean approveRoleSaved = userService.updateApproveRole(userId, approveRoleIdList);
+        if (approveRoleSaved) {
+            return ResponseEntity.ok("Update Approve Role Success...");
+        } else {
+            return ResponseEntity.status(500).body("Update User Role Failed...");
+        }
     }
     
     @PostMapping("/getAllTeamMember")
@@ -95,6 +103,26 @@ public class UserController {
     @PostMapping("/division/{divisionId}")
     public ResponseEntity<List<UserDto>> getAllUserByDivisionId(@PathVariable("divisionId") Long divisionId){
         return ResponseEntity.ok(userService.getAllDivisionMember(divisionId));
+    }
+
+    @PostMapping("/gender")
+    public ResponseEntity<List<UserDto>> getAllUserByGender(@RequestParam("gender") String gender){
+        return ResponseEntity.ok(userService.getAllUserByGender(gender));
+    }
+
+    @PostMapping("/team/{teamId}/gender/{gender}")
+    public ResponseEntity<List<UserDto>> getAllUserByTeamIdAndGender(@PathVariable("teamId") Long teamId, @PathVariable("gender") String gender){
+        return ResponseEntity.ok(userService.getAllUserByTeamIdAndGender(teamId, gender));
+    }
+
+    @PostMapping("/department/{departmentId}/gender/{gender}")
+    public ResponseEntity<List<UserDto>> getUsersByDepartmentIdAndGender(@PathVariable("departmentId") Long departmentId, @PathVariable("gender") String gender){
+        return ResponseEntity.ok(userService.getAllUserByDepartmentIdAndGender(departmentId, gender));
+    }
+
+    @PostMapping("/division/{divisionId}/gender/{gender}")
+    public ResponseEntity<List<UserDto>> getUsersByDivisionIdAndGender(@PathVariable("divisionId") Long divisionId, @PathVariable("gender") String gender){
+        return ResponseEntity.ok(userService.getAllUserByDivisionIdAndGender(divisionId, gender));
     }
     
     @PostMapping("/userList")

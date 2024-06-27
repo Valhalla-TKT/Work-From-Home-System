@@ -8,6 +8,7 @@
 package com.kage.wfhs.controller.view;
 
 import com.kage.wfhs.dto.UserDto;
+import com.kage.wfhs.dto.auth.CurrentLoginUserDto;
 import com.kage.wfhs.model.ApproveRole;
 import com.kage.wfhs.repository.DepartmentRepository;
 import com.kage.wfhs.repository.DivisionRepository;
@@ -57,7 +58,7 @@ public class ViewController {
     public String home(HttpSession session, ModelMap model){
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if(authentication != null && authentication.isAuthenticated()){
-            UserDto userDto = userService.getLoginUserBystaffId(authentication.getName());
+            CurrentLoginUserDto userDto = userService.getLoginUserBystaffId(authentication.getName());
             //session.setAttribute("login-user", userDto);
             int notificationTypeCount = notificationTypeService.getAllNotificationTypes().size();
             if(notificationTypeCount == 0) {

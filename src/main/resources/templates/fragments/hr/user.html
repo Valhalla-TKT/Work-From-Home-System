@@ -13,27 +13,6 @@
 			<div id="content" role="main">
 				<script src="../cdn.dribbble.com/assets/packs/js/jobs-landing.0b84700565e7372a2aee.js"></script>
 				<div class="container-medium">
-					<div class="hero-banner">
-						<div class="banner-content">
-							<h1 class="job-banner-heading">
-								Maximizing Staff Efficiency
-							</h1>
-							<p class="margin-t-16 color-deep-blue-sea-light-20">
-								Streamlining operations and fostering clear communication to enhance staff productivity.
-							</p>
-							<div class="banner-buttons-container margin-t-24">
-								<a class="job-banner-cta js-job-cta btn2 btn2--large add-data" href="#">
-									<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
-										fill="none" role="img" class="icon">
-										<path d="M12 5V19M5 12H19" stroke="currentColor" stroke-width="2"
-											stroke-linecap="round" stroke-linejoin="round"></path>
-									</svg>
-									Add Staff
-								</a>
-							</div>
-						</div>
-					</div>
-
 					<div class="content-container display-flex direction-col-reverse">
 						<div class="job-listings-container flex-1">
 							<form data-search-input-form class="search-input-form">
@@ -54,11 +33,20 @@
 								</label>
 							</form>
 
-							<div class="display-flex align-center new-opportunities-container justify-space-between margin-b-40 margin-t-40">
-								<div>
+							<div
+								class="display-flex align-center new-opportunities-container justify-space-between margin-b-40 margin-t-40">
+								<div class="add-function">
 									<div class="display-flex align-center">
 										<div class="new-opportunities-heading">All staffs</div>
 									</div>
+									<a class="job-banner-cta js-job-cta btn2 add-data" href="#">
+										<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+											viewBox="0 0 24 24" fill="none" role="img" class="icon">
+											<path d="M12 5V19M5 12H19" stroke="currentColor" stroke-width="2"
+												stroke-linecap="round" stroke-linejoin="round"></path>
+										</svg>
+										Add Staff
+									</a>
 								</div>
 
 								<a class="form-btn outlined filters-button filters-toggle-btn" href="#">
@@ -72,8 +60,13 @@
 									<span class="label" title="Filters">Filters</span>
 								</a>
 							</div>
-							<div class="staff-card-container" id="staff-list" style="margin-top: 50px; display: flex !important; flex-wrap:wrap !important; justify-content: center; align-items:center;">
+							<div class="staff-card-container" id="staff-list"
+								style="margin-top: 50px; display: flex !important; flex-wrap:wrap !important; justify-content: space-between; align-items:center;">
 
+							</div>
+							<div id="pagination-controls" style="text-align: center;">
+								<button id="load-more" class="btn2 btn2--large" style="text-align: center; ">Load
+									More</button>
 							</div>
 						</div>
 						<div class="search-filters-container">
@@ -83,33 +76,31 @@
 								<span>Total Staffs : <span id="total-count"></span></span>
 							</div> <br>
 							<div class="search-filters job-board-filters-form js-filters">
-								<form class="job-filters js-job-search-form" id="options"
-									action="#" accept-charset="UTF-8" method="get">
+								<form class="job-filters js-job-search-form" id="options" action="#"
+									accept-charset="UTF-8" method="get">
 									<label for="keyword" class="hide" aria-hidden="true">Filter</label>
 									<input type="text" name="keyword" id="keyword" placeholder="Company, skill, tag…"
 										class="hide js-keyword input-with-outline-only" aria-hidden="true" />
-									<label for="role-name">Position</label>
-									<select type="text" name="" id="position-filter" placeholder="Enter Location…" accordionclass="js-location input-with-outline-only" style="width: 100%; margin-bottom: 10px;"></select>
-									<label for="role-name">Gender</label>
-									<select type="text" name="" id="gender-filter" placeholder="Enter Location…" class="js-location input-with-outline-only" style="width: 100%; margin-bottom: 10px;">
+									<label for="gender-filter">Gender</label>
+									<select type="text" name="" id="gender-filter" placeholder="Enter Location…"
+										class="js-location input-with-outline-only"
+										style="width: 100%; margin-bottom: 10px;">
 										<option value="all">Select Staff Gender</option>
 										<option value="male">Male</option>
 										<option value="female">Female</option>
 									</select>
-									<label for="role-name">Team</label>
-									<select type="text" name="" id="team-filter" placeholder="Enter Location…" class="js-location input-with-outline-only" style="width: 100%; margin-bottom: 10px;"></select>
-									<label for="role-name">Department</label>
-									<select type="text" name="" id="department-filter" placeholder="Enter Location…" class="js-location input-with-outline-only" style="width: 100%; margin-bottom: 10px;"></select>
-									<label for="role-name">Division</label>
-									<select type="text" name="" id="division-filter" placeholder="Enter Location…" class="js-location input-with-outline-only" style="width: 100%; margin-bottom: 10px;"></select>
-									
-
-									<div class="submit submit-container">
-										<input type="submit" value="Filter" class="js-job-submit form-sub w-100"
-											disabled="true" />
-										<a class="margin-t-16 job-board-clear-filters"
-											href="#">Clear Filters</a>
-									</div>
+									<label for="division-filter">Division</label>
+									<select type="text" name="" id="division-filter" placeholder="Enter Location…"
+										class="js-location input-with-outline-only"
+										style="width: 100%; margin-bottom: 10px;"></select>
+									<label for="department-filter">Department</label>
+									<select type="text" name="" id="department-filter" placeholder="Enter Location…"
+										class="js-location input-with-outline-only"
+										style="width: 100%; margin-bottom: 10px;"></select>
+									<label for="team-filter">Team</label>
+									<select type="text" name="" id="team-filter" placeholder="Enter Location…"
+										class="js-location input-with-outline-only"
+										style="width: 100%; margin-bottom: 10px;"></select>
 								</form>
 							</div>
 						</div>
@@ -117,7 +108,8 @@
 				</div>
 			</div>
 		</div>
-		<div id="add-data-overlay" >
+
+		<div id="add-data-overlay">
 			<div id="add-data-modal" class="add-data-modal" style="width: 30%; height: 60%; overflow:auto;">
 				<div class="add-data-modal-content">
 					<div class="form-title">
@@ -125,6 +117,21 @@
 						<span class="close">&times;</span>
 					</div> <br>
 					<form id="addForm">
+						<label for="staff-id">Staff ID</label>
+						<input type="tel" id="staff-id" placeholder="xx-xxxxx"
+							required="required" step="any">
+						<label for="name">Staff Name</label>
+						<input type="text" id="name" placeholder="e.g. John" required="required">
+						<label for="email">Email</label>
+						<input type="email" id="email" placeholder="e.g. xxx@diracetechnology.com" required="required">
+						<label for="gender">Choose Gender</label>
+						<select id="gender" required="required" style="width: 100%" step="any">
+							<option selected="selected" disabled="disabled"> Select Gender</option>
+							<option value="M">Male</option>
+							<option value="F">Female</option>
+						</select>
+						<label for="position-name">His/Her Position</label>
+						<input type="text" id="position-name" placeholder="e.g. Software Engineer" required="required">
 						<label for="approveRoleSelectBox">Choose Permission</label>
 						<select id="approveRoleSelectBox" required="required" style="width: 100%" step="any"></select>
 						<div id="team-data">
@@ -139,77 +146,52 @@
 							<label for="division-name">Choose division He/She Has To Join</label>
 							<select id="division-name" required="required" style="width: 100%" step="any"></select>
 						</div>
-						<label for="staff-id">Staff ID</label>
-						<input type="tel" id="staff-id" placeholder="xx-xxxxx" pattern="[0-9]{3}-[0-9]{3}-[0-9]{3}" required="required" step="any" disabled>
-						<label for="name">Staff Name</label>
-						<input type="text" id="name" placeholder="e.g. Thant Htoo Aung" required="required">
-						<label for="email">Email</label>
-						<input type="email" id="email" placeholder="e.g. xxx@gmail.com" required="required">
-						<label for="phone-number">Phone</label>
-						<input type="tel" id="phone-number" placeholder="e.g. 09 123 456 789" required="required">
-						<label for="join-date">Choose Date he/she joined</label>
-						<input type="text" id="join-date" placeholder="dd-mm-yy" required="required">
-						<label for="gender">Choose Gender</label>
-						<select id="gender" required="required" style="width: 100%" step="any">
-							<option selected="selected" disabled="disabled"> Select Gender</option>
-							<option value="M">Male</option>
-							<option value="F">Female</option>
-						</select>
-						<label for="role-name">Choose His/Her Role</label>
-						<select id="role-name" required="required" style="width: 100%" step="any"></select>
-						<label for="position-name">Choose His/Her Position</label>
-						<select id="position-name" required="required" style="width: 100%" step="any"></select>
-						<label for="parentRadio"> Does he/she Have Parent?  </label>
-						<div data-v-42dea6db="" class="radio-button-container">
-							<div class="radio-button w-50">
-								<input type="radio" class="radio-button__input" id="parentRadio" name="parent" value="true">
-								<label class="radio-button__label 1" for="parentRadio" style="padding-top: 0px;">
-									<span class="radio-button__custom"></span> Yes
-								</label>
-							</div>
-							<div class="radio-button w-50">
-								<input type="radio" class="radio-button__input" id="parentRadio1" name="parent" value="false">
-								<label class="radio-button__label 2" for="parentRadio1" style="padding-top: 0px;">
-									<span class="radio-button__custom"></span> No
-								</label>
-							</div>
-						</div>
-						<label for="maritalStatusRadio1"> His/Her Marital Status?  </label>
-						<div data-v-42dea6db="" class="radio-button-container">
-							<div class="radio-button w-50">
-								<input type="radio" class="radio-button__input" id="maritalStatusRadio1" name="marital_status" value="true">
-								<label class="radio-button__label 3" for="maritalStatusRadio1" style="padding-top: 0px;">
-									<span class="radio-button__custom"></span> Marriage
-								</label>
-							</div>
-							<div class="radio-button w-50">
-								<input type="radio" class="radio-button__input" id="maritalStatusRadio2" name="marital_status" value="false">
-								<label class="radio-button__label 4" for="maritalStatusRadio2" style="padding-top: 0px;">
-									<span class="radio-button__custom"></span> Single
-								</label>
-							</div>
-						</div>
-						<label for="hasChildren1"> Does he/she Has Children?  </label>
-						<div data-v-42dea6db="" class="radio-button-container">
-							<div class="radio-button w-50">
-								<input type="radio" class="radio-button__input" id="hasChildren1" name="children" value="true">
-								<label class="radio-button__label 5" for="hasChildren1" style="padding-top: 0px;">
-									<span class="radio-button__custom"></span> Yes
-								</label>
-							</div>
-							<div class="radio-button w-50">
-								<input type="radio" class="radio-button__input" id="hasChildren2" name="children" value="false">
-								<label class="radio-button__label 6" for="hasChildren2" style="padding-top: 0px;">
-									<span class="radio-button__custom"></span> No
-								</label>
-							</div>
-						</div>
-
 						<button class="btn2 add-data-btn" type="button" id="create-staff">Add Staff</button>
+					</form>
+				</div>
+			</div>
+		</div>
+
+		<!-- Detail Modal -->
+		<div id="detail-data-overlay" style="display: none;">
+			<div id="detail-data-modal" class="add-data-modal" style="width: 30%; height: 60%; overflow:auto;">
+				<div class="add-data-modal-content">
+					<div class="form-title">
+						<span class="title">Staff Detail</span>
+						<span class="close">&times;</span>
+					</div> <br>
+					<form id="detail">
+						<label for="staff-id-detail">Staff ID</label>
+						<input type="tel" id="staff-id-detail" style="color: #0d0c22; background: #fff;" placeholder="xx-xxxxx"
+							   required="required" step="any" disabled>
+						<label for="name-detail">Staff Name</label>
+						<input type="text" id="name-detail" placeholder="e.g. John" required="required" style="color: #0d0c22; background: #fff;" disabled>
+						<label for="email-detail">Email</label>
+						<input type="email" id="email-detail" placeholder="e.g. xxx@gmail.com" required="required" style="color: #0d0c22; background: #fff;" disabled>
+						<label for="gender-detail">Choose Gender</label>
+						<input type="text" id="gender-detail" required="required" style="color: #0d0c22; background: #fff;" disabled>
+						<label for="position-name-detail">His/Her Position</label>
+						<input type="text" id="position-name-detail" placeholder="e.g. Software Engineer" required="required" style="color: #0d0c22; background: #fff;">
+						<label for="approveRoleSelectBoxDetail">Choose Permission</label>
+						<select id="approveRoleSelectBoxDetail" required="required" style="width: 100%" step="any"></select>
+						<div id="team-data-detail">
+							<label for="team-name">Choose Team He/She Has To Join</label>
+							<select id="team-name" required="required" style="width: 100%" step="any"></select>
+						</div>
+						<div id="department-data">
+							<label for="department-name">Choose department He/She Has To Join</label>
+							<select id="department-name" required="required" style="width: 100%" step="any"></select>
+						</div>
+						<div id="division-data">
+							<label for="division-name">Choose division He/She Has To Join</label>
+							<select id="division-name" required="required" style="width: 100%" step="any"></select>
+						</div>
+						<button class="btn2 add-data-btn" type="button" id="edit-staff">Save Changes</button>
 					</form>
 				</div>
 			</div>
 		</div>
 	</div>
 </body>
+
 </html>

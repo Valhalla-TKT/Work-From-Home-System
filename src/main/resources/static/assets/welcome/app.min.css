@@ -4,7 +4,7 @@
  * Copyright 2011-2020 Twitter, Inc.
  * Licensed under MIT (https://github.com/twbs/bootstrap/blob/main/LICENSE)
  */
- :root {
+:root {
     --bs-blue: #0d6efd;
     --bs-indigo: #6610f2;
     --bs-purple: #6f42c1;
@@ -29,6 +29,19 @@
     --bs-font-sans-serif: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", "Liberation Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
     --bs-font-monospace: SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
     --bs-gradient: linear-gradient(180deg, hsla(0, 0%, 100%, 0.15), hsla(0, 0%, 100%, 0))
+}
+
+:root {
+    --btn-bg-color: #0d0c22;
+    --btn-bg-color-hover: #565564;
+    --btn-text-color: #fff;
+    --btn-text-color-hover: #fff;
+    --btn-border-color: var(--btn-bg-color);
+    --btn-border-color-hover: var(--btn-bg-color-hover);
+    --btn-height: 40px;
+    --btn-padding: 20px;
+    --btn-font-size: 13px;
+    --btn-icon-size: 16px
 }
 
 *,
@@ -13086,6 +13099,8 @@ body.plate-show:after {
 }
 
 .swal2-modal {
+    display: flex !important;
+    flex-direction: column;
     border-radius: .5rem
 }
 
@@ -13098,23 +13113,80 @@ body.plate-show:after {
 }
 
 .swal2-modal .swal2-actions button {
+    display: flex;
     border-radius: .5rem;
     padding: .375rem .75rem
 }
 
 .swal2-modal .swal2-actions .swal2-confirm {
-    background: #ff6e40;
-    color: #fff
+    width: var(--btn-width, -webkit-min-content);
+    width: var(--btn-width, -moz-min-content);
+    width: var(--btn-width, min-content);
+    height: var(--btn-height);
+    padding: 0 var(--btn-padding);
+    -webkit-transition: 0.15s cubic-bezier(0.32, 0, 0.59, 0.03);
+    transition: 0.15s cubic-bezier(0.32, 0, 0.59, 0.03);
+    -webkit-transition-property: color, background-color, border, border-radius;
+    transition-property: color, background-color, border, border-radius;
+    border: var(--btn-border-width, 1.5px) solid var(--btn-border-color, var(--btn-bg-color));
+    border-radius: var(--btn-border-radius, 9999999px);
+    background-color: var(--btn-bg-color);
+    color: var(--btn-text-color);
+    font-family: inherit;
+    font-size: var(--btn-font-size);
+    font-weight: var(--btn-font-weight, 600);
+    line-height: 1;
+    text-decoration: none;
+    white-space: nowrap;
+    cursor: pointer;
+    gap: var(--btn-gap, 8px)
 }
 
 .swal2-modal .swal2-actions .swal2-deny {
-    background: #ededed;
-    color: #000
+    width: var(--btn-width, -webkit-min-content);
+    width: var(--btn-width, -moz-min-content);
+    width: var(--btn-width, min-content);
+    height: var(--btn-height);
+    padding: 0 var(--btn-padding);
+    -webkit-transition: 0.15s cubic-bezier(0.32, 0, 0.59, 0.03);
+    transition: 0.15s cubic-bezier(0.32, 0, 0.59, 0.03);
+    -webkit-transition-property: color, background-color, border, border-radius;
+    transition-property: color, background-color, border, border-radius;
+    border-radius: var(--btn-border-radius, 9999999px);
+    background-color: var(--bs-danger);
+    color: var(--btn-text-color);
+    font-family: inherit;
+    font-size: var(--btn-font-size);
+    font-weight: var(--btn-font-weight, 600);
+    line-height: 1;
+    text-decoration: none;
+    white-space: nowrap;
+    cursor: pointer;
+    gap: var(--btn-gap, 8px)
 }
 
 .swal2-modal .swal2-actions .swal2-cancel {
-    background: #ea4444;
-    color: #fff
+    width: var(--btn-width, -webkit-min-content);
+    width: var(--btn-width, -moz-min-content);
+    width: var(--btn-width, min-content);
+    height: var(--btn-height);
+    padding: 0 var(--btn-padding);
+    -webkit-transition: 0.15s cubic-bezier(0.32, 0, 0.59, 0.03);
+    transition: 0.15s cubic-bezier(0.32, 0, 0.59, 0.03);
+    -webkit-transition-property: color, background-color, border, border-radius;
+    transition-property: color, background-color, border, border-radius;
+    border: var(--btn-border-width, 1.5px) solid var(--btn-border-color, var(--btn-bg-color));
+    border-radius: var(--btn-border-radius, 9999999px);
+    background-color: #fff;
+    color: black;
+    font-family: inherit;
+    font-size: var(--btn-font-size);
+    font-weight: var(--btn-font-weight, 600);
+    line-height: 1;
+    text-decoration: none;
+    white-space: nowrap;
+    cursor: pointer;
+    gap: var(--btn-gap, 8px)
 }
 
 .swal2-modal .swal2-icon.swal2-error {
@@ -17204,19 +17276,19 @@ blockquote * {
 }
 
 #my-Modal {
-    display: none; 
-    position: fixed; 
-    padding-top: 3%; 
+    display: none;
+    position: fixed;
+    padding-top: 3%;
     left: 0;
     top: 0;
-    width: 100%; 
-    height: 100%; 
-    overflow: auto; 
-    background-color: rgb(0,0,0); 
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgb(0,0,0);
     background-color: rgba(0,0,0,0.8);
-  }
+}
 
-  .modal-content {
+.modal-content {
     top: 0;
     z-index: 999;
     position: relative;
@@ -17225,20 +17297,20 @@ blockquote * {
     padding: 20px;
     border: 1px solid #888;
     width: 50%;
-  }
+}
 
-  .modal-content p {
+.modal-content p {
     font-family: Poppins, sans-serif;
     color: #ff6e40;
     text-align: center;
     font-weight: 500;
     font-size: 1.2rem;
-    border-bottom: 1px solid #ff6e40; 
+    border-bottom: 1px solid #ff6e40;
     padding-top: 20px;
     padding-bottom: 30px;
-  }
+}
 
-  .close {
+.close {
     margin-right: 3%;
     margin-top: 1%;
     top: 0;
@@ -17247,14 +17319,14 @@ blockquote * {
     color: #aaaaaa;
     font-size: 30px;
     font-weight: bold;
-  }
-  
-  .close:hover,
-  .close:focus {
+}
+
+.close:hover,
+.close:focus {
     color: #000;
     text-decoration: none;
     cursor: pointer;
-  }
+}
 .edit-form {
     display: none;
 }

@@ -56,7 +56,7 @@ public class SecurityConfig {
                 .cors(Customizer.withDefaults())
                 .httpBasic(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/static/**", "/assets/**", "/swagger-ui/**", "/icons/**", "/formImages/**", "/images/**", "/ws/**").permitAll()
+                        .requestMatchers("/static/**", "/assets/**", "/swagger-ui/**", "/icons/**", "/formImages/**", "/images/**", "/ws/**", "/auth/**").permitAll()
                         .requestMatchers("/admin/**").access((authentication, context) -> {
                             Authentication authen = authentication.get();
                             boolean isApplicant = authen.getAuthorities().stream()
@@ -64,6 +64,7 @@ public class SecurityConfig {
                             return isApplicant ? new org.springframework.security.authorization.AuthorizationDecision(false)
                                     : new org.springframework.security.authorization.AuthorizationDecision(true);
                         })
+//                        .requestMatchers("/api/admin/importExcel").permitAll()
                         .anyRequest().authenticated()
                 )
                 .exceptionHandling(exceptionHandling -> exceptionHandling.accessDeniedPage("/accessDenied"))
@@ -81,7 +82,7 @@ public class SecurityConfig {
                                             cookie.setPath("/");
                                             cookie.setMaxAge(86400); // 1 day
                                             response.addCookie(cookie);
-                                            UserDto userDto = userService.getLoginUserBystaffId(authentication.getName());
+                                            CurrentLoginUserDto userDto = userService.getLoginUserBystaffId(authentication.getName());
                                             request.getSession().setAttribute("login-user", userDto);
                                             response.sendRedirect("/dashboard");
 

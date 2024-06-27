@@ -1,21 +1,26 @@
-$(document).ready(function(){
-    getAllUser();
+$(document).ready( function(){
+    let approveRoles = [];
+     getAllUser(1, true);
     toggleSections();
     $('#join-date').dateDropper({
         format: 'd-m-Y',
     });
     getAllTeam(), getAllDepartment(), getAllDivision(), getAllApproveRole()
-    $('#team-filter').on('change', getAllUser);
+    $('#team-filter').on('change', async function() {
+        await getAllUser(1);
+    });
     $('#department-filter').on('change', async function() {
         await updateTeamsByDepartment();
-        await getAllUser();
+        await getAllUser(1);
     });
     $('#division-filter').on('change', async function() {
         await updateDepartmentsByDivision();
         await updateTeamsByDivision();
-        await getAllUser();
+        await getAllUser(1);
     });
-    $('#gender-filter').on('change', getAllUser);
+    $('#gender-filter').on('change', async function() {
+        await getAllUser(1)
+    });
 
     $('#gender').change(function() {
         var selectedGender = $(this).val();
@@ -147,7 +152,6 @@ $(document).ready(function(){
                     var option = $('<option>', {
                         value: response[i].id,
                         text: response[i].name,
-                        'data-code': response[i].code
                     });
                     selectBox.append(option);
                 }
@@ -158,7 +162,6 @@ $(document).ready(function(){
                     var option = $('<option>', {
                         value: response[i].id,
                         text: response[i].name,
-                        'data-code': response[i].code
                     });
                     selectBox.append(option);
                 }
@@ -171,11 +174,15 @@ $(document).ready(function(){
     async function updateTeamsByDepartment() {
         try {
             var departmentId = $('#department-filter').val();
+            var divisionId = $('#division-filter').val();
             var teams = [];
 
             if (departmentId !== 'all') {
                 teams = await getTeamsByDepartmentId(departmentId);
-            } else {
+            } else if (divisionId !== 'all') {
+                teams = await getTeamsByDivisionId(divisionId);
+            }
+            else {
                 teams = await fetchTeams();
             }
 
@@ -187,7 +194,6 @@ $(document).ready(function(){
                 var option = $('<option>', {
                     value: team.id,
                     text: team.name,
-                    'data-code': team.code
                 });
                 selectBox.append(option);
             });
@@ -206,7 +212,6 @@ $(document).ready(function(){
                     var option = $('<option>', {
                         value: response[i].id,
                         text: response[i].name,
-                        'data-code': response[i].code
                     });
                     selectBox.append(option);
                 }
@@ -217,7 +222,6 @@ $(document).ready(function(){
                     var option = $('<option>', {
                         value: response[i].id,
                         text: response[i].name,
-                        'data-code': response[i].code
                     });
                     selectBox.append(option);
                 }
@@ -246,7 +250,6 @@ $(document).ready(function(){
                 var option = $('<option>', {
                     value: department.id,
                     text: department.name,
-                    'data-code': department.code
                 });
                 selectBox.append(option);
             });
@@ -274,7 +277,6 @@ $(document).ready(function(){
                 var option = $('<option>', {
                     value: team.id,
                     text: team.name,
-                    'data-code': team.code
                 });
                 selectBox.append(option);
             });
@@ -293,7 +295,6 @@ $(document).ready(function(){
                     var option = $('<option>', {
                         value: response[i].id,
                         text: response[i].name,
-                        'data-code': response[i].code
                     });
                     selectBox.append(option);
                 }
@@ -304,7 +305,6 @@ $(document).ready(function(){
                     var option = $('<option>', {
                         value: response[i].id,
                         text: response[i].name,
-                        'data-code': response[i].code
                     });
                     selectBox.append(option);
                 }
@@ -314,111 +314,162 @@ $(document).ready(function(){
             })
     }
 
-    function getAllPosition() {
-        $.ajax({
-            url: `http://localhost:8080/api/position/positionList`,
-            type: 'POST',
-            contentType: 'application/json',
-            success: function (response) {
-                var selectBox = $('#position-name');
-                selectBox.empty();
-                selectBox.append('<option value="" disabled selected>Select Position Name</option>');
-                for (var i = 0; i < response.length; i++) {
-                    var option = $('<option>', {
-                        value: response[i].id,
-                        text: response[i].name,
-                        'data-code': response[i].code
-                    });
-                    selectBox.append(option);
-                }
-                var selectBox = $('#position-filter');
-                selectBox.empty();
-                selectBox.append('<option value="" disabled selected>Select Position Name</option>');
-                for (var i = 0; i < response.length; i++) {
-                    var option = $('<option>', {
-                        value: response[i].id,
-                        text: response[i].name,
-                        'data-code': response[i].code
-                    });
-                    selectBox.append(option);
-                }
-            },
-            error: function (error) {
-                console.error('Error:', error);
-            }
-        });
+    var currentPage = 1;
+    var usersPerPage = 10;
+
+    function renderLoadMoreButton(totalCount, currentCount) {
+        console.log("totalCount = ", totalCount, ", currentCount = ", currentCount)
+        if (currentCount < totalCount) {
+            $('#load-more').show();
+        } else {
+            $('#load-more').hide();
+        }
     }
 
-    async function getAllUser() {
-        $('#staff-list').empty();
-        var rowCount = 0;
+    async function getAllUser(page = 1, appendData = false) {
         var selectedTeamId = $('#team-filter').val();
         var selectedDepartmentId = $('#department-filter').val();
         var selectedDivisionId = $('#division-filter').val();
         var selectedGender = $('#gender-filter').val();
         let response;
-        if (selectedTeamId && selectedTeamId !== "all") {
-            response = await getUsersByTeamId(selectedTeamId);
-        } else if (selectedDepartmentId && selectedDepartmentId !== "all") {
-            response = await getUsersByDepartmentId(selectedDepartmentId);
-        } else if (selectedDivisionId && selectedDivisionId !== "all") {
-            response = await getUsersByDivisionId(selectedDivisionId);
-        } else {
-            response = await fetchUsers();
+
+        // Clear staff list based on filter
+        if (!appendData) {
+            $('#staff-list').empty();
         }
 
-        if (response === null || response === undefined) {
-            console.log("User is null.");
-        } else if (Array.isArray(response)) {
-            if (response.length === 0) {
-                console.log("Response List length is 0.");
+        try {
+            if (selectedGender === "all") {
+                if (selectedTeamId && selectedTeamId !== "all") {
+                    response = await getUsersByTeamId(selectedTeamId);
+                } else if (selectedDepartmentId && selectedDepartmentId !== "all") {
+                    response = await getUsersByDepartmentId(selectedDepartmentId);
+                } else if (selectedDivisionId && selectedDivisionId !== "all") {
+                    response = await getUsersByDivisionId(selectedDivisionId);
+                } else {
+                    response = await fetchUsers();
+                }
             } else {
-                response.forEach(function (user){
-                    if (selectedGender && selectedGender !== "all" && user.gender !== selectedGender) {
-                        return;
-                    }
-                    rowCount++;
-                    $('#staff-list').append(`
-                      <a href="detail"
-                                        class="js-resume-card resume-card  designer-search-card resume-card-sections-hidden  js-user-row-6234">
-                        <div class="resume-card-header resume-section-padding  ">
-                          <div class="resume-card-header-designer">
-                            <img class="resume-card-avatar" alt="Halo UI/UX" width="62" height="62"
-                              src="/assets/icons/DAT Logo.png" />
-                            <div class="resume-card-header-details">
-                              <div class="resume-card-title">
-                                <h3 class="resume-card-designer-name user-select-none">
-                                  ${user.name}
-                                </h3>
-                                <span class="badge badge-pro">${user.staffId}</span>
-                              </div>
-    
-                              <span class="resume-card-header-text">
-                                <p>
-                                  <span class="resume-card-location">${user.divisionName}</span>                                      
-                                </p>
-                              </span>               
-                            </div>
-    
-    
-                          </div>
-    
-                        </div>
-    
-                      </a>
-                      `);
-                });
+                if (selectedTeamId && selectedTeamId !== "all") {
+                    response = await getUsersByTeamIdAndGender(selectedTeamId, selectedGender);
+                } else if (selectedDepartmentId && selectedDepartmentId !== "all") {
+                    response = await getUsersByDepartmentIdAndGender(selectedDepartmentId, selectedGender);
+                } else if (selectedDivisionId && selectedDivisionId !== "all") {
+                    response = await getUsersByDivisionIdAndGender(selectedDivisionId, selectedGender);
+                } else {
+                    response = await getUsersByGender(selectedGender);
+                }
             }
-            document.getElementById("total-count").innerText = rowCount;
-        }
 
+            var totalUsers = response.length;
+            var start = (page - 1) * usersPerPage;
+            var end = start + usersPerPage;
+            var usersToShow = response.slice(start, end);
+
+            console.log(usersToShow)
+            usersToShow.forEach(user => {
+                // if (selectedGender && selectedGender !== "all" && user.gender !== selectedGender) {
+                //     return; // Skip this user if gender doesn't match the filter
+                // }
+
+                // Append user to staff list
+                $('#staff-list').append(`
+                <a href="detail" class="js-resume-card resume-card designer-search-card resume-card-sections-hidden js-user-row-6234" data-user='${JSON.stringify(user)}'>
+                    <div class="resume-card-header resume-section-padding">
+                        <div class="resume-card-header-designer">
+                            <img class="resume-card-avatar" alt="${user.name}" width="70" height="70"
+                                src="/assets/profile/${user.profile}" />                               
+                            <div class="resume-card-header-details">
+                                <div class="resume-card-title">
+                                    <h3 class="resume-card-designer-name user-select-none">
+                                        ${user.name}
+                                    </h3>
+                                    <span class="badge badge-pro">${user.staffId}</span>
+                                </div>
+                                <span class="resume-card-header-text">
+                                    <p>
+                                        <span class="resume-card-location">${user.teamName}</span>
+                                        <span class="resume-card-middot">.</span>
+                                        <span class="resume-card-location">${user.divisionName}</span>
+                                    </p>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </a>
+            `);
+            });
+            addCardEventListeners();
+
+            console.log("hi")
+            renderLoadMoreButton(totalUsers, $('#staff-list').children().length);
+        } catch (error) {
+            console.error('Error in getAllUser:', error);
+        }
     }
+
+    function showDetailModal(user) {
+        document.getElementById('staff-id-detail').value = user.staffId;
+        document.getElementById('name-detail').value = user.name;
+        document.getElementById('email-detail').value = user.email;
+        document.getElementById('gender-detail').value = user.gender;
+        document.getElementById('position-name-detail').value = user.positionName;
+        let userRole = ''
+            user.approveRoles.forEach(role => {
+                userRole = role.name;
+            });
+        const approveRoleSelectBoxDetail = document.getElementById('approveRoleSelectBoxDetail');
+        approveRoleSelectBoxDetail.innerHTML = '';
+        approveRoles.forEach(role => {
+            let option = document.createElement('option');
+            option.value = role.id;
+            option.text = role.name;
+            if (role.name === userRole) {
+                option.selected = true;
+            }
+            approveRoleSelectBoxDetail.appendChild(option);
+        });
+        // document.getElementById('team-name-detail').value = user.teamName;
+        // document.getElementById('department-name-detail').value = user.departmentName;
+        // document.getElementById('division-name-detail').value = user.divisionName;
+        document.getElementById('detail-data-overlay').style.display = 'block';
+    }
+
+    $('#approveRoleSelectBoxDetail').change(function() {
+        var selectedOption = $(this).find('option:selected').text();
+        toggleSections(selectedOption);
+    });
+
+    function addCardEventListeners() {
+        const cards = document.querySelectorAll('.js-resume-card');
+        cards.forEach(card => {
+            card.addEventListener('click', function (event) {
+                event.preventDefault();
+                const user = JSON.parse(card.getAttribute('data-user'));
+                showDetailModal(user);
+            });
+        });
+    }
+
+    document.querySelectorAll('.close').forEach(closeBtn => {
+        closeBtn.addEventListener('click', () => {
+            document.getElementById('detail-data-overlay').style.display = 'none';
+        });
+    });
+
+
+
+    $('#load-more').on('click', async function() {
+        currentPage++;
+        await getAllUser(currentPage, true);
+    });
     function getAllApproveRole() {
         $.ajax({
             url: `http://localhost:8080/api/approveRole/approveRoleList`,
             type: 'POST',
             contentType: 'application/json',
             success: function (response) {
+                approveRoles = response;
                 var selectBox = $('#approveRoleSelectBox');
                 selectBox.empty();
                 selectBox.append('<option value="" disabled selected>Select Approve Role Name</option>');
@@ -426,9 +477,19 @@ $(document).ready(function(){
                     var option = $('<option>', {
                         value: response[i].id,
                         text: response[i].name,
-                        'data-code': response[i].code
                     });
                     selectBox.append(option);
+                }
+                var selectBoxDetail = $('#approveRoleSelectBoxDetail');
+                console.log("Select Approve Role Name");
+                selectBoxDetail.empty();
+                selectBoxDetail.append('<option value="" disabled selected>Select Approve Role Name</option>');
+                for (var j = 0; j < response.length; j++) {
+                    var optionJ = $('<option>', {
+                        value: response[j].id,
+                        text: response[j].name,
+                    });
+                    selectBoxDetail.append(optionJ);
                 }
             },
             error: function (error) {
@@ -444,6 +505,18 @@ $(document).ready(function(){
     }
     async function getUsersByDivisionId(divisionId) {
         return await fetchUsersByDivisionId(divisionId)
+    }
+    async function getUsersByGender(gender) {
+        return await fetchUsersByGender(gender)
+    }
+    async function getUsersByTeamIdAndGender(teamId, gender) {
+        return await fetchUsersByTeamIdAndGender(teamId, gender)
+    }
+    async function getUsersByDepartmentIdAndGender(departmentId, gender) {
+        return await fetchUsersByDepartmentIdAndGender(departmentId, gender)
+    }
+    async function getUsersByDivisionIdAndGender(divisionId, gender) {
+        return await fetchUsersByDivisionIdAndGender(divisionId, gender)
     }
     async function getTeamsByDepartmentId(departmentId) {
         return await fetchTeamsByDepartmentId(departmentId)
