@@ -73,6 +73,7 @@ public class WorkFlowStatusServiceImplement implements WorkFlowStatusService {
             createApproval(registerForm.getId(), "CISO");
         } else {
             ApproveRole approveRole = helper.getMaxOrder(applicant.getApproveRoles());
+            System.out.println("Approve Role: " + approveRole.getName());
             List<User> approvers = findApprovers(applicant, approveRole);
             for (User user : approvers) {
                 WorkFlowStatus workFlowStatus = new WorkFlowStatus();
@@ -102,7 +103,7 @@ public class WorkFlowStatusServiceImplement implements WorkFlowStatusService {
             return approverList;
         }
         if (approveRole.getName().equals("CISO")) {
-            return userRepo.findCISO();
+            return userRepo.findByApproveRoleName("CISO");
         } else {
             return userRepo.findByApproveRole(approveRole.getId());
         }
@@ -135,15 +136,18 @@ public class WorkFlowStatusServiceImplement implements WorkFlowStatusService {
     public void updateStatus(Long id, WorkFlowStatusDto workFlowStatusDto) throws Exception {
     	WorkFlowStatus workFlowStatus = EntityUtil.getEntityById(workFlowStatusRepo, id);      
         RegisterForm form = registerFormRepo.findByWorkFlowStatusId(id);
+        System.out.println("hello aye thu" + form.getApplicant().getName());
 
         WorkFlowStatus cisoApprove = workFlowStatusRepo.findByApproveRoleNameAndFormId(form.getId(), "CISO");
         if(cisoApprove != null){
+            System.out.println("hi");
+            System.out.println(cisoApprove.getUser().getName());
             cisoApprove.setStatus(Status.PENDING);
             cisoApprove.setReason(null);
             cisoApprove.setApprove_date(null);
             workFlowStatusRepo.save(cisoApprove);
         }
-
+        System.out.println("hi");
         Status newStatus = workFlowStatusDto.isState() ? Status.APPROVE : Status.REJECT;
         workFlowStatus.setStatus(newStatus);
         workFlowStatus.setApprove_date(workFlowStatusDto.getApproveDate());
@@ -195,6 +199,7 @@ public class WorkFlowStatusServiceImplement implements WorkFlowStatusService {
         WorkFlowStatus workFlowStatus = new WorkFlowStatus();
         workFlowStatus.setStatus(Status.PENDING);
         workFlowStatus.setRegisterForm(EntityUtil.getEntityById(registerFormRepo, registerFormId));
+        System.out.println("helloooooooooo CISOOOOOOOOOOOOOOOOO");
         workFlowStatus.setUser(userRepo.findByApproveRoles_Name(roleName));
         workFlowStatus.setApproveRole(approveRoleRepo.findByName(roleName));
         workFlowStatusRepo.save(workFlowStatus);

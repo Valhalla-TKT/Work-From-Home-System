@@ -179,22 +179,6 @@ $(document).ready(function() {
 				});
 			    $(".form-card-container").append($aTag);
 			});
-			// $(".form-checkbox").change(function() {
-            //         var checkboxValue = $(this).val();
-            //         if ($(this).prop('checked')) {
-            //             selectedValues.push(checkboxValue);
-			// 			$('.resume-card').addClass('shadow');
-            //             console.log("Checkbox value checked:", checkboxValue);
-            //         } else {
-            //             var index = selectedValues.indexOf(checkboxValue);
-            //             if (index !== -1) {
-            //                 selectedValues.splice(index, 1);
-            //             }
-			// 			$('.resume-card').removeClass('shadow');
-            //         }
-            //         console.log("Selected values:", selectedValues);
-            //     });
-			//
             },
             error: function(xhr, status, error) {
                 console.error('Error:', error);
@@ -219,113 +203,112 @@ $(document).ready(function() {
 				console.log('Success:', applicantList);
 				$(".form-card-container").empty();
 				forms.forEach(function(form, index) {
-				var applicant = applicantList[index];
-				var $aTag = $("<div>", {
+					var applicant = applicantList[index];
+					var $aTag = $("<div>", {
 
-					class: "js-resume-card resume-card designer-search-card resume-card-sections-hidden js-user-row-" + form.id
-				});
-				var $header = $("<div>", {
-					class: "resume-card-header resume-section-padding"
-				});
-				var $designer = $("<div>", {
-					class: "resume-card-header-designer"
-				});
-				var $avatar = $("<img>", {
-					class: "resume-card-avatar",
-					alt: `${applicant.name} photo`,
-					src: `/assets/profile/${applicant.profile}`,
-					width: "80",
-					height: "80",
-				});
-				var $details = $("<div>", {
-					class: "resume-card-header-details"
-				});
-				var $title = $("<div>", {
-					class: "resume-card-title"
-				}).append(
-					$("<h3>", {
-						class: "resume-card-designer-name user-select-none",
-						text: applicant.name
-					}),
-					$("<span>", {
-						class: "badge badge-pro",
-						text: form.currentStatus
-					})
-				);
-				var $text = $("<span>", {
-					class: "resume-card-header-text"
-				}).append(
-					$("<p>").append(
-						$("<span>", {
-							class: "resume-card-location",
-							text: applicant.positionName
+						class: "js-resume-card resume-card designer-search-card resume-card-sections-hidden js-user-row-" + form.id
+					});
+					var $header = $("<div>", {
+						class: "resume-card-header resume-section-padding"
+					});
+					var $designer = $("<div>", {
+						class: "resume-card-header-designer"
+					});
+					var $avatar = $("<img>", {
+						class: "resume-card-avatar",
+						alt: `${applicant.name} photo`,
+						src: `/assets/profile/${applicant.profile}`,
+						width: "80",
+						height: "80",
+					});
+					var $details = $("<div>", {
+						class: "resume-card-header-details"
+					});
+					var $title = $("<div>", {
+						class: "resume-card-title"
+					}).append(
+						$("<h3>", {
+							class: "resume-card-designer-name user-select-none",
+							text: applicant.name
 						}),
 						$("<span>", {
-							class: "resume-card-middot",
-							text: "•"
-						}),
-						$("<span>", {
-							text: applicant.teamName
-						}),
-						$("<br />", {
-							class: "resume-card-middot",
-							text: "•"
-						}),
-						$("<span>", {
-							text: applicant.departmentName
-						}),
-					),
-					$("<input>", {
-						type: "checkbox",
-						class: "resume-card-checkbox",
-						value: form.id,
-						css: {
-							display: 'none'
+							class: "badge badge-pro",
+							text: form.currentStatus
+						})
+					);
+					var $text = $("<span>", {
+						class: "resume-card-header-text"
+					}).append(
+						$("<p>").append(
+							$("<span>", {
+								class: "resume-card-location",
+								text: applicant.positionName
+							}),
+							$("<span>", {
+								class: "resume-card-middot",
+								text: "•"
+							}),
+							$("<span>", {
+								text: applicant.teamName
+							}),
+							$("<br />", {
+								class: "resume-card-middot",
+								text: "•"
+							}),
+							$("<span>", {
+								text: applicant.departmentName
+							}),
+						),
+						$("<input>", {
+							type: "checkbox",
+							class: "resume-card-checkbox",
+							value: form.id,
+							css: {
+								display: 'none'
+							}
+						})
+					);
+					var $goDetail = $("<span>", {
+						class: "view-form-detail",
+						text: "Double Click to View Detail"
+					});
+					$details.append($title, $text, $goDetail);
+					$designer.append($avatar, $details );
+					$header.append($designer);
+					$aTag.append($header);
+					$aTag.on('click', function() {
+						var $checkbox = $(this).find(".resume-card-checkbox");
+						if ($checkbox.prop('checked')) {
+							$checkbox.prop('checked', false);
+							$(this).removeClass('shadow');
+						} else {
+							$checkbox.prop('checked', true);
+							$(this).addClass('shadow');
 						}
-					})
-				);
-				var $goDetail = $("<span>", {
-					class: "view-form-detail",
-					text: "Double Click to View Detail"
-				});
-				$details.append($title, $text, $goDetail);
-				$designer.append($avatar, $details );
-				$header.append($designer);
-				$aTag.append($header);
-				$aTag.on('click', function() {
-					var $checkbox = $(this).find(".resume-card-checkbox");
-					if ($checkbox.prop('checked')) {
-						$checkbox.prop('checked', false);
-						$(this).removeClass('shadow');
-					} else {
-						$checkbox.prop('checked', true);
-						$(this).addClass('shadow');
-					}
-					updateFormListSelectCount();
-					var checkboxValue = $checkbox.val();
-					if ($checkbox.prop('checked')) {
-						selectedValues.push(checkboxValue);
-						console.log(selectedValues)
-					} else {
-						var index = selectedValues.indexOf(checkboxValue);
-						if (index !== -1) {
-							selectedValues.splice(index, 1);
+						var checkboxValue = $checkbox.val();
+						if ($checkbox.prop('checked')) {
+							selectedValues.push(checkboxValue);
 							console.log(selectedValues)
+						} else {
+							var index = selectedValues.indexOf(checkboxValue);
+							if (index !== -1) {
+								selectedValues.splice(index, 1);
+								console.log(selectedValues)
+							}
 						}
-					}
-					console.log("Selected values:", selectedValues);
+						updateFormListSelectCount();
+						console.log("Selected values:", selectedValues);
+					});
+					$aTag.on('dblclick', function() {
+						window.location.href = "form/" + form.id + "/user/" + currentUser.id;
+					});
+					$(".form-card-container").append($aTag);
 				});
-				$aTag.on('dblclick', function() {
-					window.location.href = "form/" + form.id + "/user/" + currentUser.id;
-				});
-				$(".form-card-container").append($aTag);
-			});
-
-            },
-            error: function(xhr, status, error) {
-                console.error('Error:', error);
-                console.log('Response:', xhr.responseText);
-            }
+			},
+			error: function(xhr, status, error) {
+				console.error('Error:', error);
+				console.log('Response:', xhr.responseText);
+			}
         });
     }
     
@@ -438,6 +421,7 @@ $(document).ready(function() {
 								console.log(selectedValues)
 							}
 						}
+						updateFormListSelectCount();
 						console.log("Selected values:", selectedValues);
 					});
 					$aTag.on('dblclick', function() {
@@ -445,17 +429,15 @@ $(document).ready(function() {
 					});
 					$(".form-card-container").append($aTag);
 				});
-
 			},
-            error: function(xhr, status, error) {
-                console.error('Error:', error);
-                console.log('Response:', xhr.responseText);
-            }
+			error: function(xhr, status, error) {
+				console.error('Error:', error);
+				console.log('Response:', xhr.responseText);
+			}
         });
     }
     
-    function getAllForm() {        
-		console.log("hello")		
+    function getAllForm() {
         $.ajax({
             url: 'http://localhost:8080/api/registerform/getAllForms',
             type: 'POST',
@@ -465,109 +447,117 @@ $(document).ready(function() {
             },
             success: function(response) {
 				console.log(response)
-				console.log(response)
 				var forms = response.forms;
 				var applicantList = response.applicants;
-                console.log('Success:', response);
-                $(".form-card-container").empty();
-                forms.forEach(function(form, index) {
-			    var applicant = applicantList[index];
-			    var statusLength = form.workFlowStatuses.length;
-			    
-			    // Ensure there are at least two statuses in the list
-			    if (statusLength >= 2) {
-			        var secondToLastStatus = form.workFlowStatuses[statusLength - 2];
-			        var statusText = secondToLastStatus.status;
-			    } else {
-			        var statusText = "No previous status";
-			    }
-			    
-			    var $aTag = $("<a>", {
-					href: "form/" + form.id + "/user/" + currentUser.id,
-			        class: "js-resume-card resume-card designer-search-card resume-card-sections-hidden js-user-row-" + form.id
-			    });
-			    var $header = $("<div>", {
-			        class: "resume-card-header resume-section-padding"
-			    });
-			    var $designer = $("<div>", {
-			        class: "resume-card-header-designer"
-			    });
-				var $avatar = $("<img>", {
-					class: "resume-card-avatar",
-					alt: `${applicant.name} photo`,
-					src: `/assets/profile/${applicant.profile}`,
-					width: "80",
-					height: "80",
-				});
-				var $details = $("<div>", {
-					class: "resume-card-header-details"
-				});
-				var $title = $("<div>", {
-					class: "resume-card-title"
-				}).append(
-					$("<h3>", {
-						class: "resume-card-designer-name user-select-none",
-						text: applicant.name
-					}),
-					$("<span>", {
-						class: "badge badge-pro",
-						text: form.currentStatus
-					})
-				);
-				var $text = $("<span>", {
-					class: "resume-card-header-text"
-				}).append(
-					$("<p>").append(
-						$("<span>", {
-							class: "resume-card-location",
-							text: applicant.positionName
-						}),
-						$("<span>", {
-							class: "resume-card-middot",
-							text: "•"
-						}),
-						$("<span>", {
-							text: applicant.teamName
-						}),
-						$("<br />", {
-							class: "resume-card-middot",
-							text: "•"
-						}),
-						$("<span>", {
-							text: applicant.departmentName
-						}),
-					),
-					$("<input>", {
-						type: "checkbox",
-						class: "form-checkbox",
-						value: form.id
-					})
-				);
-			    $details.append($title, $text);
-			    $designer.append($avatar, $details);
-			    $header.append($designer);
-			    $aTag.append($header);
-			    $(".form-card-container").append($aTag);
-			});
-			$(".form-checkbox").change(function() {
-                    var checkboxValue = $(this).val();
-                    if ($(this).prop('checked')) {
-                        selectedValues.push(checkboxValue);
-                        console.log("Checkbox value checked:", checkboxValue);
-                    } else {
-                        var index = selectedValues.indexOf(checkboxValue);
-                        if (index !== -1) {
-                            selectedValues.splice(index, 1);
-                        }
-                    }
-                    console.log("Selected values:", selectedValues);
-                });
+				console.log('Success:', applicantList);
+				$(".form-card-container").empty();
+				forms.forEach(function(form, index) {
+					var applicant = applicantList[index];
+					var $aTag = $("<div>", {
 
-            },
-            error: function(xhr, status, error) {
-                console.error('Error:', error);
-                console.log('Response:', xhr.responseText);
-            }
+						class: "js-resume-card resume-card designer-search-card resume-card-sections-hidden js-user-row-" + form.id
+					});
+					var $header = $("<div>", {
+						class: "resume-card-header resume-section-padding"
+					});
+					var $designer = $("<div>", {
+						class: "resume-card-header-designer"
+					});
+					var $avatar = $("<img>", {
+						class: "resume-card-avatar",
+						alt: `${applicant.name} photo`,
+						src: `/assets/profile/${applicant.profile}`,
+						width: "80",
+						height: "80",
+					});
+					var $details = $("<div>", {
+						class: "resume-card-header-details"
+					});
+					var $title = $("<div>", {
+						class: "resume-card-title"
+					}).append(
+						$("<h3>", {
+							class: "resume-card-designer-name user-select-none",
+							text: applicant.name
+						}),
+						$("<span>", {
+							class: "badge badge-pro",
+							text: form.currentStatus
+						})
+					);
+					var $text = $("<span>", {
+						class: "resume-card-header-text"
+					}).append(
+						$("<p>").append(
+							$("<span>", {
+								class: "resume-card-location",
+								text: applicant.positionName
+							}),
+							$("<span>", {
+								class: "resume-card-middot",
+								text: "•"
+							}),
+							$("<span>", {
+								text: applicant.teamName
+							}),
+							$("<br />", {
+								class: "resume-card-middot",
+								text: "•"
+							}),
+							$("<span>", {
+								text: applicant.departmentName
+							}),
+						),
+						$("<input>", {
+							type: "checkbox",
+							class: "resume-card-checkbox",
+							value: form.id,
+							css: {
+								display: 'none'
+							}
+						})
+					);
+					var $goDetail = $("<span>", {
+						class: "view-form-detail",
+						text: "Double Click to View Detail"
+					});
+					$details.append($title, $text, $goDetail);
+					$designer.append($avatar, $details );
+					$header.append($designer);
+					$aTag.append($header);
+					$aTag.on('click', function() {
+						var $checkbox = $(this).find(".resume-card-checkbox");
+						if ($checkbox.prop('checked')) {
+							$checkbox.prop('checked', false);
+							$(this).removeClass('shadow');
+						} else {
+							$checkbox.prop('checked', true);
+							$(this).addClass('shadow');
+						}
+						var checkboxValue = $checkbox.val();
+						if ($checkbox.prop('checked')) {
+							selectedValues.push(checkboxValue);
+							console.log(selectedValues)
+						} else {
+							var index = selectedValues.indexOf(checkboxValue);
+							if (index !== -1) {
+								selectedValues.splice(index, 1);
+								console.log(selectedValues)
+							}
+						}
+						updateFormListSelectCount();
+						console.log("Selected values:", selectedValues);
+					});
+					$aTag.on('dblclick', function() {
+						window.location.href = "form/" + form.id + "/user/" + currentUser.id;
+					});
+					$(".form-card-container").append($aTag);
+				});
+			},
+			error: function(xhr, status, error) {
+				console.error('Error:', error);
+				console.log('Response:', xhr.responseText);
+			}
         });
     }
     
