@@ -11,6 +11,6 @@ import java.util.Date;
 @ToString
 public class FormHistoryDto {
     private Long formId;
-    private String applicantName;
-    private Date signedDate;
+    private String signedDate;
+    private String status;
 }

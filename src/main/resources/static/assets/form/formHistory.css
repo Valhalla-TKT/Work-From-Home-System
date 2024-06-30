@@ -187,7 +187,7 @@
     font-weight: bold;
 }
 
-.approved-status {
+.approve-status {
     background-color: #4CAF50;
     color: #fff;
 }
@@ -197,7 +197,7 @@
     color: #fff;
 }
 
-.rejected-status {
+.reject-status {
     background-color: #F44336;
     color: #fff;
 }

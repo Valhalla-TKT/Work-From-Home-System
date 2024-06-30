@@ -1,16 +1,44 @@
 document.addEventListener('DOMContentLoaded', function () {
     const searchInput = document.querySelector('.search-input');
     const statusFilter = document.querySelector('.status-filter');
-    const formHistoryCards = Array.from(document.querySelectorAll('.form-history-card'));
+    const formHistoryContainer = document.querySelector('.form-history-listing');
     const pagination = document.querySelector('.pagination');
     const pageNumbers = pagination.querySelector('.page-numbers');
     const itemsPerPage = 8;
     let currentPage = 1;
-    let filteredCards = formHistoryCards;
+    let formHistoryData = [];
+    let filteredData = [];
+    const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+    const userName = document.querySelector('.user-name');
+    const userEmail = document.querySelector('.user-email');
+    const userProfilePicture = document.querySelector('.profile-picture');
+
+    function renderFormHistory() {
+        formHistoryContainer.innerHTML = '';
+
+        const start = (currentPage - 1) * itemsPerPage;
+        const end = start + itemsPerPage;
+        const pageData = filteredData.slice(start, end);
+
+        pageData.forEach(item => {
+            const card = document.createElement('div');
+            card.classList.add('form-history-card');
+            card.innerHTML = `
+                <div class="form-history-info">
+                    <h2 class="form-history-title">For ${item.signedDate}</h2>
+                    <div class="form-history-details">
+                        <p class="form-history-date">For ${item.signedDate}</p>
+                        <p class="form-history-status ${item.status.toLowerCase()}-status">${item.status}</p>
+                    </div>
+                </div>
+            `;
+            formHistoryContainer.appendChild(card);
+        });
+    }
 
     function updatePagination() {
         pageNumbers.innerHTML = '';
-        const totalPages = Math.ceil(filteredCards.length / itemsPerPage);
+        const totalPages = Math.ceil(filteredData.length / itemsPerPage);
 
         for (let i = 1; i <= totalPages; i++) {
             const pageLink = document.createElement('a');
@@ -26,28 +54,18 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     function displayCurrentPage() {
-        const start = (currentPage - 1) * itemsPerPage;
-        const end = start + itemsPerPage;
-
-        formHistoryCards.forEach(card => {
-            card.style.display = 'none';
-        });
-
-        filteredCards.slice(start, end).forEach(card => {
-            card.style.display = 'block';
-        });
+        renderFormHistory();
     }
 
     function filterHistory() {
         const searchTerm = searchInput.value.toLowerCase();
         const status = statusFilter.value;
 
-        filteredCards = formHistoryCards.filter(card => {
-            const title = card.querySelector('.form-history-title').textContent.toLowerCase();
-            const date = card.querySelector('.form-history-date').textContent.toLowerCase();
-            const statusText = card.querySelector('.form-history-status').classList[1];
+        filteredData = formHistoryData.filter(item => {
+            const title = item.signedDate.toLowerCase();
+            const statusText = item.status.toLowerCase();
 
-            const matchesSearch = title.includes(searchTerm) || date.includes(searchTerm);
+            const matchesSearch = title.includes(searchTerm);
             const matchesStatus = status === 'all' || statusText.includes(status);
 
             return matchesSearch && matchesStatus;
@@ -64,7 +82,7 @@ document.addEventListener('DOMContentLoaded', function () {
             const page = event.target.dataset.page;
             if (page === 'prev' && currentPage > 1) {
                 currentPage--;
-            } else if (page === 'next' && currentPage < Math.ceil(filteredCards.length / itemsPerPage)) {
+            } else if (page === 'next' && currentPage < Math.ceil(filteredData.length / itemsPerPage)) {
                 currentPage++;
             } else if (!isNaN(page)) {
                 currentPage = parseInt(page);
@@ -77,6 +95,15 @@ document.addEventListener('DOMContentLoaded', function () {
     searchInput.addEventListener('input', filterHistory);
     statusFilter.addEventListener('change', filterHistory);
 
-    updatePagination();
-    displayCurrentPage();
+    (async function initialize() {
+        const userId = currentUser.id;
+        userName.innerText = currentUser.name;
+        userEmail.innerText = currentUser.email;
+        userProfilePicture.src = `/assets/profile/${currentUser.profile}`;
+        userProfilePicture.alt = currentUser.name;
+        formHistoryData = await fetchUserFormHistory(userId);
+        filteredData = [...formHistoryData];
+        updatePagination();
+        displayCurrentPage();
+    })();
 });

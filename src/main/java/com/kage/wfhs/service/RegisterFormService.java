@@ -10,6 +10,7 @@ package com.kage.wfhs.service;
 import java.util.List;
 import java.util.Map;
 
+import com.kage.wfhs.dto.form.FormHistoryDto;
 import com.kage.wfhs.dto.form.FormListDto;
 import org.springframework.stereotype.Service;
 
@@ -49,7 +50,7 @@ public interface RegisterFormService {
 
 	Map<String, Object> getFormWithStatus(String status, long entityId, long userId, String entityName);
 
-    List<FormListDto> getUserHistory(long userId);
+    List<FormHistoryDto> getUserHistory(long userId);
 
 //	Map<String, Object> getDepartmentWithStatus(String status, long departmentId, long userId);
 }

@@ -11,6 +11,7 @@ import com.kage.wfhs.dto.CaptureDto;
 import com.kage.wfhs.dto.RegisterFormDto;
 import com.kage.wfhs.dto.UserDto;
 import com.kage.wfhs.dto.WorkFlowStatusDto;
+import com.kage.wfhs.dto.form.FormHistoryDto;
 import com.kage.wfhs.dto.form.FormListDto;
 import com.kage.wfhs.exception.EntityNotFoundException;
 import com.kage.wfhs.model.ApproveRole;
@@ -293,7 +294,7 @@ public class RegisterFormController {
     public ResponseEntity<Map<String, Object>> retrieveUserFormHistory(@PathVariable("userId") long userId) {
         Map<String, Object> response = new HashMap<>();
         try {
-            List<FormListDto> formHistory = registerFormService.getUserHistory(userId);
+            List<FormHistoryDto> formHistory = registerFormService.getUserHistory(userId);
 
             response.put("formHistory", formHistory);
 

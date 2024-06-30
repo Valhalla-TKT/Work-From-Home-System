@@ -419,6 +419,21 @@ async function fetchUsersByDivisionIdAndGender(divisionId ,gender) {
     }
 }
 
+async function fetchUserFormHistory(userId) {
+    try {
+        const responseData = await sendRequestWithoutParam(`/api/registerform/users/${userId}/form-history`, 'GET');
+        const contentType = responseData.headers.get('content-type');
+        if (contentType && contentType.includes('application/json')) {
+            const data = await responseData.json();
+            return data.formHistory;
+        } else {
+            return await responseData.text();
+        }
+    } catch (error) {
+        console.error('Error:', error);
+    }
+}
+
 async function getSessionUser() {
     return new Promise((resolve, reject) => {
         $.ajax({
