@@ -272,6 +272,17 @@ public class RegisterFormServiceImplement implements RegisterFormService {
         return responseData;
     }
 
+    @Override
+    public List<FormListDto> getUserHistory(long userId) {
+        List<RegisterForm> registerForms = registerFormRepo.findByApplicantId(userId);
+        List<FormListDto> formList = new ArrayList<>();
+        for (RegisterForm registerForm : registerForms) {
+            FormListDto registerFormDto = modelMapper.map(registerForm, FormListDto.class);
+            formList.add(registerFormDto);
+        }
+        return formList;
+    }
+
 //    @Override
 //    public Map<String, Object> getDepartmentWithStatus(String status, long departmentId, long userId) {
 //        User user = EntityUtil.getEntityById(userRepo, userId);

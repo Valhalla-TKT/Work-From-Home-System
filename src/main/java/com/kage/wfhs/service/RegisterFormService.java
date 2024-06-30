@@ -49,5 +49,7 @@ public interface RegisterFormService {
 
 	Map<String, Object> getFormWithStatus(String status, long entityId, long userId, String entityName);
 
+    List<FormListDto> getUserHistory(long userId);
+
 //	Map<String, Object> getDepartmentWithStatus(String status, long departmentId, long userId);
 }

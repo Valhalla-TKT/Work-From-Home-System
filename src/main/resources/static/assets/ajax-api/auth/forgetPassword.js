@@ -1,11 +1,23 @@
-// async function checkAndSendEmail() {
-//     const response = await checkEmailAndSendOTP("thanthtoo1285@gmail.com")
-//     console.log(response.status)
-// }
+
 document.addEventListener("DOMContentLoaded", async function () {
-    document.getElementById('sendOtpButton').addEventListener('click', async () => {
+    const sendOtpButton = document.getElementById('sendOtpButton');
+    sendOtpButton.addEventListener('click', async () => {
         const email = document.getElementById('email').value;
         await checkEmailAndSendOTP(email);
+        sendOtpButton.disabled = true;
+        let countdown = 60;
+        sendOtpButton.value = ` (${countdown}s)`;
+
+        const interval = setInterval(() => {
+            countdown -= 1;
+            sendOtpButton.value = `(${countdown}s)`;
+
+            if (countdown <= 0) {
+                clearInterval(interval);
+                sendOtpButton.disabled = false;
+                sendOtpButton.value = 'Send OTP';
+            }
+        }, 1000);
     });
 
     document.getElementById('verifyOtpButton').addEventListener('click', async () => {

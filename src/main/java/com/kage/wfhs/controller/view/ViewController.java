@@ -105,6 +105,7 @@ public class ViewController {
 
     @GetMapping("/historyForm")
     public String historyForm() {
-        return "form";
+        return "formHistory";
     }
+
 }

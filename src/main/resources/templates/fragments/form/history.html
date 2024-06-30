@@ -3,10 +3,121 @@
 <html xmlns:th="http://www.thymeleaf.org">
 
 <head>
-<title>WorkHub</title>
+    <title>WorkHub</title>
 </head>
 
 <body>
-<div id="wrap" th:fragment="content"></div>
+<!--<div id="wrap" class="container-history" th:fragment="content">-->
+<div id="wrap" class="history-section container-history" th:fragment="content">
+<!--    <h1 class="history-page-title">WFHS Form History</h1>-->
+
+<!--    <div class="property-listing">-->
+<!--        <div class="property-card">-->
+
+<!--            <div class="property-info">-->
+<!--                <h2 class="property-title">Thant Htoo Aung</h2>-->
+<!--                <div class="property-details">-->
+<!--                    <p class="property-status">For June, 2024</p>-->
+<!--                    <p class="property-pending pending-status">Pending</p>-->
+<!--                </div>-->
+<!--            </div>-->
+<!--        </div>-->
+<!--        <div class="property-card">-->
+
+<!--            <div class="property-info">-->
+<!--                <h2 class="property-title">Thant Htoo Aung</h2>-->
+<!--                <div class="property-details">-->
+<!--                    <p class="property-status">For May, 2024</p>-->
+<!--                    <p class="property-pending approved-status">Approved</p>-->
+<!--                </div>-->
+<!--            </div>-->
+<!--        </div>-->
+<!--        <div class="property-card">-->
+<!--            <div class="property-info">-->
+<!--                <h2 class="property-title">Thant Htoo Aung</h2>-->
+<!--                <div class="property-details">-->
+<!--                    <p class="property-status">For April, 2024</p>-->
+<!--                    <p class="property-pending rejected-status">Rejected</p>-->
+<!--                </div>-->
+<!--            </div>-->
+<!--        </div>-->
+
+
+<!--    </div>-->
+    <div class="user-profile">
+        <img src="/assets/profile/default-male.jpg" alt="User Profile" class="profile-picture">
+        <div class="user-info">
+            <h2 class="user-name">Thant Htoo Aung</h2>
+            <p class="user-email">thanthtooaung@diracetechnology.com</p>
+        </div>
+    </div>
+
+    <h1 class="history-page-title">WFHS Form History</h1>
+
+    <div class="search-filter">
+        <input type="text" class="search-input" placeholder="Search by month or year">
+        <select class="status-filter">
+            <option value="all">All</option>
+            <option value="approved">Approved</option>
+            <option value="pending">Pending</option>
+            <option value="rejected">Rejected</option>
+        </select>
+    </div>
+
+    <div class="form-history-listing">
+        <div class="form-history-card">
+            <div class="form-history-info">
+                <h2 class="form-history-title">Abcd</h2>
+                <div class="form-history-details">
+                    <p class="form-history-date">For June, 2024</p>
+                    <p class="form-history-status pending-status">Pending</p>
+                </div>
+            </div>
+        </div>
+        <div class="form-history-card">
+            <div class="form-history-info">
+                <h2 class="form-history-title">For May, 2024</h2>
+                <div class="form-history-details">
+                    <p class="form-history-date">For May, 2024</p>
+                    <p class="form-history-status approved-status">Approved</p>
+                </div>
+            </div>
+        </div>
+        <div class="form-history-card">
+            <div class="form-history-info">
+                <h2 class="form-history-title">For April, 2024</h2>
+                <div class="form-history-details">
+                    <p class="form-history-date">For April, 2024</p>
+                    <p class="form-history-status rejected-status">Rejected</p>
+                </div>
+            </div>
+        </div>
+        <div class="form-history-card">
+            <div class="form-history-info">
+                <h2 class="form-history-title">For April, 2024</h2>
+                <div class="form-history-details">
+                    <p class="form-history-date">For April, 2024</p>
+                    <p class="form-history-status rejected-status">Rejected</p>
+                </div>
+            </div>
+        </div>
+        <div class="form-history-card">
+            <div class="form-history-info">
+                <h2 class="form-history-title">For April, 2024</h2>
+                <div class="form-history-details">
+                    <p class="form-history-date">For April, 2024</p>
+                    <p class="form-history-status rejected-status">Rejected</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="pagination">
+        <a href="#" class="page-link" data-page="prev">Previous</a>
+        <span class="page-numbers"></span>
+        <a href="#" class="page-link" data-page="next">Next</a>
+    </div>
+    <script src="/assets/form/history.js"></script>
+</div>
 </body>
 </html>

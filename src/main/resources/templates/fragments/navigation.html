@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 
-<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<html xmlns:th="http://www.thymeleaf.org">
 
 <head>
 <title>WorkHub</title>
@@ -51,7 +51,7 @@
 									</a>
 								</li>
 								<li class="nav-v2-sub__item">
-									<a class="nav-v2-sub__link" data-nav-event-clicked="Post a Job" href="jobs/new.html"> View request history 
+									<a class="nav-v2-sub__link" data-nav-event-clicked="Post a Job" href="/historyForm"> View request history
 										<span class="nav-v2-sub__subtitle">Effortlessly check work history</span>
 									</a>
 								</li>
@@ -98,14 +98,10 @@
 							    </li>		
 							    
 							</ul>
-						</li>						
-
-						<li class="nav-v2-main__item">
-							<a data-nav-event-clicked="Go Pro" href="pro.html">About us</a>
 						</li>
 
 						<li class="nav-v2-main__item">
-							<a href="help">Help</a>
+							<a href="/help">Help</a>
 						</li>						
 
 						<li class="nav-v2-main__item nav-v2-main__item--divided nav-v2-hide-medium-up">
@@ -115,8 +111,8 @@
 				</div>
 			</nav>
 
-			<a class="nav-v2-logo" th:href="@{/department}" data-nav-event-clicked="Logo" aria-label="Back to home page">
-				<strong style="letter-spacing: 1px; font-size: 26px;">WFHS</strong>
+			<a  th:href="@{/department}" data-nav-event-clicked="Logo" aria-label="Back to home page">
+				<img src="/assets/wfhs_logo.png" style="width: 250px; height: 140px; margin-top: 20px;" alt="wfhs-logo">
 			</a>
 
 
