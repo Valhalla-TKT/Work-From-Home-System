@@ -8,6 +8,7 @@
 package com.kage.wfhs.serviceImplement;
 
 import com.kage.wfhs.dto.RegisterFormDto;
+import com.kage.wfhs.dto.form.FormHistoryDto;
 import com.kage.wfhs.dto.form.FormListDto;
 import com.kage.wfhs.model.*;
 import com.kage.wfhs.repository.CaptureRepository;
@@ -32,6 +33,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 @Service
@@ -270,6 +274,26 @@ public class RegisterFormServiceImplement implements RegisterFormService {
         responseData.put("forms", registerFormDtoList);
 
         return responseData;
+    }
+
+    @Override
+    public List<FormHistoryDto> getUserHistory(long userId) {
+        List<RegisterForm> registerForms = registerFormRepo.findByApplicantId(userId);
+        List<FormHistoryDto> formList = new ArrayList<>();
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MMMM, yyyy");
+        for (RegisterForm registerForm : registerForms) {
+            FormHistoryDto formHistoryDto = new FormHistoryDto();
+            formHistoryDto.setFormId(registerForm.getId());
+            if (registerForm.getTo_date() != null) {
+                LocalDate signedDate = registerForm.getTo_date().toInstant()
+                        .atZone(ZoneId.systemDefault())
+                        .toLocalDate();
+                formHistoryDto.setSignedDate(signedDate.format(formatter));
+                formHistoryDto.setStatus(registerForm.getStatus().name());
+            }
+            formList.add(formHistoryDto);
+        }
+        return formList;
     }
 
 //    @Override

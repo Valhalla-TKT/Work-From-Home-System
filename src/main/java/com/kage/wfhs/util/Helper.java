@@ -33,7 +33,7 @@ import lombok.AllArgsConstructor;
 @Service
 public class Helper {
 
-    private static final String uploadDir = "src/main/resources/static/assets/formImages/";
+    private static final String uploadDir = "src/main/resources/static/formImages/";
 
     @Autowired
     private final WorkFlowOrderRepository workFlowOrderRepo;

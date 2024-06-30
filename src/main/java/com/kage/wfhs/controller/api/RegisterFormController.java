@@ -11,7 +11,9 @@ import com.kage.wfhs.dto.CaptureDto;
 import com.kage.wfhs.dto.RegisterFormDto;
 import com.kage.wfhs.dto.UserDto;
 import com.kage.wfhs.dto.WorkFlowStatusDto;
+import com.kage.wfhs.dto.form.FormHistoryDto;
 import com.kage.wfhs.dto.form.FormListDto;
+import com.kage.wfhs.exception.EntityNotFoundException;
 import com.kage.wfhs.model.ApproveRole;
 import com.kage.wfhs.model.WorkFlowStatus;
 import com.kage.wfhs.repository.WorkFlowStatusRepository;
@@ -36,10 +38,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 @RestController
@@ -290,4 +289,23 @@ public class RegisterFormController {
     return ResponseEntity.ok("Bulk Approve Success");
 
     }
+
+    @GetMapping("/users/{userId}/form-history")
+    public ResponseEntity<Map<String, Object>> retrieveUserFormHistory(@PathVariable("userId") long userId) {
+        Map<String, Object> response = new HashMap<>();
+        try {
+            List<FormHistoryDto> formHistory = registerFormService.getUserHistory(userId);
+
+            response.put("formHistory", formHistory);
+
+            return ResponseEntity.ok(response);
+        } catch (EntityNotFoundException e) {
+            response.put("error", "User not found.");
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
+        } catch (Exception e) {
+            response.put("error", "An unexpected error occurred.");
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
+        }
+    }
+
 }

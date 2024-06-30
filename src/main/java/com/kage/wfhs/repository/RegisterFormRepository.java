@@ -94,4 +94,6 @@ public interface RegisterFormRepository extends JpaRepository<RegisterForm,Long>
             WHERE wfs.id = :statusId
             """, nativeQuery = true)
     RegisterForm findByWorkFlowStatusId(Long statusId);
+
+    List<RegisterForm> findByApplicantId(long userId);
 }

@@ -51,6 +51,7 @@ document.addEventListener("DOMContentLoaded", async function () {
         try {
             await resetPassword(email, newPassword);
             console.log('Password change process completed successfully.');
+            window.location.href = "/signOut"
         } catch (error) {
             console.error('Password change process failed:', error.message);
         }

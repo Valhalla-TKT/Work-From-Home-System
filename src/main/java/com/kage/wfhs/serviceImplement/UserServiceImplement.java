@@ -366,7 +366,7 @@ public class UserServiceImplement implements UserService {
 	@Override
 	@Transactional
 	public void createHR() {
-		User user = userRepo.findByEmail("hr@diracetechnology.com");
+		User user = userRepo.findByStaffId("00-00001");
 		if(user == null) {
 			UserDto userDto = new UserDto();
 			userDto.setStaffId("00-00001");
