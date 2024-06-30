@@ -1,6 +1,6 @@
 async function sendRequest(url, method, requestData) {
     try {
-        const response = await fetch(`http://localhost:8080/wfhs${url}`, {
+        const response = await fetch(`http://localhost:8080${url}`, {
             method: method,
             headers: {
                 'Content-Type': 'application/json'
