@@ -250,3 +250,10 @@
     background-color: #ddd;
 }
 
+.page-link.disabled {
+    pointer-events: none;
+    background-color: #e0e0e0;
+    color: #999;
+}
+
+

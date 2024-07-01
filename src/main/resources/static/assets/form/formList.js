@@ -452,6 +452,9 @@ $(document).ready(function() {
 				console.log('Success:', applicantList);
 				$(".form-card-container").empty();
 				forms.forEach(function(form, index) {
+					if(userRole === "SERVICE_DESK") {
+						form.currentStatus = form.status;
+					}
 					var applicant = applicantList[index];
 					var $aTag = $("<div>", {
 

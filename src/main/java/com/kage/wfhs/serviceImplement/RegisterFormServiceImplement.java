@@ -276,11 +276,11 @@ public class RegisterFormServiceImplement implements RegisterFormService {
             if (status.equalsIgnoreCase("ALL")) {
                 registerFormDtoList2 = getFormAll(approveRoleId);
                 for (RegisterFormDto registerFormDto : registerFormDtoList2) {
-                    FormListDto formListDto = new FormListDto();
-                    //FormListDto registerFormDto = modelMapper.map(registerForm, FormListDto.class);
-                    formListDto.setId(registerFormDto.getId());
-                    formListDto.setApplicant(registerFormDto.getApplicant());
-                    formListDto.setRequester(registerFormDto.getRequester());
+                    RegisterForm registerForm = modelMapper.map(registerFormDto, RegisterForm.class);
+                    FormListDto formListDto = modelMapper.map(registerForm, FormListDto.class);
+//                    formListDto.setId(registerFormDto.getId());
+//                    formListDto.setApplicant(registerFormDto.getApplicant());
+//                    formListDto.setRequester(registerFormDto.getRequester());
                     formListDto.setCurrentStatus(getFormStatusByApproveId(userId, registerFormDto.getId()));
                     registerFormDtoList.add(formListDto);
                     //registerFormDtoList.add(formListDto);
@@ -288,11 +288,11 @@ public class RegisterFormServiceImplement implements RegisterFormService {
             } else {
                 registerFormDtoList2 = getAllForm(approveRoleId, status);
                 for (RegisterFormDto registerFormDto : registerFormDtoList2) {
-                    FormListDto formListDto = new FormListDto();
-                    //FormListDto registerFormDto = modelMapper.map(registerForm, FormListDto.class);
-                    formListDto.setId(registerFormDto.getId());
-                    formListDto.setApplicant(registerFormDto.getApplicant());
-                    formListDto.setRequester(registerFormDto.getRequester());
+                    RegisterForm registerForm = modelMapper.map(registerFormDto, RegisterForm.class);
+                    FormListDto formListDto = modelMapper.map(registerForm, FormListDto.class);
+//                    formListDto.setId(registerFormDto.getId());
+//                    formListDto.setApplicant(registerFormDto.getApplicant());
+//                    formListDto.setRequester(registerFormDto.getRequester());
                     formListDto.setCurrentStatus(getFormStatusByApproveId(userId, registerFormDto.getId()));
                     registerFormDtoList.add(formListDto);
                 }

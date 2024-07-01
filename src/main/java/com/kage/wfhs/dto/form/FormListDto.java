@@ -10,6 +10,6 @@ import lombok.*;
 @ToString
 public class FormListDto {
     private Long id, applicantId;
-    private String currentStatus;
+    private String currentStatus, status;
     private User applicant, requester;
 }

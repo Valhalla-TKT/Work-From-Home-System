@@ -24,7 +24,7 @@ $(document).ready( function(){
 
     $('#gender').change(function() {
         var selectedGender = $(this).val();
-        generateStaffId(selectedGender);
+        //generateStaffId(selectedGender);
     });
 
     $('#create-staff').click(function(event) {
@@ -117,30 +117,30 @@ $(document).ready( function(){
         });
     }
 
-    function generateStaffId(gender) {
-        var requestData = {
-            gender:gender
-        };
-        $.ajax({
-            url: `http://localhost:8080/api/user/generateStaffId`,
-            type: 'POST',
-            contentType: 'application/json',
-            data: JSON.stringify(requestData),
-            dataType: 'text',
-            success: function (response) {
-                var textBox = $('#staff-id');
-                textBox.empty();
-                textBox.val(response);
-            },
-            error: function (xhr, status, error) {
-                console.error('Error:', error);
-                console.error('Status:', status);
-                console.error('Response Text:', error.responseText)
-                console.error('XHR:', xhr);
-            }
-
-        });
-    }
+    // function generateStaffId(gender) {
+    //     var requestData = {
+    //         gender:gender
+    //     };
+    //     $.ajax({
+    //         url: `http://localhost:8080/api/user/generateStaffId`,
+    //         type: 'POST',
+    //         contentType: 'application/json',
+    //         data: JSON.stringify(requestData),
+    //         dataType: 'text',
+    //         success: function (response) {
+    //             var textBox = $('#staff-id');
+    //             textBox.empty();
+    //             textBox.val(response);
+    //         },
+    //         error: function (xhr, status, error) {
+    //             console.error('Error:', error);
+    //             console.error('Status:', status);
+    //             console.error('Response Text:', error.responseText)
+    //             console.error('XHR:', xhr);
+    //         }
+    //
+    //     });
+    // }
 
     async function getAllTeam() {
         await fetchTeams()
@@ -315,29 +315,134 @@ $(document).ready( function(){
     }
 
     var currentPage = 1;
-    var usersPerPage = 10;
+    var usersPerPage = 8;
+    var totalUsers = 0;
+    var userData = [];
 
-    function renderLoadMoreButton(totalCount, currentCount) {
-        console.log("totalCount = ", totalCount, ", currentCount = ", currentCount)
-        if (currentCount < totalCount) {
-            $('#load-more').show();
-        } else {
-            $('#load-more').hide();
+    const pagination = document.querySelector('.pagination');
+    const pageNumbers = pagination.querySelector('.page-numbers');
+
+    function renderUsers() {
+        const start = (currentPage - 1) * usersPerPage;
+        const end = start + usersPerPage;
+        const pageData = userData.slice(start, end);
+
+        $('#staff-list').empty();
+        pageData.forEach(user => {
+            $('#staff-list').append(`
+            <a href="detail" class="js-resume-card resume-card designer-search-card resume-card-sections-hidden js-user-row-6234" data-user='${JSON.stringify(user)}'>
+                <div class="resume-card-header resume-section-padding">
+                    <div class="resume-card-header-designer">
+                        <img class="resume-card-avatar" alt="${user.name}" width="70" height="70"
+                            src="/assets/profile/${user.profile}" />                               
+                        <div class="resume-card-header-details">
+                            <div class="resume-card-title">
+                                <h3 class="resume-card-designer-name user-select-none">
+                                    ${user.name}
+                                </h3>
+                                <span class="badge badge-pro">${user.staffId}</span>
+                            </div>
+                            <span class="resume-card-header-text">
+                                <p>
+                                    <span class="resume-card-location">${user.teamName}</span>
+                                    <span class="resume-card-middot">.</span>
+                                    <span class="resume-card-location">${user.divisionName}</span>
+                                </p>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </a>
+        `);
+        });
+        addCardEventListeners();
+        updatePagination();
+    }
+
+    function updatePagination() {
+        pageNumbers.innerHTML = '';
+        const totalPages = Math.ceil(totalUsers / usersPerPage);
+
+        if (totalPages <= 1) return;
+
+        const maxPagesToShow = 5;
+        let startPage = Math.max(1, currentPage - Math.floor(maxPagesToShow / 2));
+        let endPage = Math.min(totalPages, startPage + maxPagesToShow - 1);
+
+        if (endPage - startPage < maxPagesToShow - 1) {
+            startPage = Math.max(1, endPage - maxPagesToShow + 1);
+        }
+
+        if (currentPage > 1) {
+            addPageLink('prev', 'Previous');
+        }
+
+        if (startPage > 1) {
+            addPageLink(1, '1');
+            if (startPage > 2) {
+                addEllipsis();
+            }
+        }
+
+        for (let i = startPage; i <= endPage; i++) {
+            addPageLink(i, i);
+        }
+
+        if (endPage < totalPages) {
+            if (endPage < totalPages - 1) {
+                addEllipsis();
+            }
+            addPageLink(totalPages, totalPages);
+        }
+
+        if (currentPage < totalPages) {
+            addPageLink('next', 'Next');
         }
     }
 
-    async function getAllUser(page = 1, appendData = false) {
+    function addPageLink(page, text) {
+        const pageLink = document.createElement('a');
+        pageLink.href = '#';
+        pageLink.textContent = text;
+        pageLink.classList.add('page-link');
+        if (page === 'prev') {
+            pageLink.dataset.page = currentPage - 1;
+        } else if (page === 'next') {
+            pageLink.dataset.page = currentPage + 1;
+        } else {
+            pageLink.dataset.page = page;
+            if (page === currentPage) {
+                pageLink.classList.add('active');
+            }
+        }
+        pageNumbers.appendChild(pageLink);
+    }
+
+    function addEllipsis() {
+        const ellipsis = document.createElement('span');
+        ellipsis.textContent = '...';
+        ellipsis.classList.add('ellipsis');
+        pageNumbers.appendChild(ellipsis);
+    }
+
+    pagination.addEventListener('click', function (event) {
+        if (event.target.classList.contains('page-link')) {
+            event.preventDefault();
+            const page = parseInt(event.target.dataset.page);
+            if (!isNaN(page)) {
+                currentPage = page;
+                renderUsers();
+            }
+        }
+    });
+
+    async function getAllUser() {
         var selectedTeamId = $('#team-filter').val();
         var selectedDepartmentId = $('#department-filter').val();
         var selectedDivisionId = $('#division-filter').val();
         var selectedGender = $('#gender-filter').val();
+        const totalCount = $('#total-count');
         let response;
-
-        // Clear staff list based on filter
-        if (!appendData) {
-            $('#staff-list').empty();
-        }
-
         try {
             if (selectedGender === "all") {
                 if (selectedTeamId && selectedTeamId !== "all") {
@@ -361,52 +466,16 @@ $(document).ready( function(){
                 }
             }
 
-            var totalUsers = response.length;
-            var start = (page - 1) * usersPerPage;
-            var end = start + usersPerPage;
-            var usersToShow = response.slice(start, end);
-
-            console.log(usersToShow)
-            usersToShow.forEach(user => {
-                // if (selectedGender && selectedGender !== "all" && user.gender !== selectedGender) {
-                //     return; // Skip this user if gender doesn't match the filter
-                // }
-
-                // Append user to staff list
-                $('#staff-list').append(`
-                <a href="detail" class="js-resume-card resume-card designer-search-card resume-card-sections-hidden js-user-row-6234" data-user='${JSON.stringify(user)}'>
-                    <div class="resume-card-header resume-section-padding">
-                        <div class="resume-card-header-designer">
-                            <img class="resume-card-avatar" alt="${user.name}" width="70" height="70"
-                                src="/assets/profile/${user.profile}" />                               
-                            <div class="resume-card-header-details">
-                                <div class="resume-card-title">
-                                    <h3 class="resume-card-designer-name user-select-none">
-                                        ${user.name}
-                                    </h3>
-                                    <span class="badge badge-pro">${user.staffId}</span>
-                                </div>
-                                <span class="resume-card-header-text">
-                                    <p>
-                                        <span class="resume-card-location">${user.teamName}</span>
-                                        <span class="resume-card-middot">.</span>
-                                        <span class="resume-card-location">${user.divisionName}</span>
-                                    </p>
-                                </span>
-                            </div>
-                        </div>
-                    </div>
-                </a>
-            `);
-            });
-            addCardEventListeners();
-
-            console.log("hi")
-            renderLoadMoreButton(totalUsers, $('#staff-list').children().length);
+            userData = response;
+            totalUsers = userData.length;
+            totalCount.text(totalUsers)
+            currentPage = 1;
+            renderUsers();
         } catch (error) {
             console.error('Error in getAllUser:', error);
         }
     }
+
 
     function showDetailModal(user) {
         document.getElementById('staff-id-detail').value = user.staffId;
@@ -429,9 +498,6 @@ $(document).ready( function(){
             }
             approveRoleSelectBoxDetail.appendChild(option);
         });
-        // document.getElementById('team-name-detail').value = user.teamName;
-        // document.getElementById('department-name-detail').value = user.departmentName;
-        // document.getElementById('division-name-detail').value = user.divisionName;
         document.getElementById('detail-data-overlay').style.display = 'block';
     }
 

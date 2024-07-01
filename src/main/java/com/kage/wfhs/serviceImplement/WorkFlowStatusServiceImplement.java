@@ -136,18 +136,6 @@ public class WorkFlowStatusServiceImplement implements WorkFlowStatusService {
     public void updateStatus(Long id, WorkFlowStatusDto workFlowStatusDto) throws Exception {
     	WorkFlowStatus workFlowStatus = EntityUtil.getEntityById(workFlowStatusRepo, id);      
         RegisterForm form = registerFormRepo.findByWorkFlowStatusId(id);
-        System.out.println("hello aye thu" + form.getApplicant().getName());
-
-        WorkFlowStatus cisoApprove = workFlowStatusRepo.findByApproveRoleNameAndFormId(form.getId(), "CISO");
-        if(cisoApprove != null){
-            System.out.println("hi");
-            System.out.println(cisoApprove.getUser().getName());
-            cisoApprove.setStatus(Status.PENDING);
-            cisoApprove.setReason(null);
-            cisoApprove.setApprove_date(null);
-            workFlowStatusRepo.save(cisoApprove);
-        }
-        System.out.println("hi");
         Status newStatus = workFlowStatusDto.isState() ? Status.APPROVE : Status.REJECT;
         workFlowStatus.setStatus(newStatus);
         workFlowStatus.setApprove_date(workFlowStatusDto.getApproveDate());
@@ -180,6 +168,9 @@ public class WorkFlowStatusServiceImplement implements WorkFlowStatusService {
                 ledgerService.createLedger(registerForm.getId());
                 //notificationService.sendPendingApproveRejectNotificationToServiceDesk(registerForm.getId(), registerForm.getApplicant().getId(), registerForm.getStatus().name());
             } else if (Objects.equals(userRole, "SERVICE_DESK") && !workFlowStatusDto.isState()) {
+                RegisterForm registerForm = EntityUtil.getEntityById(registerFormRepo, workFlowStatusDto.getRegisterFormId());
+                registerForm.setStatus(Status.REJECT);
+                registerFormRepo.save(registerForm);
 //                RegisterForm registerForm = registerFormRepo
             }
             else {
