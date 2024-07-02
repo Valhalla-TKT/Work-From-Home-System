@@ -35,12 +35,32 @@ public interface RegisterFormRepository extends JpaRepository<RegisterForm,Long>
     List<RegisterForm> findRegisterFormByTeam(Long approveRoleId, String status, Long teamId);
 
     @Query(value = """
+            SELECT rf.* FROM register_form rf 
+            JOIN work_flow_status wfs ON rf.id = wfs.register_form_id
+            JOIN user u ON u.id = wfs.user_id 
+            JOIN team t ON u.team_id = t.id 
+            WHERE wfs.status = :status AND t.id = :teamId
+        """, nativeQuery = true)
+    List<RegisterForm> findRegisterFormByTeamWithoutApproveRoleId(String status, Long teamId);
+
+
+    @Query(value = """
             SELECT rf.* FROM register_form rf JOIN work_flow_status wfs ON rf.id = wfs.register_form_id
             JOIN user u ON u.id = wfs.user_id JOIN user_has_approve_role uhar ON u.id = uhar.user_id
             JOIN approve_role ar ON uhar.approve_role_id = ar.id JOIN team t ON u.team_id = t.id
             WHERE ar.id = :approveRoleId AND t.id = :teamId
         """, nativeQuery = true )
     List<RegisterForm> findRegisterFormByTeamAll(Long approveRoleId, Long teamId);
+
+    @Query(value = """
+            SELECT rf.* FROM register_form rf 
+            JOIN work_flow_status wfs ON rf.id = wfs.register_form_id
+            JOIN user u ON u.id = wfs.user_id 
+            JOIN team t ON u.team_id = t.id
+            WHERE t.id = :teamId
+        """, nativeQuery = true )
+    List<RegisterForm> findRegisterFormByTeamAllWithoutApproveRoleId(Long teamId);
+
 
     @Query(value = """
             SELECT rf.* FROM register_form rf JOIN work_flow_status wfs ON rf.id = wfs.register_form_id

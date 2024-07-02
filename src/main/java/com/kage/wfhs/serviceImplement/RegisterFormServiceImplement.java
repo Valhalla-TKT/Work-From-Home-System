@@ -136,8 +136,13 @@ public class RegisterFormServiceImplement implements RegisterFormService {
     public List<FormListDto> getAllFormSpecificTeam(Long approveRoleId, String status, Long teamId, Long userId) {
         List<RegisterForm> registerForms = registerFormRepo.findRegisterFormByTeam(approveRoleId, status, teamId);
         return getRegisterFormDtoList(userId, registerForms);
-
     }
+
+    public List<FormListDto> getAllFormSpecificTeamWithoutUserId(String status, Long teamId, Long userId) {
+        List<RegisterForm> registerForms = registerFormRepo.findRegisterFormByTeamWithoutApproveRoleId(status, teamId);
+        return getRegisterFormDtoList(userId, registerForms);
+    }
+
 
     private List<FormListDto> getRegisterFormDtoList(Long userId, List<RegisterForm> registerForms) {
         List<FormListDto> registerFormList = new ArrayList<>();
@@ -171,6 +176,11 @@ public class RegisterFormServiceImplement implements RegisterFormService {
     @Override
     public List<FormListDto> getAllFormSpecificTeamAll(Long approveRoleId, Long teamId, Long userId) {
         List<RegisterForm> registerForms = registerFormRepo.findRegisterFormByTeamAll(approveRoleId, teamId);
+        return getRegisterFormDtoList(userId, registerForms);
+    }
+
+    public List<FormListDto> getAllFormSpecificTeamAllWithoutUserId(Long teamId, Long userId) {
+        List<RegisterForm> registerForms = registerFormRepo.findRegisterFormByTeamAllWithoutApproveRoleId(teamId);
         return getRegisterFormDtoList(userId, registerForms);
     }
 
@@ -256,9 +266,18 @@ public class RegisterFormServiceImplement implements RegisterFormService {
 
         if ("team".equalsIgnoreCase(entityName)) {
             if (status.equalsIgnoreCase("ALL")) {
-                registerFormDtoList = getAllFormSpecificTeamAll(approveRoleId, entityId, userId);
+                if(user.getApproveRoles().stream().noneMatch(role -> role.getName().equals("PROJECT_MANAGER"))) {
+                    registerFormDtoList = getAllFormSpecificTeamAllWithoutUserId(entityId, userId);
+                } else if(user.getApproveRoles().stream().anyMatch(role -> role.getName().equals("PROJECT_MANAGER"))) {
+                    registerFormDtoList = getAllFormSpecificTeamAll(approveRoleId, entityId, userId);
+                }
+
             } else {
-                registerFormDtoList = getAllFormSpecificTeam(approveRoleId, status, entityId, userId);
+                if(user.getApproveRoles().stream().noneMatch(role -> role.getName().equals("PROJECT_MANAGER"))) {
+                    registerFormDtoList = getAllFormSpecificTeamWithoutUserId(status, entityId, userId);
+                } else if(user.getApproveRoles().stream().anyMatch(role -> role.getName().equals("PROJECT_MANAGER"))) {
+                    registerFormDtoList = getAllFormSpecificTeam(approveRoleId, status, entityId, userId);
+                }
             }
         } else if ("department".equalsIgnoreCase(entityName)) {
             if (status.equalsIgnoreCase("ALL")) {
