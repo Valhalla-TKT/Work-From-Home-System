@@ -166,7 +166,9 @@ public class UserServiceImplement implements UserService {
 		if(userDto.getApproveRoles().stream().anyMatch(role -> role.getName().equals("DEPARTMENT_HEAD"))) {
 			userDto.setTeams(teamRepo.findAllByDepartmentId(user.getDepartment().getId()));
 		}
-		userDto.getDepartment().setTeams(teamRepo.findAllByDepartmentId(user.getDepartment().getId()));
+		if(userDto.getDepartment() != null) {
+			userDto.getDepartment().setTeams(teamRepo.findAllByDepartmentId(user.getDepartment().getId()));
+		}
         return userDto;
 	}
 
