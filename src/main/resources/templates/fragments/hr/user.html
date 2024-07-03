@@ -15,7 +15,7 @@
 				<div class="container-medium">
 					<div class="content-container display-flex direction-col-reverse">
 						<div class="job-listings-container flex-1">
-							<form data-search-input-form class="search-input-form">
+							<form data-search-input-form class="search-input-form" style="margin-top: 20px;">
 								<svg xmlns="http://www.w3.org/2000/svg" width="17" height="17" viewBox="0 0 17 17"
 									fill="none" role="img" class="icon">
 									<path
@@ -39,7 +39,7 @@
 									<div class="display-flex align-center">
 										<div class="new-opportunities-heading">All staffs</div>
 									</div>
-									<a class="job-banner-cta js-job-cta btn2 add-data" href="#">
+									<a class="job-banner-cta js-job-cta btn2 add-data visible-hr-only" href="#">
 										<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
 											viewBox="0 0 24 24" fill="none" role="img" class="icon">
 											<path d="M12 5V19M5 12H19" stroke="currentColor" stroke-width="2"
@@ -174,18 +174,19 @@
 						<label for="approveRoleSelectBoxDetail">Choose Permission</label>
 						<select id="approveRoleSelectBoxDetail" required="required" style="width: 100%" step="any"></select>
 						<div id="team-data-detail">
-							<label for="team-name">Choose Team He/She Has To Join</label>
-							<select id="team-name" required="required" style="width: 100%" step="any"></select>
+							<label for="team-name-detail">Choose Team He/She Has To Join</label>
+							<select id="team-name-detail" required="required" style="width: 100%" step="any"></select>
 						</div>
-						<div id="department-data">
-							<label for="department-name">Choose department He/She Has To Join</label>
-							<select id="department-name" required="required" style="width: 100%" step="any"></select>
+						<div id="department-data-detail">
+							<label for="department-name-detail">Choose department He/She Has To Join</label>
+							<select id="department-name-detail" required="required" style="width: 100%" step="any"></select>
 						</div>
-						<div id="division-data">
-							<label for="division-name">Choose division He/She Has To Join</label>
-							<select id="division-name" required="required" style="width: 100%" step="any"></select>
+						<div id="division-data-detail">
+							<label for="division-name-detail">Choose division He/She Has To Join</label>
+							<select id="division-name-detail" required="required" style="width: 100%" step="any"></select>
 						</div>
-						<button class="btn2 add-data-btn" type="button" id="edit-staff">Save Changes</button>
+						<input type="hidden" id="user-id-detail">
+						<button class="btn2 add-data-btn" type="button" id="update-approve-role">Save Changes</button>
 					</form>
 				</div>
 			</div>

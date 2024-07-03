@@ -1,5 +1,13 @@
 $(document).ready( function(){
     let approveRoles = [];
+    let filteredUserData = [];
+    var currentPage = 1;
+    var usersPerPage = 8;
+    var totalUsers = 0;
+    var userData = [];
+
+    const pagination = document.querySelector('.pagination');
+    const pageNumbers = pagination.querySelector('.page-numbers');
      getAllUser(1, true);
     toggleSections();
     $('#join-date').dateDropper({
@@ -21,6 +29,30 @@ $(document).ready( function(){
     $('#gender-filter').on('change', async function() {
         await getAllUser(1)
     });
+
+    $('#search-by-staff-name').on('input', function() {
+        const searchTerm = $(this).val().trim().toLowerCase();
+        searchUsers(searchTerm);
+    });
+
+    function searchUsers(term) {
+        if (!term) {
+            console.log()
+            filteredUserData = userData;
+        } else {
+            console.log("i")
+            filteredUserData = userData.filter(user => {
+                const name = user.name.toLowerCase();
+                const email = user.email.toLowerCase();
+                const staffId = user.staffId.toLowerCase();
+                return name.includes(term) || email.includes(term) || staffId.includes(term);
+            });
+        }
+        totalUsers = filteredUserData.length;
+        currentPage = 1;
+        renderUsers();
+        renderUsers();
+    }
 
     $('#gender').change(function() {
         var selectedGender = $(this).val();
@@ -165,6 +197,17 @@ $(document).ready( function(){
                     });
                     selectBox.append(option);
                 }
+                var selectBoxDetail = $('#team-name-detail');
+                selectBoxDetail.empty();
+                selectBoxDetail.append('<option value="all" selected>Select Team Name</option>');
+                for (var d = 0; d < response.length; d++) {
+                    var optionDetail = $('<option>', {
+                        value: response[d].id,
+                        text: response[d].name,
+                    });
+                    selectBoxDetail.append(optionDetail);
+                }
+
             })
             .catch(error => {
                 console.error('Error:', error);
@@ -218,6 +261,16 @@ $(document).ready( function(){
                 var selectBox = $('#department-filter');
                 selectBox.empty();
                 selectBox.append('<option value="all" selected>Select Department Name</option>');
+                for (var i = 0; i < response.length; i++) {
+                    var option = $('<option>', {
+                        value: response[i].id,
+                        text: response[i].name,
+                    });
+                    selectBox.append(option);
+                }
+                var selectBox = $('#department-name-detail');
+                selectBox.empty();
+                selectBox.append('<option value="" disabled selected>Select Department Name</option>');
                 for (var i = 0; i < response.length; i++) {
                     var option = $('<option>', {
                         value: response[i].id,
@@ -308,24 +361,26 @@ $(document).ready( function(){
                     });
                     selectBox.append(option);
                 }
+                var selectBox = $('#division-name-detail');
+                selectBox.empty();
+                selectBox.append('<option value="" disabled selected>Select Division Name</option>');
+                for (var i = 0; i < response.length; i++) {
+                    var option = $('<option>', {
+                        value: response[i].id,
+                        text: response[i].name,
+                    });
+                    selectBox.append(option);
+                }
             })
             .catch(error => {
                 console.error('Error:', error);
             })
     }
 
-    var currentPage = 1;
-    var usersPerPage = 8;
-    var totalUsers = 0;
-    var userData = [];
-
-    const pagination = document.querySelector('.pagination');
-    const pageNumbers = pagination.querySelector('.page-numbers');
-
     function renderUsers() {
         const start = (currentPage - 1) * usersPerPage;
         const end = start + usersPerPage;
-        const pageData = userData.slice(start, end);
+        const pageData = filteredUserData.slice(start, end);
 
         $('#staff-list').empty();
         pageData.forEach(user => {
@@ -467,6 +522,7 @@ $(document).ready( function(){
             }
 
             userData = response;
+            filteredUserData = userData;
             totalUsers = userData.length;
             totalCount.text(totalUsers)
             currentPage = 1;
@@ -483,6 +539,7 @@ $(document).ready( function(){
         document.getElementById('email-detail').value = user.email;
         document.getElementById('gender-detail').value = user.gender;
         document.getElementById('position-name-detail').value = user.positionName;
+        document.getElementById('user-id-detail').value = user.id;
         let userRole = ''
             user.approveRoles.forEach(role => {
                 userRole = role.name;
@@ -498,12 +555,46 @@ $(document).ready( function(){
             }
             approveRoleSelectBoxDetail.appendChild(option);
         });
+        $('#team-name-detail').val(user.teamId).change();
+        $('#department-name-detail').val(user.departmentId).change();
+        $('#division-name-detail').val(user.divisionId).change();
         document.getElementById('detail-data-overlay').style.display = 'block';
     }
 
     $('#approveRoleSelectBoxDetail').change(function() {
         var selectedOption = $(this).find('option:selected').text();
+        console.log(selectedOption)
         toggleSections(selectedOption);
+    });
+
+    $('#update-approve-role').click(function(event) {
+        event.preventDefault();
+        var userId = $('#user-id-detail').val();
+        var approveRoleIdList = $('#approveRoleSelectBoxDetail').val();
+        console.log(userId, approveRoleIdList)
+
+        $.ajax({
+            url: `http://localhost:8080/api/user/updateApproveRole`,
+            type: 'POST',
+            data: {
+                userId: userId,
+                approveRoleId: approveRoleIdList
+            },
+            success: function(response) {
+                Swal.fire({
+                    title: 'Success!',
+                    text: 'Role updated successfully.',
+                    icon: 'success',
+                    confirmButtonText: 'OK'
+                }).then(() => {
+                    $('#message').text(response);
+                });
+            },
+            error: function(error) {
+                console.error('Error:', error);
+                $('#message').text('Update User Role Failed...');
+            }
+        });
     });
 
     function addCardEventListeners() {
