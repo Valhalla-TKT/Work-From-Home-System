@@ -23878,7 +23878,8 @@ body.no-hiring .designer-search-container a.shot-thumbnail-link {
     box-sizing: border-box;
     height: 100vh;
     padding: 0px 32px 52px;
-    overflow-y: auto
+    overflow-y: auto;
+    overflow-x: hidden;
 }
 
 .form-checkbox {

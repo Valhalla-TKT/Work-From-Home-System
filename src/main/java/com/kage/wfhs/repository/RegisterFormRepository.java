@@ -35,13 +35,25 @@ public interface RegisterFormRepository extends JpaRepository<RegisterForm,Long>
     List<RegisterForm> findRegisterFormByTeam(Long approveRoleId, String status, Long teamId);
 
     @Query(value = """
-            SELECT rf.* FROM register_form rf 
+        SELECT DISTINCT rf.* 
+        FROM register_form rf 
+        JOIN user u ON rf.applicant_id = u.id 
+        JOIN work_flow_status wfs ON rf.id = wfs.register_form_id
+        WHERE u.team_id = :teamId
+          AND wfs.status = :status
+          AND wfs.approve_role_id = :approveRoleId
+    """, nativeQuery = true)
+    List<RegisterForm> findRegisterFormByTeamWithoutApproveRoleId(String status, Long teamId, Long approveRoleId);
+
+    @Query(value = """
+            SELECT rf.* 
+            FROM register_form rf 
             JOIN work_flow_status wfs ON rf.id = wfs.register_form_id
             JOIN user u ON u.id = wfs.user_id 
             JOIN team t ON u.team_id = t.id 
-            WHERE wfs.status = :status AND t.id = :teamId
+            WHERE wfs.status = :status AND t.id = :teamId AND wfs.approve_role_id = :approveRoleId
         """, nativeQuery = true)
-    List<RegisterForm> findRegisterFormByTeamWithoutApproveRoleId(String status, Long teamId);
+    List<RegisterForm> findRegisterFormByTeamAndApproveRoleId(String status, Long teamId, Long approveRoleId);
 
 
     @Query(value = """
@@ -53,12 +65,11 @@ public interface RegisterFormRepository extends JpaRepository<RegisterForm,Long>
     List<RegisterForm> findRegisterFormByTeamAll(Long approveRoleId, Long teamId);
 
     @Query(value = """
-            SELECT rf.* FROM register_form rf 
-            JOIN work_flow_status wfs ON rf.id = wfs.register_form_id
-            JOIN user u ON u.id = wfs.user_id 
-            JOIN team t ON u.team_id = t.id
-            WHERE t.id = :teamId
-        """, nativeQuery = true )
+        SELECT rf.* 
+        FROM register_form rf 
+        JOIN user u ON rf.applicant_id = u.id 
+        WHERE u.team_id = :teamId
+    """, nativeQuery = true)
     List<RegisterForm> findRegisterFormByTeamAllWithoutApproveRoleId(Long teamId);
 
 

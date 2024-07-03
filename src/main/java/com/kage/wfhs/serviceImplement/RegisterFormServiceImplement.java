@@ -138,8 +138,8 @@ public class RegisterFormServiceImplement implements RegisterFormService {
         return getRegisterFormDtoList(userId, registerForms);
     }
 
-    public List<FormListDto> getAllFormSpecificTeamWithoutUserId(String status, Long teamId, Long userId) {
-        List<RegisterForm> registerForms = registerFormRepo.findRegisterFormByTeamWithoutApproveRoleId(status, teamId);
+    public List<FormListDto> getRegisterFormByTeamWithoutApproveRoleId(Long approveRoleId, String status, Long teamId, Long userId) {
+        List<RegisterForm> registerForms = registerFormRepo.findRegisterFormByTeamWithoutApproveRoleId(status, teamId, approveRoleId);
         return getRegisterFormDtoList(userId, registerForms);
     }
 
@@ -274,7 +274,7 @@ public class RegisterFormServiceImplement implements RegisterFormService {
 
             } else {
                 if(user.getApproveRoles().stream().noneMatch(role -> role.getName().equals("PROJECT_MANAGER"))) {
-                    registerFormDtoList = getAllFormSpecificTeamWithoutUserId(status, entityId, userId);
+                    registerFormDtoList = getRegisterFormByTeamWithoutApproveRoleId(approveRoleId, status, entityId, userId);
                 } else if(user.getApproveRoles().stream().anyMatch(role -> role.getName().equals("PROJECT_MANAGER"))) {
                     registerFormDtoList = getAllFormSpecificTeam(approveRoleId, status, entityId, userId);
                 }
