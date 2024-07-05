@@ -343,6 +343,20 @@ public class RegisterFormServiceImplement implements RegisterFormService {
         return formList;
     }
 
+    @Override
+    public void createCeoForm(Long userId, Date fromDate, Date toDate) throws Exception {
+        RegisterFormDto registerFormDto = new RegisterFormDto();
+        registerFormDto.setApplicantId(userId);
+        registerFormDto.setRequesterId(userId);
+        registerFormDto.setWorking_place("Home");
+        registerFormDto.setRequest_reason("For Emergency.");
+        registerFormDto.setFrom_date(fromDate);
+        registerFormDto.setTo_date(toDate);
+        registerFormDto.setRequest_percent(100);
+        registerFormDto.setSignedDate(new Date());
+        createRegisterForm(registerFormDto);
+    }
+
 //    @Override
 //    public Map<String, Object> getDepartmentWithStatus(String status, long departmentId, long userId) {
 //        User user = EntityUtil.getEntityById(userRepo, userId);

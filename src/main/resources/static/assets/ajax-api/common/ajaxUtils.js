@@ -30,7 +30,7 @@ async function handleResponse(response, redirectUrl = null) {
 
 async function sendRequestWithOneParam(url, method, paramName, param) {
     try {
-        const fullUrl = `${url}?${paramName}=${param}`;
+        const fullUrl = `http://localhost:8080${url}?${paramName}=${param}`;
 
         const response = await fetch(fullUrl, {
             method: method,

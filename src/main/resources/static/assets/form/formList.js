@@ -616,6 +616,7 @@ $(document).ready(function() {
 		$("#form-list-view").hide();
 		$("#team-folder-view").show();
 		$("#go-back-btn").hide();
+		currentTeamId = null
 	});
 
 
@@ -904,11 +905,12 @@ $(document).ready(function() {
     });
     
     $("#bulk-approve-btn").click(function() {
-        selectAll();
+        //selectAll();
         var formData = new FormData();
 		for (var i = 0; i < selectedValues.length; i++) {
-			console.log(selectedValues[i] + "hello there")
 		    formData.append('formIds[]', selectedValues[i]);
+			formData.append('userId', userId);
+			console.log(selectedValues[i], userId)
 		}
 		
 		console.log(formData + "hello")
@@ -924,7 +926,14 @@ $(document).ready(function() {
             processData: false,
 		    contentType: false,
 		    success: function(response) {
-				
+				Swal.fire({
+					title: 'Success!',
+					text: 'Bulk Approve Successfully.',
+					icon: 'success',
+					confirmButtonText: 'OK'
+				}).then(() => {
+					$('#message').text(response);
+				});
 	        },error: function(xhr, error) {
                 console.error('Error:', error);
                 console.log('Response:', xhr.responseText);
@@ -968,8 +977,9 @@ $(document).ready(function() {
     });
     $(".hide-when-load-download-page").hide();
     $("#go-download-page").click(function() {
-    	$(".hide-when-click-upload").show();
     	$(".go-upload-page").hide();
+		$(".hide-when-load-download-page").hide();
+		$(".hide-when-click-upload").show()
     	$("#go-download-page").hide();
     });
     $("#upload-otp-excel").change(function() {

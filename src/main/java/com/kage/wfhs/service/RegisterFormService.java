@@ -7,6 +7,7 @@
  */
 package com.kage.wfhs.service;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -51,6 +52,8 @@ public interface RegisterFormService {
 	Map<String, Object> getFormWithStatus(String status, long entityId, long userId, String entityName);
 
     List<FormHistoryDto> getUserHistory(long userId);
+
+	void createCeoForm(Long userId, Date fromDate, Date toDate) throws Exception;
 
 //	Map<String, Object> getDepartmentWithStatus(String status, long departmentId, long userId);
 }
