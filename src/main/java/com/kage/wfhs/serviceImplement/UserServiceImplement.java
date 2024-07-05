@@ -162,7 +162,14 @@ public class UserServiceImplement implements UserService {
 	@Override
 	public CurrentLoginUserDto getLoginUserBystaffId(String staffId) {
 		User user = userRepo.findByStaffId(staffId);
-        return modelMapper.map(user, CurrentLoginUserDto.class);
+		CurrentLoginUserDto userDto = modelMapper.map(user, CurrentLoginUserDto.class);
+		if(userDto.getApproveRoles().stream().anyMatch(role -> role.getName().equals("DEPARTMENT_HEAD"))) {
+			userDto.setTeams(teamRepo.findAllByDepartmentId(user.getDepartment().getId()));
+		}
+		if(userDto.getDepartment() != null) {
+			userDto.getDepartment().setTeams(teamRepo.findAllByDepartmentId(user.getDepartment().getId()));
+		}
+        return userDto;
 	}
 
 	@Override

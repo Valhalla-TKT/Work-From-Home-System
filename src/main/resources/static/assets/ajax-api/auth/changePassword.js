@@ -98,7 +98,7 @@ document.addEventListener('DOMContentLoaded', async function () {
                 });
         } catch (error) {
             console.error('Password change process failed:', error.message);
-            Swal.fire('Error', 'Password change failed: ' + error.message, 'error');
+            Swal.fire('Error', 'Current password is incorrect. Please enter the correct password.' , 'error');
         }
     }
 });

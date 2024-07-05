@@ -332,12 +332,12 @@ $(document).ready(async function() {
 				// }
 				const navModalProfileImg = document.getElementById("nav-modal-profile-img");
 				const navProfileImg = document.getElementById("nav-profile-img");
-				navModalProfileImg.src = `assets/profile/${currentUser.profile}`;
+				navModalProfileImg.src = `/assets/profile/${currentUser.profile}`;
 				navModalProfileImg.alt = currentUser.name;
-				navProfileImg.src = `assets/profile/${currentUser.profile}`;
+				navProfileImg.src = `/assets/profile/${currentUser.profile}`;
 				navProfileImg.alt = currentUser.name;
 				const profileImage = $('#profile-page-image')
-				profileImage.attr('src', `assets/profile/${currentUser.profile}`).attr('alt', currentUser.name);
+				profileImage.attr('src', `/assets/profile/${currentUser.profile}`).attr('alt', currentUser.name);
 				console.log(profileImage)
 			}
 	    }

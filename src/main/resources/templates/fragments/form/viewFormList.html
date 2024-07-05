@@ -21,7 +21,7 @@
                                             <div class="search-summary-details">
                                                 <h1 class="search-summary-title" id="form-list-title">Work from Home Request Form Lists</h1>
                                             </div>
-                                            <button id="bulk-approve-btn" class="btn2" style="background: white; color: #0d0c22; margin-right: 10px;">Bulk Approve</button>
+                                            <button id="bulk-approve-btn" class="btn2 hide-service-desk-only" style="background: white; color: #0d0c22; margin-right: 10px;">Bulk Approve</button>
                                             <button id="select-all-btn" class="btn2" type="button">Select All</button>
                                             <button id="go-upload-page" class="btn2 visible-service-desk-only hide-when-click-upload" style="background: white; color: #0d0c22; margin-right: 10px;">Upload Excel for OTP</button>             
                                             <button id="service-desk-download-btn" class="btn2 visible-service-desk-only hide-when-click-upload">Download List</button>   
@@ -42,11 +42,24 @@
                                 </div>
                             </div>
 
-                            <div id="designer-search-results-stream" class="designer-search-results-stream hide-when-click-upload">
-                                <div class="form-card-container">
-                                                                       
-                                </div>
+                            <!-- Go Back Button -->
+                            <button id="go-back-btn" class="btn2" style="display: none; margin: 10px;">Back to Teams</button>
+
+<!--                            <div id="designer-search-results-stream" class="designer-search-results-stream hide-when-click-upload">-->
+<!--                                <div class="form-card-container">-->
+<!--                                                                       -->
+<!--                                </div>-->
+<!--                            </div>-->
+
+                            <div id="team-folder-view" class="designer-search-results-stream hide-when-click-upload">
+                                <div class="form-card-container"></div>
                             </div>
+
+                            <!-- Form List Container -->
+                            <div id="form-list-view" class="designer-search-results-stream hide-when-click-upload" style="display: none;">
+                                <div class="form-card-container"></div>
+                            </div>
+
                             <div class="hide-when-load-download-page">
 								<input type="file" id="upload-otp-excel">                 
                             </div>
@@ -75,25 +88,7 @@
                                                     </select>
 
                                                 </div>
-                                                <div class="form-field-wrapper">
-                                                    <div class="label-flag heading-label">
-                                                        <label>Specific</label>
-                                                    </div>
-                                                    <select name="specific" id="" style="width: 100%;">
-                                                        <option value="all">All</option>
-                                                        <option value="name">Name</option>
-                                                        <option value="position">Position</option>
-                                                        <option value="role">Role</option>
-                                                    </select>
-                                                </div>
-                                                <div class="form-field-wrapper">
-                                                    <div class="label-flag heading-label">
-                                                        <label>Location</label>
-                                                    </div>
-                                                    <select name="" id="" style="width: 100%;">
-                                                        <option value="all">All</option>
-                                                    </select>
-                                                </div>
+
                                             </fieldset>
                                         </form>
                                     </div>

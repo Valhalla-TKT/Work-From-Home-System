@@ -453,6 +453,20 @@ async function getSessionUser() {
     });
 }
 
+async function createCeoForm(userId, fromDate, toDate) {
+    try {
+        const responseData = await sendRequestWithThreeParams(`/api/registerform/createCeoForm`, 'POST', 'userId', userId, "from_date", fromDate, "to_date", toDate);
+        const contentType = responseData.headers.get('content-type');
+        if (contentType && contentType.includes('application/json')) {
+            return await responseData.json();
+        } else {
+            return await responseData.text();
+        }
+    } catch (error) {
+        console.error('Error:', error);
+    }
+}
+
 // Cookie JWT
 async function fetchCookie(url) {
     const token = getCookie("JWT");

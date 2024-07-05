@@ -380,21 +380,20 @@ $(document).ready(function() {
       function hideCheckBoxDialogModal() {
           checkBoxModalDialog.get(0).close();
       }
-      $('#ceo-apply-form-btn').click(function(event) {
+      $('#ceo-apply-form-btn').click(async function(event) {
 			event.preventDefault();
 			var formData = new FormData();
-			formData.append('applicantId', currentUser.id);
-	        formData.append('requesterId', currentUser.id);
+			//formData.append('applicantId', currentUser.id);
+	        formData.append('userId', currentUser.id);
 	        formData.append('from_date', formatDate(fromDate));
 	        formData.append('to_date', formatDate(toDate));
-	        formData.append('signed_date', signed_date);
-	        formData.append('applied_date', applied_date);
 	        $.ajax({
-		    url: 'api/registerform/createCeoForm',
+		    url: 'http://localhost:8080/api/registerform/createCeoForm',
 		    type: 'POST',
 		    data: formData,
 		    processData: false,
 		    contentType: false,
+		  	//await createCeoForm(currentUserId, formatDate(new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 1)), formatDate(toDate));
 		    success: function(response) {
 		        console.log("Successful : ", response);
 		        $('#message').text(response);

@@ -15,26 +15,26 @@ $(document).ready(function() {
 		});
 	}
 	
-	function handleSearch2(searchInput, listContainer) {
-        searchInput.on('input', function() {
-            var searchText = $(this).val().toLowerCase();
-
-            listContainer.find('.js-resume-card').each(function() {
-                var userName = $(this).find('.resume-card-designer-name').text().toLowerCase();
-
-                if (userName.includes(searchText)) {
-                    $(this).show();
-                } else {
-                    $(this).hide();
-                }
-            });
-        });
-    }
+	// function handleSearch2(searchInput, listContainer) {
+    //     searchInput.on('input', function() {
+    //         var searchText = $(this).val().toLowerCase();
+	//
+    //         listContainer.find('.js-resume-card').each(function() {
+    //             var userName = $(this).find('.resume-card-designer-name').text().toLowerCase();
+	//
+    //             if (userName.includes(searchText)) {
+    //                 $(this).show();
+    //             } else {
+    //                 $(this).hide();
+    //             }
+    //         });
+    //     });
+    // }
 
 	const searchByDivisionName = $('#search-by-division-name');
 	const searchByDepartmentName = $('#search-by-department-name');
 	const searchByTeamName = $('#search-by-team-name');
-	const searchByStaffName = $('#search-by-staff-name');
+	// const searchByStaffName = $('#search-by-staff-name');
 			
 
 	if (searchByDivisionName.length) {
@@ -49,7 +49,7 @@ $(document).ready(function() {
 		handleSearch(searchByTeamName, $('#team-list'));
 	}
 	
-	if (searchByStaffName.length) {
-		handleSearch2(searchByStaffName, $('#staff-list'));
-	}
+	// if (searchByStaffName.length) {
+	// 	handleSearch2(searchByStaffName, $('#staff-list'));
+	// }
 });
