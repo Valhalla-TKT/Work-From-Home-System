@@ -37,8 +37,8 @@ public class FirstTimeLoginFilter extends OncePerRequestFilter {
 
         // Allow requests to static resources and specific endpoints
         if (requestURI.startsWith("/wfhs/static/") || requestURI.startsWith("/wfhs/assets/") ||
-                requestURI.startsWith("/wfhs/api/session/") || requestURI.startsWith("/wfhs/swagger-ui/") || requestURI.startsWith("/wfhs/api/password/") ||
-                requestURI.startsWith("/wfhs/icons/") || requestURI.startsWith("/wfhs/formImages/") ||
+                requestURI.startsWith(request.getContextPath() + "/api/session/") || requestURI.startsWith("/wfhs/swagger-ui/") || requestURI.startsWith(request.getContextPath() + "/api/password/") ||
+                requestURI.startsWith("/icons/") || requestURI.startsWith("/formImages/") ||
                 requestURI.startsWith("/wfhs/images/") || requestURI.startsWith("/wfhs/ws/") ||
                 requestURI.equals("/wfhs/login") || requestURI.equals("/wfhs/profile") || requestURI.equals("/wfhs/admin/importExcel")) {
             filterChain.doFilter(request, response);
