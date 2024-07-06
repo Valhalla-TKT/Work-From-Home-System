@@ -36,11 +36,11 @@ public class FirstTimeLoginFilter extends OncePerRequestFilter {
         String requestURI = request.getRequestURI();
 
         // Allow requests to static resources and specific endpoints
-        if (requestURI.startsWith("/static/") || requestURI.startsWith("/assets/") ||
-                requestURI.startsWith("/api/session/") || requestURI.startsWith("/swagger-ui/") || requestURI.startsWith("/api/password/") ||
-                requestURI.startsWith("/icons/") || requestURI.startsWith("/formImages/") ||
-                requestURI.startsWith("/images/") || requestURI.startsWith("/ws/") ||
-                requestURI.equals("/login") || requestURI.equals("/profile") || requestURI.equals("/admin/importExcel")) {
+        if (requestURI.startsWith("/wfhs/static/") || requestURI.startsWith("/wfhs/assets/") ||
+                requestURI.startsWith("/wfhs/api/session/") || requestURI.startsWith("/wfhs/swagger-ui/") || requestURI.startsWith("/wfhs/api/password/") ||
+                requestURI.startsWith("/wfhs/icons/") || requestURI.startsWith("/wfhs/formImages/") ||
+                requestURI.startsWith("/wfhs/images/") || requestURI.startsWith("/wfhs/ws/") ||
+                requestURI.equals("/wfhs/login") || requestURI.equals("/wfhs/profile") || requestURI.equals("/wfhs/admin/importExcel")) {
             filterChain.doFilter(request, response);
             return;
         }
@@ -58,13 +58,14 @@ public class FirstTimeLoginFilter extends OncePerRequestFilter {
                 Set<String> roles = userDto.getApproveRoles().stream().map(ApproveRole::getName).collect(Collectors.toSet());
                 if (roles.contains("HR")) {
                     logger.debug("Redirecting to /importExcel");
-                    response.sendRedirect("/admin/importExcel");
+                    response.sendRedirect(request.getContextPath() + "/admin/importExcel");
                     return;
                 } else  {
                     logger.debug("Redirecting to /profile");
-                    response.sendRedirect("/profile");
+                    response.sendRedirect(request.getContextPath() + "/profile");
                     return;
                 }
+
             }
         }
         filterChain.doFilter(request, response);
