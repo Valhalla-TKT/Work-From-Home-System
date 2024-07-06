@@ -437,7 +437,7 @@ async function fetchUserFormHistory(userId) {
 async function getSessionUser() {
     return new Promise((resolve, reject) => {
         $.ajax({
-            url: 'http://localhost:8080/api/session/user',
+            url: 'http://localhost:8080/wfhs/api/session/user',
             type: 'POST',
             contentType: 'application/json',
             success: function(response) {

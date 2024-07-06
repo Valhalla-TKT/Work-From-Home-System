@@ -64,7 +64,6 @@ public class SecurityConfig {
                             return isApplicant ? new org.springframework.security.authorization.AuthorizationDecision(false)
                                     : new org.springframework.security.authorization.AuthorizationDecision(true);
                         })
-                        .requestMatchers("/api/registerform/**").permitAll()
                         .anyRequest().authenticated()
                 )
                 .exceptionHandling(exceptionHandling -> exceptionHandling.accessDeniedPage("/accessDenied"))
@@ -73,7 +72,7 @@ public class SecurityConfig {
                 .formLogin(form -> form
                                 .loginPage("/login")
                                 .loginProcessingUrl("/signIn")
-                                .defaultSuccessUrl("/dashboard")
+                                .defaultSuccessUrl("/wfhs/dashboard")
                                 .successHandler(
                                         (((request, response, authentication) -> {
                                         	String token = jwtUtil.generateToken(authentication.getName());
@@ -84,7 +83,7 @@ public class SecurityConfig {
                                             response.addCookie(cookie);
                                             CurrentLoginUserDto userDto = userService.getLoginUserBystaffId(authentication.getName());
                                             request.getSession().setAttribute("login-user", userDto);
-                                            response.sendRedirect("/dashboard");
+                                            response.sendRedirect("/wfhs/dashboard");
 
                                         }))
                                 )
@@ -93,7 +92,7 @@ public class SecurityConfig {
                 ).logout(
                         logout -> logout
                                 .logoutUrl("/signOut")
-                                .logoutSuccessUrl("/login")
+                                .logoutSuccessUrl("/wfhs/login")
                                 .logoutSuccessHandler(
                                         (((request, response, authentication) -> {
                                             Cookie cookie = new Cookie("JWT", null);
@@ -101,7 +100,7 @@ public class SecurityConfig {
                                             cookie.setPath("/");
                                             cookie.setMaxAge(0);
                                             response.addCookie(cookie);
-                                            response.sendRedirect("/login");
+                                            response.sendRedirect("/wfhs/login");
                                         }))
                                 )
                                 .invalidateHttpSession(true)
@@ -140,7 +139,7 @@ public class SecurityConfig {
         return (request, response, exception) -> {
             String errorMessage = "Incorrect username or password.";
             request.getSession().setAttribute("errorMessage", errorMessage);
-            response.sendRedirect("/login?error");
+            response.sendRedirect("/wfhs/login?error");
         };
     }
 }

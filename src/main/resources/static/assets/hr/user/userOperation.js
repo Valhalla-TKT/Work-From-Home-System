@@ -154,7 +154,7 @@ $(document).ready( function(){
     //         gender:gender
     //     };
     //     $.ajax({
-    //         url: `http://localhost:8080/api/user/generateStaffId`,
+    //         url: `http://localhost:8080/wfhs/api/user/generateStaffId`,
     //         type: 'POST',
     //         contentType: 'application/json',
     //         data: JSON.stringify(requestData),
@@ -389,7 +389,7 @@ $(document).ready( function(){
                 <div class="resume-card-header resume-section-padding">
                     <div class="resume-card-header-designer">
                         <img class="resume-card-avatar" alt="${user.name}" width="70" height="70"
-                            src="/assets/profile/${user.profile}" />                               
+                            src="/wfhs/assets/profile/${user.profile}" />                               
                         <div class="resume-card-header-details">
                             <div class="resume-card-title">
                                 <h3 class="resume-card-designer-name user-select-none">
@@ -574,7 +574,7 @@ $(document).ready( function(){
         console.log(userId, approveRoleIdList)
 
         $.ajax({
-            url: `http://localhost:8080/api/user/updateApproveRole`,
+            url: `http://localhost:8080/wfhs/api/user/updateApproveRole`,
             type: 'POST',
             data: {
                 userId: userId,
@@ -622,7 +622,7 @@ $(document).ready( function(){
     });
     function getAllApproveRole() {
         $.ajax({
-            url: `http://localhost:8080/api/approveRole/approveRoleList`,
+            url: `http://localhost:8080/wfhs/api/approveRole/approveRoleList`,
             type: 'POST',
             contentType: 'application/json',
             success: function (response) {
