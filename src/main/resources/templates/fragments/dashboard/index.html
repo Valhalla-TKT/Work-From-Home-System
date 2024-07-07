@@ -10,15 +10,14 @@
 		<section class="hero" data-track-location="Header">
 			<div class="home-container">
 				<div class="home-badge home-badge--color-cycle">
-					<a data-track-cta="Get started">Welcome From WorkHub!</a>
+					<a data-track-cta="Get started">Welcome From DAT: Work From Home System!</a>
 				</div>
 				<br>
 				<h1 class="hero__heading">WorkHub for managing remote work</h1>
 				<div class="home-type-body-large font-weight-500">Get inspired
 					by the productivity and success of millions of remote workers and
 					companies around the world.</div>
-				<br> <a class="margin-t-32 btn2 btn2--large hide-ceo-only" data-track-cta="Get started" href="/applyForm">Apply Form
-					Now</a>
+				<br> <a class="margin-t-32 btn2 btn2--large hide-ceo-only" data-track-cta="Get started" th:href="@{/applyForm}">Apply Form Now</a>
 				<a class="margin-t-32 btn2 btn2--large visible-ceo-only" id="ceo-apply-form-btn" data-track-cta="Get started">Apply Form
 					Now</a>
 			</div>
@@ -73,7 +72,7 @@
 										<div class="shot-statistic js-shot-likes-container">
 											<span
 												class="js-shot-likes-count num color-deep-blue-sea-light-20 font-weight-500"
-												data-val="4"
+												th:attr="data-val=${divisionCount}"
 												style="font-size: 20px; margin-right: 0.5rem; color: #0d0c22;">0 </span>
 											<div class="like-action-23716274 compact-true shot-action">
 												<img class="photo lazyload" alt="Ethan Fender" width="24" height="24"
@@ -106,7 +105,7 @@
 										<div class="shot-statistic js-shot-likes-container">
 											<span
 												class="js-shot-likes-count num color-deep-blue-sea-light-20 font-weight-500"
-												data-val="12"
+												th:attr="data-val=${departmentCount}"
 												style="font-size: 20px; margin-right: 0.5rem; color: #0d0c22;">0 </span>
 											<div class="like-action-23716274 compact-true shot-action">
 												<img class="photo lazyload" alt="Ethan Fender" width="24" height="24"
@@ -139,7 +138,7 @@
 										<div class="shot-statistic js-shot-likes-container">
 											<span
 												class="js-shot-likes-count num color-deep-blue-sea-light-20 font-weight-500"
-												data-val="43"
+												th:attr="data-val=${teamCount}"
 												style="font-size: 20px; margin-right: 0.5rem; color: #0d0c22;">0 </span>
 											<div class="like-action-23716274 compact-true shot-action">
 												<img class="photo lazyload" alt="Ethan Fender" width="24" height="24"
@@ -172,7 +171,7 @@
 										<div class="shot-statistic js-shot-likes-container">
 											<span
 												class="js-shot-likes-count num color-deep-blue-sea-light-20 font-weight-500"
-												data-val="160"
+												th:attr="data-val=${userCount}"
 												style="font-size: 20px; margin-right: 0.5rem; color: #0d0c22;">0 </span>
 											<div class="like-action-23716274 compact-true shot-action">
 												<img class="photo lazyload" alt="Ethan Fender" width="24" height="24"
@@ -384,10 +383,10 @@
 
 			</div>
 		</div>
-		<script src="/assets/dashboard/chart.js"></script>
-		<script src="/assets/dashboard/count.js"></script>
-		<script src="/assets/dashboard/progressBar.js"></script>
-		<script src="/assets/dashboard/calendar.js"></script>
+		<script src="/wfhs/assets/dashboard/chart.js"></script>
+		<script src="/wfhs/assets/dashboard/count.js"></script>
+		<script src="/wfhs/assets/dashboard/progressBar.js"></script>
+		<script src="/wfhs/assets/dashboard/calendar.js"></script>
 	</main>
 
 </body>

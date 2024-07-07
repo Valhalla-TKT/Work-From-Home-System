@@ -24,7 +24,7 @@ async function createUser() {
 // Division
 async function createNewDivision(requestData) {    
     try {
-        const responseData = await sendRequest(`/admin/api/division/`, 'POST', requestData);
+        const responseData = await sendRequest(`/api/division/`, 'POST', requestData);
         handleResponse(responseData, null);
     } catch (error) {
         console.error('Error:', error);
@@ -408,6 +408,54 @@ async function fetchUsersByDepartmentIdAndGender(departmentId ,gender) {
 async function fetchUsersByDivisionIdAndGender(divisionId ,gender) {
     try {
         const responseData = await sendRequestWithoutParam(`/api/user/division/${divisionId}/gender/${gender}`, 'POST');
+        const contentType = responseData.headers.get('content-type');
+        if (contentType && contentType.includes('application/json')) {
+            return await responseData.json();
+        } else {
+            return await responseData.text();
+        }
+    } catch (error) {
+        console.error('Error:', error);
+    }
+}
+
+async function fetchUserFormHistory(userId) {
+    try {
+        const responseData = await sendRequestWithoutParam(`/api/registerform/users/${userId}/form-history`, 'GET');
+        const contentType = responseData.headers.get('content-type');
+        if (contentType && contentType.includes('application/json')) {
+            const data = await responseData.json();
+            return data.formHistory;
+        } else {
+            return await responseData.text();
+        }
+    } catch (error) {
+        console.error('Error:', error);
+    }
+}
+
+async function getSessionUser() {
+    return new Promise((resolve, reject) => {
+        $.ajax({
+            url: 'http://localhost:8080/wfhs/api/session/user',
+            type: 'POST',
+            contentType: 'application/json',
+            success: function(response) {
+                console.log(response);
+                localStorage.setItem('currentUser', JSON.stringify(response));
+                resolve(response);
+            },
+            error: function (error) {
+                console.error('Error:', error);
+                reject(null);
+            }
+        });
+    });
+}
+
+async function createCeoForm(userId, fromDate, toDate) {
+    try {
+        const responseData = await sendRequestWithThreeParams(`/api/registerform/createCeoForm`, 'POST', 'userId', userId, "from_date", fromDate, "to_date", toDate);
         const contentType = responseData.headers.get('content-type');
         if (contentType && contentType.includes('application/json')) {
             return await responseData.json();

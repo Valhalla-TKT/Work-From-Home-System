@@ -3,155 +3,138 @@
 <html xmlns:th="http://www.thymeleaf.org">
 
 <head>
-<title>WorkHub</title>
+    <title>WorkHub</title>
 </head>
+
 <body>
 
-	<div id="wrap" th:fragment="content">
-	      <div id="wrap-inner" class="flushed">
-            <div id="content" role="main">
-                <div class="container-medium">
-                    <div class="hero-banner">
-                        <div class="banner-content">
-                            <h1 class="job-banner-heading">
-                                Explore Our Diverse Departments 
-                            </h1>
-                            <p class="margin-t-16 color-deep-blue-sea-light-20">
-                                Discover specialized departments tailored for remote collaboration, fostering innovation and productivity.
-                            </p>
-                            <div class="banner-buttons-container margin-t-24">
-                                <a class="job-banner-cta js-job-cta btn2 btn2--large add-data" href="#">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
-                                        fill="none" role="img" class="icon">
+<div id="wrap" th:fragment="content">
+    <div id="wrap-inner" class="flushed">
+        <div id="content" role="main">
+            <div class="container-medium">
+                <div class="content-container display-flex direction-col-reverse">
+                    <div class="job-listings-container flex-1">
+                        <form data-search-input-form class="search-input-form">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="17" height="17" viewBox="0 0 17 17"
+                                 fill="none" role="img" class="icon">
+                                <path
+                                        d="M1.5 7.75C1.5 9.4076 2.15848 10.9973 3.33058 12.1694C4.50269 13.3415 6.0924 14 7.75 14C9.4076 14 10.9973 13.3415 12.1694 12.1694C13.3415 10.9973 14 9.4076 14 7.75C14 6.0924 13.3415 4.50269 12.1694 3.33058C10.9973 2.15848 9.4076 1.5 7.75 1.5C6.0924 1.5 4.50269 2.15848 3.33058 3.33058C2.15848 4.50269 1.5 6.0924 1.5 7.75V7.75Z"
+                                        stroke="currentColor" stroke-width="1.5" stroke-linecap="round"
+                                        stroke-linejoin="round"></path>
+                                <path d="M12.814 12.8132L15.5 15.4999" stroke="currentColor" stroke-width="1.5"
+                                      stroke-linecap="round" stroke-linejoin="round"></path>
+                            </svg>
+
+                            <label for="search-input">
+                                <input type="text" name="search-input" id="search-by-department-name"
+                                       placeholder="Search by department name..."
+                                       class="js-search-input input-with-outline-only search-input" />
+                            </label>
+                        </form>
+
+                        <div
+                                class="display-flex align-center new-opportunities-container justify-space-between margin-b-40 margin-t-40">
+                            <div class="add-function">
+                                <div class="display-flex align-center">
+                                    <div class="new-opportunities-heading">All departments</div>
+                                </div>
+                                <a class="job-banner-cta js-job-cta btn2 add-data visible-hr-only" href="#">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                                         viewBox="0 0 24 24" fill="none" role="img" class="icon">
                                         <path d="M12 5V19M5 12H19" stroke="currentColor" stroke-width="2"
-                                            stroke-linecap="round" stroke-linejoin="round"></path>
+                                              stroke-linecap="round" stroke-linejoin="round"></path>
                                     </svg>
                                     Add New Department
                                 </a>
                             </div>
-                        </div>
-                    </div>
 
-                    <div class="content-container display-flex direction-col-reverse">
-                        <div class="job-listings-container flex-1">
-                            <form data-search-input-form class="search-input-form">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="17" height="17" viewBox="0 0 17 17"
-                                    fill="none" role="img" class="icon">
-                                    <path
-                                        d="M1.5 7.75C1.5 9.4076 2.15848 10.9973 3.33058 12.1694C4.50269 13.3415 6.0924 14 7.75 14C9.4076 14 10.9973 13.3415 12.1694 12.1694C13.3415 10.9973 14 9.4076 14 7.75C14 6.0924 13.3415 4.50269 12.1694 3.33058C10.9973 2.15848 9.4076 1.5 7.75 1.5C6.0924 1.5 4.50269 2.15848 3.33058 3.33058C2.15848 4.50269 1.5 6.0924 1.5 7.75V7.75Z"
-                                        stroke="currentColor" stroke-width="1.5" stroke-linecap="round"
-                                        stroke-linejoin="round"></path>
-                                    <path d="M12.814 12.8132L15.5 15.4999" stroke="currentColor" stroke-width="1.5"
-                                        stroke-linecap="round" stroke-linejoin="round"></path>
+                            <a class="form-btn outlined filters-button filters-toggle-btn" href="#">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                                     fill="none" role="img" class="icon">
+                                    <path fill-rule="evenodd" clip-rule="evenodd"
+                                          d="M0 6C0 5.17157 0.671573 4.5 1.5 4.5H22.5C23.3284 4.5 24 5.17157 24 6C24 6.82843 23.3284 7.5 22.5 7.5H1.5C0.671573 7.5 0 6.82843 0 6ZM3 12C3 11.1716 3.67157 10.5 4.5 10.5H19.5C20.3284 10.5 21 11.1716 21 12C21 12.8284 20.3284 13.5 19.5 13.5H4.5C3.67157 13.5 3 12.8284 3 12ZM7.5 16.5C6.67157 16.5 6 17.1716 6 18C6 18.8284 6.67157 19.5 7.5 19.5H16.5C17.3284 19.5 18 18.8284 18 18C18 17.1716 17.3284 16.5 16.5 16.5H7.5Z">
+                                    </path>
                                 </svg>
 
-                                <label for="search-input">
-                                    <input type="text" name="search-input" id="search-by-department-name"
-                                        placeholder="Search by department name..."
-                                        class="js-search-input input-with-outline-only search-input" />
-                                </label>
-                            </form>
+                                <span class="label" title="Filters">Filters</span>
+                            </a>
+                        </div>
+                        <ol class="job-board-job-list" id="department-list">
+                            <!-- Success Message -->
+                            <li class="job-list-item" id="message"
+                                style="background: lightgreen; height: fit-content; display:none;">
+                                <p></p>
+                                <span style="font-size: 20px;" class="close">&times;</span>
+                            </li>
 
-                            <div
-                                class="display-flex align-center new-opportunities-container justify-space-between margin-b-40 margin-t-40">
-                                <div>
-                                    <div class="display-flex align-center">
-                                        <div class="new-opportunities-heading">All departments</div>
-                                    </div>
-                                </div>
 
-                                <a class="form-btn outlined filters-button filters-toggle-btn" href="#">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
-                                        fill="none" role="img" class="icon">
-                                        <path fill-rule="evenodd" clip-rule="evenodd"
-                                            d="M0 6C0 5.17157 0.671573 4.5 1.5 4.5H22.5C23.3284 4.5 24 5.17157 24 6C24 6.82843 23.3284 7.5 22.5 7.5H1.5C0.671573 7.5 0 6.82843 0 6ZM3 12C3 11.1716 3.67157 10.5 4.5 10.5H19.5C20.3284 10.5 21 11.1716 21 12C21 12.8284 20.3284 13.5 19.5 13.5H4.5C3.67157 13.5 3 12.8284 3 12ZM7.5 16.5C6.67157 16.5 6 17.1716 6 18C6 18.8284 6.67157 19.5 7.5 19.5H16.5C17.3284 19.5 18 18.8284 18 18C18 17.1716 17.3284 16.5 16.5 16.5H7.5Z">
-                                        </path>
-                                    </svg>
-
-                                    <span class="label" title="Filters">Filters</span>
-                                </a>
+                        </ol>
+                        <div class="page">
+                            <div role="navigation" aria-label="Pagination" class="pagination">
+                                <span class="previous_page disabled" aria-label="Previous page">&larr; Prev</span>
+                                <a class="next_page" aria-label="Next page" rel="next"
+                                   href="https://dribbble.com/jobs?page=2">Next &rarr;</a>
                             </div>
-                            <ol class="job-board-job-list" id="department-list">
-                                <!-- Success Message -->
-                                <li class="job-list-item" id="message" style="background: lightgreen; height: fit-content; display:none;" >
-                                    <p></p>
-                                    <span style="font-size: 20px;" class="close">&times;</span>
-                                </li>
-                                
-                                
-                            </ol>
-                            <div class="page">
-                                <div role="navigation" aria-label="Pagination" class="pagination">
-                                    <span class="previous_page disabled" aria-label="Previous page">&larr; Prev</span>
-                                    <a class="next_page" aria-label="Next page" rel="next" href="https://dribbble.com/jobs?page=2">Next &rarr;</a>
-                                </div>
-                            </div>
-                        </div>		
-                        <div class="search-filters-container">
-	                        <div class="search-filters job-board-filters-form js-filters" style="text-align: center;">
-	                        	<span> <img alt="department" src="assets/icons/department.png" style="width: 50px" > </span> <br>
-						        <span>Total Departments : <span id="total-count"></span></span>
-						    </div> <br>
-                            <div class="search-filters job-board-filters-form js-filters">
-                                <form class="job-filters js-job-search-form" id="options"
-                                    action="https://dribbble.com/jobs" accept-charset="UTF-8" method="get">
-                                    <label for="keyword" class="hide" aria-hidden="true">Filter</label>
-                                    <input type="text" name="keyword" id="keyword" placeholder="Company, skill, tag…"
-                                        class="hide js-keyword input-with-outline-only" aria-hidden="true" />
+                        </div>
+                    </div>
+                    <div class="search-filters-container">
+                        <div class="search-filters job-board-filters-form js-filters" style="text-align: center;">
+                                <span> <img alt="department" src="/wfhs/assets/icons/department.png" style="width: 50px">
+                                </span> <br>
+                            <span>Total Departments : <span id="total-count"></span></span>
+                        </div> <br>
+                        <div class="search-filters job-board-filters-form js-filters">
+                            <form class="job-filters js-job-search-form" id="options"
+                                  action="https://dribbble.com/jobs" accept-charset="UTF-8" method="get">
+                                <label for="keyword" class="hide" aria-hidden="true">Filter</label>
+                                <input type="text" name="keyword" id="keyword" placeholder="Company, skill, tag…"
+                                       class="hide js-keyword input-with-outline-only" aria-hidden="true" />
 
-                                    <label for="division-name">Division</label>
-                                    <select type="text" name="" id="division-filter" placeholder="Enter Location…"
+                                <label for="division-name">Division</label>
+                                <select type="text" name="" id="division-filter" placeholder="Enter Location…"
                                         class="js-location input-with-outline-only" style="width: 100%;"></select>
-                                    <div class="submit submit-container">
-                                        <input type="submit" value="Filter" class="js-job-submit form-sub w-100"
-                                            disabled="true" />
-                                        <a class="margin-t-16 job-board-clear-filters"
-                                            href="https://dribbble.com/jobs">Clear Filters</a>
-                                    </div>
-                                </form>
-                            </div>
+                            </form>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-        <div id="edit-data-overlay">
-	        <div id="edit-data-modal" class="edit-data-modal">
-	            <div class="edit-data-modal-content">
-	                <span class="title">Update Department</span>
-	                <span class="close">&times;</span>
-	                <form id="editForm">
-                        <label for="edit-division-name">Choose Division</label>
-                        <select id="edit-division-name" required="required" style="width: 100%"></select>
-	                    <label for="edit-department-code">Department Code</label>
-	                    <input type="text" id="edit-department-code" required="required">
-	                    <label for="edit-department-name">Department Name</label>
-	                    <input type="text" id="edit-department-name" required="required">
-	                    <input type="hidden" id="departmentId" name="departmentId">
-	                    <button class="btn2 edit-data-btn" type="button" id="saveChangesBtn">Save Changes</button>
-	                </form>
-	            </div>
-	        </div>
-	    </div>
-	
-	    <div id="add-data-overlay">
-	        <div id="add-data-modal" class="add-data-modal">
-	            <div class="add-data-modal-content">
-	                <span class="title">Add Department</span>
-	                <span class="close">&times;</span>
-	                <form id="addForm">
-                        <label for="division-code">Choose Division</label>
-                        <select id="division-name" required="required" style="width: 100%"></select>
-	                    <label for="code">Department Code</label>
-	                    <input type="tel" id="department-code" placeholder="xxx-xxx-xxx" pattern="[0-9]{3}-[0-9]{3}-[0-9]{3}" required="required">
-	                    <label for="name">Department Name</label>
-	                    <input type="text" id="department-name" placeholder="e.g. Offshore Department" required="required">
-	                    <input type="hidden" id="departmentId" name="departmentId">
-	                    <button class="btn2 add-data-btn" type="button" id="create-department">Add Department</button>
-	                </form>
-	            </div>
-	        </div>
-	    </div>
-	</div>
+    </div>
+    <div id="edit-data-overlay">
+        <div id="edit-data-modal" class="edit-data-modal">
+            <div class="edit-data-modal-content">
+                <span class="title">Update Department</span>
+                <span class="close">&times;</span>
+                <form id="editForm">
+                    <label for="edit-division-name">Choose Division</label>
+                    <select id="edit-division-name" required="required" style="width: 100%"></select>
+                    <label for="edit-department-name">Department Name</label>
+                    <input type="text" id="edit-department-name" required="required">
+                    <input type="hidden" id="departmentId" name="departmentId">
+                    <button class="btn2 edit-data-btn" type="button" id="saveChangesBtn">Save Changes</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div id="add-data-overlay">
+        <div id="add-data-modal" class="add-data-modal">
+            <div class="add-data-modal-content">
+                <span class="title">Add Department</span>
+                <span class="close">&times;</span>
+                <form id="addForm">
+                    <label for="division-name">Choose Division</label>
+                    <select id="division-name" required="required" style="width: 100%"></select>
+                    <label for="department-name">Department Name</label>
+                    <input type="text" id="department-name" placeholder="e.g. Offshore Department"
+                           required="required">
+                    <input type="hidden" id="departmentId" name="departmentId">
+                    <button class="btn2 add-data-btn" type="button" id="create-department">Add Department</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
 </body>
+
 </html>

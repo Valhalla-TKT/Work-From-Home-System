@@ -162,7 +162,14 @@ public class UserServiceImplement implements UserService {
 	@Override
 	public CurrentLoginUserDto getLoginUserBystaffId(String staffId) {
 		User user = userRepo.findByStaffId(staffId);
-        return modelMapper.map(user, CurrentLoginUserDto.class);
+		CurrentLoginUserDto userDto = modelMapper.map(user, CurrentLoginUserDto.class);
+		if(userDto.getApproveRoles().stream().anyMatch(role -> role.getName().equals("DEPARTMENT_HEAD"))) {
+			userDto.setTeams(teamRepo.findAllByDepartmentId(user.getDepartment().getId()));
+		}
+		if(userDto.getDepartment() != null) {
+			userDto.getDepartment().setTeams(teamRepo.findAllByDepartmentId(user.getDepartment().getId()));
+		}
+        return userDto;
 	}
 
 	@Override
@@ -366,16 +373,16 @@ public class UserServiceImplement implements UserService {
 	@Override
 	@Transactional
 	public void createHR() {
-		User user = userRepo.findByEmail("hr@gmail.com");
+		User user = userRepo.findByStaffId("00-00001");
 		if(user == null) {
 			UserDto userDto = new UserDto();
 			userDto.setStaffId("00-00001");
 			userDto.setName("HR");
-			userDto.setEmail("hr@gmail.com");
+			userDto.setEmail("hr@diracetechnology.com");
 			userDto.setPhoneNumber("000 000 000");
 			userDto.setPassword(passwordEncoder.encode("123@dirace"));
 			userDto.setEnabled(true);
-			userDto.setGender("Male");
+			userDto.setGender("female");
 			User HR = modelMapper.map(userDto, User.class);
 			ApproveRole approveRole = approveRoleRepo.findByName("HR");
 			if (approveRole == null) {

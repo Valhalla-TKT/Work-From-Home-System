@@ -8,7 +8,8 @@
 package com.kage.wfhs.serviceImplement;
 
 import com.kage.wfhs.dto.RegisterFormDto;
-import com.kage.wfhs.dto.UserDto;
+import com.kage.wfhs.dto.form.FormHistoryDto;
+import com.kage.wfhs.dto.form.FormListDto;
 import com.kage.wfhs.model.*;
 import com.kage.wfhs.repository.CaptureRepository;
 import com.kage.wfhs.repository.RegisterFormRepository;
@@ -32,6 +33,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 @Service
@@ -129,16 +133,21 @@ public class RegisterFormServiceImplement implements RegisterFormService {
     }
 
     @Override
-    public List<RegisterFormDto> getAllFormSpecificTeam(Long approveRoleId, String status, Long teamId, Long userId) {
+    public List<FormListDto> getAllFormSpecificTeam(Long approveRoleId, String status, Long teamId, Long userId) {
         List<RegisterForm> registerForms = registerFormRepo.findRegisterFormByTeam(approveRoleId, status, teamId);
         return getRegisterFormDtoList(userId, registerForms);
-
     }
 
-    private List<RegisterFormDto> getRegisterFormDtoList(Long userId, List<RegisterForm> registerForms) {
-        List<RegisterFormDto> registerFormList = new ArrayList<>();
+    public List<FormListDto> getRegisterFormByTeamWithoutApproveRoleId(Long approveRoleId, String status, Long teamId, Long userId) {
+        List<RegisterForm> registerForms = registerFormRepo.findRegisterFormByTeamWithoutApproveRoleId(status, teamId, approveRoleId);
+        return getRegisterFormDtoList(userId, registerForms);
+    }
+
+
+    private List<FormListDto> getRegisterFormDtoList(Long userId, List<RegisterForm> registerForms) {
+        List<FormListDto> registerFormList = new ArrayList<>();
         for (RegisterForm registerForm : registerForms) {
-            RegisterFormDto registerFormDto = modelMapper.map(registerForm, RegisterFormDto.class);
+            FormListDto registerFormDto = modelMapper.map(registerForm, FormListDto.class);
             registerFormDto.setCurrentStatus(getFormStatusByApproveId(userId, registerFormDto.getId()));
             registerFormList.add(registerFormDto);
         }
@@ -146,13 +155,13 @@ public class RegisterFormServiceImplement implements RegisterFormService {
     }
 
     @Override
-    public List<RegisterFormDto> getAllFormSpecificDepartment(Long approveRoleId, String status, Long departmentId, Long userId) {
+    public List<FormListDto> getAllFormSpecificDepartment(Long approveRoleId, String status, Long departmentId, Long userId) {
         List<RegisterForm> registerForms = registerFormRepo.findRegisterFormByDepartment(approveRoleId, status, departmentId);
         return getRegisterFormDtoList(userId, registerForms);
     }
 
     @Override
-    public List<RegisterFormDto> getAllFormSpecificDivision(Long approveRoleId, String status, Long teamId, Long userId) {
+    public List<FormListDto> getAllFormSpecificDivision(Long approveRoleId, String status, Long teamId, Long userId) {
 
         List<RegisterForm> registerForms = registerFormRepo.findRegisterFormByDivision(approveRoleId, status, teamId);
         return getRegisterFormDtoList(userId, registerForms);
@@ -165,13 +174,18 @@ public class RegisterFormServiceImplement implements RegisterFormService {
     }
 
     @Override
-    public List<RegisterFormDto> getAllFormSpecificTeamAll(Long approveRoleId, Long teamId, Long userId) {
+    public List<FormListDto> getAllFormSpecificTeamAll(Long approveRoleId, Long teamId, Long userId) {
         List<RegisterForm> registerForms = registerFormRepo.findRegisterFormByTeamAll(approveRoleId, teamId);
         return getRegisterFormDtoList(userId, registerForms);
     }
 
+    public List<FormListDto> getAllFormSpecificTeamAllWithoutUserId(Long teamId, Long userId) {
+        List<RegisterForm> registerForms = registerFormRepo.findRegisterFormByTeamAllWithoutApproveRoleId(teamId);
+        return getRegisterFormDtoList(userId, registerForms);
+    }
+
     @Override
-    public List<RegisterFormDto> getAllFormSpecificDepartmentAll(Long approveRoleId, Long departmentId, Long userId) {
+    public List<FormListDto> getAllFormSpecificDepartmentAll(Long approveRoleId, Long departmentId, Long userId) {
         List<RegisterForm> registerForms = registerFormRepo.findRegisterFormByDepartmentAll(approveRoleId, departmentId);
         return getRegisterFormDtoList(userId, registerForms);
     }
@@ -181,7 +195,7 @@ public class RegisterFormServiceImplement implements RegisterFormService {
     }
 
     @Override
-    public List<RegisterFormDto> getAllFormSpecificDivisionAll(Long approveRoleId, Long divisionId, Long userId) {
+    public List<FormListDto> getAllFormSpecificDivisionAll(Long approveRoleId, Long divisionId, Long userId) {
         List<RegisterForm> registerForms = registerFormRepo.findRegisterFormByDivisionAll(approveRoleId, divisionId);
         return getRegisterFormDtoList(userId, registerForms);
 //        List<RegisterFormDto> registerFormList = new ArrayList<>();
@@ -194,6 +208,8 @@ public class RegisterFormServiceImplement implements RegisterFormService {
 
     @Override
     public List<RegisterFormDto> getAllForm(Long approveRoleId, String status) {
+//        List<RegisterForm> registerForms = registerFormRepo.findRegisterForm(approveRoleId, status);
+//        return getRegisterFormDtoList(userId, registerForms);
         List<RegisterForm> registerForms = registerFormRepo.findRegisterForm(approveRoleId, status);
         List<RegisterFormDto> registerFormList = new ArrayList<>();
         for (RegisterForm registerForm : registerForms) {
@@ -245,13 +261,23 @@ public class RegisterFormServiceImplement implements RegisterFormService {
         long approveRoleId = approveRoleService.getIdByWorkFlowOrderId(orderId);
 
         Map<String, Object> responseData = new HashMap<>();
-        List<RegisterFormDto> registerFormDtoList = new ArrayList<>();
+        List<FormListDto> registerFormDtoList = new ArrayList<>();
+        List<RegisterFormDto> registerFormDtoList2 = new ArrayList<>();
 
         if ("team".equalsIgnoreCase(entityName)) {
             if (status.equalsIgnoreCase("ALL")) {
-                registerFormDtoList = getAllFormSpecificTeamAll(approveRoleId, entityId, userId);
+                if(user.getApproveRoles().stream().noneMatch(role -> role.getName().equals("PROJECT_MANAGER"))) {
+                    registerFormDtoList = getAllFormSpecificTeamAllWithoutUserId(entityId, userId);
+                } else if(user.getApproveRoles().stream().anyMatch(role -> role.getName().equals("PROJECT_MANAGER"))) {
+                    registerFormDtoList = getAllFormSpecificTeamAll(approveRoleId, entityId, userId);
+                }
+
             } else {
-                registerFormDtoList = getAllFormSpecificTeam(approveRoleId, status, entityId, userId);
+                if(user.getApproveRoles().stream().noneMatch(role -> role.getName().equals("PROJECT_MANAGER"))) {
+                    registerFormDtoList = getRegisterFormByTeamWithoutApproveRoleId(approveRoleId, status, entityId, userId);
+                } else if(user.getApproveRoles().stream().anyMatch(role -> role.getName().equals("PROJECT_MANAGER"))) {
+                    registerFormDtoList = getAllFormSpecificTeam(approveRoleId, status, entityId, userId);
+                }
             }
         } else if ("department".equalsIgnoreCase(entityName)) {
             if (status.equalsIgnoreCase("ALL")) {
@@ -265,11 +291,70 @@ public class RegisterFormServiceImplement implements RegisterFormService {
             } else {
                 registerFormDtoList = getAllFormSpecificDivision(approveRoleId, status, entityId, userId);
             }
+        } else if ("user".equalsIgnoreCase(entityName)) {
+            if (status.equalsIgnoreCase("ALL")) {
+                registerFormDtoList2 = getFormAll(approveRoleId);
+                for (RegisterFormDto registerFormDto : registerFormDtoList2) {
+                    RegisterForm registerForm = modelMapper.map(registerFormDto, RegisterForm.class);
+                    FormListDto formListDto = modelMapper.map(registerForm, FormListDto.class);
+//                    formListDto.setId(registerFormDto.getId());
+//                    formListDto.setApplicant(registerFormDto.getApplicant());
+//                    formListDto.setRequester(registerFormDto.getRequester());
+                    formListDto.setCurrentStatus(getFormStatusByApproveId(userId, registerFormDto.getId()));
+                    registerFormDtoList.add(formListDto);
+                    //registerFormDtoList.add(formListDto);
+                }
+            } else {
+                registerFormDtoList2 = getAllForm(approveRoleId, status);
+                for (RegisterFormDto registerFormDto : registerFormDtoList2) {
+                    RegisterForm registerForm = modelMapper.map(registerFormDto, RegisterForm.class);
+                    FormListDto formListDto = modelMapper.map(registerForm, FormListDto.class);
+//                    formListDto.setId(registerFormDto.getId());
+//                    formListDto.setApplicant(registerFormDto.getApplicant());
+//                    formListDto.setRequester(registerFormDto.getRequester());
+                    formListDto.setCurrentStatus(getFormStatusByApproveId(userId, registerFormDto.getId()));
+                    registerFormDtoList.add(formListDto);
+                }
+            }
         }
 
         responseData.put("forms", registerFormDtoList);
 
         return responseData;
+    }
+
+    @Override
+    public List<FormHistoryDto> getUserHistory(long userId) {
+        List<RegisterForm> registerForms = registerFormRepo.findByApplicantId(userId);
+        List<FormHistoryDto> formList = new ArrayList<>();
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MMMM, yyyy");
+        for (RegisterForm registerForm : registerForms) {
+            FormHistoryDto formHistoryDto = new FormHistoryDto();
+            formHistoryDto.setFormId(registerForm.getId());
+            if (registerForm.getTo_date() != null) {
+                LocalDate signedDate = registerForm.getTo_date().toInstant()
+                        .atZone(ZoneId.systemDefault())
+                        .toLocalDate();
+                formHistoryDto.setSignedDate(signedDate.format(formatter));
+                formHistoryDto.setStatus(registerForm.getStatus().name());
+            }
+            formList.add(formHistoryDto);
+        }
+        return formList;
+    }
+
+    @Override
+    public void createCeoForm(Long userId, Date fromDate, Date toDate) throws Exception {
+        RegisterFormDto registerFormDto = new RegisterFormDto();
+        registerFormDto.setApplicantId(userId);
+        registerFormDto.setRequesterId(userId);
+        registerFormDto.setWorking_place("Home");
+        registerFormDto.setRequest_reason("For Emergency.");
+        registerFormDto.setFrom_date(fromDate);
+        registerFormDto.setTo_date(toDate);
+        registerFormDto.setRequest_percent(100);
+        registerFormDto.setSignedDate(new Date());
+        createRegisterForm(registerFormDto);
     }
 
 //    @Override

@@ -10,13 +10,16 @@ package com.kage.wfhs.controller.api;
 import com.kage.wfhs.dto.ApproveRoleDto;
 import com.kage.wfhs.dto.UserDto;
 import com.kage.wfhs.dto.WorkFlowOrderDto;
+import com.kage.wfhs.model.User;
 import com.kage.wfhs.service.UserService;
 import com.kage.wfhs.service.WorkFlowOrderService;
 
 import lombok.AllArgsConstructor;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -64,13 +67,17 @@ public class UserController {
     @PostMapping("/getAllTeamMember")
     public ResponseEntity<List<UserDto>> teamMember(@RequestParam("teamId") long teamId,
                                                     @RequestParam("userId") long userId){
-        System.out.println("teamId = " + teamId + " userId = " + userId);
-        List<UserDto> userList = new ArrayList<>();
+
         WorkFlowOrderDto upperRole = workFlowOrderService.getWorkFlowOrderByUserId(userId);
         List<UserDto> memberList = userService.getAllTeamMember(teamId);
         List<UserDto> upperUserList = userService.getUpperRole(upperRole.getId() -1);
-        userList.addAll(upperUserList);
-        userList.addAll(memberList);
+        Set<UserDto> userSet = new HashSet<>();
+        userSet.addAll(upperUserList);
+        userSet.addAll(memberList);
+        List<UserDto> userList = new ArrayList<>(userSet);
+        for (UserDto userDto : userList) {
+            System.out.println(userDto.getName());
+        }
         return ResponseEntity.ok(userList);
     }
 

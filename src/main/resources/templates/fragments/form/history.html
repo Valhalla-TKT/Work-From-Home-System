@@ -3,10 +3,41 @@
 <html xmlns:th="http://www.thymeleaf.org">
 
 <head>
-<title>WorkHub</title>
+    <title>WorkHub</title>
 </head>
 
 <body>
-<div id="wrap" th:fragment="content"></div>
+<div id="wrap" class="history-section container-history" th:fragment="content">
+    <div class="user-profile">
+        <img class="profile-picture">
+        <div class="user-info">
+            <h2 class="user-name"><!-- username will add with ajax --></h2>
+            <p class="user-email"><!-- email will add with ajax --></p>
+        </div>
+    </div>
+
+    <h1 class="history-page-title">WFHS Form History</h1>
+
+    <div class="search-filter">
+        <input type="text" class="search-input" placeholder="Search by month or year">
+        <select class="status-filter">
+            <option value="all">All</option>
+            <option value="approve">Approved</option>
+            <option value="pending">Pending</option>
+            <option value="reject">Rejected</option>
+        </select>
+    </div>
+
+    <div class="form-history-listing">
+
+    </div>
+
+    <div class="pagination">
+        <a href="#" class="page-link" data-page="prev">Previous</a>
+        <span class="page-numbers"></span>
+        <a href="#" class="page-link" data-page="next">Next</a>
+    </div>
+    <script src="/wfhs/assets/form/history.js"></script>
+</div>
 </body>
 </html>

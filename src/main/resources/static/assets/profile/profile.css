@@ -99,8 +99,9 @@
   background: #e7e7e9;
 }
 .profile-pro-masthead .masthead-avatar img {
-  width: 100%;
-  height: auto;
+  width: 90px;
+  height: 90px;
+  border-radius: 50%;
 }
 .masthead-stats {
   display: -ms-flexbox;

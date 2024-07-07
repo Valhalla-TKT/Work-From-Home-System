@@ -14,6 +14,7 @@ import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.security.SecureRandom;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
@@ -32,7 +33,7 @@ import lombok.AllArgsConstructor;
 @Service
 public class Helper {
 
-    private static final String uploadDir = "src/main/resources/static/assets/formImages/";
+    private static final String uploadDir = "src/main/resources/static/formImages/";
 
     @Autowired
     private final WorkFlowOrderRepository workFlowOrderRepo;
@@ -52,6 +53,7 @@ public class Helper {
         return text.replace(" ", "_");
     }
 
+    private static final SecureRandom random = new SecureRandom();
 
     public static String saveImage(MultipartFile file) {
         String storageFileName = null;
@@ -108,23 +110,16 @@ public class Helper {
 
     public static String generateOTP(String email, String staffID) {
         try {
-            String combined = email + staffID;
+            String combined = email + staffID + UUID.randomUUID().toString();
 
             MessageDigest digest = MessageDigest.getInstance("SHA-256");
             byte[] hash = digest.digest(combined.getBytes());
 
-            StringBuilder hexString = new StringBuilder();
-            for (byte b : hash) {
-                String hex = Integer.toHexString(0xff & b);
-                if (hex.length() == 1) hexString.append('0');
-                hexString.append(hex);
-            }
+            random.setSeed(hash);
 
-            String uuid = UUID.randomUUID().toString();
-
-            String combinedWithUUID = hexString.toString() + uuid;
-
-            return combinedWithUUID.substring(0, 6).toUpperCase();
+            int otpLength = 6;
+            int otp = random.nextInt((int) Math.pow(10, otpLength));
+            return String.format("%06d", otp).toUpperCase();
         } catch (NoSuchAlgorithmException e) {
             throw new RuntimeException("Error generating OTP", e);
         }

@@ -1,0 +1,259 @@
+/*.container-history {*/
+/*    width: 90%;*/
+/*    margin: 0 auto;*/
+/*    padding: 20px;*/
+/*}*/
+
+/*.history-page-title {*/
+/*    text-align: left;*/
+/*    margin-bottom: 20px;*/
+/*    font-size: 2em;*/
+/*    color: #333;*/
+/*}*/
+
+/*.property-listing {*/
+/*    display: flex;*/
+/*    flex-wrap: wrap;*/
+/*    justify-content: space-between;*/
+/*    margin-bottom: 20px;*/
+/*}*/
+
+/*.property-card {*/
+/*    background-color: #fff;*/
+/*    width: 48%;*/
+/*    margin: 10px;*/
+/*    box-shadow : 0 1px 3px rgba(0, 0, 0, .3), 0 0 0 1px rgba(0, 0, 0, .04);*/
+/*    border-radius: 8px;*/
+/*    overflow: hidden;*/
+/*    transition: transform 0.3s;*/
+/*}*/
+
+/*.property-card:hover {*/
+/*    transform: scale(1.05);*/
+/*}*/
+
+/*.property-image {*/
+/*    width: 100%;*/
+/*    height: 200px;*/
+/*    object-fit: cover;*/
+/*}*/
+
+/*.property-info {*/
+/*    padding: 15px;*/
+/*}*/
+
+/*.property-title {*/
+/*    font-size: 1.5em;*/
+/*    margin: 0 0 10px;*/
+/*    color: #333;*/
+/*}*/
+
+/*.property-details {*/
+/*    display: flex;*/
+/*    justify-content: space-between;*/
+/*    margin: 0;*/
+/*    color: #666;*/
+/*}*/
+
+/*.property-status {*/
+/*    margin: 0 0 5px;*/
+/*    color: #666;*/
+/*}*/
+
+/*.property-pending {*/
+/*    margin: 0 0 5px;*/
+/*    color: #333;*/
+/*    padding: 0 20px;*/
+/*    border-radius: 4px;*/
+/*    display: flex;*/
+/*    align-items: center;*/
+/*    font-weight: bold;*/
+/*}*/
+
+/*.approved-status {*/
+/*    background-color: #4CAF50;*/
+/*    color: #fff;*/
+/*}*/
+
+/*.pending-status {*/
+/*    background-color: #FF9800;*/
+/*    color: #fff;*/
+/*}*/
+
+/*.rejected-status {*/
+/*    background-color: #F44336;*/
+/*    color: #fff;*/
+/*}*/
+
+/* history.css */
+
+.container-history {
+    width: 90%;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+.user-profile {
+    display: flex;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.profile-picture {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    margin-right: 20px;
+}
+
+.user-info {
+    font-size: 1.2em;
+}
+
+.history-page-title {
+    text-align: left;
+    margin-bottom: 20px;
+    font-size: 2em;
+    color: #333;
+}
+
+.search-filter {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 20px;
+}
+
+.search-input {
+    width: 70%;
+    padding: 10px;
+    font-size: 1em;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+.status-filter {
+    width: 25%;
+    padding: 10px;
+    font-size: 1em;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+.form-history-listing {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    margin-bottom: 20px;
+}
+
+.form-history-card {
+    background-color: #fff;
+    width: 48%;
+    margin: 10px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3), 0 0 0 1px rgba(0, 0, 0, 0.04);
+    border-radius: 8px;
+    overflow: hidden;
+    transition: transform 0.3s;
+}
+
+.form-history-card:hover {
+    transform: scale(1.05);
+}
+
+.form-history-info {
+    padding: 15px;
+}
+
+.form-history-title {
+    font-size: 1.5em;
+    margin: 0 0 10px;
+    color: #333;
+}
+
+.form-history-details {
+    display: flex;
+    justify-content: space-between;
+    margin: 0;
+    color: #666;
+}
+
+.form-history-status {
+    margin: 0 0 5px;
+    color: #333;
+    padding: 0 20px;
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    font-weight: bold;
+}
+
+.approve-status {
+    background-color: #4CAF50;
+    color: #fff;
+}
+
+.pending-status {
+    background-color: #FF9800;
+    color: #fff;
+}
+
+.reject-status {
+    background-color: #F44336;
+    color: #fff;
+}
+
+.pagination {
+    text-align: center;
+    margin-top: 20px;
+}
+
+.page-link {
+    margin: 0 5px;
+    padding: 10px 15px;
+    background-color: #f0f0f0;
+    color: #333;
+    text-decoration: none;
+    border-radius: 4px;
+    transition: background-color 0.3s;
+}
+
+.page-link:hover {
+    background-color: #e0e0e0;
+}
+
+/* history.css */
+
+/* Existing styles... */
+
+.pagination {
+    text-align: center;
+    margin-top: 20px;
+}
+
+.page-link {
+    display: inline-block;
+    margin: 0 5px;
+    padding: 10px 15px;
+    background-color: #f0f0f0;
+    color: #333;
+    text-decoration: none;
+    border-radius: 4px;
+    transition: background-color 0.3s;
+}
+
+.page-link:hover {
+    background-color: #e0e0e0;
+}
+
+.pagination .page-link.active {
+    font-weight: bold;
+    background-color: #ddd;
+}
+
+.page-link.disabled {
+    pointer-events: none;
+    background-color: #e0e0e0;
+    color: #999;
+}
+
+

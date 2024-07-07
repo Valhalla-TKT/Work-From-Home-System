@@ -11,6 +11,9 @@ import com.kage.wfhs.dto.CaptureDto;
 import com.kage.wfhs.dto.RegisterFormDto;
 import com.kage.wfhs.dto.UserDto;
 import com.kage.wfhs.dto.WorkFlowStatusDto;
+import com.kage.wfhs.dto.form.FormHistoryDto;
+import com.kage.wfhs.dto.form.FormListDto;
+import com.kage.wfhs.exception.EntityNotFoundException;
 import com.kage.wfhs.model.ApproveRole;
 import com.kage.wfhs.model.WorkFlowStatus;
 import com.kage.wfhs.repository.WorkFlowStatusRepository;
@@ -35,10 +38,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 @RestController
@@ -158,13 +158,13 @@ public class RegisterFormController {
 
     private ResponseEntity<Map<String, Object>> getMapResponseEntity(Map<String, Object> responseData) {
         Object formsObject = responseData.get("forms");
-        List<RegisterFormDto> registerFormDtoList = new ArrayList<>();
+        List<FormListDto> registerFormDtoList = new ArrayList<>();
         if (formsObject instanceof List<?>) {
             for (Object item : (List<?>) formsObject) {
-                if (item instanceof RegisterFormDto) {
-                    registerFormDtoList.add((RegisterFormDto) item);
+                if (item instanceof FormListDto) {
+                    registerFormDtoList.add((FormListDto) item);
                 } else {
-                    throw new ClassCastException("Item in the list is not of type RegisterFormDto");
+                    throw new ClassCastException("Item in the list is not of type FormListDto");
                 }
             }
         } else {
@@ -175,8 +175,8 @@ public class RegisterFormController {
         return getMapResponseEntity(responseData, registerFormDtoList, applicantList, requesterList);
     }
 
-    private ResponseEntity<Map<String, Object>> getMapResponseEntity(Map<String, Object> responseData, List<RegisterFormDto> registerFormDtoList, List<UserDto> applicantList, List<UserDto> requesterList) {
-        for(RegisterFormDto registerFormdto : registerFormDtoList) {
+    private ResponseEntity<Map<String, Object>> getMapResponseEntity(Map<String, Object> responseData, List<FormListDto> registerFormDtoList, List<UserDto> applicantList, List<UserDto> requesterList) {
+        for(FormListDto registerFormdto : registerFormDtoList) {
             applicantList.add(modelMapper.map(userService.getUserById(registerFormdto.getApplicant().getId()), UserDto.class));
             requesterList.add(modelMapper.map(userService.getUserById(registerFormdto.getRequester().getId()), UserDto.class));
         }
@@ -193,45 +193,12 @@ public class RegisterFormController {
             @RequestParam(value = "userId") long userId){
         Map<String, Object> responseData = registerFormService.getFormWithStatus(status, divisionId, userId, "division");
         return getMapResponseEntity(responseData);
-//        UserDto user = userService.getUserById(userId);
-//        ApproveRole approveRole = helper.getMaxOrder(user.getApproveRoles());
-//        long orderId = workFlowOrderService.getWorkFlowOrderByApproveRoleId(approveRole.getId()).getId();
-//        long approveRoleId = approveRoleService.getIdByWorkFlowOrderId(orderId);
-//        Map<String, Object> responseData = new HashMap<>();
-//        List<RegisterFormDto> registerFormDtoList =  new ArrayList<>();
-//        List<UserDto> applicantList = new ArrayList<>();
-//        List<UserDto> requesterList = new ArrayList<>();
-//        if(status.equalsIgnoreCase("ALL")){
-//        	registerFormDtoList = registerFormService.getAllFormSpecificDivisionAll(approveRoleId,divisionId);
-//            responseData.put("forms", registerFormDtoList);
-//        } else {
-//            registerFormDtoList = registerFormService.getAllFormSpecificDivision(approveRoleId, status,divisionId);
-//            responseData.put("forms", registerFormDtoList);
-//        }
-//        return getMapResponseEntity(responseData, registerFormDtoList, applicantList, requesterList);
     }
     
     @PostMapping("/getAllForms")
     public ResponseEntity<Map<String, Object>> getAllForms(
             @RequestParam(value = "status") String status,
             @RequestParam(value = "userId") long userId){
-//        UserDto user = userService.getUserById(userId);
-//        ApproveRole approveRole = helper.getMaxOrder(user.getApproveRoles());
-//        long orderId = workFlowOrderService.getWorkFlowOrderByApproveRoleId(approveRole.getId()).getId();
-//        long approveRoleId = approveRoleService.getIdByWorkFlowOrderId(orderId);
-//        Map<String, Object> responseData = new HashMap<>();
-//        List<RegisterFormDto> registerFormDtoList =  new ArrayList<>();
-//        List<UserDto> applicantList = new ArrayList<>();
-//        List<UserDto> requesterList = new ArrayList<>();
-//        if(status.equalsIgnoreCase("ALL")){
-//        	registerFormDtoList = registerFormService.getFormAll(approveRoleId);
-//        	responseData.put("forms", registerFormDtoList);
-//        }else {
-//            registerFormDtoList = registerFormService.getAllForm(approveRoleId, status);
-//            responseData.put("forms", registerFormDtoList);
-//        }
-//
-//        return getMapResponseEntity(responseData, registerFormDtoList, applicantList, requesterList);
         Map<String, Object> responseData = registerFormService.getFormWithStatus(status, 1L, userId, "user");
         return getMapResponseEntity(responseData);
     }
@@ -281,12 +248,53 @@ public class RegisterFormController {
 	}
     
     @PostMapping("/bulkApprove")
-    public ResponseEntity<String> bulkApprove(@RequestParam("formIds[]") List<Long> formIds) throws Exception {
+    public ResponseEntity<String> bulkApprove(@RequestParam("formIds[]") List<Long> formIds, @RequestParam("userId") Long userId) throws Exception {
+        for (long id : formIds) {
+            System.out.println(id);
+        }
     	for (long id : formIds) {
-        WorkFlowStatus workFlowStatus = workFlowStatusRepo.findByApproveRoleNameAndFormId(id,"CEO") ;
-        workFlowStatusService.updateStatus(workFlowStatus.getId(),new WorkFlowStatusDto());
+            WorkFlowStatus workFlowStatus = workFlowStatusRepo.findByUserIdAndRegisterFormId(userId, id) ;
+            WorkFlowStatusDto workFlowStatusDto = new WorkFlowStatusDto();
+            workFlowStatusDto.setState(true);
+            workFlowStatusDto.setRegisterFormId((id));
+            workFlowStatusDto.setApproverId(userId);
+            workFlowStatusDto.setApproveDate(new Date());
+            workFlowStatusDto.setReason("Approve with Bulk Approve Process.");
+            workFlowStatusService.updateStatus(workFlowStatus.getId(),workFlowStatusDto);
+        }
+        return ResponseEntity.ok("Bulk Approve Success");
     }
-    return ResponseEntity.ok("Bulk Approve Success");
 
+    @GetMapping("/users/{userId}/form-history")
+    public ResponseEntity<Map<String, Object>> retrieveUserFormHistory(@PathVariable("userId") long userId) {
+        Map<String, Object> response = new HashMap<>();
+        try {
+            List<FormHistoryDto> formHistory = registerFormService.getUserHistory(userId);
+
+            response.put("formHistory", formHistory);
+
+            return ResponseEntity.ok(response);
+        } catch (EntityNotFoundException e) {
+            response.put("error", "User not found.");
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
+        } catch (Exception e) {
+            response.put("error", "An unexpected error occurred.");
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
+        }
     }
+
+    @PostMapping("/createCeoForm")
+    public ResponseEntity<?> createCeoForm(
+            @RequestParam(value = "userId") long userId,
+            @RequestParam(value = "from_date") @DateTimeFormat(pattern = "yyyy-MM-dd") Date fromDate,
+            @RequestParam(value = "to_date") @DateTimeFormat(pattern = "yyyy-MM-dd") Date toDate
+    ) {
+        try {
+            registerFormService.createCeoForm(userId, fromDate, toDate);
+            return ResponseEntity.status(HttpStatus.CREATED).body("CEO form created successfully");
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("An unexpected error occurred");
+        }
+    }
+
 }

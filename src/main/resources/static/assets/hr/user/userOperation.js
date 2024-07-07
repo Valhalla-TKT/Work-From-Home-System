@@ -1,4 +1,13 @@
 $(document).ready( function(){
+    let approveRoles = [];
+    let filteredUserData = [];
+    var currentPage = 1;
+    var usersPerPage = 8;
+    var totalUsers = 0;
+    var userData = [];
+
+    const pagination = document.querySelector('.pagination');
+    const pageNumbers = pagination.querySelector('.page-numbers');
      getAllUser(1, true);
     toggleSections();
     $('#join-date').dateDropper({
@@ -21,9 +30,33 @@ $(document).ready( function(){
         await getAllUser(1)
     });
 
+    $('#search-by-staff-name').on('input', function() {
+        const searchTerm = $(this).val().trim().toLowerCase();
+        searchUsers(searchTerm);
+    });
+
+    function searchUsers(term) {
+        if (!term) {
+            console.log()
+            filteredUserData = userData;
+        } else {
+            console.log("i")
+            filteredUserData = userData.filter(user => {
+                const name = user.name.toLowerCase();
+                const email = user.email.toLowerCase();
+                const staffId = user.staffId.toLowerCase();
+                return name.includes(term) || email.includes(term) || staffId.includes(term);
+            });
+        }
+        totalUsers = filteredUserData.length;
+        currentPage = 1;
+        renderUsers();
+        renderUsers();
+    }
+
     $('#gender').change(function() {
         var selectedGender = $(this).val();
-        generateStaffId(selectedGender);
+        //generateStaffId(selectedGender);
     });
 
     $('#create-staff').click(function(event) {
@@ -116,30 +149,30 @@ $(document).ready( function(){
         });
     }
 
-    function generateStaffId(gender) {
-        var requestData = {
-            gender:gender
-        };
-        $.ajax({
-            url: `http://localhost:8080/api/user/generateStaffId`,
-            type: 'POST',
-            contentType: 'application/json',
-            data: JSON.stringify(requestData),
-            dataType: 'text',
-            success: function (response) {
-                var textBox = $('#staff-id');
-                textBox.empty();
-                textBox.val(response);
-            },
-            error: function (xhr, status, error) {
-                console.error('Error:', error);
-                console.error('Status:', status);
-                console.error('Response Text:', error.responseText)
-                console.error('XHR:', xhr);
-            }
-
-        });
-    }
+    // function generateStaffId(gender) {
+    //     var requestData = {
+    //         gender:gender
+    //     };
+    //     $.ajax({
+    //         url: `http://localhost:8080/wfhs/api/user/generateStaffId`,
+    //         type: 'POST',
+    //         contentType: 'application/json',
+    //         data: JSON.stringify(requestData),
+    //         dataType: 'text',
+    //         success: function (response) {
+    //             var textBox = $('#staff-id');
+    //             textBox.empty();
+    //             textBox.val(response);
+    //         },
+    //         error: function (xhr, status, error) {
+    //             console.error('Error:', error);
+    //             console.error('Status:', status);
+    //             console.error('Response Text:', error.responseText)
+    //             console.error('XHR:', xhr);
+    //         }
+    //
+    //     });
+    // }
 
     async function getAllTeam() {
         await fetchTeams()
@@ -151,7 +184,6 @@ $(document).ready( function(){
                     var option = $('<option>', {
                         value: response[i].id,
                         text: response[i].name,
-                        'data-code': response[i].code
                     });
                     selectBox.append(option);
                 }
@@ -162,10 +194,20 @@ $(document).ready( function(){
                     var option = $('<option>', {
                         value: response[i].id,
                         text: response[i].name,
-                        'data-code': response[i].code
                     });
                     selectBox.append(option);
                 }
+                var selectBoxDetail = $('#team-name-detail');
+                selectBoxDetail.empty();
+                selectBoxDetail.append('<option value="all" selected>Select Team Name</option>');
+                for (var d = 0; d < response.length; d++) {
+                    var optionDetail = $('<option>', {
+                        value: response[d].id,
+                        text: response[d].name,
+                    });
+                    selectBoxDetail.append(optionDetail);
+                }
+
             })
             .catch(error => {
                 console.error('Error:', error);
@@ -195,7 +237,6 @@ $(document).ready( function(){
                 var option = $('<option>', {
                     value: team.id,
                     text: team.name,
-                    'data-code': team.code
                 });
                 selectBox.append(option);
             });
@@ -214,7 +255,6 @@ $(document).ready( function(){
                     var option = $('<option>', {
                         value: response[i].id,
                         text: response[i].name,
-                        'data-code': response[i].code
                     });
                     selectBox.append(option);
                 }
@@ -225,7 +265,16 @@ $(document).ready( function(){
                     var option = $('<option>', {
                         value: response[i].id,
                         text: response[i].name,
-                        'data-code': response[i].code
+                    });
+                    selectBox.append(option);
+                }
+                var selectBox = $('#department-name-detail');
+                selectBox.empty();
+                selectBox.append('<option value="" disabled selected>Select Department Name</option>');
+                for (var i = 0; i < response.length; i++) {
+                    var option = $('<option>', {
+                        value: response[i].id,
+                        text: response[i].name,
                     });
                     selectBox.append(option);
                 }
@@ -254,7 +303,6 @@ $(document).ready( function(){
                 var option = $('<option>', {
                     value: department.id,
                     text: department.name,
-                    'data-code': department.code
                 });
                 selectBox.append(option);
             });
@@ -282,7 +330,6 @@ $(document).ready( function(){
                 var option = $('<option>', {
                     value: team.id,
                     text: team.name,
-                    'data-code': team.code
                 });
                 selectBox.append(option);
             });
@@ -301,7 +348,6 @@ $(document).ready( function(){
                     var option = $('<option>', {
                         value: response[i].id,
                         text: response[i].name,
-                        'data-code': response[i].code
                     });
                     selectBox.append(option);
                 }
@@ -312,7 +358,16 @@ $(document).ready( function(){
                     var option = $('<option>', {
                         value: response[i].id,
                         text: response[i].name,
-                        'data-code': response[i].code
+                    });
+                    selectBox.append(option);
+                }
+                var selectBox = $('#division-name-detail');
+                selectBox.empty();
+                selectBox.append('<option value="" disabled selected>Select Division Name</option>');
+                for (var i = 0; i < response.length; i++) {
+                    var option = $('<option>', {
+                        value: response[i].id,
+                        text: response[i].name,
                     });
                     selectBox.append(option);
                 }
@@ -322,65 +377,127 @@ $(document).ready( function(){
             })
     }
 
-    function getAllPosition() {
-        $.ajax({
-            url: `http://localhost:8080/api/position/positionList`,
-            type: 'POST',
-            contentType: 'application/json',
-            success: function (response) {
-                var selectBox = $('#position-name');
-                selectBox.empty();
-                selectBox.append('<option value="" disabled selected>Select Position Name</option>');
-                for (var i = 0; i < response.length; i++) {
-                    var option = $('<option>', {
-                        value: response[i].id,
-                        text: response[i].name,
-                        'data-code': response[i].code
-                    });
-                    selectBox.append(option);
-                }
-                var selectBox = $('#position-filter');
-                selectBox.empty();
-                selectBox.append('<option value="" disabled selected>Select Position Name</option>');
-                for (var i = 0; i < response.length; i++) {
-                    var option = $('<option>', {
-                        value: response[i].id,
-                        text: response[i].name,
-                        'data-code': response[i].code
-                    });
-                    selectBox.append(option);
-                }
-            },
-            error: function (error) {
-                console.error('Error:', error);
-            }
+    function renderUsers() {
+        const start = (currentPage - 1) * usersPerPage;
+        const end = start + usersPerPage;
+        const pageData = filteredUserData.slice(start, end);
+
+        $('#staff-list').empty();
+        pageData.forEach(user => {
+            $('#staff-list').append(`
+            <a href="detail" class="js-resume-card resume-card designer-search-card resume-card-sections-hidden js-user-row-6234" data-user='${JSON.stringify(user)}'>
+                <div class="resume-card-header resume-section-padding">
+                    <div class="resume-card-header-designer">
+                        <img class="resume-card-avatar" alt="${user.name}" width="70" height="70"
+                            src="/wfhs/assets/profile/${user.profile}" />                               
+                        <div class="resume-card-header-details">
+                            <div class="resume-card-title">
+                                <h3 class="resume-card-designer-name user-select-none">
+                                    ${user.name}
+                                </h3>
+                                <span class="badge badge-pro">${user.staffId}</span>
+                            </div>
+                            <span class="resume-card-header-text">
+                                <p>
+                                    <span class="resume-card-location">${user.teamName}</span>
+                                    <span class="resume-card-middot">.</span>
+                                    <span class="resume-card-location">${user.divisionName}</span>
+                                </p>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </a>
+        `);
         });
+        addCardEventListeners();
+        updatePagination();
     }
 
-    var currentPage = 1;
-    var usersPerPage = 10;
+    function updatePagination() {
+        pageNumbers.innerHTML = '';
+        const totalPages = Math.ceil(totalUsers / usersPerPage);
 
-    function renderLoadMoreButton(totalCount, currentCount) {
-        console.log("totalCount = ", totalCount, ", currentCount = ", currentCount)
-        if (currentCount < totalCount) {
-            $('#load-more').show();
-        } else {
-            $('#load-more').hide();
+        if (totalPages <= 1) return;
+
+        const maxPagesToShow = 5;
+        let startPage = Math.max(1, currentPage - Math.floor(maxPagesToShow / 2));
+        let endPage = Math.min(totalPages, startPage + maxPagesToShow - 1);
+
+        if (endPage - startPage < maxPagesToShow - 1) {
+            startPage = Math.max(1, endPage - maxPagesToShow + 1);
+        }
+
+        if (currentPage > 1) {
+            addPageLink('prev', 'Previous');
+        }
+
+        if (startPage > 1) {
+            addPageLink(1, '1');
+            if (startPage > 2) {
+                addEllipsis();
+            }
+        }
+
+        for (let i = startPage; i <= endPage; i++) {
+            addPageLink(i, i);
+        }
+
+        if (endPage < totalPages) {
+            if (endPage < totalPages - 1) {
+                addEllipsis();
+            }
+            addPageLink(totalPages, totalPages);
+        }
+
+        if (currentPage < totalPages) {
+            addPageLink('next', 'Next');
         }
     }
 
-    async function getAllUser(page = 1, appendData = false) {
+    function addPageLink(page, text) {
+        const pageLink = document.createElement('a');
+        pageLink.href = '#';
+        pageLink.textContent = text;
+        pageLink.classList.add('page-link');
+        if (page === 'prev') {
+            pageLink.dataset.page = currentPage - 1;
+        } else if (page === 'next') {
+            pageLink.dataset.page = currentPage + 1;
+        } else {
+            pageLink.dataset.page = page;
+            if (page === currentPage) {
+                pageLink.classList.add('active');
+            }
+        }
+        pageNumbers.appendChild(pageLink);
+    }
+
+    function addEllipsis() {
+        const ellipsis = document.createElement('span');
+        ellipsis.textContent = '...';
+        ellipsis.classList.add('ellipsis');
+        pageNumbers.appendChild(ellipsis);
+    }
+
+    pagination.addEventListener('click', function (event) {
+        if (event.target.classList.contains('page-link')) {
+            event.preventDefault();
+            const page = parseInt(event.target.dataset.page);
+            if (!isNaN(page)) {
+                currentPage = page;
+                renderUsers();
+            }
+        }
+    });
+
+    async function getAllUser() {
         var selectedTeamId = $('#team-filter').val();
         var selectedDepartmentId = $('#department-filter').val();
         var selectedDivisionId = $('#division-filter').val();
         var selectedGender = $('#gender-filter').val();
+        const totalCount = $('#total-count');
         let response;
-
-        // Clear staff list based on filter
-        if (!appendData) {
-            $('#staff-list').empty();
-        }
-
         try {
             if (selectedGender === "all") {
                 if (selectedTeamId && selectedTeamId !== "all") {
@@ -404,49 +521,99 @@ $(document).ready( function(){
                 }
             }
 
-            var totalUsers = response.length;
-            var start = (page - 1) * usersPerPage;
-            var end = start + usersPerPage;
-            var usersToShow = response.slice(start, end);
-
-            console.log(usersToShow)
-            usersToShow.forEach(user => {
-                // if (selectedGender && selectedGender !== "all" && user.gender !== selectedGender) {
-                //     return; // Skip this user if gender doesn't match the filter
-                // }
-
-                // Append user to staff list
-                $('#staff-list').append(`
-                <a href="detail" class="js-resume-card resume-card designer-search-card resume-card-sections-hidden js-user-row-6234">
-                    <div class="resume-card-header resume-section-padding">
-                        <div class="resume-card-header-designer">
-                            <img class="resume-card-avatar" alt="${user.name}" width="80" height="80"
-                                src="/assets/profile/${user.profile}" />                               
-                            <div class="resume-card-header-details">
-                                <div class="resume-card-title">
-                                    <h3 class="resume-card-designer-name user-select-none">
-                                        ${user.name}
-                                    </h3>
-                                    <span class="badge badge-pro">${user.staffId}</span>
-                                </div>
-                                <span class="resume-card-header-text">
-                                    <p>
-                                        <span class="resume-card-location">${user.divisionName}</span>
-                                    </p>
-                                </span>
-                            </div>
-                        </div>
-                    </div>
-                </a>
-            `);
-            });
-
-            console.log("hi")
-            renderLoadMoreButton(totalUsers, $('#staff-list').children().length);
+            userData = response;
+            filteredUserData = userData;
+            totalUsers = userData.length;
+            totalCount.text(totalUsers)
+            currentPage = 1;
+            renderUsers();
         } catch (error) {
             console.error('Error in getAllUser:', error);
         }
     }
+
+
+    function showDetailModal(user) {
+        document.getElementById('staff-id-detail').value = user.staffId;
+        document.getElementById('name-detail').value = user.name;
+        document.getElementById('email-detail').value = user.email;
+        document.getElementById('gender-detail').value = user.gender;
+        document.getElementById('position-name-detail').value = user.positionName;
+        document.getElementById('user-id-detail').value = user.id;
+        let userRole = ''
+            user.approveRoles.forEach(role => {
+                userRole = role.name;
+            });
+        const approveRoleSelectBoxDetail = document.getElementById('approveRoleSelectBoxDetail');
+        approveRoleSelectBoxDetail.innerHTML = '';
+        approveRoles.forEach(role => {
+            let option = document.createElement('option');
+            option.value = role.id;
+            option.text = role.name;
+            if (role.name === userRole) {
+                option.selected = true;
+            }
+            approveRoleSelectBoxDetail.appendChild(option);
+        });
+        $('#team-name-detail').val(user.teamId).change();
+        $('#department-name-detail').val(user.departmentId).change();
+        $('#division-name-detail').val(user.divisionId).change();
+        document.getElementById('detail-data-overlay').style.display = 'block';
+    }
+
+    $('#approveRoleSelectBoxDetail').change(function() {
+        var selectedOption = $(this).find('option:selected').text();
+        console.log(selectedOption)
+        toggleSections(selectedOption);
+    });
+
+    $('#update-approve-role').click(function(event) {
+        event.preventDefault();
+        var userId = $('#user-id-detail').val();
+        var approveRoleIdList = $('#approveRoleSelectBoxDetail').val();
+        console.log(userId, approveRoleIdList)
+
+        $.ajax({
+            url: `http://localhost:8080/wfhs/api/user/updateApproveRole`,
+            type: 'POST',
+            data: {
+                userId: userId,
+                approveRoleId: approveRoleIdList
+            },
+            success: function(response) {
+                Swal.fire({
+                    title: 'Success!',
+                    text: 'Role updated successfully.',
+                    icon: 'success',
+                    confirmButtonText: 'OK'
+                }).then(() => {
+                    $('#message').text(response);
+                });
+            },
+            error: function(error) {
+                console.error('Error:', error);
+                $('#message').text('Update User Role Failed...');
+            }
+        });
+    });
+
+    function addCardEventListeners() {
+        const cards = document.querySelectorAll('.js-resume-card');
+        cards.forEach(card => {
+            card.addEventListener('click', function (event) {
+                event.preventDefault();
+                const user = JSON.parse(card.getAttribute('data-user'));
+                showDetailModal(user);
+            });
+        });
+    }
+
+    document.querySelectorAll('.close').forEach(closeBtn => {
+        closeBtn.addEventListener('click', () => {
+            document.getElementById('detail-data-overlay').style.display = 'none';
+        });
+    });
+
 
 
     $('#load-more').on('click', async function() {
@@ -455,10 +622,11 @@ $(document).ready( function(){
     });
     function getAllApproveRole() {
         $.ajax({
-            url: `http://localhost:8080/api/approveRole/approveRoleList`,
+            url: `http://localhost:8080/wfhs/api/approveRole/approveRoleList`,
             type: 'POST',
             contentType: 'application/json',
             success: function (response) {
+                approveRoles = response;
                 var selectBox = $('#approveRoleSelectBox');
                 selectBox.empty();
                 selectBox.append('<option value="" disabled selected>Select Approve Role Name</option>');
@@ -466,9 +634,19 @@ $(document).ready( function(){
                     var option = $('<option>', {
                         value: response[i].id,
                         text: response[i].name,
-                        'data-code': response[i].code
                     });
                     selectBox.append(option);
+                }
+                var selectBoxDetail = $('#approveRoleSelectBoxDetail');
+                console.log("Select Approve Role Name");
+                selectBoxDetail.empty();
+                selectBoxDetail.append('<option value="" disabled selected>Select Approve Role Name</option>');
+                for (var j = 0; j < response.length; j++) {
+                    var optionJ = $('<option>', {
+                        value: response[j].id,
+                        text: response[j].name,
+                    });
+                    selectBoxDetail.append(optionJ);
                 }
             },
             error: function (error) {

@@ -1,6 +1,5 @@
 package com.kage.wfhs.security;
 
-import com.kage.wfhs.dto.UserDto;
 import com.kage.wfhs.dto.auth.CurrentLoginUserDto;
 import com.kage.wfhs.model.ApproveRole;
 import com.kage.wfhs.service.UserService;
@@ -8,7 +7,6 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
-
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -33,14 +31,26 @@ public class FirstTimeLoginFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest request,
                                     HttpServletResponse response,
                                     FilterChain filterChain) throws ServletException, IOException {
+        String contextPath = request.getContextPath();
         String requestURI = request.getRequestURI();
+        String relativeURI = requestURI.substring(contextPath.length());
+        String clientIP = getClientIpAddress(request);
+
+        logger.debug("Request URI: {} from IP: {}", requestURI, clientIP);
 
         // Allow requests to static resources and specific endpoints
-        if (requestURI.startsWith("/static/") || requestURI.startsWith("/assets/") ||
-                requestURI.startsWith("/api/session/") || requestURI.startsWith("/swagger-ui/") || requestURI.startsWith("/api/password/") ||
-                requestURI.startsWith("/icons/") || requestURI.startsWith("/formImages/") ||
-                requestURI.startsWith("/images/") || requestURI.startsWith("/ws/") ||
-                requestURI.equals("/login") || requestURI.equals("/profile") || requestURI.equals("/admin/importExcel")) {
+        if (relativeURI.startsWith("/static/") ||
+                relativeURI.startsWith("/assets/") ||
+                relativeURI.startsWith("/api/session/") ||
+                relativeURI.startsWith("/swagger-ui/") ||
+                relativeURI.startsWith("/api/password/") ||
+                relativeURI.startsWith("/icons/") ||
+                relativeURI.startsWith("/formImages/") ||
+                relativeURI.startsWith("/images/") ||
+                relativeURI.startsWith("/ws/") ||
+                relativeURI.equals("/login") ||
+                relativeURI.equals("/profile") ||
+                relativeURI.equals("/admin/importExcel")) {
             filterChain.doFilter(request, response);
             return;
         }
@@ -56,17 +66,31 @@ public class FirstTimeLoginFilter extends OncePerRequestFilter {
 
             if (userDto != null && userDto.isFirstTimeLogin()) {
                 Set<String> roles = userDto.getApproveRoles().stream().map(ApproveRole::getName).collect(Collectors.toSet());
+                String redirectUrl = "http://" + request.getServerName() + ":" + request.getServerPort() + contextPath;
                 if (roles.contains("HR")) {
-                    logger.debug("Redirecting to /importExcel");
-                    response.sendRedirect("/admin/importExcel");
+                    logger.debug("Redirecting to /admin/importExcel");
+                    response.sendRedirect(redirectUrl + "/admin/importExcel");
                     return;
                 } else  {
                     logger.debug("Redirecting to /profile");
-                    response.sendRedirect("/profile");
+                    response.sendRedirect(redirectUrl + "/profile");
                     return;
                 }
             }
         }
         filterChain.doFilter(request, response);
+    }
+
+    private String getClientIpAddress(HttpServletRequest request) {
+        String remoteAddr = "";
+
+        if (request != null) {
+            remoteAddr = request.getHeader("X-Forwarded-For");
+            if (remoteAddr == null || remoteAddr.isEmpty()) {
+                remoteAddr = request.getRemoteAddr();
+            }
+        }
+
+        return remoteAddr;
     }
 }

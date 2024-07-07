@@ -4,6 +4,7 @@ import com.kage.wfhs.model.*;
 import lombok.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.List;
 import java.util.Set;
 
 @Getter
@@ -19,4 +20,7 @@ public class CurrentLoginUserDto {
     private Team team;
     private Department department;
     private Division division;
+    private List<Team> teams;
+    private List<Division> divisions;
+    private List<Department> departments;
 }

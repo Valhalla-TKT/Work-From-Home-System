@@ -1,5 +1,5 @@
-document.addEventListener('DOMContentLoaded', function () {
-    const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+document.addEventListener('DOMContentLoaded', async function () {
+    const currentUser = await getSessionUser()
     if (!currentUser) {
         Swal.fire('Error', 'User not logged in.', 'error');
         return;
@@ -98,7 +98,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 });
         } catch (error) {
             console.error('Password change process failed:', error.message);
-            Swal.fire('Error', 'Password change failed: ' + error.message, 'error');
+            Swal.fire('Error', 'Current password is incorrect. Please enter the correct password.' , 'error');
         }
     }
 });
