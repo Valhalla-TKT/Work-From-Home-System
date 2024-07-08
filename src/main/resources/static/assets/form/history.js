@@ -58,7 +58,7 @@ document.addEventListener('DOMContentLoaded', function () {
             card.addEventListener('click', function () {
                 const formId = this.dataset.formId;
                 if (formId) {
-                    fetch('/form/viewDetail', {
+                    fetch(`${getContextPath()}/form/viewDetail`, {
                         method: 'POST',
                         headers: {
                             'Content-Type': 'application/json'
@@ -145,7 +145,7 @@ document.addEventListener('DOMContentLoaded', function () {
         const userId = currentUser.id;
         userName.innerText = currentUser.name;
         userEmail.innerText = currentUser.email;
-        userProfilePicture.src = `/assets/profile/${currentUser.profile}`;
+        userProfilePicture.src = `${getContextPath()}/assets/profile/${currentUser.profile}`;
         userProfilePicture.alt = currentUser.name;
         formHistoryData = await fetchUserFormHistory(userId);
         filteredData = [...formHistoryData];

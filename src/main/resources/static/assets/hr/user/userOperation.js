@@ -154,7 +154,7 @@ $(document).ready( function(){
     //         gender:gender
     //     };
     //     $.ajax({
-    //         url: `http://localhost:8080/api/user/generateStaffId`,
+    //         url: `${getContextPath()}/api/user/generateStaffId`,
     //         type: 'POST',
     //         contentType: 'application/json',
     //         data: JSON.stringify(requestData),
@@ -389,7 +389,7 @@ $(document).ready( function(){
                 <div class="resume-card-header resume-section-padding">
                     <div class="resume-card-header-designer">
                         <img class="resume-card-avatar" alt="${user.name}" width="70" height="70"
-                            src="/assets/profile/${user.profile}" />                               
+                            src="${getContextPath()}/assets/profile/${user.profile}" />                               
                         <div class="resume-card-header-details">
                             <div class="resume-card-title">
                                 <h3 class="resume-card-designer-name user-select-none">
@@ -574,7 +574,7 @@ $(document).ready( function(){
         console.log(userId, approveRoleIdList)
 
         $.ajax({
-            url: `http://localhost:8080/api/user/updateApproveRole`,
+            url: `${getContextPath()}/api/user/updateApproveRole`,
             type: 'POST',
             data: {
                 userId: userId,
@@ -622,7 +622,7 @@ $(document).ready( function(){
     });
     function getAllApproveRole() {
         $.ajax({
-            url: `http://localhost:8080/api/approveRole/approveRoleList`,
+            url: `${getContextPath()}/api/approveRole/approveRoleList`,
             type: 'POST',
             contentType: 'application/json',
             success: function (response) {
@@ -638,7 +638,6 @@ $(document).ready( function(){
                     selectBox.append(option);
                 }
                 var selectBoxDetail = $('#approveRoleSelectBoxDetail');
-                console.log("Select Approve Role Name");
                 selectBoxDetail.empty();
                 selectBoxDetail.append('<option value="" disabled selected>Select Approve Role Name</option>');
                 for (var j = 0; j < response.length; j++) {

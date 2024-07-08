@@ -166,7 +166,6 @@ $(document).ready(function() {
     
     // user ID
     var currentUserId = currentUser.id;
-    console.log(currentUserId)
 	nameInputBox.val(currentUser.name);
 	updateStaffIdFields(currentUser.staffId);
 	if(currentUser.positionName == null) {
@@ -388,7 +387,7 @@ $(document).ready(function() {
 	        formData.append('from_date', formatDate(fromDate));
 	        formData.append('to_date', formatDate(toDate));
 	        $.ajax({
-		    url: 'http://localhost:8080/api/registerform/createCeoForm',
+		    url: `${getContextPath()}/api/registerform/createCeoForm`,
 		    type: 'POST',
 		    data: formData,
 		    processData: false,
@@ -405,7 +404,7 @@ $(document).ready(function() {
 	                timerProgressBar: true,
 	                showConfirmButton: false
 	            }).then(() => {
-	                window.location.href = '/dashboard';
+	                window.location.href = `${getContextPath()}/dashboard`;
 	            });
 		    },
 		    error: function(error) {
@@ -687,16 +686,13 @@ if (!isNaN(toDateObj.getTime())) {
     }
 
     function getTeamMemberById(formData) {
-        console.log(formData + "hello")
         $.ajax({
-            url: 'http://localhost:8080/api/user/getAllTeamMember',
+            url: `${getContextPath()}/api/user/getAllTeamMember`,
           type: 'POST',
             data: formData,
           contentType: false,
             processData: false,
           success: function (response) {
-              console.log(response)
-              console.log("success")
               var selectBox = $('#team-member-list');
                 selectBox.empty();
                 selectBox.append('<option value="" disabled selected>Select Name</option>');

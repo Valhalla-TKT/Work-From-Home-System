@@ -434,24 +434,37 @@ async function fetchUserFormHistory(userId) {
     }
 }
 
+// async function getSessionUser() {
+//     return new Promise((resolve, reject) => {
+//         $.ajax({
+//             url: '${getContextPath()}/wfhs/api/session/user',
+//             type: 'POST',
+//             contentType: 'application/json',
+//             success: function(response) {
+//                 console.log(response);
+//                 localStorage.setItem('currentUser', JSON.stringify(response));
+//                 resolve(response);
+//             },
+//             error: function (error) {
+//                 console.error('Error:', error);
+//                 reject(null);
+//             }
+//         });
+//     });
+// }
+
 async function getSessionUser() {
-    return new Promise((resolve, reject) => {
-        $.ajax({
-            url: 'http://localhost:8080/wfhs/api/session/user',
-            type: 'POST',
-            contentType: 'application/json',
-            success: function(response) {
-                console.log(response);
-                localStorage.setItem('currentUser', JSON.stringify(response));
-                resolve(response);
-            },
-            error: function (error) {
-                console.error('Error:', error);
-                reject(null);
-            }
-        });
-    });
+    try {
+        const response = await sendRequest('/api/session/user', 'POST', {});
+        const responseData = await response.json();
+        localStorage.setItem('currentUser', JSON.stringify(responseData));
+        return responseData;
+    } catch (error) {
+        console.error('Error:', error);
+        return null;
+    }
 }
+
 
 async function createCeoForm(userId, fromDate, toDate) {
     try {

@@ -12,16 +12,6 @@
     <!-- header -->
     <div th:replace="fragments/navigation :: navigation"></div>
 	<!-- header -->
-    
-      <div
-    id="g_id_onload"
-    data-client_id="32073492121-s6ur8ti01mh34gq2bpbufb8ujdfrpn4v.apps.googleusercontent.com"
-    data-login_uri="index.html"
-    
-    data-ux_mode="redirect"
-  ></div>
-
-    
 
     <div th:replace="fragments/form/apply :: content"></div>
 	<!-- main -->
@@ -57,19 +47,12 @@
 
       <div id="work-availability-modal-app"></div>
 
-    <script src="/assets/ajax-api/ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-<!-- jquery failover -->
-<script>
-  if (typeof jQuery == 'undefined') {
-    document.write(unescape('%3Cscript th:src="@{/assets/jquery-3.2.1.min-53e3da38f323e0f6a546d64ae37b6c7634d01f1393ea50816b16ef9c79a88862.js}">%3C/script>'))
-  }
-</script>
+
 
 
     
 
     <script>
-  // ensure namespace is available
   Dribbble = window.Dribbble || {};
   Dribbble.JsConfig = Dribbble.JsConfig || {};
   Dribbble.isHistorySupported = () => (window.history && 'pushState' in window.history);
@@ -87,17 +70,15 @@
     <script th:src="@{/assets/categories-legacy-js-df367e0be108a4bcd5cf056b1dc087a41e9f132ef897cb72dca69f0961bf07f7.js}"></script>
     <script>
   var config = Dribbble.JsConfig || {}
-  // the assign is so this partial can be called in other partials, e.g. modals
-  // without overriding parent instantiations of JsConfig
   Dribbble.JsConfig = Object.assign(config, {
-      user: {"isLoggedIn":false,"reCaptchaSiteKey":"6LdmBTIUAAAAAM4NIokaWu8p3BBuYEw3CxuDdyg_","canPurchasePro":true,"isHiringTrialEligible":false},
+      user: {},
       hiringProfile: {},
-      features: {"braintreeHiring":false,"proDiscountToasty":false,"collaborators":false,"hiringBundleDiscount":true,"purchaseFreelance":true,"proTrial":false,"jobBoardTrial":true,"hideCohortSelection":true,"shotFeedUpdates":false,"caseStudiesLinkBlock":false,"hiringAndJobDiscount":true,"programmaticAds":false},
+      features: {},
       isRobot: null,
-      remoteIp: "103.233.207.98",
+      remoteIp: "",
       isProduction: true,
-      permissions: {"userPermissions":["canBuyBoostWithBraintree","canSeeThirdPartyPaymentMethods"]},
-      screenshot_boost: {"buttonText":[{"label":"Buy Now","value":"buy-now"},{"label":"Download","value":"download"},{"label":"Learn More","value":"learn-more"},{"label":"Shop Now","value":"shop-now"},{"label":"Apply Now","value":"apply-now"},{"label":"Try Now","value":"try-now"},{"label":"Get Offer","value":"get-offer"},{"label":"Contact Us","value":"contact-us"}],"tiers":{"lowTier":{"daysToServe":7,"range":{"lowerLimit":0,"upperLimit":10000}},"midTier":{"daysToServe":14,"range":{"lowerLimit":10001,"upperLimit":100000}},"highTier":{"daysToServe":28,"range":{"lowerLimit":100001,"upperLimit":null}}},"pricePerImpression":"0.01","purchase":{"stripePublicKey":"pk_live_9EfFSEE6iTCgHghKqBqnixxR","savedCreditCardInformation":null},"discount":null,"minimumImpressions":2000,"targetPlacements":{"following":"Following Feed","popular":"Popular Feed","search":"Search Feed","goods":"Goods Feed","recent":"New \u0026 Noteworthy Feed","shot_modal":"Shot Modal","similar_work":"Similar Work","tags":"Tag Feed","popular_first":"Popular Feed First"},"priorities":["self_serve","sales","remnant","sales_priority"]},
+      permissions: {},
+      screenshot_boost: {},
   })
 </script>
 
@@ -106,24 +87,25 @@
     
 
 
-    <script th:src="@{/assets/shots-manifest-774f346db3e5e419264b407a465002836f193c259e06bfa2eeff0b6b981a532f.js}"></script>  <script>
-    $(function() {
+<!--    <script th:src="@{/assets/shots-manifest-774f346db3e5e419264b407a465002836f193c259e06bfa2eeff0b6b981a532f.js}"></script>  -->
+<!--    <script>-->
+<!--    $(function() {-->
 
-      Dribbble.Thumbnails.initialize({"page_limit":1,"enable_shot_overlay":true,"cursor":false,"deferredContent":null,"staticParams":null,"showBoostedAds":true,"showSimilarShots":true,"boostedAdPlacement":"Popular Feed","boostedAdParams":null,"numberOfAdsOnFirstPage":3,"numberOfAdsOnSubsequentPages":0,"boostedAdGroupPositions":[1,7,14],"perPage":52});
-
-
-      if(Dribbble.Bucket){
-        new Dribbble.Bucket({ target: "a[data-bucket-add]" });
-      }
+<!--      Dribbble.Thumbnails.initialize({"page_limit":1,"enable_shot_overlay":true,"cursor":false,"deferredContent":null,"staticParams":null,"showBoostedAds":true,"showSimilarShots":true,"boostedAdPlacement":"Popular Feed","boostedAdParams":null,"numberOfAdsOnFirstPage":3,"numberOfAdsOnSubsequentPages":0,"boostedAdGroupPositions":[1,7,14],"perPage":52});-->
 
 
-      $(document).on(
-        'click',
-        'a[data-fav-toggle=shot]',
-        Screenshot.Like.Shot.toggle
-      )
-    });
-  </script>	
+<!--      if(Dribbble.Bucket){-->
+<!--        new Dribbble.Bucket({ target: "a[data-bucket-add]" });-->
+<!--      }-->
+
+
+<!--      $(document).on(-->
+<!--        'click',-->
+<!--        'a[data-fav-toggle=shot]',-->
+<!--        Screenshot.Like.Shot.toggle-->
+<!--      )-->
+<!--    });-->
+<!--  </script>	-->
 
 <div id="site-notifications"></div>
 
@@ -134,38 +116,6 @@
 <script th:src="@{/assets/welcome/fullscreen.js}"></script>
     
     <script>
-    /* async function fetchMyanmarData() {
-    	  try {
-    	    const response = await fetch('https://restcountries.com/v3.1/name/Myanmar');
-    	    const data = await response.json();
-    	    console.log("hiii")
-    	    console.log(data);
-    	  } catch (error) {
-    	    console.error('Error fetching data:', error);
-    	  }
-    	}
-    async function useMyanmarApiAndChangeSelectBox() {
-    	  const myanmarData = await fetchMyanmarData();
-    	  const regionStateSelect = document.getElementById('region-state-select');
-    	  const cityTownshipSelect = document.getElementById('city-township-select');
-    	  
-    	  regionStateSelect.innerHTML = '<option selected="selected" disabled value="">Region/State</option>';
-    	  cityTownshipSelect.innerHTML = '<option selected="selected" disabled value="">City/Township</option>';
-    	  
-    	  myanmarData.regions.forEach(region => {
-    	    const option = document.createElement('option');
-    	    option.value = region.name;
-    	    option.textContent = region.name;
-    	    regionStateSelect.appendChild(option);
-    	  });
-    	  
-    	  myanmarData.cities.forEach(city => {
-    	    const option = document.createElement('option');
-    	    option.value = city.name;
-    	    option.textContent = city.name;
-    	    cityTownshipSelect.appendChild(option);
-    	  });
-    	} */
     const windowOperationSystemInputBox = $('#file1')[0];
     const windowSecurityPatchInputBox = $('#file2')[0];
     const windowAntivirusSoftwareInputBox = $('#file3')[0];
@@ -180,7 +130,6 @@
     var previewImageShow = true;
     var operationSystem, securityPatch, antivirusSoftware, antivirusPattern, antivirusFullScan;
     var osType = 'Window';
-    console.log(osType)
     function previewImage(input, index) {
     	const fileLabel = document.getElementById('file-label-' + index);
         if (!fileLabel) {

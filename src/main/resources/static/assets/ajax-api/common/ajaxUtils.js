@@ -1,11 +1,4 @@
 function getContextPath() {
-    const metaTag = document.querySelector('meta[name="context-path"]');
-    if (!metaTag) {
-        console.error('Meta tag for context path not found.');
-        return '';
-    }
-    const contextPath = metaTag.getAttribute('content');
-    console.log(`Retrieved Context Path: ${contextPath}`);
     const path = window.location.pathname;
     const segments = path.split('/').filter(segment => segment.length > 0);
     return segments.length > 0 ? `/${segments[0]}` : '/';

@@ -42,11 +42,41 @@
 
   </a>
 </div>
-<script src="/assets/hr/importExcelValidate.js"></script>
+<script>
+    Dribbble = window.Dribbble || {};
+    Dribbble.JsConfig = Dribbble.JsConfig || {};
+    User = {
+        loggedIn: function() {
+            return !!document.querySelector('body.logged-in')
+        },
+        loggedOut: function() {
+            return !this.loggedIn()
+        },
+    };
+</script>
+
+<script th:src="@{/assets/categories-legacy-js-df367e0be108a4bcd5cf056b1dc087a41e9f132ef897cb72dca69f0961bf07f7.js}"></script>
+<script>
+    var config = Dribbble.JsConfig || {}
+    Dribbble.JsConfig = Object.assign(config, {
+        user: {},
+        hiringProfile: {},
+        features: {},
+        isRobot: null,
+        remoteIp: "",
+        isProduction: true,
+        permissions: {},
+        screenshot_boost: {},
+    })
+</script>
+
+
+<script th:src="@{/assets/packs/js/application.ae6c19f201cd97e78298.js}"></script>
+<script th:src="@{/assets/hr/importExcelValidate.js}"></script>
 
 
 <div th:replace="~{fragments/chat :: chat}"></div>
 
-<script src="/assets/welcome/fullscreen.js"></script>
+<script th:src="@{/assets/welcome/fullscreen.js}"></script>
 </body>
 </html>

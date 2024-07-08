@@ -10,7 +10,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0" />
     <meta name="description" content="WorkHub">
     <meta name="author" content="TKT">
-    <meta name="context-path" th:content="${contextPath}" />
     <meta name="theme-color" content="#FFFFFF">              
     <meta name="referrer" content="origin-when-cross-origin">
     <meta name="mixpanel-controller" content="welcome" />
@@ -26,7 +25,7 @@
     <link rel="stylesheet" th:href="@{/assets/vendors/bootstrap/bootstrap5.3.min.css}">
     <!-- <link rel="stylesheet" href="https://cdn.datatables.net/2.0.1/css/dataTables.bootstrap5.css"> -->
     <link rel="stylesheet" th:href="@{/assets/vendors/dataTables/dataTables.bootstrap5.css}">
-    <link rel="icon" href="https://www.diracetechnology.com/wp-content/themes/dat/favicon.ico" type="image/x-icon">
+    <link rel="icon" th:href="@{/assets/icons/wfhs-small-logo.ico}" type="image/x-icon">
     <link rel="stylesheet" th:href="@{/assets/welcome/app.min.css}" media="print" onload="this.media='all'">
     <title>WFHS : DIR-ACE Technology</title>
     <!-- Fontawsome icons -->
@@ -69,8 +68,7 @@
     <link rel="stylesheet" th:href="@{/assets/vendors/dateDropper/datedropper.css}">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/datedropper/2.0/datedropper.min.css"/>
     <!-- <link rel="stylesheet" href="/assets/vendors/dateDropper/datedropper.min.css"> -->
-	<!-- External CSS and JS Links For Excel Import-->	
-<!--	<script src="/assets/hr/permission.js"></script>-->
+	<!-- External CSS and JS Links For Excel Import-->
 	<script th:src="@{/assets/hr/search.js}"></script>
 	<!-- External CSS Links For Profile -->
 	 <link rel="stylesheet" th:href="@{/assets/profile/profile.css}">

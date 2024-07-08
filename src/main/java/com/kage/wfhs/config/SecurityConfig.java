@@ -138,7 +138,7 @@ public class SecurityConfig {
     @Bean
     public AuthenticationFailureHandler authenticationFailureHandler() {
         return (request, response, exception) -> {
-            String errorMessage = "Incorrect username or password.";
+            String errorMessage = "Incorrect Staff ID or Password.";
             request.getSession().setAttribute("errorMessage", errorMessage);
             String contextPath = request.getContextPath();
             response.sendRedirect(contextPath + "/login?error");

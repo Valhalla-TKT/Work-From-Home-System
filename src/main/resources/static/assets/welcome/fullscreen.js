@@ -2,9 +2,7 @@
  * 
  */
 var elem = $("#fullscreen-body");
-console.log("Hello")
 $(".fullscreen-toggle").on("click", function(){
-	console.log("Hello")
 	if (document.fullscreenElement) {
 		document.exitFullscreen();
 		$(".fullscreen-mode-icon i").attr("class", "fa-solid fa-expand fullscreen-toggle");
