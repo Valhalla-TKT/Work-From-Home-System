@@ -140,7 +140,7 @@ function getAllDepartment() {
 			                          href="#"></a>
 			                      <div class="job-details-container">
 			                          <div class="lazy-avatar company-avatar">
-			                              <img src="/wfhs/assets/icons/DAT Logo.png" />
+			                              <img src="/assets/icons/DAT Logo.png" />
 			                          </div>
 			                          <div class="job-title-company-container">
 			                              <div class="job-role">

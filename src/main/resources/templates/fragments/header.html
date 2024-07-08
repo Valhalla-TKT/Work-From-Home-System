@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 
 <html xmlns:th="http://www.thymeleaf.org">
@@ -9,23 +10,24 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0" />
     <meta name="description" content="WorkHub">
     <meta name="author" content="TKT">
+    <meta name="context-path" th:content="${contextPath}" />
     <meta name="theme-color" content="#FFFFFF">              
     <meta name="referrer" content="origin-when-cross-origin">
     <meta name="mixpanel-controller" content="welcome" />
     <meta name="mixpanel-action" content="index" />
     <!-- script for session -->
-    <script src="/wfhs/assets/vendors/jQuery/jquery-3.6.4.min.js"></script>
-    <script src="/wfhs/assets/ajax-api/common/ajaxUtils.js"></script>
-    <script src="/wfhs/assets/ajax-api/common/ajax.js"></script>
-    <script src="/wfhs/assets/ajax-api/currentLoginUser.js"></script>
-    <script type="module" src="/wfhs/assets/ajax-api/auth/changePassword.js"></script>
+    <script th:src="@{/assets/vendors/jQuery/jquery-3.6.4.min.js}"></script>
+    <script th:src="@{/assets/ajax-api/common/ajaxUtils.js}"></script>
+    <script th:src="@{/assets/ajax-api/common/ajax.js}"></script>
+    <script th:src="@{/assets/ajax-api/currentLoginUser.js}"></script>
+    <script type="module" th:src="@{/assets/ajax-api/auth/changePassword.js}"></script>
     <!-- Favicon icon -->
     <!-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.3.0/css/bootstrap.min.css"> -->
-    <link rel="stylesheet" href="/wfhs/assets/vendors/bootstrap/bootstrap5.3.min.css">
+    <link rel="stylesheet" th:href="@{/assets/vendors/bootstrap/bootstrap5.3.min.css}">
     <!-- <link rel="stylesheet" href="https://cdn.datatables.net/2.0.1/css/dataTables.bootstrap5.css"> -->
-    <link rel="stylesheet" href="/wfhs/assets/vendors/dataTables/dataTables.bootstrap5.css">
+    <link rel="stylesheet" th:href="@{/assets/vendors/dataTables/dataTables.bootstrap5.css}">
     <link rel="icon" href="https://www.diracetechnology.com/wp-content/themes/dat/favicon.ico" type="image/x-icon">
-    <link rel="stylesheet" href="/wfhs/assets/welcome/app.min.css" media="print" onload="this.media='all'">
+    <link rel="stylesheet" th:href="@{/assets/welcome/app.min.css}" media="print" onload="this.media='all'">
     <title>WFHS : DIR-ACE Technology</title>
     <!-- Fontawsome icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"/>
@@ -36,66 +38,64 @@
     <link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:wght@400;600&amp;family=IBM+Plex+Mono:wght@500&amp;display=block" rel="stylesheet">
     
     <!-- Help -->
-    <link rel="stylesheet" href="/wfhs/assets/help/all.min.css">
-    <link rel="stylesheet" href="/wfhs/assets/help/flaticon.css">
-    <link rel="stylesheet" href="/wfhs/assets/help/main.css">
+    <link rel="stylesheet" th:href="@{/assets/help/all.min.css}">
+    <link rel="stylesheet" th:href="@{/assets/help/flaticon.css}">
+    <link rel="stylesheet" th:href="@{/assets/help/main.css}">
     
-    <link rel="stylesheet" href="/wfhs/assets/dashboard/count.css">
-    <link rel="stylesheet" href="/wfhs/assets/dashboard/progressBar.css">
-    <link rel="stylesheet" href="/wfhs/assets/dashboard/calendar.css">
+    <link rel="stylesheet" th:href="@{/assets/dashboard/count.css}">
+    <link rel="stylesheet" th:href="@{/assets/dashboard/progressBar.css}">
+    <link rel="stylesheet" th:href="@{/assets/dashboard/calendar.css}">
     <!-- External No Script CSS Links -->
-    <noscript><link rel="stylesheet" href="/wfhs/assets/welcome/async-80f86073db4bdce2969b20f0aab21325fa0e4ed28633f126fa55960e61062142.css"></noscript>
-    <noscript><link rel="stylesheet" href="/wfhs/assets/mini-master-async-01a9476fb8215905ccaf9dfad824abe959500bbf559c2cb7fc5e3cd58dab3b45.css"></noscript>
+    <noscript><link rel="stylesheet" th:href="@{/assets/welcome/async-80f86073db4bdce2969b20f0aab21325fa0e4ed28633f126fa55960e61062142.css}"></noscript>
+    <noscript><link rel="stylesheet" th:href="@{/assets/mini-master-async-01a9476fb8215905ccaf9dfad824abe959500bbf559c2cb7fc5e3cd58dab3b45.css}"></noscript>
     <!-- External CSS and JS Links For Chat -->
-    <link rel="stylesheet" href="/wfhs/assets/chat/chat.css">
-	<script src="/wfhs/assets/chat/response.js"></script>
-	<script src="/wfhs/assets/chat/chat.js"></script>
+    <link rel="stylesheet" th:href="@{/assets/chat/chat.css}">
+	<script th:src="@{/assets/chat/response.js}"></script>
+<!--	<script src="/assets/chat/chat.js"></script>-->
 	<!-- External CSS Links For Forms -->
-	<link rel="stylesheet" href="/wfhs/assets/form/chunk.css">
-	<link rel="stylesheet" href="/wfhs/assets/form/form.css">
-	<link rel="stylesheet" href="/wfhs/assets/form/form2.css">
-	<link rel="stylesheet" href="/wfhs/assets/form/formList.css">
-	<link rel="stylesheet" href="/wfhs/assets/form/permission.css">
-    <link rel="stylesheet" href="/wfhs/assets/form/formHistory.css">
+	<link rel="stylesheet" th:href="@{/assets/form/chunk.css}">
+	<link rel="stylesheet" th:href="@{/assets/form/form.css}">
+	<link rel="stylesheet" th:href="@{/assets/form/form2.css}">
+	<link rel="stylesheet" th:href="@{/assets/form/formList.css}">
+	<link rel="stylesheet" th:href="@{/assets/form/permission.css}">
+    <link rel="stylesheet" th:href="@{/assets/form/formHistory.css}">
 	
 	<!-- <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script> -->
 
-	<script src="/wfhs/assets/ajax-api/cityJSON.js"></script>
-	<script src="/wfhs/assets/form/applyForm.js"></script>
-	<script src="/wfhs/assets/form/formList.js"></script>
-	<script src="/wfhs/assets/form/viewFormDetailsById.js"></script>
+	<script th:src="@{/assets/ajax-api/cityJSON.js}"></script>
+
 	
 	<!-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/datedropper/2.0/datedropper.css"/> -->
-    <link rel="stylesheet" href="/wfhs/assets/vendors/dateDropper/datedropper.css">
+    <link rel="stylesheet" th:href="@{/assets/vendors/dateDropper/datedropper.css}">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/datedropper/2.0/datedropper.min.css"/>
-    <!-- <link rel="stylesheet" href="/wfhs/assets/vendors/dateDropper/datedropper.min.css"> -->
+    <!-- <link rel="stylesheet" href="/assets/vendors/dateDropper/datedropper.min.css"> -->
 	<!-- External CSS and JS Links For Excel Import-->	
-	<script src="/wfhs/assets/hr/permission.js"></script>
-	<script src="/wfhs/assets/hr/search.js"></script>
+<!--	<script src="/assets/hr/permission.js"></script>-->
+	<script th:src="@{/assets/hr/search.js}"></script>
 	<!-- External CSS Links For Profile -->
-	 <link rel="stylesheet" href="/wfhs/assets/profile/profile.css">
+	 <link rel="stylesheet" th:href="@{/assets/profile/profile.css}">
 	 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@48,400,0,0" />
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@48,400,1,0" />
     
     <!-- External CSS Links For Dashboard and Frame -->
-    <link rel="stylesheet" media="screen" href="/wfhs/assets/welcome/index.css" />
-    <link rel="stylesheet" href="/wfhs/assets/welcome/async-80f86073db4bdce2969b20f0aab21325fa0e4ed28633f126fa55960e61062142.css" media="print" onload="this.media='all'">
-    <link rel="stylesheet" href="/wfhs/assets/mini-master-async-01a9476fb8215905ccaf9dfad824abe959500bbf559c2cb7fc5e3cd58dab3b45.css" media="print" onload="this.media='all'">
-    <link rel="stylesheet" href="/wfhs/assets/form/form3.css">
-    <link rel="stylesheet" href="/wfhs/assets/dashboard/chart.css">
+    <link rel="stylesheet" media="screen" th:href="@{/assets/welcome/index.css}" />
+    <link rel="stylesheet" th:href="@{/assets/welcome/async-80f86073db4bdce2969b20f0aab21325fa0e4ed28633f126fa55960e61062142.css}" media="print" onload="this.media='all'">
+    <link rel="stylesheet" th:href="@{/assets/mini-master-async-01a9476fb8215905ccaf9dfad824abe959500bbf559c2cb7fc5e3cd58dab3b45.css}" media="print" onload="this.media='all'">
+    <link rel="stylesheet" th:href="@{/assets/form/form3.css}">
+    <link rel="stylesheet" th:href="@{/assets/dashboard/chart.css}">
     <!-- <script src="https://cdn.jsdelivr.net/npm/chart.js"></script> -->
-    <script src="/wfhs/assets/vendors/chartJS/chart.js"></script>
+    <script th:src="@{/assets/vendors/chartJS/chart.js}"></script>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
-    <!-- <link rel="stylesheet" href="/wfhs/assets/vendors/bootstrap/bootstrap-icons.css"> -->
+    <!-- <link rel="stylesheet" href="/assets/vendors/bootstrap/bootstrap-icons.css"> -->
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <!-- Websocket -->
     <script src="https://cdn.jsdelivr.net/npm/@stomp/stompjs@7.0.0/bundles/stomp.umd.min.js"></script>
-  <!--   <script src="/wfhs/assets/websocket/websocketNotification.js"></script> -->
-    <script src="/wfhs/assets/vendors/jQuery/jquery-3.7.1.js"></script>
+  <!--   <script src="/assets/websocket/websocketNotification.js"></script> -->
+    <script th:src="@{/assets/vendors/jQuery/jquery-3.7.1.js}"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
     <script src="https://cdn.datatables.net/2.0.1/js/dataTables.js"></script>    
     <script src="https://cdn.datatables.net/2.0.3/js/dataTables.js"></script>
-    <script src="/wfhs/assets/vendors/dataTables/dataTables2.0.3.js"></script>
+    <script th:src="@{/assets/vendors/dataTables/dataTables2.0.3.js}"></script>
 	<script src="https://cdn.datatables.net/buttons/3.0.1/js/dataTables.buttons.js"></script>
 	<script src="https://cdn.datatables.net/buttons/3.0.1/js/buttons.dataTables.js"></script>
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>

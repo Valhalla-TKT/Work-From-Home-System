@@ -14,25 +14,70 @@ document.addEventListener('DOMContentLoaded', function () {
     const userProfilePicture = document.querySelector('.profile-picture');
 
     function renderFormHistory() {
-        formHistoryContainer.innerHTML = '';
+        try {
+            formHistoryContainer.innerHTML = '';
 
-        const start = (currentPage - 1) * itemsPerPage;
-        const end = start + itemsPerPage;
-        const pageData = filteredData.slice(start, end);
+            const start = (currentPage - 1) * itemsPerPage;
+            const end = start + itemsPerPage;
+            const pageData = filteredData.slice(start, end);
 
-        pageData.forEach(item => {
-            const card = document.createElement('div');
-            card.classList.add('form-history-card');
-            card.innerHTML = `
-                <div class="form-history-info">
-                    <h2 class="form-history-title">For ${item.signedDate}</h2>
-                    <div class="form-history-details">
-                        <p class="form-history-date">For ${item.signedDate}</p>
-                        <p class="form-history-status ${item.status.toLowerCase()}-status">${item.status}</p>
+            pageData.forEach(item => {
+                const card = document.createElement('div');
+                card.classList.add('form-history-card');
+                card.dataset.formId = item.formId;
+                const signedDate = item.signedDate || 'N/A';
+                card.innerHTML = `
+                    <div class="form-history-info">
+                        <h2 class="form-history-title">For ${signedDate}</h2>
+                        <div class="form-history-details">
+                            <p class="form-history-date">For ${signedDate}</p>
+                            <p class="form-history-status ${item.status.toLowerCase()}-status">${item.status}</p>
+                        </div>
                     </div>
-                </div>
-            `;
-            formHistoryContainer.appendChild(card);
+                `;
+                formHistoryContainer.appendChild(card);
+            });
+        } catch (error) {
+            console.error('Error in renderFormHistory:', error);
+        }
+    }
+
+    // function setupCardClickHandlers() {
+    //     document.querySelectorAll('.form-history-card').forEach(card => {
+    //         card.addEventListener('click', function () {
+    //             const formId = this.dataset.formId;
+    //             if (formId) {
+    //                 window.location.href = `/form/viewDetail/${formId}`;
+    //             }
+    //         });
+    //     });
+    // }
+
+    function setupCardClickHandlers() {
+        document.querySelectorAll('.form-history-card').forEach(card => {
+            card.addEventListener('click', function () {
+                const formId = this.dataset.formId;
+                if (formId) {
+                    fetch('/form/viewDetail', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({ formId })
+                    })
+                        .then(response => response.json())
+                        .then(data => {
+                            if (data.success) {
+                                window.location.href = `/form/viewDetail/${data.formToken}`;
+                            } else {
+                                console.error('Error in viewing form detail:', data.message);
+                            }
+                        })
+                        .catch(error => {
+                            console.error('Error in viewing form detail:', error);
+                        });
+                }
+            });
         });
     }
 
@@ -55,6 +100,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
     function displayCurrentPage() {
         renderFormHistory();
+        setupCardClickHandlers();
     }
 
     function filterHistory() {

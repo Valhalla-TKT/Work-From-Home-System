@@ -388,7 +388,7 @@ $(document).ready(function() {
 	        formData.append('from_date', formatDate(fromDate));
 	        formData.append('to_date', formatDate(toDate));
 	        $.ajax({
-		    url: 'http://localhost:8080/wfhs/api/registerform/createCeoForm',
+		    url: 'http://localhost:8080/api/registerform/createCeoForm',
 		    type: 'POST',
 		    data: formData,
 		    processData: false,
@@ -689,7 +689,7 @@ if (!isNaN(toDateObj.getTime())) {
     function getTeamMemberById(formData) {
         console.log(formData + "hello")
         $.ajax({
-            url: 'http://localhost:8080/wfhs/api/user/getAllTeamMember',
+            url: 'http://localhost:8080/api/user/getAllTeamMember',
           type: 'POST',
             data: formData,
           contentType: false,

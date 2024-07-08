@@ -70,7 +70,7 @@ $(document).ready(function() {
 
     function getTeamMembersPendingForm() {        
         $.ajax({
-            url: 'http://localhost:8080/wfhs/api/registerform/getTeamWithStatus',
+            url: 'http://localhost:8080/api/registerform/getTeamWithStatus',
             type: 'POST',
             data: {
                 status: status,
@@ -195,7 +195,7 @@ $(document).ready(function() {
     
     // function getTeamsPendingForm() {
     //     $.ajax({
-    //         url: 'http://localhost:8080/wfhs/api/registerform/getDepartmentWithStatus',
+    //         url: 'http://localhost:8080/api/registerform/getDepartmentWithStatus',
     //         type: 'POST',
     //         data: {
     //             status: status,
@@ -319,7 +319,7 @@ $(document).ready(function() {
     // }
 	function getTeamsPendingForm() {
 		$.ajax({
-			url: 'http://localhost:8080/wfhs/api/registerform/getDepartmentWithStatus',
+			url: 'http://localhost:8080/api/registerform/getDepartmentWithStatus',
 			type: 'POST',
 			data: {
 				status: status,
@@ -357,7 +357,7 @@ $(document).ready(function() {
 	// function getTeamForms(status, teamId, userId) {
 	// 	console.log(teamId, status, userId)
 	// 	$.ajax({
-	// 		url: 'http://localhost:8080/wfhs/api/registerform/getTeamWithStatus',
+	// 		url: 'http://localhost:8080/api/registerform/getTeamWithStatus',
 	// 		type: 'POST',
 	// 		data: {
 	// 			status: status,
@@ -486,7 +486,7 @@ $(document).ready(function() {
 	function getTeamForms(status, teamId, userId) {
 		console.log(teamId, status, userId);
 		$.ajax({
-			url: 'http://localhost:8080/wfhs/api/registerform/getTeamWithStatus',
+			url: 'http://localhost:8080/api/registerform/getTeamWithStatus',
 			type: 'POST',
 			data: {
 				status: status,
@@ -622,7 +622,7 @@ $(document).ready(function() {
 
 	function getDepartmentsPendingForm() {
         $.ajax({
-            url: 'http://localhost:8080/wfhs/api/registerform/getDivisionWithStatus',
+            url: 'http://localhost:8080/api/registerform/getDivisionWithStatus',
             type: 'POST',
             data: {
                 status: status,
@@ -747,7 +747,7 @@ $(document).ready(function() {
     
     function getAllForm() {
         $.ajax({
-            url: 'http://localhost:8080/wfhs/api/registerform/getAllForms',
+            url: 'http://localhost:8080/api/registerform/getAllForms',
             type: 'POST',
             data: {
                 status: status,
@@ -920,7 +920,7 @@ $(document).ready(function() {
     
     function bulkApprove(formData) {
 		$.ajax({
-            url: 'http://localhost:8080/wfhs/api/registerform/bulkApprove',
+            url: 'http://localhost:8080/api/registerform/bulkApprove',
             type: 'POST',
             data: formData,
             processData: false,
@@ -944,7 +944,7 @@ $(document).ready(function() {
     function downloadForms(formData) {
 		console.log(formData)
 		$.ajax({
-            url: 'http://localhost:8080/wfhs/api/registerform/downloadAllForms',
+            url: 'http://localhost:8080/api/registerform/downloadAllForms',
             type: 'POST',
             data: formData,
             processData: false,
@@ -993,7 +993,7 @@ $(document).ready(function() {
 	    formData.append('file', file);
 	
 	    $.ajax({
-	        url: 'http://localhost:8080/wfhs/api/registerform/uploadExcelServiceDesk',
+	        url: 'http://localhost:8080/api/registerform/uploadExcelServiceDesk',
 	        type: 'POST',
 	        data: formData,
 	        contentType: false,

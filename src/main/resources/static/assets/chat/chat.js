@@ -48,7 +48,7 @@ document.addEventListener("DOMContentLoaded", function () {
     };
 
     const connect = () => {
-        const socket = new SockJS('/wfhs/ws');
+        const socket = new SockJS('/ws');
         stompClient = Stomp.over(socket);
         stompClient.connect({}, onConnected, onError);
     };

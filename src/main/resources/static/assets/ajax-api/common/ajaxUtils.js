@@ -1,6 +1,22 @@
+function getContextPath() {
+    const metaTag = document.querySelector('meta[name="context-path"]');
+    if (!metaTag) {
+        console.error('Meta tag for context path not found.');
+        return '';
+    }
+    const contextPath = metaTag.getAttribute('content');
+    console.log(`Retrieved Context Path: ${contextPath}`);
+    const path = window.location.pathname;
+    const segments = path.split('/').filter(segment => segment.length > 0);
+    return segments.length > 0 ? `/${segments[0]}` : '/';
+}
+
 async function sendRequest(url, method, requestData) {
     try {
-        const response = await fetch(`http://localhost:8080/wfhs${url}`, {
+        const contextPath = getContextPath();
+        const fullUrl = `${contextPath}${url}`;
+
+        const response = await fetch(fullUrl, {
             method: method,
             headers: {
                 'Content-Type': 'application/json'
@@ -25,12 +41,13 @@ async function handleResponse(response, redirectUrl = null) {
         window.location.href = redirectUrl;
     }
     const responseData = await response.text();
-    console.log("Successful : ", responseData);        
+    console.log("Successful : ", responseData);
 }
 
 async function sendRequestWithOneParam(url, method, paramName, param) {
     try {
-        const fullUrl = `http://localhost:8080/wfhs${url}?${paramName}=${param}`;
+        const contextPath = getContextPath();
+        const fullUrl = `${contextPath}${url}?${paramName}=${param}`;
 
         const response = await fetch(fullUrl, {
             method: method,
@@ -51,7 +68,8 @@ async function sendRequestWithOneParam(url, method, paramName, param) {
 
 async function sendRequestWithTwoParams(url, method, param1Name, param1, param2Name, param2) {
     try {
-        const fullUrl = `http://localhost:8080/wfhs${url}?${param1Name}=${param1}&${param2Name}=${param2}`;
+        const contextPath = getContextPath();
+        const fullUrl = `${contextPath}${url}?${param1Name}=${param1}&${param2Name}=${param2}`;
 
         const response = await fetch(fullUrl, {
             method: method,
@@ -73,7 +91,8 @@ async function sendRequestWithTwoParams(url, method, param1Name, param1, param2N
 
 async function sendRequestWithThreeParams(url, method, param1Name, param1, param2Name, param2, param3Name, param3) {
     try {
-        const fullUrl = `http://localhost:8080/wfhs${url}?${param1Name}=${param1}&${param2Name}=${param2}&${param3Name}=${param3}`;
+        const contextPath = getContextPath();
+        const fullUrl = `${contextPath}${url}?${param1Name}=${param1}&${param2Name}=${param2}&${param3Name}=${param3}`;
 
         const response = await fetch(fullUrl, {
             method: method,
@@ -95,7 +114,10 @@ async function sendRequestWithThreeParams(url, method, param1Name, param1, param
 
 async function sendRequestWithoutParam(url, method) {
     try {
-        const response = await fetch(`http://localhost:8080/wfhs${url}`, {
+        const contextPath = getContextPath();
+        const fullUrl = `${contextPath}${url}`;
+
+        const response = await fetch(fullUrl, {
             method: method,
             headers: {
                 'Content-Type': 'application/json'
