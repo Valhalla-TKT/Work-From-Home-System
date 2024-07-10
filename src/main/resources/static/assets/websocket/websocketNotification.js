@@ -1,4 +1,4 @@
-const url = "ws://10.1.9.73:8081/wfhs";
+const url = "ws://10.1.9.73:8081";
 //const topicApproveNotificationCount = "/topic/approveNotificationCount";
 const appApproveRejectNotification = "/app/approveRejectNotification";
 

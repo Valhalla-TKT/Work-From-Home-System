@@ -1,38 +1,35 @@
 document.addEventListener('DOMContentLoaded', function () {
-  console.log("Chart Debug");
 
-  function getSessionUser() {
-    $.ajax({
-        url: '/api/session/user',
-        type: 'POST',
-        contentType: 'application/json',
-        success: function(response) {
-            console.log(response);
-            localStorage.setItem('currentUser', JSON.stringify(response));
-            // Call getData function to update chart data
-            getTeamData();
-            getDepartmentData();
-            getDivisionData();
-        },
-        error: function(error) {
-            console.error('Error:', error);
-        }
-    });
-}
+  // function getSessionUser() {
+  //   $.ajax({
+  //       url: `${getContextPath()}/api/session/user`,
+  //       type: 'POST',
+  //       contentType: 'application/json',
+  //       success: function(response) {
+  //           localStorage.setItem('currentUser', JSON.stringify(response));
+  //           // Call getData function to update chart data
+  //           getTeamData();
+  //           getDepartmentData();
+  //           getDivisionData();
+  //       },
+  //       error: function(error) {
+  //           console.error('Error:', error);
+  //       }
+  //   });
+//}
 
 //----------------------------------TEAM START-----------------------------------------
 
   // Function to fetch data for the chart
   function getTeamData() {
       var currentUser = JSON.parse(localStorage.getItem('currentUser'));
-      console.log(currentUser);
       if (currentUser) {
           var teamId = currentUser.team.id;
           console.log("Team ID:", teamId); // For debugging
 
           // Ajax call to fetch data from backend and update the chart
           $.ajax({
-              url: '/api/user/userRequest',
+              url: `${getContextPath()}/api/user/userRequest`,
               type: 'GET',
               data: {
                   teamId: teamId
@@ -57,7 +54,7 @@ document.addEventListener('DOMContentLoaded', function () {
           });
 
           $.ajax({
-            url: '/api/user/teamRegistrationInfo',
+            url: `${getContextPath()}/api/user/teamRegistrationInfo`,
             type: 'GET',
             data: {
                 teamId: teamId
@@ -77,7 +74,7 @@ document.addEventListener('DOMContentLoaded', function () {
         });
 
         $.ajax({
-        url: '/api/user/requestStaff',
+        url: `${getContextPath()}/api/user/requestStaff`,
         type: 'GET',
         data: {
             teamId: teamId
@@ -198,7 +195,7 @@ document.addEventListener('DOMContentLoaded', function () {
   
             // Ajax call to fetch data from backend and update the chart
             $.ajax({
-                url: '/api/user/teamRequest',
+                url: `${getContextPath()}/api/user/teamRequest`,
                 type: 'GET',
                 data: {
                     departmentId: departmentId
@@ -223,7 +220,7 @@ document.addEventListener('DOMContentLoaded', function () {
             });
   
             $.ajax({
-              url: '/api/user/departmentRegistrationInfo',
+              url: `${getContextPath()}/api/user/departmentRegistrationInfo`,
               type: 'GET',
               data: {
                   departmentId: departmentId
@@ -243,7 +240,7 @@ document.addEventListener('DOMContentLoaded', function () {
           });
   
             $.ajax({
-              url: '/api/user/requestTeam',
+              url: `${getContextPath()}/api/user/requestTeam`,
               type: 'GET',
               data: {
                   departmentId: departmentId
@@ -363,7 +360,7 @@ document.addEventListener('DOMContentLoaded', function () {
   
             // Ajax call to fetch data from backend and update the chart
             $.ajax({
-                url: '/api/user/departmentRequest',
+                url: `${getContextPath()}/api/user/departmentRequest`,
                 type: 'GET',
                 data: {
                     divisionId: divisionId
@@ -388,7 +385,7 @@ document.addEventListener('DOMContentLoaded', function () {
             });
   
             $.ajax({
-              url: '/api/user/divisionRegistrationInfo',
+              url: `${getContextPath()}/api/user/divisionRegistrationInfo`,
               type: 'GET',
               data: {
                   divisionId: divisionId
@@ -408,7 +405,7 @@ document.addEventListener('DOMContentLoaded', function () {
           });
   
             $.ajax({
-              url: '/api/user/requestDepartment',
+              url: `${getContextPath()}/api/user/requestDepartment`,
               type: 'GET',
               data: {
                   divisionId: divisionId
@@ -522,7 +519,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
   // AJAX request to fetch all user requests
 $.ajax({
-    url: '/api/user/allRequest',
+    url: `${getContextPath()}/api/user/allRequest`,
     type: 'GET',
     success: function(data) {
         // Extract data from the response
@@ -543,7 +540,7 @@ $.ajax({
 
 // AJAX request to fetch total staff requests
 $.ajax({
-    url: '/api/user/requestAll',
+    url: `${getContextPath()}/api/user/requestAll`,
     type: 'GET',
     success: function(data) {
         // Extract data from the response
@@ -618,6 +615,17 @@ $.ajax({
 });
 
   // Call getSessionUser() to fetch user data and update the chart
-  getSessionUser();
+    getSessionUser().then((user) => {
+        if (user) {
+            getTeamData();
+            getDepartmentData();
+            getDivisionData();
+        } else {
+            console.error('No user data found.');
+        }
+    }).catch((error) => {
+        console.error('Error fetching session user:', error);
+    });
+
 
 });

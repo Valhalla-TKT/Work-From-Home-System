@@ -4,60 +4,9 @@ $(document).ready(function () {
         event.preventDefault();
         createTeam();
     });
-    $("#team-code").prop("disabled", true);
     getAllDepartment();
     $("#department-name").change(function () {
-        var selectedOption = $("#department-name option:selected");
-        var selectedDepartmentCode = selectedOption.data("code") + "-";
-        $("#team-code").prop("disabled", false);
-        $("#team-code").val(selectedDepartmentCode);
 
-        $("#team-code").on("input", function (e) {
-            var inputValue = this.value;
-
-            if (inputValue.length > 16) {
-                this.value = inputValue.slice(0, 16);
-            }
-            if (inputValue.length <= 11) {
-                this.value = selectedDepartmentCode;
-            }
-        });
-
-        // Disable backspace key
-        $("#team-code").on("keydown", function (e) {
-            if (e.which === 8 && this.value.length <= 8) {
-                e.preventDefault();
-            }
-        });
-    });
-});
-
-$("#edit-department-name").change(async function () {
-    var selectedOption = $("#edit-department-name option:selected");
-    var departmentId = selectedOption.val();
-    let departmentResponse = await searchDepartment(departmentId);
-    console.log(departmentResponse);
-    var selectedDepartmentCode = departmentResponse.code + "-";
-    $("#edit-team-code").prop("disabled", false);
-    $("#edit-team-code").val(selectedDepartmentCode);
-
-    // Disable backspace key
-    $("#edit-team-code").off("keydown").on("keydown", function (e) {
-        if (e.which === 12 && this.value.length <= 12) {
-            e.preventDefault();
-        }
-    });
-
-    $("#edit-team-code").off("input").on("input", function (e) {        
-        var inputValue = this.value;
-
-        if (inputValue.length > 16) {
-            this.value = inputValue.slice(0, 16);
-        }
-
-        if (inputValue.length <= 12) {
-            this.value = selectedDepartmentCode;
-        }
     });
 });
 
@@ -74,8 +23,6 @@ async function getAllDepartment() {
             throw new Error('Invalid response format');
         }
 
-        console.table(departmentResponse)
-
         populateSelectBox('#department-name', departmentResponse, 'Department');
         populateSelectBox('#department-filter', departmentResponse, 'Department');
 
@@ -85,11 +32,9 @@ async function getAllDepartment() {
 }
 
 async function createTeam() {
-    var code = $("#team-code").val();
     var name = $("#team-name").val();
     var department = $("#department-name").val();
     var requestData = {
-        code: code,
         name: name,
         departmentId: department,
     };
@@ -105,7 +50,6 @@ async function createTeam() {
             });
             getAllTeam();
             $("#team-name").val("");
-            $("#team-code").val("");
             $("#department-name").val("");
         })
         .catch(error => {
@@ -137,7 +81,7 @@ function getAllTeam() {
                                     href="#"></a>
                                 <div class="job-details-container">
                                     <div class="lazy-avatar company-avatar">
-                                        <img src="/assets/icons/DAT Logo.png" />
+                                        <img src="${getContextPath()}/assets/icons/DAT Logo.png" alt="DAT Logo" />
                                     </div>
                                     <div class="job-title-company-container">
                                         <div class="job-role">
@@ -172,7 +116,6 @@ function getAllTeam() {
                         `);
                     });
                 }
-                console.log("row count =", rowCount);
                 document.getElementById("total-count").innerText = rowCount;
             }
         })
@@ -182,7 +125,6 @@ function openEditModal(teamId) {
     searchTeam(teamId)
         .then(teamResponse => {
             $("#edit-team-name").val(teamResponse.name);
-            $("#edit-team-code").val(teamResponse.code);
             $("#teamId").val(teamId);
             fetchDepartments()
                 .then(departmentResponse => {
@@ -224,12 +166,10 @@ function closeEditModal() {
 }
 
 async function saveChanges() {
-    var editedCode = $("#edit-team-code").val();
     var editedName = $("#edit-team-name").val();    
     var editedDepartmentId = $("#edit-department-name").val();
     var teamId = $("#teamId").val();
     var requestData = {
-        code: editedCode,
         name: editedName,
         departmentId: editedDepartmentId,
         id: teamId

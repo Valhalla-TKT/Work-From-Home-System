@@ -473,7 +473,7 @@ $(document).ready(function () {
 
     function approveForm(formData) {
         $.ajax({
-            url: 'http://localhost:8080/api/registerform/update',
+            url: `${getContextPath()}/api/registerform/update`,
             type: 'POST',
             data: formData,
             processData: false,
@@ -492,7 +492,7 @@ $(document).ready(function () {
                     timerProgressBar: true,
                     showConfirmButton: false
                 }).then(() => {
-                    window.location.href = '/admin/viewFormList';
+                    window.location.href = `${getContextPath()}/admin/viewFormList`;
                 });
             },
             error: function (error) {
@@ -503,7 +503,7 @@ $(document).ready(function () {
 
     function rejectForm(formData) {
         $.ajax({
-            url: 'http://localhost:8080/api/registerform/update',
+            url: `${getContextPath()}/api/registerform/update`,
             type: 'POST',
             data: formData,
             processData: false,

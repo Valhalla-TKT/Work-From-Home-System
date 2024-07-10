@@ -70,7 +70,6 @@ public class AdminViewController {
     public String ledgerPage(Model model) {
         List<LedgerDto> ledgerList = ledgerService.getAllLedger();
         model.addAttribute("ledgerList", ledgerList);
-
         return "hr/ledger";
     }
 

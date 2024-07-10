@@ -191,7 +191,7 @@
 
             function getAllApproveRoleList() {
                 $.ajax({
-                    url: "http://localhost:8080/api/approveRole/approveRoleList",
+                    url: `${getContextPath()}/api/approveRole/approveRoleList`,
                     type: "POST",
                     contentType: "application/json",
                     success: function(response) {

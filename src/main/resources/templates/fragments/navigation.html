@@ -29,29 +29,29 @@
 				<div class="nav-v2-main__wrapper">
 					<ul ul class="nav-v2-main__list">
 						<li class="nav-v2-main__item">
-							<a data-nav-event-clicked="Dashboard" href="/dashboard">Home</a>
+							<a data-nav-event-clicked="Dashboard" th:href="@{/dashboard}">Home</a>
 						</li>
 						
 						<li class="nav-v2-main__item nav-v2-main__item--sub-nav"><a href="#">Forms</a>
 
 							<ul class="nav-v2-sub">
 								<li class="nav-v2-sub__item hide-applicant-only hide-hr-only">
-									<a class="nav-v2-sub__link" data-nav-event-clicked="Designer Search" href="/admin/viewFormList"> View request list
+									<a class="nav-v2-sub__link" data-nav-event-clicked="Designer Search" th:href="@{/admin/viewFormList}"> View request list
 										<span class="nav-v2-sub__subtitle">Quickly view work from home form</span>
 									</a>
 								</li>
 								<li class="nav-v2-sub__item visible-hr-only">
-									<a class="nav-v2-sub__link" data-nav-event-clicked="Designer Search" href="/admin/ledger"> Ledger
+									<a class="nav-v2-sub__link" data-nav-event-clicked="Designer Search" th:href="@{/admin/ledger}"> Ledger
 										<span class="nav-v2-sub__subtitle">Fully view the WFH ledger</span>
 									</a>
 								</li>
 								<li class="nav-v2-sub__item ">
-									<a class="nav-v2-sub__link" data-nav-event-clicked="Post a Job" href="/applyForm"> Apply form now
+									<a class="nav-v2-sub__link" data-nav-event-clicked="Post a Job" th:href="@{/applyForm}"> Apply form now
 										<span class="nav-v2-sub__subtitle">Swiftly apply for remote work</span>
 									</a>
 								</li>
 								<li class="nav-v2-sub__item">
-									<a class="nav-v2-sub__link" data-nav-event-clicked="Post a Job" href="/historyForm"> View request history
+									<a class="nav-v2-sub__link" data-nav-event-clicked="Post a Job" th:href="@{/historyForm}"> View request history
 										<span class="nav-v2-sub__subtitle">Effortlessly check work history</span>
 									</a>
 								</li>
@@ -61,38 +61,33 @@
 						<li class="nav-v2-main__item nav-v2-main__item--sub-nav hide-applicant-only"><a data-nav-event-clicked="Hire Designers" href="#">Manage</a>
 
 							<ul class="nav-v2-sub">
-								<li class="nav-v2-sub__item visible-hr-only">
-								    <a class="nav-v2-sub__link" data-nav-event-clicked="Approve Role" href="/admin/approveRole"> Approver
-								        <span class="nav-v2-sub__subtitle">Administrate approval permissions Role</span>
-								    </a>
-								</li>
 							    <li class="nav-v2-sub__item">
-							        <a class="nav-v2-sub__link" data-nav-event-clicked="Add Division" href="/admin/division"> Division
+							        <a class="nav-v2-sub__link" data-nav-event-clicked="Add Division" th:href="@{/admin/division}"> Division
 							            <span class="nav-v2-sub__subtitle">Manage divisions</span>
 							        </a>
 							    </li>
 							    <li class="nav-v2-sub__item">
-							        <a class="nav-v2-sub__link" data-nav-event-clicked="Add Department" href="/admin/department">Department
+							        <a class="nav-v2-sub__link" data-nav-event-clicked="Add Department" th:href="@{/admin/department}">Department
 							            <span class="nav-v2-sub__subtitle">Supervise departments</span>
 							        </a>
 							    </li>
 							    <li class="nav-v2-sub__item">
-							        <a class="nav-v2-sub__link" data-nav-event-clicked="Add Team" href="/admin/team">Team
+							        <a class="nav-v2-sub__link" data-nav-event-clicked="Add Team" th:href="@{/admin/team}">Team
 							            <span class="nav-v2-sub__subtitle">Oversee teams</span>
 							        </a>
 							    </li>
 							    <li class="nav-v2-sub__item">
-							        <a class="nav-v2-sub__link" data-nav-event-clicked="Add User" href="/admin/user">User
+							        <a class="nav-v2-sub__link" data-nav-event-clicked="Add User" th:href="@{/admin/user}">User
 							            <span class="nav-v2-sub__subtitle">Control users</span>
 							        </a>
 							    </li>				
 								<li class="nav-v2-sub__item visible-hr-only">
-							        <a class="nav-v2-sub__link" data-nav-event-clicked="Add User" href="/admin/importExcel">Import
+							        <a class="nav-v2-sub__link" data-nav-event-clicked="Add User" th:href="@{/admin/importExcel}">Import
 							            <span class="nav-v2-sub__subtitle">Import Excel Here</span>
 							        </a>
 							    </li>
 							    <li class="nav-v2-sub__item visible-hr-only">
-							        <a class="nav-v2-sub__link" data-nav-event-clicked="Add User" href="/admin/approveRoleSwitch">Switch
+							        <a class="nav-v2-sub__link" data-nav-event-clicked="Add User" th:href="@{/admin/approveRoleSwitch}">Switch
 							            <span class="nav-v2-sub__subtitle">Switch Approve Role Here</span>
 							        </a>
 							    </li>		
@@ -101,7 +96,7 @@
 						</li>
 
 						<li class="nav-v2-main__item">
-							<a href="/help">Help</a>
+							<a th:href="@{/help}">Help</a>
 						</li>						
 
 						<li class="nav-v2-main__item nav-v2-main__item--divided nav-v2-hide-medium-up">
@@ -112,7 +107,7 @@
 			</nav>
 
 			<a  th:href="@{/dashboard}" data-nav-event-clicked="Logo" aria-label="Back to home page">
-				<img src="/assets/wfhs_logo.png" style="width: 250px; height: 140px; margin-top: 20px;" alt="wfhs-logo">
+				<img th:src="@{/assets/wfhs_logo.png}" style="width: 250px; height: 140px; margin-top: 20px;" alt="wfhs-logo">
 			</a>
 
 
@@ -206,12 +201,11 @@
 						<div class="nav-v2-profile" data-nav-v2-profile="" data-nav-event-category="Profile">
  							<div class="nav-v2-profile__wrapper" data-nav-v2-profile-wrapper="">
  								<div style="display: flex; align-items: center; flex-direction: row;">
-									<a class="nav-v2-user" title="Open profile" data-nav-event-clicked="Profile" href="/profile">
+									<a class="nav-v2-user" title="Open profile" data-nav-event-clicked="Profile" th:href="@{/profile}">
 										<div style="display: flex; flex-direction: row; align-items: center; column-gap: 10px;">
 											<img class="nav-v2-user__image" id="nav-modal-profile-img">
 											<div style="display: flex; flex-direction: column; row-gap: 5px;">
 												<div class="nav-v2-user__name">
-													
 												</div>
 												<div class="nav-v2-position"></div>
 											</div>
@@ -221,17 +215,20 @@
 								<div class="nav-v2-sessions"></div>
 
 								<ul class="nav-v2-profile__menu">									
-									
+
+<!--									<li class="nav-v2-profile__item">-->
+<!--										<a data-nav-event-clicked="Work preferences" id="google_translate_element" href="#"></a>-->
+<!--									</li>-->
+<!--									<script type="text/javascript">-->
+<!--										function googleTranslateElementInit() {-->
+<!--										  new google.translate.TranslateElement({pageLanguage: 'en'}, 'google_translate_element');-->
+<!--										}-->
+<!--									</script>-->
+
+<!--									<script type="text/javascript" src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>-->
 									<li class="nav-v2-profile__item">
-										<a data-nav-event-clicked="Work preferences" id="google_translate_element" href="#"></a>
+										<a th:href="@{/profile}">Profile</a>
 									</li>
-									<script type="text/javascript">
-										function googleTranslateElementInit() {
-										  new google.translate.TranslateElement({pageLanguage: 'en'}, 'google_translate_element');
-										}
-									</script>
-									
-									<script type="text/javascript" src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
 									<li class="nav-v2-profile__item nav-v2-profile__item--divided">
 										<form id="signOutForm" method="POST" th:action="@{/signOut}">
 											<input name="_method" value="delete" type="hidden">

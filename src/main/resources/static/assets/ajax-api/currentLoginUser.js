@@ -10,7 +10,6 @@ $(document).ready(async function() {
 
 	function getData() {
 		var currentUser = JSON.parse(localStorage.getItem('currentUser'));
-		console.log(currentUser)
 	    if (currentUser) {
 	        var userName = currentUser.name;
 	        var currentUserPosition = currentUser.positionName;
@@ -306,7 +305,6 @@ $(document).ready(async function() {
 			}
 			//
 	        //console.log('dfskfdksldk',userRole)
-	        console.log(userName)
 	        $('.nav-v2-user__name').text(userName);
 	        $('.nav-v2-position').text(positionName);
 	        $('#profile_page_name').text(userName);
@@ -315,7 +313,6 @@ $(document).ready(async function() {
 	        $('#position_page_staff_id').text("Staff ID : " + staffId);
 	        $('#position_page_department_name').text(departmentName);
 	        // $('#profile_page_role_name').text(userRole);
-			console.log(currentUser.profile)
 	        if (currentUser.profile) {
 				// 	console.log("Hii")
 				//     $('.show-profile-is-not-null').hide();
@@ -332,13 +329,12 @@ $(document).ready(async function() {
 				// }
 				const navModalProfileImg = document.getElementById("nav-modal-profile-img");
 				const navProfileImg = document.getElementById("nav-profile-img");
-				navModalProfileImg.src = `/assets/profile/${currentUser.profile}`;
+				navModalProfileImg.src = `${getContextPath()}/assets/profile/${currentUser.profile}`;
 				navModalProfileImg.alt = currentUser.name;
-				navProfileImg.src = `/assets/profile/${currentUser.profile}`;
+				navProfileImg.src = `${getContextPath()}/assets/profile/${currentUser.profile}`;
 				navProfileImg.alt = currentUser.name;
 				const profileImage = $('#profile-page-image')
-				profileImage.attr('src', `/assets/profile/${currentUser.profile}`).attr('alt', currentUser.name);
-				console.log(profileImage)
+				profileImage.attr('src', `${getContextPath()}/assets/profile/${currentUser.profile}`).attr('alt', currentUser.name);
 			}
 	    }
 	}

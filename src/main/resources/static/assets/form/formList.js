@@ -70,7 +70,7 @@ $(document).ready(function() {
 
     function getTeamMembersPendingForm() {        
         $.ajax({
-            url: 'http://localhost:8080/api/registerform/getTeamWithStatus',
+            url: `${getContextPath()}/api/registerform/getTeamWithStatus`,
             type: 'POST',
             data: {
                 status: status,
@@ -98,7 +98,7 @@ $(document).ready(function() {
 				var $avatar = $("<img>", {
 					class: "resume-card-avatar",
 					alt: `${applicant.name} photo`,
-					src: `/assets/profile/${applicant.profile}`,
+					src: `${getContextPath()}/assets/profile/${applicant.profile}`,
 					width: "80",
 					height: "80",
 				});
@@ -195,7 +195,7 @@ $(document).ready(function() {
     
     // function getTeamsPendingForm() {
     //     $.ajax({
-    //         url: 'http://localhost:8080/api/registerform/getDepartmentWithStatus',
+    //         url: '${getContextPath()}/api/registerform/getDepartmentWithStatus',
     //         type: 'POST',
     //         data: {
     //             status: status,
@@ -223,7 +223,7 @@ $(document).ready(function() {
 	// 				var $avatar = $("<img>", {
 	// 					class: "resume-card-avatar",
 	// 					alt: `${applicant.name} photo`,
-	// 					src: `/assets/profile/${applicant.profile}`,
+	// 					src: `${getContextPath()}/assets/profile/${applicant.profile}`,
 	// 					width: "80",
 	// 					height: "80",
 	// 				});
@@ -319,7 +319,7 @@ $(document).ready(function() {
     // }
 	function getTeamsPendingForm() {
 		$.ajax({
-			url: 'http://localhost:8080/api/registerform/getDepartmentWithStatus',
+			url: `${getContextPath()}/api/registerform/getDepartmentWithStatus`,
 			type: 'POST',
 			data: {
 				status: status,
@@ -357,7 +357,7 @@ $(document).ready(function() {
 	// function getTeamForms(status, teamId, userId) {
 	// 	console.log(teamId, status, userId)
 	// 	$.ajax({
-	// 		url: 'http://localhost:8080/api/registerform/getTeamWithStatus',
+	// 		url: '${getContextPath()}/api/registerform/getTeamWithStatus',
 	// 		type: 'POST',
 	// 		data: {
 	// 			status: status,
@@ -385,7 +385,7 @@ $(document).ready(function() {
 	// 				var $avatar = $("<img>", {
 	// 					class: "resume-card-avatar",
 	// 					alt: `${applicant.name} photo`,
-	// 					src: `/assets/profile/${applicant.profile}`,
+	// 					src: `${getContextPath()}/assets/profile/${applicant.profile}`,
 	// 					width: "80",
 	// 					height: "80",
 	// 				});
@@ -486,7 +486,7 @@ $(document).ready(function() {
 	function getTeamForms(status, teamId, userId) {
 		console.log(teamId, status, userId);
 		$.ajax({
-			url: 'http://localhost:8080/api/registerform/getTeamWithStatus',
+			url: `${getContextPath()}/api/registerform/getTeamWithStatus`,
 			type: 'POST',
 			data: {
 				status: status,
@@ -514,7 +514,7 @@ $(document).ready(function() {
 					var $avatar = $("<img>", {
 						class: "resume-card-avatar",
 						alt: `${applicant.name} photo`,
-						src: `/assets/profile/${applicant.profile}`,
+						src: `${getContextPath()}/assets/profile/${applicant.profile}`,
 						width: "80",
 						height: "80",
 					});
@@ -622,7 +622,7 @@ $(document).ready(function() {
 
 	function getDepartmentsPendingForm() {
         $.ajax({
-            url: 'http://localhost:8080/api/registerform/getDivisionWithStatus',
+            url: `${getContextPath()}/api/registerform/getDivisionWithStatus`,
             type: 'POST',
             data: {
                 status: status,
@@ -650,7 +650,7 @@ $(document).ready(function() {
 					var $avatar = $("<img>", {
 						class: "resume-card-avatar",
 						alt: `${applicant.name} photo`,
-						src: `/assets/profile/${applicant.profile}`,
+						src: `${getContextPath()}/assets/profile/${applicant.profile}`,
 						width: "80",
 						height: "80",
 					});
@@ -747,7 +747,7 @@ $(document).ready(function() {
     
     function getAllForm() {
         $.ajax({
-            url: 'http://localhost:8080/api/registerform/getAllForms',
+            url: `${getContextPath()}/api/registerform/getAllForms`,
             type: 'POST',
             data: {
                 status: status,
@@ -777,7 +777,7 @@ $(document).ready(function() {
 					var $avatar = $("<img>", {
 						class: "resume-card-avatar",
 						alt: `${applicant.name} photo`,
-						src: `/assets/profile/${applicant.profile}`,
+						src: `${getContextPath()}/assets/profile/${applicant.profile}`,
 						width: "80",
 						height: "80",
 					});
@@ -920,7 +920,7 @@ $(document).ready(function() {
     
     function bulkApprove(formData) {
 		$.ajax({
-            url: 'http://localhost:8080/api/registerform/bulkApprove',
+            url: `${getContextPath()}/api/registerform/bulkApprove`,
             type: 'POST',
             data: formData,
             processData: false,
@@ -944,7 +944,7 @@ $(document).ready(function() {
     function downloadForms(formData) {
 		console.log(formData)
 		$.ajax({
-            url: 'http://localhost:8080/api/registerform/downloadAllForms',
+            url: `${getContextPath()}/api/registerform/downloadAllForms`,
             type: 'POST',
             data: formData,
             processData: false,
@@ -993,7 +993,7 @@ $(document).ready(function() {
 	    formData.append('file', file);
 	
 	    $.ajax({
-	        url: 'http://localhost:8080/api/registerform/uploadExcelServiceDesk',
+	        url: `${getContextPath()}/api/registerform/uploadExcelServiceDesk`,
 	        type: 'POST',
 	        data: formData,
 	        contentType: false,
@@ -1007,7 +1007,7 @@ $(document).ready(function() {
 	                timerProgressBar: true,
 	                showConfirmButton: false
 	            }).then(() => {
-	                window.location.href = '/dashboard';
+	                window.location.href = `${getContextPath()}/dashboard`;
 	            });
 	            console.log('File uploaded successfully:', response);
 	        },

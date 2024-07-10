@@ -6,7 +6,6 @@ document.addEventListener('DOMContentLoaded', async function () {
     }
 
     const staffId = currentUser.staffId;
-    console.log(staffId)
     const form = document.getElementById('changePasswordForm');
 
     if (form) {

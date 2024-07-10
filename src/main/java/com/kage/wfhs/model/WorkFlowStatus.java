@@ -27,26 +27,29 @@ public class WorkFlowStatus implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
     @Enumerated(EnumType.STRING)
+    @Column(nullable = true)
     private Status status;
-    @Column(columnDefinition = "TEXT")
+
+    @Column(columnDefinition = "TEXT", nullable = true)
     private String reason;
     private Date approve_date;
 
     @ManyToOne
-    @JoinColumn(name = "register_form_id")
+    @JoinColumn(name = "register_form_id", nullable = true)
     @JsonIgnore
 	@ToString.Exclude
     private RegisterForm registerForm;
 
     @ManyToOne
-    @JoinColumn(name = "user_id")
+    @JoinColumn(name = "user_id", nullable = true)
     @JsonIgnore
 	@ToString.Exclude
     private User user;
     
     @ManyToOne
-    @JoinColumn(name = "approve_role_id")
+    @JoinColumn(name = "approve_role_id", nullable = true)
     @JsonIgnore
 	@ToString.Exclude
     private ApproveRole approveRole;
