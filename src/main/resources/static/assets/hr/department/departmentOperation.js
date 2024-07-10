@@ -77,8 +77,6 @@ async function getAllDivision() {
             throw new Error('Invalid response format');
         }
 
-		console.table(divisionResponse)
-
         populateSelectBox('#division-name', divisionResponse, 'Division');
         populateSelectBox('#division-filter', divisionResponse, 'Division');
 
@@ -140,7 +138,7 @@ function getAllDepartment() {
 			                          href="#"></a>
 			                      <div class="job-details-container">
 			                          <div class="lazy-avatar company-avatar">
-			                              <img src="/wfhs/assets/icons/DAT Logo.png" />
+			                              <img src="${getContextPath()}/assets/icons/DAT Logo.png"  alt="DAT Logo"/>
 			                          </div>
 			                          <div class="job-title-company-container">
 			                              <div class="job-role">
@@ -176,7 +174,6 @@ function getAllDepartment() {
 					});
 				
 				}
-				console.log("row count =", rowCount)
 				document.getElementById('total-count').innerText = rowCount
 			}
 		})	

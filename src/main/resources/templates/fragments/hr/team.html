@@ -80,7 +80,7 @@
 
                         <div class="search-filters-container">
                             <div class="search-filters job-board-filters-form js-filters" style="text-align: center;">
-                                <span> <img alt="department" src="/wfhs/assets/icons/team.png" style="width: 50px"> </span>
+                                <span> <img alt="department" th:src="@{/assets/icons/team.png}" style="width: 50px"> </span>
                                 <br>
                                 <span>Total Team : <span id="total-count"></span></span>
                             </div> <br>
@@ -109,8 +109,6 @@
                     <form id="editForm">
                         <label for="edit-department-name">Choose Department</label>
                         <select id="edit-department-name" required="required" style="width: 100%"></select>
-                        <label for="edit-team-code">Team Code</label>
-                        <input type="text" id="edit-team-code" required="required">
                         <label for="edit-team-name">Team Name</label>
                         <input type="text" id="edit-team-name" required="required">
                         <input type="hidden" id="teamId" name="teamId">
@@ -126,12 +124,9 @@
                     <span class="title">Add Team</span>
                     <span class="close">&times;</span>
                     <form id="addForm">
-                        <label for="department-code">Choose Department</label>
+                        <label for="department-name">Choose Department</label>
                         <select id="department-name" required="required" style="width: 100%"></select>
-                        <label for="code">Team Code</label>
-                        <input type="tel" id="team-code" placeholder="xxx-xxx-xxx" pattern="[0-9]{3}-[0-9]{3}-[0-9]{3}"
-                            required="required">
-                        <label for="name">Team Name</label>
+                        <label for="team-name">Team Name</label>
                         <input type="text" id="team-name" placeholder="e.g. Offshore Team" required="required">
                         <input type="hidden" id="teamId" name="teamId">
                         <button class="btn2 add-data-btn" type="button" id="create-team">Add Team</button>

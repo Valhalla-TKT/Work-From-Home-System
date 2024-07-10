@@ -45,7 +45,6 @@ async function getAllDivision() {
 	$('#division-list').empty();
 	var rowCount = 0;
 	const response = await fetchDivisions();
-	console.log(response)
 	if (response === null || response === undefined || response === "No Division found.") {
 		console.log("Division is null.");
 	} else if (Array.isArray(response)) {
@@ -61,7 +60,7 @@ async function getAllDivision() {
 							  href="#"></a>
 						  <div class="job-details-container">
 							  <div class="lazy-avatar company-avatar">
-								  <img src="/wfhs/assets/icons/DAT Logo.png" />
+								  <img src="${getContextPath()}/assets/icons/DAT Logo.png" />
 							  </div>
 							  <div class="job-title-company-container">
 								  <div class="job-role">
@@ -95,7 +94,6 @@ async function getAllDivision() {
 					  </li>
 				  `);
 			});
-			console.log("row count =", rowCount)
 		}
 	} else if (typeof response === 'object' && Object.keys(response).length === 0) {
 		console.log("This is not list")

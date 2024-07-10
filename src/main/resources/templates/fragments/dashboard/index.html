@@ -242,7 +242,7 @@
 								<div class="d-md-flex align-items-center mb-3">
 									<div class="d-flex align-items-center">
 										<div class="display-7 me-3">
-											<i class="bi bi-bag-check me-2 text-success"></i>Team Pioneers
+											<i class="bi bi-bag-check me-2 text-success" id="teamName"></i>Team Pioneers
 										</div>
 									</div>
 								</div>
@@ -383,10 +383,10 @@
 
 			</div>
 		</div>
-		<script src="/wfhs/assets/dashboard/chart.js"></script>
-		<script src="/wfhs/assets/dashboard/count.js"></script>
-		<script src="/wfhs/assets/dashboard/progressBar.js"></script>
-		<script src="/wfhs/assets/dashboard/calendar.js"></script>
+		<script th:src="@{/assets/dashboard/chart.js}"></script>
+		<script th:src="@{/assets/dashboard/count.js}"></script>
+		<script th:src="@{/assets/dashboard/progressBar.js}"></script>
+		<script th:src="@{/assets/dashboard/calendar.js}"></script>
 	</main>
 
 </body>

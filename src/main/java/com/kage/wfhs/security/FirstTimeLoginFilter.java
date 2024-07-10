@@ -66,14 +66,13 @@ public class FirstTimeLoginFilter extends OncePerRequestFilter {
 
             if (userDto != null && userDto.isFirstTimeLogin()) {
                 Set<String> roles = userDto.getApproveRoles().stream().map(ApproveRole::getName).collect(Collectors.toSet());
-                String redirectUrl = "http://" + request.getServerName() + ":" + request.getServerPort() + contextPath;
                 if (roles.contains("HR")) {
                     logger.debug("Redirecting to /admin/importExcel");
-                    response.sendRedirect(redirectUrl + "/admin/importExcel");
+                    response.sendRedirect(contextPath + "/admin/importExcel");
                     return;
-                } else  {
+                } else {
                     logger.debug("Redirecting to /profile");
-                    response.sendRedirect(redirectUrl + "/profile");
+                    response.sendRedirect(contextPath + "/profile");
                     return;
                 }
             }

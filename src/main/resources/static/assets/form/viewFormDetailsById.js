@@ -184,7 +184,7 @@ $(document).ready(function () {
 
     function getFormDetailsById(formId, userId) {
         $.ajax({
-            url: `/wfhs/api/registerform/getFormById?formId=${formId}&userId=${userId}`,
+            url: `/api/registerform/getFormById?formId=${formId}&userId=${userId}`,
             type: 'POST',
             contentType: 'application/json',
             success: function (response) {
@@ -473,7 +473,7 @@ $(document).ready(function () {
 
     function approveForm(formData) {
         $.ajax({
-            url: 'http://localhost:8080/wfhs/api/registerform/update',
+            url: `${getContextPath()}/api/registerform/update`,
             type: 'POST',
             data: formData,
             processData: false,
@@ -492,7 +492,7 @@ $(document).ready(function () {
                     timerProgressBar: true,
                     showConfirmButton: false
                 }).then(() => {
-                    window.location.href = '/admin/viewFormList';
+                    window.location.href = `${getContextPath()}/admin/viewFormList`;
                 });
             },
             error: function (error) {
@@ -503,7 +503,7 @@ $(document).ready(function () {
 
     function rejectForm(formData) {
         $.ajax({
-            url: 'http://localhost:8080/wfhs/api/registerform/update',
+            url: `${getContextPath()}/api/registerform/update`,
             type: 'POST',
             data: formData,
             processData: false,
