@@ -42,17 +42,6 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     }
 
-    // function setupCardClickHandlers() {
-    //     document.querySelectorAll('.form-history-card').forEach(card => {
-    //         card.addEventListener('click', function () {
-    //             const formId = this.dataset.formId;
-    //             if (formId) {
-    //                 window.location.href = `/form/viewDetail/${formId}`;
-    //             }
-    //         });
-    //     });
-    // }
-
     function setupCardClickHandlers() {
         document.querySelectorAll('.form-history-card').forEach(card => {
             card.addEventListener('click', function () {
@@ -68,7 +57,7 @@ document.addEventListener('DOMContentLoaded', function () {
                         .then(response => response.json())
                         .then(data => {
                             if (data.success) {
-                                window.location.href = `/form/viewDetail/${data.formToken}`;
+                                window.location.href = `${getContextPath()}/form/viewDetail/${data.formToken}`;
                             } else {
                                 console.error('Error in viewing form detail:', data.message);
                             }

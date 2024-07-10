@@ -649,7 +649,7 @@ if (!isNaN(toDateObj.getTime())) {
 		formData.append('registerFormDto', JSON.stringify(requestData));
 		
 		$.ajax({
-		    url: 'api/registerform/create',
+		    url: `${getContextPath()}/api/registerform/create`,
 		    type: 'POST',
 		    data: formData,
 		    processData: false,
@@ -665,7 +665,7 @@ if (!isNaN(toDateObj.getTime())) {
 	                timerProgressBar: true,
 	                showConfirmButton: false
 	            }).then(() => {
-	                window.location.href = '/dashboard';
+	                window.location.href = `${getContextPath()}/dashboard`;
 	            });
 		    },
 		    error: function(error) {

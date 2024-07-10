@@ -1007,7 +1007,7 @@ $(document).ready(function() {
 	                timerProgressBar: true,
 	                showConfirmButton: false
 	            }).then(() => {
-	                window.location.href = '/dashboard';
+	                window.location.href = `${getContextPath()}/dashboard`;
 	            });
 	            console.log('File uploaded successfully:', response);
 	        },
