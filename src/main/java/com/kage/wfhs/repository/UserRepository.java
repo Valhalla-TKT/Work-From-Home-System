@@ -200,4 +200,7 @@ public interface UserRepository extends JpaRepository<User,Long> {
     List<User> findAllByDepartmentIdAndGender(Long departmentId, String gender);
 
     List<User> findAllByDivisionIdAndGender(Long divisionId, String gender);
+    
+    @Query("SELECT u FROM User u JOIN u.approveRoles ar WHERE ar.name != :roleName AND u.staffId != '00-00001'")
+    List<User> findUsersByRoleNotEqual(@Param("roleName") String roleName);
 }

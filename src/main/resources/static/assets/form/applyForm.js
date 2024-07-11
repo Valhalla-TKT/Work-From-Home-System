@@ -39,7 +39,7 @@ $(document).ready(function() {
 	var toDate = new Date(fromDate.getFullYear(), fromDate.getMonth() + 1, 0);
 	
 	// Data to send Backend
-	var applicantId, requesterId, positionName, working_place, request_reason, from_date, to_date, os_type, securityPatch, antivirusSoftware, antivirusPattern, antivirusFullScan, signed_date, signature;
+	var applicantId, requesterId, positionName, working_place, request_reason, from_date, to_date, os_type, securityPatch, antivirusSoftware, antivirusPattern, antivirusFullScan, signed_date, signature, approverId;
 	var request_percent = 0.0;
 	var applied_date = new Date();
 	
@@ -610,7 +610,8 @@ if (!isNaN(toDateObj.getTime())) {
 		    signature: signature,
 		    os_type: os_type,
 		    request_percent: request_percent,
-		    applied_date: applied_date
+		    applied_date: applied_date,
+		    approverId: approverId
 		};
 	    //createForm(requestData)
 	    
@@ -626,6 +627,7 @@ if (!isNaN(toDateObj.getTime())) {
         formData.append('signed_date', signed_date);
         formData.append('os_type', os_type);
         formData.append('applied_date', applied_date);
+        formData.append('approverId', approverId);
 
 		// Append file inputs to FormData
 		if(os_type === 'Window') {
@@ -681,7 +683,6 @@ if (!isNaN(toDateObj.getTime())) {
         var formData = new FormData();
         formData.append("teamId", currentUser.team.id)
         formData.append("userId", currentUser.id)
-        console.log(currentUser.team.id, currentUser.id)
         getTeamMemberById(formData);
     }
 
@@ -695,7 +696,7 @@ if (!isNaN(toDateObj.getTime())) {
           success: function (response) {
               var selectBox = $('#team-member-list');
                 selectBox.empty();
-                selectBox.append('<option value="" disabled selected>Select Name</option>');
+                selectBox.append('<option value="" disabled selected>Choose Name</option>');
                 for (var i = 0; i < response.length; i++) {
                     if (response[i].name !== currentUser.name) {
                         var option = $('<option>', {
@@ -716,5 +717,35 @@ if (!isNaN(toDateObj.getTime())) {
           }
       });
     }
+    
+    async function getAllApprover() {
+		const response = await fetchApprovers();
+		console.log(response)
+		var selectBox = $('#approver-name');
+        selectBox.empty();
+        selectBox.append('<option value="" selected>Choose Approver Name</option>');
+        for (var i = 0; i < response.length; i++) {
+            if (response[i].name !== currentUser.name) {
+                var option = $('<option>', {
+                    value: response[i].id,
+                    text: response[i].name,
+                    'data-staff-id': response[i].staffId,                  
+                });
+                selectBox.append(option);
+            }
+        }
+        selectBox.on('change', function() {
+	        var selectedValue = $(this).val();
+	        console.log('Selected value:', selectedValue);
+	        approverId = selectedValue
+	
+	        var selectedText = $(this).find('option:selected').text();
+	        console.log('Selected text:', selectedText);
+	
+	        var selectedStaffId = $(this).find('option:selected').data('staff-id');
+	        console.log('Selected staff ID:', selectedStaffId);
+	    });
+	}
+	getAllApprover();
 });
 

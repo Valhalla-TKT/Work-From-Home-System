@@ -64,4 +64,5 @@ public interface UserService {
 	List<UserDto> getAllUserByDivisionIdAndGender(Long divisionId, String gender);
 
     boolean updateApproveRole(long userId, List<Long> approveRoleIdList);
+	List<UserDto> getAllApprover();
 }

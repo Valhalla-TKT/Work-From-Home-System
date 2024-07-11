@@ -202,4 +202,8 @@ public class UserController {
     public List<Object[]> getTotalStaffRequest() {
         return userService.getTotalStaffRequest();
     }
+    @PostMapping("/getAllApprover")
+    public ResponseEntity<?> getAllApprover(){
+        return ResponseEntity.ok(userService.getAllApprover());
+    }
 }
