@@ -90,7 +90,9 @@ public class RegisterFormController {
             @RequestParam(value = "antivirusSoftware", required = false) MultipartFile antivirusSoftware,
             @RequestParam(value = "antivirusPattern", required = false) MultipartFile antivirusPattern,
             @RequestParam(value = "antivirusFullScan", required = false) MultipartFile antivirusFullScan,
-            @RequestParam(value = "signature", required = false) MultipartFile signature) throws Exception {        
+            @RequestParam(value = "signature", required = false) MultipartFile signature,
+            @RequestParam(value = "approverId") Long approverId
+    	) throws Exception {        
         RegisterFormDto registerFormDto = new RegisterFormDto();
         registerFormDto.setApplicantId(applicantId);
         registerFormDto.setRequesterId(requesterId);
@@ -109,10 +111,9 @@ public class RegisterFormController {
         registerFormDto.setAntivirusPatternInput(antivirusPattern);
         registerFormDto.setAntivirusFullScanInput(antivirusFullScan);
         registerFormDto.setSignatureInput(signature);
-
+        registerFormDto.setApproverId(approverId);
         registerFormService.createRegisterForm(registerFormDto);
-        workFlowStatusService.createWorkFlowStatus(registerFormDto.getApplicantId(), registerFormService.getFormLastId());
-        
+        workFlowStatusService.createWorkFlowStatus(registerFormDto.getApplicantId(), registerFormService.getFormLastId(), approverId);
         return ResponseEntity.ok("Request Form Successful....");
     }
 

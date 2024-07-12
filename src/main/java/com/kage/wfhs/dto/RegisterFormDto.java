@@ -26,7 +26,7 @@ import org.springframework.web.multipart.MultipartFile;
 @AllArgsConstructor
 @ToString
 public class RegisterFormDto {
-     private Long id, applicantId, requesterId;
+     private Long id, applicantId, requesterId, approverId;
      private String working_place, request_reason, os_type, status, signature, positionName, currentStatus;
      private double request_percent;
      private Date from_date, to_date, applied_date, signedDate;
