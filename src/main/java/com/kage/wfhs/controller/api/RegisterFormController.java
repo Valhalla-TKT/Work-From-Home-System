@@ -113,8 +113,7 @@ public class RegisterFormController {
         registerFormDto.setSignatureInput(signature);
         registerFormDto.setApproverId(approverId);
         registerFormService.createRegisterForm(registerFormDto);
-        workFlowStatusService.createWorkFlowStatus(registerFormDto.getApplicantId(), registerFormService.getFormLastId());
-        System.out.println(registerFormDto.toString());
+        workFlowStatusService.createWorkFlowStatus(registerFormDto.getApplicantId(), registerFormService.getFormLastId(), approverId);
         return ResponseEntity.ok("Request Form Successful....");
     }
 

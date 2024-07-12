@@ -49,42 +49,50 @@ public class WorkFlowStatusServiceImplement implements WorkFlowStatusService {
     private final LedgerService ledgerService;
 
     @Override
-    public void createWorkFlowStatus(Long userId, Long formId) throws Exception {
-        User applicant = EntityUtil.getEntityById(userRepo, userId);
-        Set<ApproveRole> approveRoles = applicant.getApproveRoles();
+    public void createWorkFlowStatus(Long userId, Long formId, Long approverId) throws Exception {
+        //User applicant = EntityUtil.getEntityById(userRepo, userId);
+        User approver = EntityUtil.getEntityById(userRepo, approverId);
+        ApproveRole approveRole = EntityUtil.getEntityById(approveRoleRepo, approverId);
         RegisterForm registerForm = EntityUtil.getEntityById(registerFormRepo, formId);
-        boolean hasCEO = false;
-        boolean hasSERVICE_DESK = false;
-        for(ApproveRole approveRole : approveRoles) {
-            if(approveRole.getName().equalsIgnoreCase("CEO")) {
-                hasCEO = true;
-                break;
-            } else if (approveRole.getName().equalsIgnoreCase("SERVICE_DESK")) {
-                hasSERVICE_DESK = true;
-                break;
-            }
-        }
-        if(hasCEO){
-            
-            registerForm.setStatus(Status.APPROVE);
-            registerFormRepo.save(registerForm);
-            createApproval(registerForm.getId(), "SERVICE_DESK");
-        } else if (hasSERVICE_DESK) {
-            createApproval(registerForm.getId(), "CISO");
-        } else {
-            ApproveRole approveRole = helper.getMaxOrder(applicant.getApproveRoles());
-            System.out.println("Approve Role: " + approveRole.getName());
-            List<User> approvers = findApprovers(applicant, approveRole);
-            for (User user : approvers) {
-                WorkFlowStatus workFlowStatus = new WorkFlowStatus();
-                workFlowStatus.setStatus(Status.PENDING);
-                workFlowStatus.setRegisterForm(formId > 0 ? EntityUtil.getEntityById(registerFormRepo, formId) : null);
-                workFlowStatus.setUser(user);
-                workFlowStatus.setApproveRole(approveRole);
-                workFlowStatusRepo.save(workFlowStatus);
-                //notificationService.sendPendingApproveRejectNotificationToServiceDesk(workFlowStatus.getRegisterForm().getId(), applicant.getId(), workFlowStatus.getUser().getId(), workFlowStatus.getStatus().name());
-            }
-        }
+        WorkFlowStatus workFlowStatus = new WorkFlowStatus();
+        workFlowStatus.setStatus(Status.PENDING);
+        workFlowStatus.setRegisterForm(formId > 0 ? EntityUtil.getEntityById(registerFormRepo, formId) : null);
+        workFlowStatus.setUser(approver);
+        workFlowStatus.setApproveRole(approveRole);
+        EntityUtil.saveEntityWithoutReturn(workFlowStatusRepo, workFlowStatus, "Work Flow Status");
+        //workFlowStatusRepo.save(workFlowStatus);
+//        boolean hasCEO = false;
+//        boolean hasSERVICE_DESK = false;
+//        for(ApproveRole approveRole : approveRoles) {
+//            if(approveRole.getName().equalsIgnoreCase("CEO")) {
+//                hasCEO = true;
+//                break;
+//            } else if (approveRole.getName().equalsIgnoreCase("SERVICE_DESK")) {
+//                hasSERVICE_DESK = true;
+//                break;
+//            }
+//        }
+//        if(hasCEO){
+//
+//            registerForm.setStatus(Status.APPROVE);
+//            registerFormRepo.save(registerForm);
+//            createApproval(registerForm.getId(), "SERVICE_DESK");
+//        } else if (hasSERVICE_DESK) {
+//            createApproval(registerForm.getId(), "CISO");
+//        } else {
+//            ApproveRole approveRole = helper.getMaxOrder(applicant.getApproveRoles());
+//            System.out.println("Approve Role: " + approveRole.getName());
+//            List<User> approvers = findApprovers(applicant, approveRole);
+//            for (User user : approvers) {
+//                WorkFlowStatus workFlowStatus = new WorkFlowStatus();
+//                workFlowStatus.setStatus(Status.PENDING);
+//                workFlowStatus.setRegisterForm(formId > 0 ? EntityUtil.getEntityById(registerFormRepo, formId) : null);
+//                workFlowStatus.setUser(user);
+//                workFlowStatus.setApproveRole(approveRole);
+//                workFlowStatusRepo.save(workFlowStatus);
+//                //notificationService.sendPendingApproveRejectNotificationToServiceDesk(workFlowStatus.getRegisterForm().getId(), applicant.getId(), workFlowStatus.getUser().getId(), workFlowStatus.getStatus().name());
+//            }
+//        }
 
     }
 
@@ -175,7 +183,7 @@ public class WorkFlowStatusServiceImplement implements WorkFlowStatusService {
             }
             else {
             	if(workFlowStatusDto.isState()) {
-            		createWorkFlowStatus(workFlowStatusDto.getApproverId(), workFlowStatusDto.getRegisterFormId());
+            		//createWorkFlowStatus(workFlowStatusDto.getApproverId(), workFlowStatusDto.getRegisterFormId());
             	}
             }
     }
