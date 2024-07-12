@@ -507,4 +507,18 @@ async function fetchCookie(url) {
     }
 }
 
+async function fetchApprovers() {
+    try {
+        const responseData = await sendRequest(`/api/user/getAllApprover`, 'POST', {});
+        const contentType = responseData.headers.get('content-type');
+        if (contentType && contentType.includes('application/json')) {
+            return await responseData.json();
+        } else {
+            return await responseData.text();
+        }
+    } catch (error) {
+        console.error('Error:', error);
+    }
+}
+
 // fetchData('/api/protected-endpoint');

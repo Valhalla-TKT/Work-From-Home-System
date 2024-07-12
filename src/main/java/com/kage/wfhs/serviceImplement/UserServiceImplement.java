@@ -383,6 +383,7 @@ public class UserServiceImplement implements UserService {
 			userDto.setPassword(passwordEncoder.encode("123@dirace"));
 			userDto.setEnabled(true);
 			userDto.setGender("female");
+			userDto.setProfile("default-female.jpg");
 			User HR = modelMapper.map(userDto, User.class);
 			ApproveRole approveRole = approveRoleRepo.findByName("HR");
 			if (approveRole == null) {
@@ -439,5 +440,11 @@ public class UserServiceImplement implements UserService {
         } catch (Exception e) {
 			return false;
 		}
+	}
+
+	@Override
+	public List<UserDto> getAllApprover() {
+		List<User> user = userRepo.findUsersByRoleNotEqual("APPLICANT");
+		return DtoUtil.mapList(user, UserDto.class, modelMapper);
 	}
 }

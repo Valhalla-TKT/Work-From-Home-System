@@ -91,7 +91,7 @@ document.addEventListener('DOMContentLoaded', async function () {
                 .then((result) => {
                     if (result.isConfirmed) {
                         Swal.fire('Please log in again', '', 'info').then(() => {
-                            window.location.href = '/signOut';
+                            window.location.href = `${getContextPath()}/signOut`;
                         });
                     }
                 });
