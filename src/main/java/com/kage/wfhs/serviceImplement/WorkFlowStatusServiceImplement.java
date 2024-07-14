@@ -47,16 +47,20 @@ public class WorkFlowStatusServiceImplement implements WorkFlowStatusService {
     
     @Autowired
     private final LedgerService ledgerService;
+    @Autowired
+    private ApproveRoleRepository approveRoleRepository;
 
     @Override
     public void createWorkFlowStatus(Long userId, Long formId, Long approverId) throws Exception {
         //User applicant = EntityUtil.getEntityById(userRepo, userId);
         User approver = EntityUtil.getEntityById(userRepo, approverId);
-        ApproveRole approveRole = EntityUtil.getEntityById(approveRoleRepo, approverId);
+        List<User> users = new ArrayList<>();
+        users.add(approver);
+        ApproveRole approveRole = approveRoleRepository.findByUsers(users);
         RegisterForm registerForm = EntityUtil.getEntityById(registerFormRepo, formId);
         WorkFlowStatus workFlowStatus = new WorkFlowStatus();
         workFlowStatus.setStatus(Status.PENDING);
-        workFlowStatus.setRegisterForm(formId > 0 ? EntityUtil.getEntityById(registerFormRepo, formId) : null);
+        workFlowStatus.setRegisterForm(formId > 0 ? registerForm : null);
         workFlowStatus.setUser(approver);
         workFlowStatus.setApproveRole(approveRole);
         EntityUtil.saveEntityWithoutReturn(workFlowStatusRepo, workFlowStatus, "Work Flow Status");

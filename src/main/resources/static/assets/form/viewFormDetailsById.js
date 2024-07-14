@@ -178,13 +178,11 @@ $(document).ready(function () {
     });
     //
     var flowStatusId;
-    console.log(formId);
-
     getFormDetailsById(formId, userId);
 
     function getFormDetailsById(formId, userId) {
         $.ajax({
-            url: `/api/registerform/getFormById?formId=${formId}&userId=${userId}`,
+            url: `${getContextPath()}/api/registerform/getFormById?formId=${formId}&userId=${userId}`,
             type: 'POST',
             contentType: 'application/json',
             success: function (response) {

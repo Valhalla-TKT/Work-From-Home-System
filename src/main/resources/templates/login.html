@@ -1,48 +1,30 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
-
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<title>Sign in | WFHS</title>
-	<link rel="stylesheet" media="screen" th:href="@{/assets/auth/auth.css}" />
+	<title>WFHS Login Page</title>
 	<link rel="icon" th:href="@{/assets/icons/wfhs-small-logo.ico}" type="image/x-icon">
-
+	<link rel="stylesheet" media="screen" th:href="@{/assets/auth/auth.css}" />
 </head>
 <body>
-<div class="video-container">
-	<video autoplay muted loop id="video-background">
-		<source th:src="@{/assets/auth/auth-background.mp4}" type="video/mp4">
-	</video>
-	<div class="login-form">
-		<section class="content" data-content-container>
-			<main>
-
-				<div class="auth-content">
-					<h2>Welcome Back!
-						<p class="signin-subtitle">Sign in to your account to continue.</p>
-					</h2>
-					<div class="auth-form sign-in-form">
-						<form th:action="@{/signIn}" accept-charset="UTF-8" method="post">
-							<div th:if="${session.errorMessage != null}">
-								<p style="color: red" th:text="${session.errorMessage}"></p>
-							</div>
-							<div class="form-fields">
-								<fieldset>
-									<label for="login">Staff ID</label>
-									<input type="text" name="username" id="login" tabindex="1" class="text-input" autocorrect="off" autocapitalize="off">
-								</fieldset>
-								<fieldset>
-									<label for="password" class="password">Password <a href="auth/forgetPassword">Forgot Password?</a></label>
-									<input type="password" name="password" id="password" value="" tabindex="2" class="text-input" data-cypress="password">
-								</fieldset>
-							</div>
-							<input class="btn2 btn2--large btn2--full-width margin-t-20" type="submit" value="Sign In" tabindex="3" data-cypress="submit-sign-in-btn">
-						</form>
-					</div>
-				</div>
-			</main>
-		</section>
+<div class="container flex">
+	<div class="wfhs-page flex">
+		<div class="text">
+			<h1>DIR-ACE Technology</h1>
+			<p style="color: #000; font-size: 1.75rem; white-space: nowrap;">Work From Home System</p>
+		</div>
+		<form th:action="@{/signIn}" accept-charset="UTF-8" method="post">
+			<input type="text" name="username" placeholder="Staff ID" required>
+			<input type="password" name="password" placeholder="Password" required>
+			<div th:if="${session.errorMessage != null}">
+				<p style="color: red; font-size: 0.875rem; margin-bottom: 10px;" th:text="${session.errorMessage}"></p>
+			</div>
+			<div class="link">
+				<button type="submit" class="login">Login</button>
+				<a th:href="@{/auth/forgetPassword}" class="forgot">Forgot password?</a>
+			</div>
+		</form>
 	</div>
 </div>
 </body>

@@ -50,7 +50,12 @@ async function sendRequestWithOneParam(url, method, paramName, param) {
         });
 
         if (!response.ok) {
-            throw new Error('Request failed');
+            if (response.status === 401) {
+                const errorMessage = await response.text();
+                throw new Error(errorMessage || 'Unauthorized request');
+            } else {
+                throw new Error('Request failed');
+            }
         }
 
         return response;

@@ -9,8 +9,10 @@ package com.kage.wfhs.repository;
 
 import com.kage.wfhs.model.ApproveRole;
 
+import java.util.List;
 import java.util.Optional;
 
+import com.kage.wfhs.model.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
@@ -23,5 +25,5 @@ public interface ApproveRoleRepository extends JpaRepository<ApproveRole,Long> {
     Long findByWorkFlowOrderId(Long workFlowOrderId);
 
 
-
+    ApproveRole findByUsers(List<User> users);
 }
