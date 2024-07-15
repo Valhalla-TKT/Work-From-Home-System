@@ -6,14 +6,14 @@ body.mona-sans {
     font-family: 'Mona Sans';
     font-stretch: 75% 125%;
     font-weight: 200 900;
-    src: url(/assets/mona-sans/Mona-Sans-870dff5a10221ba7d01cc47eca10d0b2f911bd4196bb941985490bd8c7363cd9.woff2) format("woff2 supports variations"), url(/assets/mona-sans/Mona-Sans-870dff5a10221ba7d01cc47eca10d0b2f911bd4196bb941985490bd8c7363cd9.woff2) format("woff2-variations")
+    src: url(/wfhs/assets/mona-sans/Mona-Sans-870dff5a10221ba7d01cc47eca10d0b2f911bd4196bb941985490bd8c7363cd9.woff2) format("woff2 supports variations"), url(/wfhs/assets/mona-sans/Mona-Sans-870dff5a10221ba7d01cc47eca10d0b2f911bd4196bb941985490bd8c7363cd9.woff2) format("woff2-variations")
 }
 
 @font-face {
     font-family: 'WF Visual Sans';
     font-style: normal;
     font-weight: normal;
-    src: url(/assets/wf-visual-sans/WFVisualSans-RegularText-46461986901f80620e484e70aa8cbb90ede25a01351d464819a4e47a3f38ea43.woff2);
+    src: url(/wfhs/assets/wf-visual-sans/WFVisualSans-RegularText-46461986901f80620e484e70aa8cbb90ede25a01351d464819a4e47a3f38ea43.woff2);
     font-display: swap
 }
 
@@ -21,7 +21,7 @@ body.mona-sans {
     font-family: 'WF Visual Sans';
     font-style: normal;
     font-weight: 600;
-    src: url(/assets/wf-visual-sans/WFVisualSans-SemiBold-aa0e55353b6a1b897f76a0fcbf5561fa243ce1b8b9f6aebcb5a186f0536713b1.woff2);
+    src: url(/wfhs/assets/wf-visual-sans/WFVisualSans-SemiBold-aa0e55353b6a1b897f76a0fcbf5561fa243ce1b8b9f6aebcb5a186f0536713b1.woff2);
     font-display: swap
 }
 
@@ -830,7 +830,7 @@ h2.section.bold {
 
 h2.section.bold a {
     padding-right: 16px;
-    background: url(/assets/icon-portal-arrow-1061311edf71d6808f773db15859657d62117faae03c86ab9fe2d4ecf207a951.png) no-repeat 100% 14px;
+    background: url(/wfhs/assets/icon-portal-arrow-1061311edf71d6808f773db15859657d62117faae03c86ab9fe2d4ecf207a951.png) no-repeat 100% 14px;
     background-size: 8px 13px;
     color: #d145bf
 }
@@ -878,7 +878,7 @@ h3.jump {
 
 h3.jump a {
     padding-right: 16px;
-    background: url(/assets/icon-portal-arrow-1061311edf71d6808f773db15859657d62117faae03c86ab9fe2d4ecf207a951.png) no-repeat 100% 7px;
+    background: url(/wfhs/assets/icon-portal-arrow-1061311edf71d6808f773db15859657d62117faae03c86ab9fe2d4ecf207a951.png) no-repeat 100% 7px;
     background-size: 8px 13px;
     color: #0d0c22
 }
@@ -950,7 +950,7 @@ h3.special span.sponsored a {
 
 h3.special a.date-more {
     padding-right: 12px;
-    background: url(/assets/icon-bluearrow-5e330821379dbf08bc751353191e78fcd4542ba9f5d40f752f94874963c3cd11.png) no-repeat 100% 3px;
+    background: url(/wfhs/assets/icon-bluearrow-5e330821379dbf08bc751353191e78fcd4542ba9f5d40f752f94874963c3cd11.png) no-repeat 100% 3px;
     font-weight: 500
 }
 
@@ -1476,7 +1476,7 @@ div.content-header p.scheduled-note a {
     -ms-flex-align: start;
     align-items: flex-start;
     overflow: hidden;
-    background: url(/assets/checker-10x10-6565c4c3a486cc0e72fb0f980980056e95807a2764471f7fc0ed46a86bcb27a6.gif)
+    background: url(/wfhs/assets/checker-10x10-6565c4c3a486cc0e72fb0f980980056e95807a2764471f7fc0ed46a86bcb27a6.gif)
 }
 
 .slat-header .slat-shot a img {
@@ -1499,14 +1499,14 @@ div.content-header p.scheduled-note a {
     background-position: 0 8px;
     color: #6e6d7a;
     font-weight: normal;
-    background-image: url(/assets/icon-weburl-b925a3e8603194ff7f885bd10b35b72b70263ec259b8b033397d3e7e97a0e5ea.png)
+    background-image: url(/wfhs/assets/icon-weburl-b925a3e8603194ff7f885bd10b35b72b70263ec259b8b033397d3e7e97a0e5ea.png)
 }
 
 @media (-webkit-min-device-pixel-ratio: 1.5),
 (min-device-pixel-ratio: 1.5),
 (min-resolution: 1.5dppx) {
     .slat-header span.bucket-url a {
-        background-image: url(/assets/icon-weburl-2x-fbdff2ed8731a8b6a69fa424fa9f0cbafb1a3b4b9613c2b5141fc56ddd093b20.png);
+        background-image: url(/wfhs/assets/icon-weburl-2x-fbdff2ed8731a8b6a69fa424fa9f0cbafb1a3b4b9613c2b5141fc56ddd093b20.png);
         background-size: 16px 16px
     }
 }
@@ -3506,7 +3506,7 @@ input[type='checkbox']:checked:after {
     position: absolute;
     width: 12px;
     height: 12px;
-    background-image: url(/assets/icons/check-white-4280ab4c53ca62fad039199f10c3964076dae155a1335788ec62f4b9dd5a5f4f.svg);
+    background-image: url(/wfhs/assets/icons/check-white-4280ab4c53ca62fad039199f10c3964076dae155a1335788ec62f4b9dd5a5f4f.svg);
     background-repeat: no-repeat
 }
 
@@ -4043,7 +4043,7 @@ div.for-hire-preview p.response-text {
     padding-left: 22px;
     background-repeat: no-repeat;
     background-position: 0 50%;
-    background-image: url(/assets/icon-subscribed-aea5d81fbc01fbe2f5c0dae10e0e5423719082d91f831683ceb80cc7ab1a66f7.png)
+    background-image: url(/wfhs/assets/icon-subscribed-aea5d81fbc01fbe2f5c0dae10e0e5423719082d91f831683ceb80cc7ab1a66f7.png)
 }
 
 @media (-webkit-min-device-pixel-ratio: 1.5),
@@ -11969,7 +11969,7 @@ div.processing {
     padding: 10px 10px 10px 42px;
     border-radius: 6px;
     background-color: #fff;
-    background-image: url(/assets/processing-0adc8c1c97e052c873286dfd67ae4b039dd9bb29e66d9cff02e3bf56a77004e9.gif);
+    background-image: url(/wfhs/assets/processing-0adc8c1c97e052c873286dfd67ae4b039dd9bb29e66d9cff02e3bf56a77004e9.gif);
     background-repeat: no-repeat;
     background-position: 10px 50%;
     background-size: 32px 32px;
@@ -12004,7 +12004,7 @@ a.processing:hover,
 input.processing:hover {
     padding-left: 32px;
     background-color: #fff;
-    background-image: url(/assets/processing-0adc8c1c97e052c873286dfd67ae4b039dd9bb29e66d9cff02e3bf56a77004e9.gif);
+    background-image: url(/wfhs/assets/processing-0adc8c1c97e052c873286dfd67ae4b039dd9bb29e66d9cff02e3bf56a77004e9.gif);
     background-repeat: no-repeat;
     background-position: 0 50%;
     background-size: 32px 32px;

@@ -24,7 +24,6 @@ $(document).ready(function() {
     var status = 'ALL';
 
     formStatusSelect.val(status);
-	console.log(userRole)
 	function updateFormListSelectCount() {
 		formListSelectedCount.text(`Selected (${selectedValues.length})`);
 	}
@@ -41,7 +40,6 @@ $(document).ready(function() {
 		getDepartmentsPendingForm();
 	}
 	if(userRole === 'CISO' || userRole === 'CEO' || userRole === 'SERVICE_DESK') {
-		console.log(userRole)
 		getAllForm();			
 	}		
 	// role
@@ -754,10 +752,8 @@ $(document).ready(function() {
                 userId: userId
             },
             success: function(response) {
-				console.log(response)
 				var forms = response.forms;
 				var applicantList = response.applicants;
-				console.log('Success:', applicantList);
 				$(".form-card-container").empty();
 				forms.forEach(function(form, index) {
 					if(userRole === "SERVICE_DESK") {
@@ -873,7 +869,7 @@ $(document).ready(function() {
     }
     
     function selectAll() {
-		selectedValues = [];
+
         $("input[type='checkbox']").each(function() {
             selectedValues.push($(this).val());
 			$(this).closest('.resume-card').addClass('shadow');
@@ -889,10 +885,7 @@ $(document).ready(function() {
     
     // for service desk
     var serviceDeskDownloadBtn = $("#service-desk-download-btn")
-    console.log(serviceDeskDownloadBtn)
-    
-	
-    $("#service-desk-download-btn").click(function() {
+	serviceDeskDownloadBtn.click(function() {
         selectAll();
         var formData = new FormData();
 		for (var i = 0; i < selectedValues.length; i++) {
