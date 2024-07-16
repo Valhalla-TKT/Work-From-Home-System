@@ -59,10 +59,47 @@
 									<span class="label" title="Filters">Filters</span>
 								</a>
 							</div>
-							<div class="staff-card-container" id="staff-list"
+							<!-- <div class="staff-card-container" id="staff-list"
 								style="margin-top: 50px; display: flex !important; flex-wrap:wrap !important; justify-content: space-between; align-items:center;">
 
-							</div>
+							</div> -->
+							<style>
+								.table {
+								    width: 100%;
+								    border-collapse: collapse;
+								    margin-top: 50px;
+								}
+								
+								.table th, .table td {
+								    border: 1px solid #ddd;
+								    padding: 8px;
+								    text-align: left;
+								    width: 20%; /* Make all columns have the same width */
+            						box-sizing: border-box; 
+								}
+								
+								.table th {
+								    background-color: #f2f2f2;
+								    color: black;
+								}
+								
+								.table tr:hover {
+								    background-color: #f1f1f1;
+								}
+								
+							</style>
+							<table id="staff-table" class="table">
+							    <thead>
+							        <tr>
+							            <th>Name</th>
+							            <th>Staff ID</th>
+							            <th>Division</th>
+							            <th>Department</th>
+							            <th>Team</th>
+							        </tr>
+							    </thead>
+							    <tbody id="staff-list"></tbody>
+							</table>
 							<div class="pagination">
 								<span class="page-numbers"></span>
 							</div>

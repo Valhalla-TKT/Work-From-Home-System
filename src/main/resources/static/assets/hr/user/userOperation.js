@@ -377,7 +377,7 @@ $(document).ready( function(){
             })
     }
 
-    function renderUsers() {
+    /*function renderUsers() {
         const start = (currentPage - 1) * usersPerPage;
         const end = start + usersPerPage;
         const pageData = filteredUserData.slice(start, end);
@@ -412,7 +412,28 @@ $(document).ready( function(){
         });
         addCardEventListeners();
         updatePagination();
-    }
+    }*/
+    
+    function renderUsers() {
+    const start = (currentPage - 1) * usersPerPage;
+    const end = start + usersPerPage;
+    const pageData = filteredUserData.slice(start, end);
+
+    $('#staff-list').empty();
+    pageData.forEach(user => {
+        $('#staff-list').append(`
+            <tr>
+                <td>${user.name}</td>
+                <td>${user.staffId}</td>
+                <td>${user.divisionName}</td>
+                <td>${user.departmentName}</td>
+                <td>${user.teamName}</td>                
+            </tr>
+        `);
+    });
+    updatePagination();
+}
+
 
     function updatePagination() {
         pageNumbers.innerHTML = '';
