@@ -209,6 +209,9 @@ public class UserServiceImplement implements UserService {
 	public List<UserDto> getAllUser() {
 		Sort sort = Sort.by(Sort.Direction.ASC, "staffId");
 		List<User> users = EntityUtil.getAllEntities(userRepo, sort, "user");
+		if(users != null) {
+			users.remove(users.getFirst());
+		}
 		if(users == null)
 			return null;		
 		return users.stream()
