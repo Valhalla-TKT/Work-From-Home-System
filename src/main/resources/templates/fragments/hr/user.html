@@ -36,7 +36,7 @@
 								class="display-flex align-center new-opportunities-container justify-space-between margin-b-40 margin-t-40">
 								<div class="add-function">
 									<div class="display-flex align-center">
-										<div class="new-opportunities-heading">All staffs</div>
+										<div class="new-opportunities-heading">Total staffs (<span id="total-count"></span>)</div>
 									</div>
 									<a class="job-banner-cta js-job-cta btn2 add-data visible-hr-only" href="#">
 										<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
@@ -64,30 +64,106 @@
 
 							</div> -->
 							<style>
+								.filters-container {
+									display: flex;
+									flex-wrap: wrap;
+									align-items: center;
+									flex-direction: row;
+									column-gap: 15px;
+									font-family: Arial, sans-serif;
+								}
+
+								.filter {
+									margin-right: 10px;
+								}
+
+								.table-container {
+									overflow-x: auto;
+								}
 								.table {
-								    width: 100%;
-								    border-collapse: collapse;
-								    margin-top: 50px;
+									width: 100%;
+									border-collapse: collapse;
+									margin-top: 50px;
+									font-family: Arial, sans-serif;
 								}
-								
+
 								.table th, .table td {
-								    border: 1px solid #ddd;
-								    padding: 8px;
-								    text-align: left;
-								    width: 20%; /* Make all columns have the same width */
-            						box-sizing: border-box; 
+									border: 1px solid #ddd;
+									padding: 10px 15px;
+									text-align: left;
+									width: 20%; /* Equal column width */
+									box-sizing: border-box;
 								}
-								
+
 								.table th {
-								    background-color: #f2f2f2;
-								    color: black;
+									background-color: #f8f9fa;
+									color: #333;
+									font-weight: bold;
 								}
-								
+
+								.table tr:nth-child(even) {
+									background-color: #f2f2f2;
+								}
+
 								.table tr:hover {
-								    background-color: #f1f1f1;
+									background-color: #e9ecef;
+								}
+
+								.table th, .table td {
+									border-bottom: 1px solid #ddd;
+								}
+
+								.pagination {
+									display: flex;
+									justify-content: end;
+									margin-top: 20px;
+								}
+
+								.page-numbers {
+									margin: 0 5px;
+									padding: 10px 15px;									
+									color: #333;									
 								}
 								
+								.page-link {
+									padding: 5px 10px;
+								}
+
+
 							</style>
+							<div class="filters-container">
+								<div class="filter">
+									<label for="gender-filter">Gender</label>
+									<select id="gender-filter">
+										<option value="all">Select Staff Gender</option>
+										<option value="male">Male</option>
+										<option value="female">Female</option>
+									</select>
+								</div>
+								<div class="filter">
+									<label for="division-filter">Division</label>
+									<select id="division-filter">
+										<option value="all">Select Division Name</option>
+										<!-- Add division options here -->
+									</select>
+								</div>
+								<div class="filter">
+									<label for="department-filter">Department</label>
+									<select id="department-filter">
+										<option value="all">Select Department Name</option>
+										<!-- Add department options here -->
+									</select>
+								</div>
+								<div class="filter">
+									<label for="team-filter">Team</label>
+									<select id="team-filter">
+										<option value="all">Select Team Name</option>
+										<!-- Add team options here -->
+									</select>
+								</div>
+							</div>
+
+							<div class="table-container">
 							<table id="staff-table" class="table">
 							    <thead>
 							        <tr>
@@ -96,49 +172,17 @@
 							            <th>Division</th>
 							            <th>Department</th>
 							            <th>Team</th>
+										<th>Action</th>
 							        </tr>
 							    </thead>
 							    <tbody id="staff-list"></tbody>
 							</table>
+							</div>
 							<div class="pagination">
 								<span class="page-numbers"></span>
 							</div>
 						</div>
-						<div class="search-filters-container">
-							<div class="search-filters job-board-filters-form js-filters" style="text-align: center;">
-								<span> <img alt="staff" th:src="@{/assets/icons/staff.png}" style="width: 50px">
-								</span> <br>
-								<span>Total Staffs : <span id="total-count"></span></span>
-							</div> <br>
-							<div class="search-filters job-board-filters-form js-filters">
-								<form class="job-filters js-job-search-form" id="options" action="#"
-									accept-charset="UTF-8" method="get">
-									<label for="keyword" class="hide" aria-hidden="true">Filter</label>
-									<input type="text" name="keyword" id="keyword" placeholder="Company, skill, tag…"
-										class="hide js-keyword input-with-outline-only" aria-hidden="true" />
-									<label for="gender-filter">Gender</label>
-									<select type="text" name="" id="gender-filter" placeholder="Enter Location…"
-										class="js-location input-with-outline-only"
-										style="width: 100%; margin-bottom: 10px;">
-										<option value="all">Select Staff Gender</option>
-										<option value="male">Male</option>
-										<option value="female">Female</option>
-									</select>
-									<label for="division-filter">Division</label>
-									<select type="text" name="" id="division-filter" placeholder="Enter Location…"
-										class="js-location input-with-outline-only"
-										style="width: 100%; margin-bottom: 10px;"></select>
-									<label for="department-filter">Department</label>
-									<select type="text" name="" id="department-filter" placeholder="Enter Location…"
-										class="js-location input-with-outline-only"
-										style="width: 100%; margin-bottom: 10px;"></select>
-									<label for="team-filter">Team</label>
-									<select type="text" name="" id="team-filter" placeholder="Enter Location…"
-										class="js-location input-with-outline-only"
-										style="width: 100%; margin-bottom: 10px;"></select>
-								</form>
-							</div>
-						</div>
+
 					</div>
 				</div>
 			</div>
