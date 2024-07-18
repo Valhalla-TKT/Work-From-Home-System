@@ -135,7 +135,7 @@
 								<div class="filter">
 									<label for="gender-filter">Gender</label>
 									<select id="gender-filter">
-										<option value="all">Select Staff Gender</option>
+										<option value="all">Filter by Gender</option>
 										<option value="male">Male</option>
 										<option value="female">Female</option>
 									</select>
@@ -143,21 +143,21 @@
 								<div class="filter">
 									<label for="division-filter">Division</label>
 									<select id="division-filter">
-										<option value="all">Select Division Name</option>
+										<option value="all">Filter by Division</option>
 										<!-- Add division options here -->
 									</select>
 								</div>
 								<div class="filter">
 									<label for="department-filter">Department</label>
 									<select id="department-filter">
-										<option value="all">Select Department Name</option>
+										<option value="all">Filter by Department</option>
 										<!-- Add department options here -->
 									</select>
 								</div>
 								<div class="filter">
 									<label for="team-filter">Team</label>
 									<select id="team-filter">
-										<option value="all">Select Team Name</option>
+										<option value="all">Filter by Team</option>
 										<!-- Add team options here -->
 									</select>
 								</div>
@@ -237,7 +237,7 @@
 				<div class="add-data-modal-content">
 					<div class="form-title">
 						<span class="title">Staff Detail</span>
-						<span class="close">&times;</span>
+						<span class="close close-edit-modal">&times;</span>
 					</div> <br>
 					<form id="detail">
 						<label for="staff-id-detail">Staff ID</label>
@@ -251,8 +251,8 @@
 						<input type="text" id="gender-detail" required="required" style="color: #0d0c22; background: #fff;" disabled>
 						<label for="position-name-detail">His/Her Position</label>
 						<input type="text" id="position-name-detail" placeholder="e.g. Software Engineer" required="required" style="color: #0d0c22; background: #fff;">
-						<label for="approveRoleSelectBoxDetail">Choose Permission</label>
-						<select id="approveRoleSelectBoxDetail" required="required" style="width: 100%" step="any"></select>
+						<!-- <label for="approveRoleSelectBoxDetail">Choose Permission</label>
+						<select id="approveRoleSelectBoxDetail" required="required" style="width: 100%" step="any"></select> -->
 						<div id="team-data-detail">
 							<label for="team-name-detail">Choose Team He/She Has To Join</label>
 							<select id="team-name-detail" required="required" style="width: 100%" step="any"></select>
@@ -263,14 +263,42 @@
 						</div>
 						<div id="division-data-detail">
 							<label for="division-name-detail">Choose division He/She Has To Join</label>
-							<select id="division-name-detail" required="required" style="width: 100%" step="any"></select>
+							 <select id="division-name-detail" required="required" style="width: 100%" step="any"></select>
 						</div>
 						<input type="hidden" id="user-id-detail">
-						<button class="btn2 add-data-btn" type="button" id="update-approve-role">Save Changes</button>
+						<div style="display: flex; justify-content: end; flex-direction: row; column-gap: 20px;">
+						<button class="btn2 add-data-btn" style="width:30%;" type="button" id="change-role">Change Role</button>						
+						<button class="btn2 add-data-btn" style="width:30%;" type="button" id="update-approve-role-1">Save Changes</button>
+						</div>
 					</form>
 				</div>
 			</div>
 		</div>
+		<!-- Role Change Modal -->
+		<div id="role-change-overlay" style="display: none;">
+		    <div id="role-change-modal" class="add-data-modal" style="width: 30%; height: 40%; overflow:auto;">
+		        <div class="add-data-modal-content">
+		            <div class="form-title">
+		                <span class="title">Change Role</span>
+		                <span class="close close-role-modal" id="close-role-modal">&times;</span>
+		            </div> <br>
+		            <form id="role-change-form">
+		            	<label for="name-detail-2">Staff Name</label>
+						<input type="text" id="name-detail-2" placeholder="e.g. John" required="required" style="color: #0d0c22; background: #fff;" disabled>
+		                <label for="approveRoleSelectBoxDetail">Choose Permission</label>
+		                <select id="approveRoleSelectBoxDetail" required="required" style="width: 100%;" step="any"></select>
+						<!-- <div id="division-data-detail">
+							<label for="division-name-detail-2">Choose division</label>
+							<select id="division-name-detail-2" required="required" style="width: 100%" step="any"></select>
+					
+ 							<div id="division-name-detail-2" style="width: 100%"></div>
+ 						</div>		     -->           
+						<button class="btn2 add-data-btn" type="button" id="update-approve-role">Save Changes</button>
+		            </form>
+		        </div>
+		    </div>
+		</div>
+				
 	</div>
 </body>
 
