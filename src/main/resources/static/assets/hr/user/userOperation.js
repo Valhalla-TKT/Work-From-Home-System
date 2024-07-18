@@ -427,7 +427,8 @@ $(document).ready( function(){
                 <td>${user.staffId}</td>
                 <td>${user.divisionName}</td>
                 <td>${user.departmentName}</td>
-                <td>${user.teamName}</td>                
+                <td>${user.teamName}</td>
+                <td><i class="fa-solid fa-pen-to-square"></i> | <i class="fa-solid fa-trash"></i></td>                
             </tr>
         `);
     });
