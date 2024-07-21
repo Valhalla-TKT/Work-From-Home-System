@@ -30,12 +30,12 @@ public class RegisterForm implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     @Column(columnDefinition = "TEXT")
-    private String working_place;
-    private double request_percent;
-    private Date from_date;
-    private Date to_date;
+    private String workingPlace;
+    private double requestPercent;
+    private Date fromDate;
+    private Date toDate;
     @Column(columnDefinition = "TEXT")
-    private String request_reason;
+    private String requestReason;
     
     @Column(columnDefinition = "TEXT")
     private String signature;

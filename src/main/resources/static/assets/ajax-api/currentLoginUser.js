@@ -1,12 +1,27 @@
 $(document).ready(async function() {
 	try {
-		await getSessionUser();
-		getData();
+		const user = await getSessionUser();
+		if (!user) {
+			handleSessionExpired();
+		} else {
+			getData();
+		}
 	} catch (error) {
 		console.error('Error retrieving user:', error);
-		Swal.fire('Error', 'Could not retrieve user.', 'error');
+		handleSessionExpired();
 	}
 
+	function handleSessionExpired() {
+		Swal.fire({
+			title: 'Session Expired',
+			text: 'Your session has expired. Please log in again to continue.',
+			icon: 'warning',
+			confirmButtonText: 'OK'
+		}).then(() => {
+			localStorage.removeItem('currentUser');
+			window.location.href = `${getContextPath()}/signOut`;
+		});
+	}
 
 	function getData() {
 		var currentUser = JSON.parse(localStorage.getItem('currentUser'));
@@ -98,11 +113,11 @@ $(document).ready(async function() {
 			// 		$('#division-head-approval-output-section').hide();
 			// 		$('#ciso-approval-output-section').hide();
 			// 		$('#final-approval-output-section').hide();
-			// 		$('#project-manager-approval-input-section').show();
-			// 		$('#department-head-approval-input-section').hide();
-			// 		$('#division-head-approval-input-section').hide();
+			// 		$('#project_manager-approval-input-section').show();
+			// 		$('#department_head-approval-input-section').hide();
+			// 		$('#division_head-approval-input-section').hide();
 			// 		$('#ciso-approval-input-section').hide();
-			// 		$('#final-approval-input-section').hide();
+			// 		$('#ceo-approval-input-section').hide();
 			// 		$('#service-desk-input-section').hide();
 			// 	}
 			// 	if(userRole === 'DEPARTMENT_HEAD') {
@@ -111,11 +126,11 @@ $(document).ready(async function() {
 			// 		$('#division-head-approval-output-section').hide();
 			// 		$('#ciso-approval-output-section').hide();
 			// 		$('#final-approval-output-section').hide();
-			// 		$('#project-manager-approval-input-section').hide();
-			// 		$('#department-head-approval-input-section').show();
-			// 		$('#division-head-approval-input-section').hide();
+			// 		$('#project_manager-approval-input-section').hide();
+			// 		$('#department_head-approval-input-section').show();
+			// 		$('#division_head-approval-input-section').hide();
 			// 		$('#ciso-approval-input-section').hide();
-			// 		$('#final-approval-input-section').hide();
+			// 		$('#ceo-approval-input-section').hide();
 			// 		$('#service-desk-input-section').hide();
 			// 	}
 			// 	if(userRole === 'DIVISION_HEAD') {
@@ -124,11 +139,11 @@ $(document).ready(async function() {
 			// 		$('#division-head-approval-output-section').hide();
 			// 		$('#ciso-approval-output-section').hide();
 			// 		$('#final-approval-output-section').hide();
-			// 		$('#project-manager-approval-input-section').hide();
-			// 		$('#department-head-approval-input-section').hide();
-			// 		$('#division-head-approval-input-section').show();
+			// 		$('#project_manager-approval-input-section').hide();
+			// 		$('#department_head-approval-input-section').hide();
+			// 		$('#division_head-approval-input-section').show();
 			// 		$('#ciso-approval-input-section').hide();
-			// 		$('#final-approval-input-section').hide();
+			// 		$('#ceo-approval-input-section').hide();
 			// 		$('#service-desk-input-section').hide();
 			// 	}
 			// 	if(userRole === 'CISO') {
@@ -137,11 +152,11 @@ $(document).ready(async function() {
 			// 		$('#division-head-approval-output-section').show();
 			// 		$('#ciso-approval-output-section').hide();
 			// 		$('#final-approval-output-section').hide();
-			// 		$('#project-manager-approval-input-section').hide();
-			// 		$('#department-head-approval-input-section').hide();
-			// 		$('#division-head-approval-input-section').hide();
+			// 		$('#project_manager-approval-input-section').hide();
+			// 		$('#department_head-approval-input-section').hide();
+			// 		$('#division_head-approval-input-section').hide();
 			// 		$('#ciso-approval-input-section').show();
-			// 		$('#final-approval-input-section').hide();
+			// 		$('#ceo-approval-input-section').hide();
 			// 	}
 			// 	if(userRole === 'CEO') {
 			// 		$('#project-manager-approval-output-section').show();
@@ -149,11 +164,11 @@ $(document).ready(async function() {
 			// 		$('#division-head-approval-output-section').show();
 			// 		$('#ciso-approval-output-section').show();
 			// 		$('#final-approval-output-section').hide();
-			// 		$('#project-manager-approval-input-section').hide();
-			// 		$('#department-head-approval-input-section').hide();
-			// 		$('#division-head-approval-input-section').hide();
+			// 		$('#project_manager-approval-input-section').hide();
+			// 		$('#department_head-approval-input-section').hide();
+			// 		$('#division_head-approval-input-section').hide();
 			// 		$('#ciso-approval-input-section').hide();
-			// 		$('#final-approval-input-section').show();
+			// 		$('#ceo-approval-input-section').show();
 			// 	}
 			// 	if(userRole === 'SERVICE_DESK') {
 			// 		console.log("hihihihi")
@@ -163,11 +178,11 @@ $(document).ready(async function() {
 			// 		$('#division-head-approval-output-section').show();
 			// 		$('#ciso-approval-output-section').hide();
 			// 		$('#final-approval-output-section').hide();
-			// 		$('#project-manager-approval-input-section').hide();
-			// 		$('#department-head-approval-input-section').hide();
-			// 		$('#division-head-approval-input-section').hide();
+			// 		$('#project_manager-approval-input-section').hide();
+			// 		$('#department_head-approval-input-section').hide();
+			// 		$('#division_head-approval-input-section').hide();
 			// 		$('#ciso-approval-input-section').hide();
-			// 		$('#final-approval-input-section').hide();
+			// 		$('#ceo-approval-input-section').hide();
 			// 		$('#service-desk-input-section').show();
 			// 		$('#reject-form-btn').text('Send to Applicant').css({'color': 'blue', 'border-color': 'blue'});
 			// 		$('#approve-form-btn').hide();
@@ -229,24 +244,25 @@ $(document).ready(async function() {
 				$('#division-head-approval-output-section').hide();
 				$('#ciso-approval-output-section').hide();
 				$('#final-approval-output-section').hide();
-				$('#project-manager-approval-input-section').show();
-				$('#department-head-approval-input-section').hide();
-				$('#division-head-approval-input-section').hide();
+				$('#project_manager-approval-input-section').show();
+				$('#department_head-approval-input-section').hide();
+				$('#division_head-approval-input-section').hide();
 				$('#ciso-approval-input-section').hide();
-				$('#final-approval-input-section').hide();
+				$('#ceo-approval-input-section').hide();
 				$('#service-desk-input-section').hide();
 			}
 			if(hasRole.DEPARTMENT_HEAD) {
+				$('.hide-dept-head-only').hide();
 				$('#project-manager-approval-output-section').show();
 				$('#department-head-approval-output-section').hide();
 				$('#division-head-approval-output-section').hide();
 				$('#ciso-approval-output-section').hide();
 				$('#final-approval-output-section').hide();
-				$('#project-manager-approval-input-section').hide();
-				$('#department-head-approval-input-section').show();
-				$('#division-head-approval-input-section').hide();
+				$('#project_manager-approval-input-section').hide();
+				$('#department_head-approval-input-section').show();
+				$('#division_head-approval-input-section').hide();
 				$('#ciso-approval-input-section').hide();
-				$('#final-approval-input-section').hide();
+				$('#ceo-approval-input-section').hide();
 				$('#service-desk-input-section').hide();
 			}
 			if(hasRole.DIVISION_HEAD) {
@@ -255,11 +271,11 @@ $(document).ready(async function() {
 				$('#division-head-approval-output-section').hide();
 				$('#ciso-approval-output-section').hide();
 				$('#final-approval-output-section').hide();
-				$('#project-manager-approval-input-section').hide();
-				$('#department-head-approval-input-section').hide();
-				$('#division-head-approval-input-section').show();
+				$('#project_manager-approval-input-section').hide();
+				$('#department_head-approval-input-section').hide();
+				$('#division_head-approval-input-section').show();
 				$('#ciso-approval-input-section').hide();
-				$('#final-approval-input-section').hide();
+				$('#ceo-approval-input-section').hide();
 				$('#service-desk-input-section').hide();
 			}
 			if(hasRole.CISO) {
@@ -268,11 +284,11 @@ $(document).ready(async function() {
 				$('#division-head-approval-output-section').show();
 				$('#ciso-approval-output-section').hide();
 				$('#final-approval-output-section').hide();
-				$('#project-manager-approval-input-section').hide();
-				$('#department-head-approval-input-section').hide();
-				$('#division-head-approval-input-section').hide();
+				$('#project_manager-approval-input-section').hide();
+				$('#department_head-approval-input-section').hide();
+				$('#division_head-approval-input-section').hide();
 				$('#ciso-approval-input-section').show();
-				$('#final-approval-input-section').hide();
+				$('#ceo-approval-input-section').hide();
 			}
 			if(hasRole.CEO) {
 				$('#project-manager-approval-output-section').show();
@@ -280,25 +296,24 @@ $(document).ready(async function() {
 				$('#division-head-approval-output-section').show();
 				$('#ciso-approval-output-section').show();
 				$('#final-approval-output-section').hide();
-				$('#project-manager-approval-input-section').hide();
-				$('#department-head-approval-input-section').hide();
-				$('#division-head-approval-input-section').hide();
+				$('#project_manager-approval-input-section').hide();
+				$('#department_head-approval-input-section').hide();
+				$('#division_head-approval-input-section').hide();
 				$('#ciso-approval-input-section').hide();
-				$('#final-approval-input-section').show();
+				$('#ceo-approval-input-section').show();
 			}
 			if(hasRole.SERVICE_DESK) {
-				console.log("hihihihi")
 				$('#select-all-btn').hide();
 				$('#project-manager-approval-output-section').show();
 				$('#department-head-approval-output-section').show();
 				$('#division-head-approval-output-section').show();
 				$('#ciso-approval-output-section').hide();
 				$('#final-approval-output-section').hide();
-				$('#project-manager-approval-input-section').hide();
-				$('#department-head-approval-input-section').hide();
-				$('#division-head-approval-input-section').hide();
+				$('#project_manager-approval-input-section').hide();
+				$('#department_head-approval-input-section').hide();
+				$('#division_head-approval-input-section').hide();
 				$('#ciso-approval-input-section').hide();
-				$('#final-approval-input-section').hide();
+				$('#ceo-approval-input-section').hide();
 				$('#service-desk-input-section').show();
 				$('#reject-form-btn').text('Send to Applicant').css({'color': 'blue', 'border-color': 'blue'});
 				$('#approve-form-btn').hide();

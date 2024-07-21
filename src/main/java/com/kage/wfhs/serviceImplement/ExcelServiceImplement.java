@@ -77,7 +77,7 @@ public class ExcelServiceImplement implements ExcelService {
 
         try (Connection connection = DriverManager.getConnection(dbUrl, dbUsername, dbPassword);
              Statement statement = connection.createStatement()) {
-        	System.out.println(createTableQuery.toString());
+        	System.out.println("Importing Excel ...");
             statement.executeUpdate(createTableQuery.toString());
         }
     }

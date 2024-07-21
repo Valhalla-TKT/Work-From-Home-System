@@ -6,8 +6,14 @@
 	<title>WFHS Login Page</title>
 	<link rel="icon" th:href="@{/assets/icons/wfhs-small-logo.ico}" type="image/x-icon">
 	<link rel="stylesheet" media="screen" th:href="@{/assets/auth/auth.css}" />
+	<script th:src="@{/assets/auth/platform.min.js}"></script>
+	<script>
+		function getDeviceDetails() {
+			document.getElementById('deviceInfo').value = platform.description;
+		}
+	</script>
 </head>
-<body>
+<body onload="getDeviceDetails()">
 <div class="container flex">
 	<div class="wfhs-page flex">
 		<div class="text">
@@ -17,6 +23,7 @@
 		<form th:action="@{/signIn}" accept-charset="UTF-8" method="post">
 			<input type="text" name="username" placeholder="Staff ID" required>
 			<input type="password" name="password" placeholder="Password" required>
+			<input type="hidden" id="deviceInfo" name="deviceInfo" value="">
 			<div th:if="${session.errorMessage != null}">
 				<p style="color: red; font-size: 0.875rem; margin-bottom: 10px;" th:text="${session.errorMessage}"></p>
 			</div>

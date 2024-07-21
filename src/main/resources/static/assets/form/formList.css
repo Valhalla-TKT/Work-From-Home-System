@@ -22694,84 +22694,127 @@ div.rsvp-mod {
         align-self: flex-start
     }
 }
-.form-card-container {
-    margin-top: 50px;
-    display: flex !important;
-    flex-wrap: wrap !important;
-    justify-content: start;
-    align-items: center;
-}
+/*.form-card-container {*/
+/*    margin-top: 50px;*/
+/*    display: flex !important;*/
+/*    flex-wrap: wrap !important;*/
+/*    justify-content: start;*/
+/*    align-items: center;*/
+/*}*/
 .resume-card-container {
     margin-bottom: 32px;
     border: 1px solid #f3f3f4;
     border-radius: 12px
 }
 
+/*.folder {*/
+/*    display: inline-block;*/
+/*    width: 200px;*/
+/*    height: 150px;*/
+/*    background-color: #fff;*/
+/*    border: 2px solid #ccc;*/
+/*    border-radius: 8px;*/
+/*    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);*/
+/*    margin: 10px;*/
+/*    padding: 20px;*/
+/*    text-align: center;*/
+/*    cursor: pointer;*/
+/*    transition: transform 0.2s, box-shadow 0.2s;*/
+/*    position: relative;*/
+/*    overflow: hidden;*/
+/*}*/
+
+/*.folder:hover {*/
+/*    transform: translateY(-5px);*/
+/*    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);*/
+/*}*/
+
+/*.folder:before {*/
+/*    content: "";*/
+/*    position: absolute;*/
+/*    top: -10px;*/
+/*    left: 50%;*/
+/*    width: 100px;*/
+/*    height: 20px;*/
+/*    background-color: #ffcc00;*/
+/*    border: 2px solid #ccc;*/
+/*    border-bottom: none;*/
+/*    border-top-left-radius: 8px;*/
+/*    border-top-right-radius: 8px;*/
+/*    transform: translateX(-50%);*/
+/*    z-index: 1;*/
+/*}*/
+
+/*.folder:after {*/
+/*    content: "";*/
+/*    position: absolute;*/
+/*    top: -5px;*/
+/*    left: 50%;*/
+/*    width: 120px;*/
+/*    height: 10px;*/
+/*    background-color: #ffcc00;*/
+/*    border: 2px solid #ccc;*/
+/*    border-bottom: none;*/
+/*    transform: translateX(-50%);*/
+/*    z-index: 2;*/
+/*}*/
+
+/*.folder span {*/
+/*    position: relative;*/
+/*    z-index: 3;*/
+/*    display: block;*/
+/*    font-size: 16px;*/
+/*    font-weight: bold;*/
+/*    color: #333;*/
+/*    margin-top: 25px;*/
+/*}*/
+
+/*.folder:active {*/
+/*    transform: translateY(0);*/
+/*    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);*/
+/*}*/
+
+.form-card-container {
+    margin-top: 50px;
+    display: grid;
+    gap: 20px;
+    justify-items: center;
+    justify-content: start;
+}
+
+.team-folder-view .form-card-container {
+    grid-template-columns: repeat(5, 1fr);
+}
+
+
+.resume-card-view .form-card-container {
+    grid-template-columns: repeat(2, 1fr);
+}
+
 .folder {
-    display: inline-block;
-    width: 200px;
-    height: 150px;
-    background-color: #fff;
-    border: 2px solid #ccc;
-    border-radius: 8px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    margin: 10px;
-    padding: 20px;
-    text-align: center;
-    cursor: pointer;
-    transition: transform 0.2s, box-shadow 0.2s;
-    position: relative;
-    overflow: hidden;
+    width: min-content;
+    margin: auto;
+    animation: float 2s infinite linear;
 }
 
-.folder:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+.folder .top {
+    background-color: #FF8F56;
+    width: 60px;
+    height: 12px;
+    border-top-right-radius: 10px;
 }
 
-.folder:before {
-    content: "";
-    position: absolute;
-    top: -10px;
-    left: 50%;
+.folder .bottom {
+    background-color: #FFCE63;
     width: 100px;
-    height: 20px;
-    background-color: #ffcc00;
-    border: 2px solid #ccc;
-    border-bottom: none;
-    border-top-left-radius: 8px;
+    height: 70px;
+    box-shadow: 5px 5px 0 0 #283149;
     border-top-right-radius: 8px;
-    transform: translateX(-50%);
-    z-index: 1;
 }
 
-.folder:after {
-    content: "";
-    position: absolute;
-    top: -5px;
-    left: 50%;
-    width: 120px;
-    height: 10px;
-    background-color: #ffcc00;
-    border: 2px solid #ccc;
-    border-bottom: none;
-    transform: translateX(-50%);
-    z-index: 2;
-}
-
-.folder span {
-    position: relative;
-    z-index: 3;
-    display: block;
-    font-size: 16px;
-    font-weight: bold;
-    color: #333;
-    margin-top: 25px;
-}
-
-.folder:active {
-    transform: translateY(0);
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+.folder-title {
+    text-align: center;
+    margin-top: 5px;
 }
 
 .resume-card {

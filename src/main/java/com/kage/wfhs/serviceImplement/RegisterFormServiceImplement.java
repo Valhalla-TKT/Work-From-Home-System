@@ -8,6 +8,7 @@
 package com.kage.wfhs.serviceImplement;
 
 import com.kage.wfhs.dto.RegisterFormDto;
+import com.kage.wfhs.dto.auth.CurrentLoginUserDto;
 import com.kage.wfhs.dto.form.FormHistoryDto;
 import com.kage.wfhs.dto.form.FormListDto;
 import com.kage.wfhs.model.*;
@@ -19,10 +20,7 @@ import com.kage.wfhs.service.ApproveRoleService;
 import com.kage.wfhs.service.NotificationService;
 import com.kage.wfhs.service.RegisterFormService;
 import com.kage.wfhs.service.WorkFlowOrderService;
-import com.kage.wfhs.util.EntityUtil;
-import com.kage.wfhs.util.Helper;
-import com.kage.wfhs.util.ImageUtil;
-import com.kage.wfhs.util.OTPStaffIDExcelGenerator;
+import com.kage.wfhs.util.*;
 
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.AllArgsConstructor;
@@ -42,22 +40,16 @@ import java.util.*;
 @AllArgsConstructor
 public class RegisterFormServiceImplement implements RegisterFormService {
 
-    @Autowired
+    private final LogService logService;
+
     private final RegisterFormRepository registerFormRepo;
 
-    @Autowired
     private final UserRepository userRepo;
 
-//    @Autowired
-//    private final PositionRepository positionRepo;
-
-    @Autowired
     private final ModelMapper modelMapper;
 
-    @Autowired
     private final NotificationService notificationService;
 
-    @Autowired
     private final CaptureRepository captureRepo;
 
     private final WorkFlowOrderService workFlowOrderService;
@@ -78,21 +70,24 @@ public class RegisterFormServiceImplement implements RegisterFormService {
             applicant.setPositionName(registerFormDto.getPositionName());
             EntityUtil.saveEntity(userRepo, applicant, "User");
         }
+        User requster = EntityUtil.getEntityById(userRepo, registerFormDto.getRequesterId());
         RegisterForm registerForm = modelMapper.map(registerFormDto, RegisterForm.class);
-        registerForm.setApplicant(registerFormDto.getApplicantId() > 0 ? EntityUtil.getEntityById(userRepo, registerFormDto.getApplicantId()) : null);
-        registerForm.setRequester(registerFormDto.getRequesterId() > 0 ? EntityUtil.getEntityById(userRepo, registerFormDto.getRequesterId()) : null);
+        registerForm.setApplicant(applicant);
+        registerForm.setRequester(requster);
         registerForm.setSignature(ImageUtil.convertImageToBase64(registerFormDto.getSignatureInput()));
         registerForm.setStatus(Status.PENDING);
         registerFormRepo.save(registerForm);
-        notificationService.savePendingNotification(registerForm.getStatus().name());
+        //notificationService.savePendingNotification(registerForm.getStatus().name());
 
         Long formId = registerFormRepo.findLastId();
         Capture capture = new Capture();
         checkOsTypeAndSave(registerFormDto, formId, capture);
+        CurrentLoginUserDto formApplier = DtoUtil.map(applicant, CurrentLoginUserDto.class, modelMapper);
+        logService.logUserFormApply(formApplier);
     }
 
     private void checkOsTypeAndSave(RegisterFormDto registerFormDto, Long formId, Capture capture) {
-        capture.setOs_type(registerFormDto.getOs_type());
+        capture.setOs_type(registerFormDto.getOsType());
         if (capture.getOs_type().equalsIgnoreCase("window")) {
             capture.setAntivirusPattern(ImageUtil.convertImageToBase64(registerFormDto.getAntivirusPatternInput()));
             capture.setAntivirusFullScan(ImageUtil.convertImageToBase64(registerFormDto.getAntivirusFullScanInput()));
@@ -179,8 +174,8 @@ public class RegisterFormServiceImplement implements RegisterFormService {
         return getRegisterFormDtoList(userId, registerForms);
     }
 
-    public List<FormListDto> getAllFormSpecificTeamAllWithoutUserId(Long teamId, Long userId) {
-        List<RegisterForm> registerForms = registerFormRepo.findRegisterFormByTeamAllWithoutApproveRoleId(teamId);
+    public List<FormListDto> getAllFormSpecificTeamAllWithoutStatus(Long teamId, Long userId) {
+        List<RegisterForm> registerForms = registerFormRepo.findByUserIdAndTeamId(userId, teamId);
         return getRegisterFormDtoList(userId, registerForms);
     }
 
@@ -257,17 +252,19 @@ public class RegisterFormServiceImplement implements RegisterFormService {
     public Map<String, Object> getFormWithStatus(String status, long entityId, long userId, String entityName) {
         User user = EntityUtil.getEntityById(userRepo, userId);
         ApproveRole approveRole = helper.getMaxOrder(user.getApproveRoles());
+
         long orderId = workFlowOrderService.getWorkFlowOrderByApproveRoleId(approveRole.getId()).getId();
+
         long approveRoleId = approveRoleService.getIdByWorkFlowOrderId(orderId);
 
         Map<String, Object> responseData = new HashMap<>();
         List<FormListDto> registerFormDtoList = new ArrayList<>();
-        List<RegisterFormDto> registerFormDtoList2 = new ArrayList<>();
+        List<RegisterFormDto> registerFormDtoList2;
 
         if ("team".equalsIgnoreCase(entityName)) {
             if (status.equalsIgnoreCase("ALL")) {
                 if(user.getApproveRoles().stream().noneMatch(role -> role.getName().equals("PROJECT_MANAGER"))) {
-                    registerFormDtoList = getAllFormSpecificTeamAllWithoutUserId(entityId, userId);
+                    registerFormDtoList = getAllFormSpecificTeamAllWithoutStatus(entityId, userId);
                 } else if(user.getApproveRoles().stream().anyMatch(role -> role.getName().equals("PROJECT_MANAGER"))) {
                     registerFormDtoList = getAllFormSpecificTeamAll(approveRoleId, entityId, userId);
                 }
@@ -331,8 +328,8 @@ public class RegisterFormServiceImplement implements RegisterFormService {
         for (RegisterForm registerForm : registerForms) {
             FormHistoryDto formHistoryDto = new FormHistoryDto();
             formHistoryDto.setFormId(registerForm.getId());
-            if (registerForm.getTo_date() != null) {
-                LocalDate signedDate = registerForm.getTo_date().toInstant()
+            if (registerForm.getToDate() != null) {
+                LocalDate signedDate = registerForm.getToDate().toInstant()
                         .atZone(ZoneId.systemDefault())
                         .toLocalDate();
                 formHistoryDto.setSignedDate(signedDate.format(formatter));
@@ -348,11 +345,11 @@ public class RegisterFormServiceImplement implements RegisterFormService {
         RegisterFormDto registerFormDto = new RegisterFormDto();
         registerFormDto.setApplicantId(userId);
         registerFormDto.setRequesterId(userId);
-        registerFormDto.setWorking_place("Home");
-        registerFormDto.setRequest_reason("For Emergency.");
-        registerFormDto.setFrom_date(fromDate);
-        registerFormDto.setTo_date(toDate);
-        registerFormDto.setRequest_percent(100);
+        registerFormDto.setWorkingPlace("Home");
+        registerFormDto.setRequestReason("For Emergency.");
+        registerFormDto.setFromDate(fromDate);
+        registerFormDto.setToDate(toDate);
+        registerFormDto.setRequestPercent(100);
         registerFormDto.setSignedDate(new Date());
         createRegisterForm(registerFormDto);
     }

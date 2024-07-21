@@ -9,6 +9,7 @@
 <body>
 
 	<div id="wrap" th:fragment="content">
+
 		<div id="wrap-inner" class="flushed">
 			<div id="content" role="main">
 				<div class="container-medium">
@@ -26,8 +27,8 @@
 								</svg>
 
 								<label for="search-by-staff-name">
-									<input type="text" name="search-input" id="search-by-staff-name"
-										placeholder="Search by staff name..."
+									<input type="search" name="search-input" id="search-by-staff-name"
+										placeholder="Search by name, email, staff ID, or role..."
 										class="js-search-input input-with-outline-only search-input" />
 								</label>
 							</form>
@@ -91,7 +92,7 @@
 									border: 1px solid #ddd;
 									padding: 10px 15px;
 									text-align: left;
-									width: 20%; /* Equal column width */
+									width: 20%;
 									box-sizing: border-box;
 								}
 
@@ -298,7 +299,7 @@
 		        </div>
 		    </div>
 		</div>
-				
+
 	</div>
 </body>
 

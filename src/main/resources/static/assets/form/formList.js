@@ -32,16 +32,17 @@ $(document).ready(function() {
 		formListTitle.text(`${currentUser.teamName} Team Form List`);
 		getTeamMembersPendingForm();
 	}
-	if(userRole === 'DEPARTMENT_HEAD') {
+	// if(userRole === 'DEPARTMENT_HEAD' || userRole === 'DIVISION_HEAD') {
+	if(userRole !== 'PROJECT_MANAGER' || userRole !== 'APPLICANT') {
 		getTeamsPendingForm();
 	}
 	if(userRole === 'DIVISION_HEAD') {
-		
+
 		getDepartmentsPendingForm();
 	}
 	if(userRole === 'CISO' || userRole === 'CEO' || userRole === 'SERVICE_DESK') {
-		getAllForm();			
-	}		
+		getAllForm();
+	}
 	// role
 	    
     formStatusSelect.change(function() {
@@ -51,8 +52,8 @@ $(document).ready(function() {
 		}
 		if(userRole === 'DEPARTMENT_HEAD') {
 			// getTeamsPendingForm();
-			if (currentTeamId) { // Check if a team folder is currently opened
-				getTeamForms(status, currentTeamId, userId); // Call getTeamForms with updated status
+			if (currentTeamId) {
+				getTeamForms(status, currentTeamId, userId);
 			} else {
 				getTeamsPendingForm();
 			}
@@ -315,35 +316,101 @@ $(document).ready(function() {
 	// 		}
     //     });
     // }
+	// function getTeamsPendingForm() {
+	// 	$.ajax({
+	// 		url: `${getContextPath()}/api/registerform/getAllForms`,
+	// 		type: 'POST',
+	// 		data: {
+	// 			status: status,
+	// 			// departmentId: departmentId,
+	// 			userId: userId
+	// 		},
+	// 		success: function(response) {
+	// 			console.log(response)
+	// 			//var userDepartment = currentUser.department
+	// 			//var userTeams = currentUser.teams
+	// 			var teams = currentUser.teams
+	// 			$("#team-folder-view .form-card-container").empty();
+	//
+	// 			teams.forEach(function(team) {
+	// 				var $teamFolder = $("<div>", {
+	// 					class: "folder",
+	// 				}).dblclick(function() {
+	// 					console.log(team.id);
+	// 					console.log("hi")
+	// 					currentTeamId = team.id;
+	// 					getTeamForms(status, team.id, userId);
+	// 				}).append($("<span>", { text: team.name }));
+	//
+	//
+	// 				$("#team-folder-view .form-card-container").append($teamFolder);
+	// 			});
+	// 		},
+	// 		error: function(xhr, status, error) {
+	// 			console.error('Error:', error);
+	// 			console.log('Response:', xhr.responseText);
+	// 		}
+	// 	});
+	// }
+
 	function getTeamsPendingForm() {
 		$.ajax({
-			url: `${getContextPath()}/api/registerform/getDepartmentWithStatus`,
+			url: `${getContextPath()}/api/registerform/getAllForms`,
 			type: 'POST',
 			data: {
 				status: status,
-				departmentId: departmentId,
 				userId: userId
 			},
 			success: function(response) {
-				console.log(response)
-				//var userDepartment = currentUser.department
-				//var userTeams = currentUser.teams
-				var teams = currentUser.teams
+				console.log(response);
+
+				// Assuming currentUser.teams is an array of team objects
+				var teams = currentUser.teams;
+
+				// Empty the container
 				$("#team-folder-view .form-card-container").empty();
 
 				teams.forEach(function(team) {
-					var $teamFolder = $("<div>", {
+					// Create folder container
+					var $folderContainer = $("<div>", {
+						class: "folder-container"
+					});
+
+					var $folder = $("<div>", {
 						class: "folder",
-					}).dblclick(function() {
-						console.log(team.id);
-						console.log("hi")
-						currentTeamId = team.id;
-						getTeamForms(status, team.id, userId);
-					}).append($("<span>", { text: team.name }));
+						dblclick: function() {
+							console.log(team.id);
+							console.log("hi");
+							currentTeamId = team.id;
+							getTeamForms(status, team.id, userId);
+						}
+					});
 
+					// Create the inner content
+					var $topDiv = $("<div>", {
+						class: "top"
+					});
 
-					$("#team-folder-view .form-card-container").append($teamFolder);
+					var $bottomDiv = $("<div>", {
+						class: "bottom"
+					});
+
+					// Create title container
+					var $title = $("<div>", {
+						class: "folder-title",
+						text: team.name
+					});
+
+					// Append inner content to folder
+					$folder.append($topDiv, $bottomDiv);
+
+					// Append folder and title to folder container
+					$folderContainer.append($folder).append($title);
+
+					// Append folder container to form-card-container
+					$("#team-folder-view .form-card-container").append($folderContainer);
 				});
+				$("#team-folder-view").addClass("team-folder-view").removeClass("resume-card-view").show();
 			},
 			error: function(xhr, status, error) {
 				console.error('Error:', error);
@@ -351,6 +418,8 @@ $(document).ready(function() {
 			}
 		});
 	}
+
+
 
 	// function getTeamForms(status, teamId, userId) {
 	// 	console.log(teamId, status, userId)
@@ -481,133 +550,121 @@ $(document).ready(function() {
 	// 	});
 	// }
 
-	function getTeamForms(status, teamId, userId) {
+	async function getTeamForms(status, teamId, userId) {
 		console.log(teamId, status, userId);
-		$.ajax({
-			url: `${getContextPath()}/api/registerform/getTeamWithStatus`,
-			type: 'POST',
-			data: {
-				status: status,
-				teamId: teamId,
-				userId: userId
-			},
-			success: function(response) {
-				console.log(response);
-				var forms = response.forms;
-				var applicantList = response.applicants;
-				console.log('Success:', applicantList);
-				$("#form-list-view .form-card-container").empty();
+		var response = await fetchTeamWithStatus(status, teamId, userId);
+		console.log(response);
+		var forms = response.forms;
+		var applicantList = response.applicants;
+		console.log('Success:', applicantList);
+		$("#form-list-view .form-card-container").empty();
 
-				forms.forEach(function(form, index) {
-					var applicant = applicantList[index];
-					var $aTag = $("<div>", {
-						class: "js-resume-card resume-card designer-search-card resume-card-sections-hidden js-user-row-" + form.id
-					});
-					var $header = $("<div>", {
-						class: "resume-card-header resume-section-padding"
-					});
-					var $designer = $("<div>", {
-						class: "resume-card-header-designer"
-					});
-					var $avatar = $("<img>", {
-						class: "resume-card-avatar",
-						alt: `${applicant.name} photo`,
-						src: `${getContextPath()}/assets/profile/${applicant.profile}`,
-						width: "80",
-						height: "80",
-					});
-					var $details = $("<div>", {
-						class: "resume-card-header-details"
-					});
-					var $title = $("<div>", {
-						class: "resume-card-title"
-					}).append(
-						$("<h3>", {
-							class: "resume-card-designer-name user-select-none",
-							text: applicant.name
-						}),
-						$("<span>", {
-							class: "badge badge-pro",
-							text: form.currentStatus
-						})
-					);
-					var $text = $("<span>", {
-						class: "resume-card-header-text"
-					}).append(
-						$("<p>").append(
-							$("<span>", {
-								class: "resume-card-location",
-								text: applicant.positionName
-							}),
-							$("<span>", {
-								class: "resume-card-middot",
-								text: "•"
-							}),
-							$("<span>", {
-								text: applicant.teamName
-							}),
-							$("<br />", {
-								class: "resume-card-middot",
-								text: "•"
-							}),
-							$("<span>", {
-								text: applicant.departmentName
-							}),
-						),
-						$("<input>", {
-							type: "checkbox",
-							class: "resume-card-checkbox",
-							value: form.id,
-							css: {
-								display: 'none'
-							}
-						})
-					);
-					var $goDetail = $("<span>", {
-						class: "view-form-detail",
-						text: "Double Click to View Detail"
-					});
-					$details.append($title, $text, $goDetail);
-					$designer.append($avatar, $details);
-					$header.append($designer);
-					$aTag.append($header);
-					$aTag.on('click', function() {
-						var $checkbox = $(this).find(".resume-card-checkbox");
-						if ($checkbox.prop('checked')) {
-							$checkbox.prop('checked', false);
-							$(this).removeClass('shadow');
-						} else {
-							$checkbox.prop('checked', true);
-							$(this).addClass('shadow');
-						}
-						var checkboxValue = $checkbox.val();
-						if ($checkbox.prop('checked')) {
-							selectedValues.push(checkboxValue);
-							console.log(selectedValues);
-						} else {
-							var index = selectedValues.indexOf(checkboxValue);
-							if (index !== -1) {
-								selectedValues.splice(index, 1);
-								console.log(selectedValues);
-							}
-						}
-						updateFormListSelectCount();
-						console.log("Selected values:", selectedValues);
-					});
-					$aTag.on('dblclick', function() {
-						window.location.href = "form/" + form.id + "/user/" + currentUser.id;
-					});
-					$("#form-list-view .form-card-container").append($aTag);
-				});
-				$("#form-list-view").show();
-				$("#team-folder-view").hide();
-				$("#go-back-btn").show();
-			},
-			error: function(xhr, status, error) {
-				console.error('Error:', error);
-				console.log('Response:', xhr.responseText);
-			}
+		forms.forEach(function(form, index) {
+			var applicant = applicantList[index];
+			var $aTag = $("<div>", {
+				class: "js-resume-card resume-card designer-search-card resume-card-sections-hidden js-user-row-" + form.id
+			});
+			var $header = $("<div>", {
+				class: "resume-card-header resume-section-padding"
+			});
+			var $designer = $("<div>", {
+				class: "resume-card-header-designer"
+			});
+			var $avatar = $("<img>", {
+				class: "resume-card-avatar",
+				alt: `${applicant.name} photo`,
+				src: `${getContextPath()}/assets/profile/${applicant.profile}`,
+				width: "80",
+				height: "80",
+			});
+			var $details = $("<div>", {
+				class: "resume-card-header-details"
+			});
+			var $title = $("<div>", {
+				class: "resume-card-title"
+			}).append(
+				$("<h3>", {
+					class: "resume-card-designer-name user-select-none",
+					text: applicant.name
+				}),
+				$("<span>", {
+					class: "badge badge-pro",
+					text: form.currentStatus
+				})
+			);
+			var $text = $("<span>", {
+				class: "resume-card-header-text"
+			}).append(
+				$("<p>").append(
+					$("<span>", {
+						class: "resume-card-location",
+						text: applicant.positionName
+					}),
+					// $("<span>", {
+					// 	class: "resume-card-middot",
+					// 	text: "•"
+					// }),
+					$("<br />"),
+					$("<span>", {
+						text: applicant.teamName
+					}),
+					// $("<br />", {
+					// 	class: "resume-card-middot",
+					// 	text: "•"
+					// }),
+					// $("<span>", {
+					// 	text: applicant.departmentName
+					// }),
+				),
+				$("<input>", {
+					type: "checkbox",
+					class: "resume-card-checkbox",
+					value: form.id,
+					css: {
+						display: 'none'
+					}
+				})
+			);
+			var $goDetail = $("<span>", {
+				class: "view-form-detail",
+				text: "Double Click to View Detail"
+			});
+			$details.append($title, $text, $goDetail);
+			$designer.append($avatar, $details);
+			$header.append($designer);
+			$aTag.append($header);
+			$aTag.on('click', function() {
+				var $checkbox = $(this).find(".resume-card-checkbox");
+				if ($checkbox.prop('checked')) {
+					$checkbox.prop('checked', false);
+					$(this).removeClass('shadow');
+				} else {
+					$checkbox.prop('checked', true);
+					$(this).addClass('shadow');
+				}
+				var checkboxValue = $checkbox.val();
+				if ($checkbox.prop('checked')) {
+					selectedValues.push(checkboxValue);
+					console.log(selectedValues);
+				} else {
+					var index = selectedValues.indexOf(checkboxValue);
+					if (index !== -1) {
+						selectedValues.splice(index, 1);
+						console.log(selectedValues);
+					}
+				}
+				updateFormListSelectCount();
+				console.log("Selected values:", selectedValues);
+			});
+			$aTag.on('dblclick', function() {
+				window.location.href = "form/" + form.id + "/user/" + currentUser.id;
+			});
+			$("#form-list-view .form-card-container").append($aTag);
 		});
+		$("#form-list-view").addClass("resume-card-view").removeClass("team-folder-view").show();
+		$("#form-list-view").show();
+		$("#team-folder-view").hide();
+		$("#go-back-btn").show();
 	}
 
 	$("#go-back-btn").on('click', function() {
@@ -926,6 +983,7 @@ $(document).ready(function() {
 					confirmButtonText: 'OK'
 				}).then(() => {
 					$('#message').text(response);
+					getAllForm()
 				});
 	        },error: function(xhr, error) {
                 console.error('Error:', error);

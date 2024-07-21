@@ -65,19 +65,15 @@ public class UserController {
     }
     
     @PostMapping("/getAllTeamMember")
-    public ResponseEntity<List<UserDto>> teamMember(@RequestParam("teamId") long teamId,
-                                                    @RequestParam("userId") long userId){
-
+    public ResponseEntity<List<UserDto>> getAllTeamMember(@RequestParam("teamId") long teamId,
+                                                    @RequestParam("userId") long userId) {
         WorkFlowOrderDto upperRole = workFlowOrderService.getWorkFlowOrderByUserId(userId);
         List<UserDto> memberList = userService.getAllTeamMember(teamId);
-        List<UserDto> upperUserList = userService.getUpperRole(upperRole.getId() -1);
+        List<UserDto> upperUserList = userService.getUpperRole(upperRole.getId() -1, userId);
         Set<UserDto> userSet = new HashSet<>();
         userSet.addAll(upperUserList);
         userSet.addAll(memberList);
         List<UserDto> userList = new ArrayList<>(userSet);
-        for (UserDto userDto : userList) {
-            System.out.println(userDto.getName());
-        }
         return ResponseEntity.ok(userList);
     }
 
@@ -90,7 +86,7 @@ public class UserController {
     }
 
     @PostMapping("/getAllDepartmentMember")
-    public ResponseEntity<List<UserDto>> departmentmember(@RequestBody UserDto userDto){    	
+    public ResponseEntity<List<UserDto>> departmentmember(@RequestBody UserDto userDto){
         return ResponseEntity.ok(userService.getAllDepartmentMember(userDto.getDepartmentId()));
     }
 

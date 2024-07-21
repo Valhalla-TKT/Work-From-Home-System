@@ -2,7 +2,7 @@ $(document).ready( function(){
     let approveRoles = [];
     let filteredUserData = [];
     var currentPage = 1;
-    var usersPerPage = 8;
+    var usersPerPage = 10;
     var totalUsers = 0;
     var userData = [];
 
@@ -37,22 +37,26 @@ $(document).ready( function(){
 
     function searchUsers(term) {
         if (!term) {
-            console.log()
             filteredUserData = userData;
         } else {
-            console.log("i")
+            const lowerTerm = term.toLowerCase();
             filteredUserData = userData.filter(user => {
                 const name = user.name.toLowerCase();
                 const email = user.email.toLowerCase();
                 const staffId = user.staffId.toLowerCase();
-                return name.includes(term) || email.includes(term) || staffId.includes(term);
+
+                // Check if any of the user's roles match the search term
+                const roleMatch = user.approveRoles.some(role => role.name.toLowerCase().includes(lowerTerm));
+
+                return name.includes(lowerTerm) || email.includes(lowerTerm) || staffId.includes(lowerTerm) || roleMatch;
             });
         }
         totalUsers = filteredUserData.length;
         currentPage = 1;
         renderUsers();
-        renderUsers();
     }
+
+
 
     $('#gender').change(function() {
         var selectedGender = $(this).val();
@@ -454,7 +458,7 @@ $(document).ready( function(){
 	                <td>${user.divisionName}</td>
 	                <td>${user.departmentName}</td>
 	                <td>${user.teamName}</td>
-	                <td><i class="fa-solid fa-pen-to-square edit-user" data-user='${JSON.stringify(user)}'></i> | <i class="fa-solid fa-trash"></i></td>                
+	                <td><i class="fa-solid fa-pen-to-square edit-user cursor-pointer text-blue" data-user='${JSON.stringify(user)}'></i><span style="margin-left: 15px;"></span> | <span style="margin-right: 15px;"></span><i class="fa-solid fa-trash cursor-pointer text-red"></i></td>                
 	            </tr>
 	        `);
 	    });
@@ -636,8 +640,19 @@ $(document).ready( function(){
                     text: 'Role updated successfully.',
                     icon: 'success',
                     confirmButtonText: 'OK'
-                }).then(() => {
-                    $('#message').text(response);
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        $('#message').text(response);
+
+                        const updatedRoles = $('#approveRoleSelectBoxDetail option:selected').map(function() {
+                            return {
+                                id: $(this).val(),
+                                name: $(this).text()
+                            };
+                        }).get();
+
+                        updateUserRoleInList(userId, updatedRoles);
+                    }
                 });
             },
             error: function(error) {
@@ -646,6 +661,16 @@ $(document).ready( function(){
             }
         });
     });
+
+    function updateUserRoleInList(userId, updatedRoles) {
+        userData.forEach(user => {
+            if (user.id === parseInt(userId)) {
+                user.approveRoles = updatedRoles;
+            }
+        });
+
+        renderUsers();
+    }
 
     function addCardEventListeners() {
         const cards = document.querySelectorAll('.edit-user');

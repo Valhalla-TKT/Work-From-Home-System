@@ -18,7 +18,11 @@ async function sendRequest(url, method, requestData) {
         });
 
         if (!response.ok) {
-            throw new Error('Request failed');
+            if (response.status === 401) {
+                throw new Error('Session expired');
+            } else {
+                throw new Error('Request failed');
+            }
         }
         return response;
     } catch (error) {

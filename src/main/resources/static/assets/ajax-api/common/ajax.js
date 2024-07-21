@@ -507,6 +507,36 @@ async function fetchCookie(url) {
     }
 }
 
+// Apply Form Page
+
+async function fetchTeamMemberByUserId(teamId, userId) {
+    try {
+        const responseData = await sendRequestWithTwoParams(`/api/user/getAllTeamMember`, 'POST', "teamId", teamId, "userId", userId);
+        const contentType = responseData.headers.get('content-type');
+        if (contentType && contentType.includes('application/json')) {
+            return await responseData.json();
+        } else {
+            return await responseData.text();
+        }
+    } catch (error) {
+        console.error('Error:', error);
+    }
+}
+
+async function fetchDepartmentMemberByUserId(departmentId, userId) {
+    try {
+        const responseData = await sendRequestWithTwoParams(`/api/user/getAllDepartmentMember`, 'POST', "departmentId", departmentId, "userId", userId);
+        const contentType = responseData.headers.get('content-type');
+        if (contentType && contentType.includes('application/json')) {
+            return await responseData.json();
+        } else {
+            return await responseData.text();
+        }
+    } catch (error) {
+        console.error('Error:', error);
+    }
+}
+
 async function fetchApprovers() {
     try {
         const responseData = await sendRequest(`/api/user/getAllApprover`, 'POST', {});
@@ -520,5 +550,20 @@ async function fetchApprovers() {
         console.error('Error:', error);
     }
 }
+
+async function fetchTeamWithStatus(status, teamId, userId) {
+    try {
+        const responseData = await sendRequestWithThreeParams("/api/registerform/getTeamWithStatus", "POST", "status", status, "teamId", teamId, "userId", userId)
+        const contentType = responseData.headers.get('content-type');
+        if (contentType && contentType.includes('application/json')) {
+            return await responseData.json();
+        } else {
+            return await responseData.text();
+        }
+    } catch (error) {
+        console.error('Error:', error);
+    }
+}
+
 
 // fetchData('/api/protected-endpoint');

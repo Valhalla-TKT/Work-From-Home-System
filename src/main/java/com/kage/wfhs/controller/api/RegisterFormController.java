@@ -73,47 +73,70 @@ public class RegisterFormController {
     
     private final ExcelService excelService;
 
+//    @PostMapping("/create")
+//    public ResponseEntity<String> createForm(
+//    		@RequestParam(value = "applicantId") Long applicantId,
+//            @RequestParam(value = "requesterId") Long requesterId,
+//            @RequestParam(value = "positionName") String positionName,
+//            @RequestParam(value = "working_place") String workingPlace,
+//            @RequestParam(value = "request_reason") String requestReason,
+//            @RequestParam(value = "request_percent") double requestPercent,
+//            @RequestParam(value = "from_date") @DateTimeFormat(pattern = "yyyy-MM-dd") Date fromDate,
+//            @RequestParam(value = "to_date") @DateTimeFormat(pattern = "yyyy-MM-dd") Date toDate,
+//            @RequestParam(value = "os_type") String osType,
+//            @RequestParam(value = "applied_date") Date appliedDate,
+//            @RequestParam(value = "operationSystem", required = false) MultipartFile operationSystem,
+//            @RequestParam(value = "securityPatch", required = false) MultipartFile securityPatch,
+//            @RequestParam(value = "antivirusSoftware", required = false) MultipartFile antivirusSoftware,
+//            @RequestParam(value = "antivirusPattern", required = false) MultipartFile antivirusPattern,
+//            @RequestParam(value = "antivirusFullScan", required = false) MultipartFile antivirusFullScan,
+//            @RequestParam(value = "signature", required = false) MultipartFile signature,
+//            @RequestParam(value = "approverId") Long approverId
+//    	) throws Exception {
+//        RegisterFormDto registerFormDto = new RegisterFormDto();
+//        registerFormDto.setApplicantId(applicantId);
+//        registerFormDto.setRequesterId(requesterId);
+//        registerFormDto.setPositionName(positionName);
+//        registerFormDto.setWorking_place(workingPlace);
+//        registerFormDto.setRequest_reason(requestReason);
+//        registerFormDto.setRequest_percent(requestPercent);
+//        registerFormDto.setFrom_date(fromDate);
+//        registerFormDto.setTo_date(toDate);
+//        registerFormDto.setOs_type(osType);
+//        registerFormDto.setSignedDate(appliedDate);
+//        registerFormDto.setOperationSystemInput(operationSystem);
+//        registerFormDto.setSecurityPatchInput(securityPatch);
+//
+//        registerFormDto.setAntivirusSoftwareInput(antivirusSoftware);
+//        registerFormDto.setAntivirusPatternInput(antivirusPattern);
+//        registerFormDto.setAntivirusFullScanInput(antivirusFullScan);
+//        registerFormDto.setSignatureInput(signature);
+//        registerFormDto.setApproverId(approverId);
+//        registerFormService.createRegisterForm(registerFormDto);
+//        workFlowStatusService.createWorkFlowStatus(registerFormDto.getApplicantId(), registerFormService.getFormLastId(), approverId);
+//        return ResponseEntity.ok("Request Form Successful....");
+//    }
+
     @PostMapping("/create")
     public ResponseEntity<String> createForm(
-    		@RequestParam(value = "applicantId") long applicantId,
-            @RequestParam(value = "requesterId") long requesterId,
-            @RequestParam(value = "positionName") String positionName,
-            @RequestParam(value = "working_place") String workingPlace,
-            @RequestParam(value = "request_reason") String requestReason,
-            @RequestParam(value = "request_percent") double requestPercent,
-            @RequestParam(value = "from_date") @DateTimeFormat(pattern = "yyyy-MM-dd") Date fromDate,
-            @RequestParam(value = "to_date") @DateTimeFormat(pattern = "yyyy-MM-dd") Date toDate,
-            @RequestParam(value = "os_type") String osType,
-            @RequestParam(value = "applied_date") Date appliedDate,
-            @RequestParam(value = "operationSystem", required = false) MultipartFile operationSystem,
-            @RequestParam(value = "securityPatch", required = false) MultipartFile securityPatch,
-            @RequestParam(value = "antivirusSoftware", required = false) MultipartFile antivirusSoftware,
-            @RequestParam(value = "antivirusPattern", required = false) MultipartFile antivirusPattern,
-            @RequestParam(value = "antivirusFullScan", required = false) MultipartFile antivirusFullScan,
-            @RequestParam(value = "signature", required = false) MultipartFile signature,
-            @RequestParam(value = "approverId") Long approverId
-    	) throws Exception {        
-        RegisterFormDto registerFormDto = new RegisterFormDto();
-        registerFormDto.setApplicantId(applicantId);
-        registerFormDto.setRequesterId(requesterId);
-        registerFormDto.setPositionName(positionName);
-        registerFormDto.setWorking_place(workingPlace);
-        registerFormDto.setRequest_reason(requestReason);
-        registerFormDto.setRequest_percent(requestPercent);
-        registerFormDto.setFrom_date(fromDate);
-        registerFormDto.setTo_date(toDate);
-        registerFormDto.setOs_type(osType);
-        registerFormDto.setSignedDate(appliedDate);
+            @RequestPart("data") RegisterFormDto registerFormDto,
+            @RequestPart(value = "operatingSystem", required = false) MultipartFile operationSystem,
+            @RequestPart(value = "securityPatch", required = false) MultipartFile securityPatch,
+            @RequestPart(value = "antivirusSoftware", required = false) MultipartFile antivirusSoftware,
+            @RequestPart(value = "antivirusPattern", required = false) MultipartFile antivirusPattern,
+            @RequestPart(value = "antivirusFullScan", required = false) MultipartFile antivirusFullScan,
+            @RequestPart(value = "signature", required = false) MultipartFile signature
+    ) throws Exception {
+
+        registerFormDto.setSignedDate(registerFormDto.getAppliedDate());
         registerFormDto.setOperationSystemInput(operationSystem);
         registerFormDto.setSecurityPatchInput(securityPatch);
-        
         registerFormDto.setAntivirusSoftwareInput(antivirusSoftware);
         registerFormDto.setAntivirusPatternInput(antivirusPattern);
         registerFormDto.setAntivirusFullScanInput(antivirusFullScan);
         registerFormDto.setSignatureInput(signature);
-        registerFormDto.setApproverId(approverId);
         registerFormService.createRegisterForm(registerFormDto);
-        workFlowStatusService.createWorkFlowStatus(registerFormDto.getApplicantId(), registerFormService.getFormLastId(), approverId);
+        workFlowStatusService.createWorkFlowStatus(registerFormDto.getApplicantId(), registerFormService.getFormLastId(), registerFormDto.getApproverId());
         return ResponseEntity.ok("Request Form Successful....");
     }
 
@@ -142,7 +165,6 @@ public class RegisterFormController {
             @RequestParam(value = "status") String status,
             @RequestParam(value = "teamId") long teamId,
             @RequestParam(value = "userId") long userId){
-        
         Map<String, Object> responseData = registerFormService.getFormWithStatus(status, teamId, userId, "team");
         //List<RegisterFormDto> registerFormDtoList = (List<RegisterFormDto>) responseData.get("forms");
         return getMapResponseEntity(responseData);
@@ -200,6 +222,7 @@ public class RegisterFormController {
     public ResponseEntity<Map<String, Object>> getAllForms(
             @RequestParam(value = "status") String status,
             @RequestParam(value = "userId") long userId){
+        System.out.println("status = " + status + "userId = " + userId);
         Map<String, Object> responseData = registerFormService.getFormWithStatus(status, 1L, userId, "user");
         return getMapResponseEntity(responseData);
     }
@@ -212,14 +235,17 @@ public class RegisterFormController {
     		@RequestParam(value = "registerFormId") long registerFormId,
     		@RequestParam(value = "state") boolean state,
     		@RequestParam(value = "reason") String reason,
-    		@RequestParam(value = "approveDate") @DateTimeFormat(pattern = "yyyy-MM-dd") Date approveDate) throws Exception{
+    		@RequestParam(value = "approveDate") @DateTimeFormat(pattern = "yyyy-MM-dd") Date approveDate,
+            @RequestParam(value = "newApproverId") long newApproverId
+            ) throws Exception{
     	WorkFlowStatusDto workFlowStatusDto = new WorkFlowStatusDto();
     	workFlowStatusDto.setId(workFlowStatusId);
     	workFlowStatusDto.setApproverId(approverId);    	
     	workFlowStatusDto.setRegisterFormId(registerFormId);
     	workFlowStatusDto.setState(state);
     	workFlowStatusDto.setReason(reason);
-    	workFlowStatusDto.setApproveDate(approveDate);    	
+    	workFlowStatusDto.setApproveDate(approveDate);
+        workFlowStatusDto.setNewApproverId(newApproverId);
         workFlowStatusService.updateStatus(workFlowStatusDto.getId(),workFlowStatusDto);
         return ResponseEntity.ok("Work Flow Status is Update Success....");
     }

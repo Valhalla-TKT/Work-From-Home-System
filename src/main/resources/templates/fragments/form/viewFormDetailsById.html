@@ -20,13 +20,23 @@
 					<div class="header">
 						<div class="inner-header">
 							<div class="go-back display-none" id="go-back" onclick="goBack()">
+								<button class="go-back-btn">
+									<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
+										 fill="currentColor" class="bi bi-arrow-left"
+										 viewBox="0 0 16 16">
+										<path fill-rule="evenodd"
+											  d="M15 8a.5.5 0 0 0-.5-.5H2.707l3.147-3.146a.5.5 0 1 0-.708-.708l-4 4a.5.5 0 0 0 0 .708l4 4a.5.5 0 0 0 .708-.708L2.707 8.5H14.5A.5.5 0 0 0 15 8" />
+									</svg>
+								</button>
+							</div>
+							<div class="go-back display-none" id="go-back-1" onclick="goBack1()">
 								<button>
 									<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
-										fill="currentColor" class="bi bi-arrow-left"
-										viewBox="0 0 16 16">
-						                <path fill-rule="evenodd"
-											d="M15 8a.5.5 0 0 0-.5-.5H2.707l3.147-3.146a.5.5 0 1 0-.708-.708l-4 4a.5.5 0 0 0 0 .708l4 4a.5.5 0 0 0 .708-.708L2.707 8.5H14.5A.5.5 0 0 0 15 8" />
-						            </svg>
+										 fill="currentColor" class="bi bi-arrow-left"
+										 viewBox="0 0 16 16">
+										<path fill-rule="evenodd"
+											  d="M15 8a.5.5 0 0 0-.5-.5H2.707l3.147-3.146a.5.5 0 1 0-.708-.708l-4 4a.5.5 0 0 0 0 .708l4 4a.5.5 0 0 0 .708-.708L2.707 8.5H14.5A.5.5 0 0 0 15 8" />
+									</svg>
 								</button>
 							</div>
 							<div class="header-title">
@@ -36,8 +46,10 @@
 									<h2>Request Work From Home: Complete the Form Below</h2>
 								</div>
 								<div data-v-741dde45="" class="step-counter"
-									style="font-size: 20px">
-									1/<span data-v-741dde45="" class="color-deep-blue-sea-light-40">4</span>
+									 style="font-size: 20px; display: flex;">
+									<span data-v-741dde45="" class="color-deep-blue-sea-light-40 " id="current-step-1">1</span>
+									<span data-v-741dde45="" class="color-deep-blue-sea-light-40 display-none" id="current-step-2">2</span>
+									<span data-v-741dde45="" class="color-deep-blue-sea-light-40 display-none" id="current-step-3">3</span>/3
 								</div>
 							</div>
 						</div>
@@ -414,7 +426,7 @@
 												<div data-v-741dde45="" class="form">
 
 													<div class="file-upload-form">
-														<label for="file5" class="file-upload-label">
+														<label for="window-antivirusFullScan-display-by-form-id" class="file-upload-label">
 															<p style="color: red;">➀ Open Kaspersky application.</p>
 															<p style="color: red;">➁ Select [Task].</p>
 															<div class="file-upload-design">
@@ -563,204 +575,205 @@
 												</div>
 											</div>
 										</section>
+										<div id="approval-sections-container"></div>
 										<!-- Project Manager Approval Output Section -->
-										<section data-v-741dde45="" data-v-115a39aa="" id="project-manager-approval-output-section"
-												class="user-form-container-2 user-form display-flex">
-											<div class="pledge-container">
-												<div class="pledge-heading">
-													<h2>Project Manager Approval</h2>
-												</div>
-											</div>
-											<div class="final-form">
-												<div class="display-flex approval-final">
-													<span>Approve Status :</span>
-													<div class="final-display-input" id="pm-approval-status">
-														<div class="display-flex w-50">
-															<div class="display-data"><input class="radio-button__input" type="radio" value="yes" disabled></div>
-															<div class="display-data" style="margin-right: 10px;">Approve</div>
-														</div>
-														<div class="display-flex w-50">
-															<div class="display-data"><input class="radio-button__input" type="radio" value="no" disabled></div>
-															<div class="display-data" style="margin-right: 10px;">Reject</div>
-														</div>
-														
-													</div>
-												</div>
-												<div class="display-flex approval-final">
-													<span>Approved Date :</span>
-													<div class="display-flex final-display-input">
-														<input type="text" value="" readonly="readonly" style="color: #0d0c22; background: #fff;  border: 1px solid black;" id="project-manager-approval-approve-date-output">
-													</div>
-												</div>
-												<div class="display-flex approval-final">
-													<span>Reason of Approval :</span>
-													<div class="display-flex final-display-input">
-														<textarea type="text" value="yes" disabled style="color: #0d0c22; background: #fff;  border: 1px solid black;" id="project-manager-approval-approve-reason-output"></textarea>
-													</div>
-												</div>
-											</div>
-											
-												
-										</section>
-										<!--  -->
-										<!-- Department Head Approval Output Section -->
-										<section data-v-741dde45="" data-v-115a39aa="" id="department-head-approval-output-section"
-												class="user-form-container-2 user-form display-flex">
-											<div class="pledge-container">
-												<div class="pledge-heading">
-													<h2>Department Head Approval</h2>
-												</div>
-											</div>
-											<div class="final-form">
-												<div class="display-flex approval-final">
-													<span>Approve Status :</span>
-													<div class="final-display-input" id="dept-head-approval-status">
-														<div class="display-flex w-50">
-															<div class="display-data"><input type="checkbox" value="yes" disabled></div>
-															<div class="display-data" style="margin-right: 10px;">Approve</div>
-														</div>
-														<div class="display-flex w-50">
-															<div class="display-data"><input type="checkbox" value="no" disabled></div>
-															<div class="display-data" style="margin-right: 10px;">Reject</div>
-														</div>
-														
-													</div>
-												</div>
-												<div class="display-flex approval-final">
-													<span>Approved Date :</span>
-													<div class="display-flex final-display-input">
-														<input type="text" value="" style="color: #0d0c22; background: #fff;  border: 1px solid black;" disabled id="department-head-approval-approve-date-output">
-													</div>
-												</div>
-												<div class="display-flex approval-final">
-													<span>Reason of Approval :</span>
-													<div class="display-flex final-display-input">
-														<textarea type="text" style="color: #0d0c22; background: #fff;  border: 1px solid black;" disabled id="department-head-approval-approve-reason-output"></textarea>
-													</div>
-												</div>
-											</div>
-																							
-										</section>
-										<!--  -->
-										<!-- Division Head Approval Output Section -->
-										<section data-v-741dde45="" data-v-115a39aa="" id="division-head-approval-output-section"
-												class="user-form-container-2 user-form display-flex">
-											<div class="pledge-container">
-												<div class="pledge-heading">
-													<h2>Division Head Approval</h2>
-												</div>
-											</div>
-											<div class="final-form">
-												<div class="display-flex approval-final">
-													<span>Approve Status :</span>
-													<div class="final-display-input" id="division-head-approval-status">
-														<div class="display-flex w-50">
-															<div class="display-data"><input type="checkbox" value="yes" disabled></div>
-															<div class="display-data" style="margin-right: 10px;">Approve</div>
-														</div>
-														<div class="display-flex w-50">
-															<div class="display-data"><input type="checkbox" value="no" disabled></div>
-															<div class="display-data" style="margin-right: 10px;">Reject</div>
-														</div>
-														
-													</div>
-												</div>
-												<div class="display-flex approval-final">
-													<span>Approved Date :</span>
-													<div class="display-flex final-display-input">
-														<input type="text" value="" style="color: #0d0c22; background: #fff;  border: 1px solid black;" disabled id="division-head-approval-approve-date-output">
-													</div>
-												</div>
-												<div class="display-flex approval-final">
-													<span>Reason of Approval :</span>
-													<div class="display-flex final-display-input">
-														<textarea type="text" disabled style="color: #0d0c22; background: #fff;  border: 1px solid black;" id="division-head-approval-approve-reason-output"></textarea>
-													</div>
-												</div>
-											</div>
-																							
-										</section>
-										<!--  -->
-										<!-- CISO Approval Output Section -->
-										<section data-v-741dde45="" data-v-115a39aa="" id="ciso-approval-output-section"
-												class="user-form-container-2 user-form display-flex">
-											<div class="pledge-container">
-												<div class="pledge-heading">
-													<h2>CISO Approval on Information Security</h2>
-												</div>
-											</div>
-											<div class="final-form">
-												<div class="display-flex approval-final">
-													<span>Approve Status :</span>
-													<div class="final-display-input" id="ciso-approval-status">
-														<div class="display-flex w-50">
-															<div class="display-data"><input type="checkbox" value="yes" disabled></div>
-															<div class="display-data" style="margin-right: 10px;">Approve</div>
-														</div>
-														<div class="display-flex w-50">
-															<div class="display-data"><input type="checkbox" value="no" disabled></div>
-															<div class="display-data" style="margin-right: 10px;">Reject</div>
-														</div>
-														
-													</div>
-												</div>
-												<div class="display-flex approval-final">
-													<span>Approved Date :</span>
-													<div class="display-flex final-display-input">
-														<input type="text" value="" style="color: #0d0c22; background: #fff;  border: 1px solid black;" disabled id="ciso-approval-approve-date-output">
-													</div>
-												</div>
-												<div class="display-flex approval-final">
-													<span>Reason of Approval :</span>
-													<div class="display-flex final-display-input">
-														<textarea type="text" style="color: #0d0c22; background: #fff;  border: 1px solid black;" disabled id="ciso-approval-approve-reason-output"></textarea>
-													</div>
-												</div>
-											</div>
-																							
-										</section>
-										<!--  -->
-										<!-- CISO Approval Output Section -->
-										<section data-v-741dde45="" data-v-115a39aa="" id="final-approval-output-section"
-												class="user-form-container-2 user-form display-flex">
-											<div class="pledge-container">
-												<div class="pledge-heading">
-													<h2>Final Approval By CEO</h2>
-												</div>
-											</div>
-											<div class="final-form">
-												<div class="display-flex approval-final">
-													<span>Approve Status :</span>
-													<div class="final-display-input" id="ceo-approval-status">
-														<div class="display-flex w-50">
-															<div class="display-data"><input type="checkbox" value="yes" disabled></div>
-															<div class="display-data" style="margin-right: 10px;">Approve</div>
-														</div>
-														<div class="display-flex w-50">
-															<div class="display-data"><input type="checkbox" value="no" disabled></div>
-															<div class="display-data" style="margin-right: 10px;">Reject</div>
-														</div>
-														
-													</div>
-												</div>
-												<div class="display-flex approval-final">
-													<span>Approved Date :</span>
-													<div class="display-flex final-display-input">
-														<input type="text"style="color: #0d0c22; background: #fff;  border: 1px solid black;" value="" disabled id="ceo-approval-approve-date-output">
-													</div>
-												</div>
-												<div class="display-flex approval-final">
-													<span>Reason of Approval :</span>
-													<div class="display-flex final-display-input">
-														<textarea type="text" style="color: #0d0c22; background: #fff;  border: 1px solid black;" disabled id="ciso-approval-approve-reason-output"></textarea>
-													</div>
-												</div>
-											</div>
-																							
-										</section>
+<!--										<section data-v-741dde45="" data-v-115a39aa="" id="project-manager-approval-output-section"-->
+<!--												class="user-form-container-2 user-form display-flex">-->
+<!--											<div class="pledge-container">-->
+<!--												<div class="pledge-heading">-->
+<!--													<h2>Project Manager Approval</h2>-->
+<!--												</div>-->
+<!--											</div>-->
+<!--											<div class="final-form">-->
+<!--												<div class="display-flex approval-final">-->
+<!--													<span>Approve Status :</span>-->
+<!--													<div class="final-display-input" id="pm-approval-status">-->
+<!--														<div class="display-flex w-50">-->
+<!--															<div class="display-data"><input class="radio-button__input" type="radio" value="yes" disabled></div>-->
+<!--															<div class="display-data" style="margin-right: 10px;">Approve</div>-->
+<!--														</div>-->
+<!--														<div class="display-flex w-50">-->
+<!--															<div class="display-data"><input class="radio-button__input" type="radio" value="no" disabled></div>-->
+<!--															<div class="display-data" style="margin-right: 10px;">Reject</div>-->
+<!--														</div>-->
+<!--														-->
+<!--													</div>-->
+<!--												</div>-->
+<!--												<div class="display-flex approval-final">-->
+<!--													<span>Approved Date :</span>-->
+<!--													<div class="display-flex final-display-input">-->
+<!--														<input type="text" value="" readonly="readonly" style="color: #0d0c22; background: #fff;  border: 1px solid black;" id="project-manager-approval-approve-date-output">-->
+<!--													</div>-->
+<!--												</div>-->
+<!--												<div class="display-flex approval-final">-->
+<!--													<span>Reason of Approval :</span>-->
+<!--													<div class="display-flex final-display-input">-->
+<!--														<textarea type="text" value="yes" disabled style="color: #0d0c22; background: #fff;  border: 1px solid black;" id="project-manager-approval-approve-reason-output"></textarea>-->
+<!--													</div>-->
+<!--												</div>-->
+<!--											</div>-->
+<!--											-->
+<!--												-->
+<!--										</section>-->
+<!--										&lt;!&ndash;  &ndash;&gt;-->
+<!--										&lt;!&ndash; Department Head Approval Output Section &ndash;&gt;-->
+<!--										<section data-v-741dde45="" data-v-115a39aa="" id="department-head-approval-output-section"-->
+<!--												class="user-form-container-2 user-form display-flex">-->
+<!--											<div class="pledge-container">-->
+<!--												<div class="pledge-heading">-->
+<!--													<h2>Department Head Approval</h2>-->
+<!--												</div>-->
+<!--											</div>-->
+<!--											<div class="final-form">-->
+<!--												<div class="display-flex approval-final">-->
+<!--													<span>Approve Status :</span>-->
+<!--													<div class="final-display-input" id="dept-head-approval-status">-->
+<!--														<div class="display-flex w-50">-->
+<!--															<div class="display-data"><input type="checkbox" value="yes" disabled></div>-->
+<!--															<div class="display-data" style="margin-right: 10px;">Approve</div>-->
+<!--														</div>-->
+<!--														<div class="display-flex w-50">-->
+<!--															<div class="display-data"><input type="checkbox" value="no" disabled></div>-->
+<!--															<div class="display-data" style="margin-right: 10px;">Reject</div>-->
+<!--														</div>-->
+<!--														-->
+<!--													</div>-->
+<!--												</div>-->
+<!--												<div class="display-flex approval-final">-->
+<!--													<span>Approved Date :</span>-->
+<!--													<div class="display-flex final-display-input">-->
+<!--														<input type="text" value="" style="color: #0d0c22; background: #fff;  border: 1px solid black;" disabled id="department-head-approval-approve-date-output">-->
+<!--													</div>-->
+<!--												</div>-->
+<!--												<div class="display-flex approval-final">-->
+<!--													<span>Reason of Approval :</span>-->
+<!--													<div class="display-flex final-display-input">-->
+<!--														<textarea type="text" style="color: #0d0c22; background: #fff;  border: 1px solid black;" disabled id="department-head-approval-approve-reason-output"></textarea>-->
+<!--													</div>-->
+<!--												</div>-->
+<!--											</div>-->
+<!--																							-->
+<!--										</section>-->
+<!--										&lt;!&ndash;  &ndash;&gt;-->
+<!--										&lt;!&ndash; Division Head Approval Output Section &ndash;&gt;-->
+<!--										<section data-v-741dde45="" data-v-115a39aa="" id="division-head-approval-output-section"-->
+<!--												class="user-form-container-2 user-form display-flex">-->
+<!--											<div class="pledge-container">-->
+<!--												<div class="pledge-heading">-->
+<!--													<h2>Division Head Approval</h2>-->
+<!--												</div>-->
+<!--											</div>-->
+<!--											<div class="final-form">-->
+<!--												<div class="display-flex approval-final">-->
+<!--													<span>Approve Status :</span>-->
+<!--													<div class="final-display-input" id="division-head-approval-status">-->
+<!--														<div class="display-flex w-50">-->
+<!--															<div class="display-data"><input type="checkbox" value="yes" disabled></div>-->
+<!--															<div class="display-data" style="margin-right: 10px;">Approve</div>-->
+<!--														</div>-->
+<!--														<div class="display-flex w-50">-->
+<!--															<div class="display-data"><input type="checkbox" value="no" disabled></div>-->
+<!--															<div class="display-data" style="margin-right: 10px;">Reject</div>-->
+<!--														</div>-->
+<!--														-->
+<!--													</div>-->
+<!--												</div>-->
+<!--												<div class="display-flex approval-final">-->
+<!--													<span>Approved Date :</span>-->
+<!--													<div class="display-flex final-display-input">-->
+<!--														<input type="text" value="" style="color: #0d0c22; background: #fff;  border: 1px solid black;" disabled id="division-head-approval-approve-date-output">-->
+<!--													</div>-->
+<!--												</div>-->
+<!--												<div class="display-flex approval-final">-->
+<!--													<span>Reason of Approval :</span>-->
+<!--													<div class="display-flex final-display-input">-->
+<!--														<textarea type="text" disabled style="color: #0d0c22; background: #fff;  border: 1px solid black;" id="division-head-approval-approve-reason-output"></textarea>-->
+<!--													</div>-->
+<!--												</div>-->
+<!--											</div>-->
+<!--																							-->
+<!--										</section>-->
+<!--										&lt;!&ndash;  &ndash;&gt;-->
+<!--										&lt;!&ndash; CISO Approval Output Section &ndash;&gt;-->
+<!--										<section data-v-741dde45="" data-v-115a39aa="" id="ciso-approval-output-section"-->
+<!--												class="user-form-container-2 user-form display-flex">-->
+<!--											<div class="pledge-container">-->
+<!--												<div class="pledge-heading">-->
+<!--													<h2>CISO Approval on Information Security</h2>-->
+<!--												</div>-->
+<!--											</div>-->
+<!--											<div class="final-form">-->
+<!--												<div class="display-flex approval-final">-->
+<!--													<span>Approve Status :</span>-->
+<!--													<div class="final-display-input" id="ciso-approval-status">-->
+<!--														<div class="display-flex w-50">-->
+<!--															<div class="display-data"><input type="checkbox" value="yes" disabled></div>-->
+<!--															<div class="display-data" style="margin-right: 10px;">Approve</div>-->
+<!--														</div>-->
+<!--														<div class="display-flex w-50">-->
+<!--															<div class="display-data"><input type="checkbox" value="no" disabled></div>-->
+<!--															<div class="display-data" style="margin-right: 10px;">Reject</div>-->
+<!--														</div>-->
+<!--														-->
+<!--													</div>-->
+<!--												</div>-->
+<!--												<div class="display-flex approval-final">-->
+<!--													<span>Approved Date :</span>-->
+<!--													<div class="display-flex final-display-input">-->
+<!--														<input type="text" value="" style="color: #0d0c22; background: #fff;  border: 1px solid black;" disabled id="ciso-approval-approve-date-output">-->
+<!--													</div>-->
+<!--												</div>-->
+<!--												<div class="display-flex approval-final">-->
+<!--													<span>Reason of Approval :</span>-->
+<!--													<div class="display-flex final-display-input">-->
+<!--														<textarea type="text" style="color: #0d0c22; background: #fff;  border: 1px solid black;" disabled id="ciso-approval-approve-reason-output"></textarea>-->
+<!--													</div>-->
+<!--												</div>-->
+<!--											</div>-->
+<!--																							-->
+<!--										</section>-->
+<!--										&lt;!&ndash;  &ndash;&gt;-->
+<!--										&lt;!&ndash; CISO Approval Output Section &ndash;&gt;-->
+<!--										<section data-v-741dde45="" data-v-115a39aa="" id="final-approval-output-section"-->
+<!--												class="user-form-container-2 user-form display-flex">-->
+<!--											<div class="pledge-container">-->
+<!--												<div class="pledge-heading">-->
+<!--													<h2>Final Approval By CEO</h2>-->
+<!--												</div>-->
+<!--											</div>-->
+<!--											<div class="final-form">-->
+<!--												<div class="display-flex approval-final">-->
+<!--													<span>Approve Status :</span>-->
+<!--													<div class="final-display-input" id="ceo-approval-status">-->
+<!--														<div class="display-flex w-50">-->
+<!--															<div class="display-data"><input type="checkbox" value="yes" disabled></div>-->
+<!--															<div class="display-data" style="margin-right: 10px;">Approve</div>-->
+<!--														</div>-->
+<!--														<div class="display-flex w-50">-->
+<!--															<div class="display-data"><input type="checkbox" value="no" disabled></div>-->
+<!--															<div class="display-data" style="margin-right: 10px;">Reject</div>-->
+<!--														</div>-->
+<!--														-->
+<!--													</div>-->
+<!--												</div>-->
+<!--												<div class="display-flex approval-final">-->
+<!--													<span>Approved Date :</span>-->
+<!--													<div class="display-flex final-display-input">-->
+<!--														<input type="text"style="color: #0d0c22; background: #fff;  border: 1px solid black;" value="" disabled id="ceo-approval-approve-date-output">-->
+<!--													</div>-->
+<!--												</div>-->
+<!--												<div class="display-flex approval-final">-->
+<!--													<span>Reason of Approval :</span>-->
+<!--													<div class="display-flex final-display-input">-->
+<!--														<textarea type="text" style="color: #0d0c22; background: #fff;  border: 1px solid black;" disabled id="ciso-approval-approve-reason-output"></textarea>-->
+<!--													</div>-->
+<!--												</div>-->
+<!--											</div>-->
+<!--																							-->
+<!--										</section>-->
 										<!--  -->
 										<section data-v-741dde45="" data-v-115a39aa=""
-												class="user-form-container-2 user-form display-flex" id="project-manager-approval-input-section">
+												class="user-form-container-2 user-form display-flex" id="project_manager-approval-input-section">
 											<div class="pledge-container">
 												<div class="pledge-heading">
 													<h2>Approve Here</h2>
@@ -782,7 +795,7 @@
 											</div>																							
 										</section>
 										<section data-v-741dde45="" data-v-115a39aa=""
-												class="user-form-container-2 user-form display-flex" id="department-head-approval-input-section">
+												class="user-form-container-2 user-form display-flex" id="department_head-approval-input-section">
 											<div class="pledge-container">
 												<div class="pledge-heading">
 													<h2>Approve Here</h2>
@@ -804,7 +817,7 @@
 											</div>																							
 										</section>
 										<section data-v-741dde45="" data-v-115a39aa=""
-												class="user-form-container-2 user-form display-flex" id="division-head-approval-input-section">
+												class="user-form-container-2 user-form display-flex" id="division_head-approval-input-section">
 											<div class="pledge-container">
 												<div class="pledge-heading">
 													<h2>Approve Here</h2>
@@ -814,13 +827,13 @@
 												<div class="display-flex approval-final">
 													<span>Approved Date :</span>
 													<div class="display-flex final-display-input">
-														<input type="text" value="" id="division-head-approve-date">
+														<input type="text" value="" style="color: #0d0c22; background: #fff;  border: 1px solid black;" id="division-head-approve-date">
 													</div>
 												</div>
 												<div class="display-flex approval-final">
 													<span>Reason of Approval :</span>
 													<div class="display-flex final-display-input">
-														<textarea type="text" id="division-head-reason"></textarea>
+														<textarea type="text" style="color: #0d0c22; background: #fff;  border: 1px solid black;" id="division-head-reason"></textarea>
 													</div>
 												</div>
 											</div>																							
@@ -836,19 +849,19 @@
 												<div class="display-flex approval-final">
 													<span>Approved Date :</span>
 													<div class="display-flex final-display-input">
-														<input type="text" value="" id="ciso-approve-date">
+														<input type="text" value="" style="color: #0d0c22; background: #fff;  border: 1px solid black;" id="ciso-approve-date">
 													</div>
 												</div>
 												<div class="display-flex approval-final">
 													<span>Reason of Approval :</span>
 													<div class="display-flex final-display-input">
-														<textarea type="text" id="ciso-reason"></textarea>
+														<textarea type="text" style="color: #0d0c22; background: #fff;  border: 1px solid black;" id="ciso-reason"></textarea>
 													</div>
 												</div>
 											</div>																							
 										</section>
 										<section data-v-741dde45="" data-v-115a39aa=""
-												class="user-form-container-2 user-form display-flex" id="final-approval-input-section">
+												class="user-form-container-2 user-form display-flex" id="ceo-approval-input-section">
 											<div class="pledge-container">
 												<div class="pledge-heading">
 													<h2>Approve Here</h2>
@@ -858,13 +871,13 @@
 												<div class="display-flex approval-final">
 													<span>Approved Date :</span>
 													<div class="display-flex final-display-input">
-														<input type="text" value="" id="final-approval-approve-date">
+														<input type="text" value="" style="color: #0d0c22; background: #fff;  border: 1px solid black;" id="final-approval-approve-date">
 													</div>
 												</div>
 												<div class="display-flex approval-final">
 													<span>Reason of Approval :</span>
 													<div class="display-flex final-display-input">
-														<textarea type="text" id="final-approval-reason"></textarea>
+														<textarea type="text" style="color: #0d0c22; background: #fff;  border: 1px solid black;" id="final-approval-reason"></textarea>
 													</div>
 												</div>
 											</div>																							
@@ -880,12 +893,12 @@
 												<div class="display-flex approval-final">
 													<span>Suggestion to Applicant :</span>
 													<div class="display-flex final-display-input">
-														<textarea type="text" id="service-desk-reason"></textarea>
+														<textarea type="text" style="color: #0d0c22; background: #fff;  border: 1px solid black;" id="service-desk-reason"></textarea>
 													</div>
 												</div>
 											</div>																							
 										</section>
-										<footer class="button-container display-flex justify-flex-end">
+										<footer class="button-container display-flex justify-flex-end" id="approve-reject-button-container">
 											<div id="reject-form-btn" class="margin-l-8 form-sub" style="background: transparent; color: red; border: 2px solid red;">Reject</div>
 											<div class="margin-l-8 form-sub" id="approve-form-btn">Approve</div> 
 										</footer>

@@ -12,8 +12,10 @@ import com.kage.wfhs.model.RegisterForm;
 import java.util.List;
 import java.util.Optional;
 
+import com.kage.wfhs.model.Status;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 
 public interface RegisterFormRepository extends JpaRepository<RegisterForm,Long> {
 	Optional<RegisterForm> findById(Long id);
@@ -72,6 +74,27 @@ public interface RegisterFormRepository extends JpaRepository<RegisterForm,Long>
     """, nativeQuery = true)
     List<RegisterForm> findRegisterFormByTeamAllWithoutApproveRoleId(Long teamId);
 
+    @Query(value = "SELECT rf.* FROM register_form rf " +
+            "JOIN work_flow_status ws ON rf.id = ws.register_form_id " +
+            "JOIN user u ON rf.applicant_id = u.id " +
+            "JOIN team t ON u.team_id = t.id " +
+            "WHERE ws.status = :workflowStatus " +
+            "AND ws.user_id = :userId " +
+            "AND t.id = :teamId", nativeQuery = true)
+    List<RegisterForm> findByWorkflowStatusAndUserIdAndTeamId(
+            @Param("workflowStatus") String workflowStatus,
+            @Param("userId") Long userId,
+            @Param("teamId") Long teamId);
+
+    @Query(value = "SELECT rf.* FROM register_form rf " +
+            "JOIN work_flow_status ws ON rf.id = ws.register_form_id " +
+            "JOIN user u ON rf.applicant_id = u.id " +
+            "JOIN team t ON u.team_id = t.id " +
+            "WHERE ws.user_id = :userId " +
+            "AND t.id = :teamId", nativeQuery = true)
+    List<RegisterForm> findByUserIdAndTeamId(
+            @Param("userId") Long userId,
+            @Param("teamId") Long teamId);
 
     @Query(value = """
             SELECT rf.* FROM register_form rf JOIN work_flow_status wfs ON rf.id = wfs.register_form_id

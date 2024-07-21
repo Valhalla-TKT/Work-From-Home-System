@@ -53,6 +53,7 @@ public class WorkFlowStatusServiceImplement implements WorkFlowStatusService {
     @Override
     public void createWorkFlowStatus(Long userId, Long formId, Long approverId) throws Exception {
         //User applicant = EntityUtil.getEntityById(userRepo, userId);
+        System.out.println(userId + " " + formId + " " + approverId);
         User approver = EntityUtil.getEntityById(userRepo, approverId);
         List<User> users = new ArrayList<>();
         users.add(approver);
@@ -136,6 +137,9 @@ public class WorkFlowStatusServiceImplement implements WorkFlowStatusService {
         List<WorkFlowStatusDto> workFlowStatusList = new ArrayList<>();
         for (WorkFlowStatus workFlowStatus : workFlowStatuses){
             WorkFlowStatusDto workFlowStatusDto = modelMapper.map(workFlowStatus, WorkFlowStatusDto.class);
+            workFlowStatusDto.setApproverId(workFlowStatus.getUser().getId());
+            workFlowStatusDto.setApproverName(workFlowStatus.getUser().getName());
+            workFlowStatusDto.setState("APPROVE".equalsIgnoreCase(workFlowStatus.getStatus().name()));
             workFlowStatusList.add(workFlowStatusDto);
         }
         return workFlowStatusList;
@@ -186,7 +190,8 @@ public class WorkFlowStatusServiceImplement implements WorkFlowStatusService {
         }
         else {
         	if(workFlowStatusDto.isState()) {
-        		//createWorkFlowStatus(workFlowStatusDto.getApproverId(), workFlowStatusDto.getRegisterFormId());
+//        		createWorkFlowStatus(workFlowStatusDto.getApproverId(), workFlowStatusDto.getRegisterFormId(), );
+                createWorkFlowStatus(workFlowStatusDto.getNewApproverId(), workFlowStatusDto.getRegisterFormId(), workFlowStatusDto.getNewApproverId());
         	}
         }
     }
