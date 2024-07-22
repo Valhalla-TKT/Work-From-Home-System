@@ -11,6 +11,7 @@ import com.kage.wfhs.dto.UserDto;
 import com.kage.wfhs.dto.auth.CurrentLoginUserDto;
 import com.kage.wfhs.security.FirstTimeLoginFilter;
 import com.kage.wfhs.service.UserService;
+import com.kage.wfhs.util.LogService;
 import lombok.RequiredArgsConstructor;
 
 import org.springframework.context.annotation.Bean;
@@ -35,7 +36,6 @@ import com.kage.wfhs.security.OurUserDetailService;
 import com.kage.wfhs.util.JwtUtil;
 
 import jakarta.servlet.http.Cookie;
-import jakarta.servlet.http.HttpServletRequest;
 
 @Configuration
 @EnableWebSecurity
@@ -45,6 +45,7 @@ public class SecurityConfig {
     private final JwtUtil jwtUtil;
     private final FirstTimeLoginFilter firstTimeLoginFilter;
     private final UserService userService;
+    private final LogService logService;
 
     @Bean
     public static PasswordEncoder passwordEncoder() {
@@ -85,6 +86,13 @@ public class SecurityConfig {
                                     response.addCookie(cookie);
                                     CurrentLoginUserDto userDto = userService.getLoginUserBystaffId(authentication.getName());
                                     request.getSession().setAttribute("login-user", userDto);
+//                                    String logMessage = String.format("User logged in: Staff ID=%s, Name=%s, Team Name=%s",
+//                                            userDto.getStaffId(), userDto.getName(),
+//                                            userDto.getTeam() != null ? userDto.getTeam().getName() : "No Team");
+//                                    logger.info(logMessage);
+//                                    writeLoginLog(logMessage);
+                                    String deviceInfo = request.getParameter("deviceInfo");
+                                    logService.logUserLogin(userDto, deviceInfo);
                                     response.sendRedirect(contextPath + "/dashboard");
                                 })
                         .failureHandler(authenticationFailureHandler())
@@ -108,6 +116,31 @@ public class SecurityConfig {
                 );
         return http.build();
     }
+
+//    private void writeLoginLog(String logMessage) {
+//        try (BufferedWriter writer = new BufferedWriter(new FileWriter(LOGIN_LOG_FILE, true))) {
+//            writer.write(logMessage);
+//            writer.newLine();
+//        } catch (IOException e) {
+//            logger.error("Error writing login log: ", e);
+//        }
+//    }
+//
+//    public void logUserLogin(CurrentLoginUserDto userDto) {
+//        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+//        String currentTime = LocalDateTime.now().format(formatter);
+//
+//        String logMessage = String.format("User logged in at %s: Staff ID=%s, Name=%s, Team Name=%s, Department Name=%s, Division Name=%s",
+//                currentTime,
+//                userDto.getStaffId(),
+//                userDto.getName(),
+//                userDto.getTeam() != null ? userDto.getTeam().getName() : "No Team",
+//                userDto.getDepartment() != null ? userDto.getDepartment().getName() : "No Department",
+//                userDto.getDepartment() != null ? userDto.getDivision().getName() : "No Division");
+//
+//        logger.info(logMessage);
+//        writeLoginLog(logMessage);
+//    }
 
     @Bean
     public JwtAuthenticationFilter jwtAuthenticationFilter() {

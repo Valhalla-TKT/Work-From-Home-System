@@ -2,7 +2,7 @@ $(document).ready( function(){
     let approveRoles = [];
     let filteredUserData = [];
     var currentPage = 1;
-    var usersPerPage = 8;
+    var usersPerPage = 10;
     var totalUsers = 0;
     var userData = [];
 
@@ -37,22 +37,26 @@ $(document).ready( function(){
 
     function searchUsers(term) {
         if (!term) {
-            console.log()
             filteredUserData = userData;
         } else {
-            console.log("i")
+            const lowerTerm = term.toLowerCase();
             filteredUserData = userData.filter(user => {
                 const name = user.name.toLowerCase();
                 const email = user.email.toLowerCase();
                 const staffId = user.staffId.toLowerCase();
-                return name.includes(term) || email.includes(term) || staffId.includes(term);
+
+                // Check if any of the user's roles match the search term
+                const roleMatch = user.approveRoles.some(role => role.name.toLowerCase().includes(lowerTerm));
+
+                return name.includes(lowerTerm) || email.includes(lowerTerm) || staffId.includes(lowerTerm) || roleMatch;
             });
         }
         totalUsers = filteredUserData.length;
         currentPage = 1;
         renderUsers();
-        renderUsers();
     }
+
+
 
     $('#gender').change(function() {
         var selectedGender = $(this).val();
@@ -189,7 +193,7 @@ $(document).ready( function(){
                 }
                 var selectBox = $('#team-filter');
                 selectBox.empty();
-                selectBox.append('<option value="all" selected>Select Team Name</option>');
+                selectBox.append('<option value="all" selected>Filter by Team</option>');
                 for (var i = 0; i < response.length; i++) {
                     var option = $('<option>', {
                         value: response[i].id,
@@ -231,7 +235,7 @@ $(document).ready( function(){
 
             var selectBox = $('#team-filter');
             selectBox.empty();
-            selectBox.append('<option value="all" selected>Select Team Name</option>');
+            selectBox.append('<option value="all" selected>Filter by Team</option>');
 
             teams.forEach(team => {
                 var option = $('<option>', {
@@ -260,7 +264,7 @@ $(document).ready( function(){
                 }
                 var selectBox = $('#department-filter');
                 selectBox.empty();
-                selectBox.append('<option value="all" selected>Select Department Name</option>');
+                selectBox.append('<option value="all" selected>Filter by Department</option>');
                 for (var i = 0; i < response.length; i++) {
                     var option = $('<option>', {
                         value: response[i].id,
@@ -297,7 +301,7 @@ $(document).ready( function(){
 
             var selectBox = $('#department-filter');
             selectBox.empty();
-            selectBox.append('<option value="all" selected>Select Department Name</option>');
+            selectBox.append('<option value="all" selected>Filter by Department</option>');
 
             departments.forEach(department => {
                 var option = $('<option>', {
@@ -324,7 +328,7 @@ $(document).ready( function(){
 
             var selectBox = $('#team-filter');
             selectBox.empty();
-            selectBox.append('<option value="all" selected>Select Team Name</option>');
+            selectBox.append('<option value="all" selected>Filter by Team</option>');
 
             teams.forEach(team => {
                 var option = $('<option>', {
@@ -343,7 +347,7 @@ $(document).ready( function(){
             .then(response => {
                 var selectBox = $('#division-name');
                 selectBox.empty();
-                selectBox.append('<option value="" disabled selected>Select Division Name</option>');
+                selectBox.append('<option value="" disabled selected>Choose Division Name</option>');
                 for (var i = 0; i < response.length; i++) {
                     var option = $('<option>', {
                         value: response[i].id,
@@ -353,7 +357,7 @@ $(document).ready( function(){
                 }
                 var selectBox = $('#division-filter');
                 selectBox.empty();
-                selectBox.append('<option value="all" selected>Select Division Name</option>');
+                selectBox.append('<option value="all" selected>Filter by Division</option>');
                 for (var i = 0; i < response.length; i++) {
                     var option = $('<option>', {
                         value: response[i].id,
@@ -363,7 +367,7 @@ $(document).ready( function(){
                 }
                 var selectBox = $('#division-name-detail');
                 selectBox.empty();
-                selectBox.append('<option value="" disabled selected>Select Division Name</option>');
+                selectBox.append('<option value="" disabled selected>Choose Division Name</option>');
                 for (var i = 0; i < response.length; i++) {
                     var option = $('<option>', {
                         value: response[i].id,
@@ -371,13 +375,39 @@ $(document).ready( function(){
                     });
                     selectBox.append(option);
                 }
+                /*var selectBox = $('#division-name-detail-2');
+                selectBox.empty();
+                selectBox.append('<option value="" disabled selected>Choose Division Name</option>');
+                for (var i = 0; i < response.length; i++) {
+                    var option = $('<option>', {
+                        value: response[i].id,
+                        text: response[i].name,
+                    });
+                    selectBox.append(option);
+                }*/
+                var checkboxContainer = $('#division-name-detail-2');
+	            checkboxContainer.empty();
+	            response.forEach(division => {
+	                var checkbox = $('<input>', {
+	                    type: 'checkbox',
+	                    value: division.id,
+	                    id: 'division-' + division.id,
+	                });
+	                var label = $('<label>', {
+	                    for: 'division-' + division.id,
+	                    text: division.name,
+	                });
+	                checkboxContainer.append(checkbox);
+	                checkboxContainer.append(label);
+	                checkboxContainer.append('<br>');
+	            });
             })
             .catch(error => {
                 console.error('Error:', error);
             })
     }
 
-    function renderUsers() {
+    /*function renderUsers() {
         const start = (currentPage - 1) * usersPerPage;
         const end = start + usersPerPage;
         const pageData = filteredUserData.slice(start, end);
@@ -412,7 +442,30 @@ $(document).ready( function(){
         });
         addCardEventListeners();
         updatePagination();
-    }
+    }*/
+    
+    function renderUsers() {
+	    const start = (currentPage - 1) * usersPerPage;
+	    const end = start + usersPerPage;
+	    const pageData = filteredUserData.slice(start, end);
+	
+	    $('#staff-list').empty();
+	    pageData.forEach(user => {
+	        $('#staff-list').append(`
+	            <tr>
+	                <td>${user.name}</td>
+	                <td>${user.staffId}</td>
+	                <td>${user.divisionName}</td>
+	                <td>${user.departmentName}</td>
+	                <td>${user.teamName}</td>
+	                <td><i class="fa-solid fa-pen-to-square edit-user cursor-pointer text-blue" data-user='${JSON.stringify(user)}'></i><span style="margin-left: 15px;"></span> | <span style="margin-right: 15px;"></span><i class="fa-solid fa-trash cursor-pointer text-red"></i></td>                
+	            </tr>
+	        `);
+	    });
+	    updatePagination();
+	    addCardEventListeners();
+	}
+
 
     function updatePagination() {
         pageNumbers.innerHTML = '';
@@ -559,11 +612,14 @@ $(document).ready( function(){
         $('#department-name-detail').val(user.departmentId).change();
         $('#division-name-detail').val(user.divisionId).change();
         document.getElementById('detail-data-overlay').style.display = 'block';
+        
+        // for permission change
+        document.getElementById('name-detail-2').value = user.name;
+        $('#division-name-detail-2').val(user.divisionId).change();
     }
 
     $('#approveRoleSelectBoxDetail').change(function() {
         var selectedOption = $(this).find('option:selected').text();
-        console.log(selectedOption)
         toggleSections(selectedOption);
     });
 
@@ -571,8 +627,6 @@ $(document).ready( function(){
         event.preventDefault();
         var userId = $('#user-id-detail').val();
         var approveRoleIdList = $('#approveRoleSelectBoxDetail').val();
-        console.log(userId, approveRoleIdList)
-
         $.ajax({
             url: `${getContextPath()}/api/user/updateApproveRole`,
             type: 'POST',
@@ -586,8 +640,19 @@ $(document).ready( function(){
                     text: 'Role updated successfully.',
                     icon: 'success',
                     confirmButtonText: 'OK'
-                }).then(() => {
-                    $('#message').text(response);
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        $('#message').text(response);
+
+                        const updatedRoles = $('#approveRoleSelectBoxDetail option:selected').map(function() {
+                            return {
+                                id: $(this).val(),
+                                name: $(this).text()
+                            };
+                        }).get();
+
+                        updateUserRoleInList(userId, updatedRoles);
+                    }
                 });
             },
             error: function(error) {
@@ -597,8 +662,18 @@ $(document).ready( function(){
         });
     });
 
+    function updateUserRoleInList(userId, updatedRoles) {
+        userData.forEach(user => {
+            if (user.id === parseInt(userId)) {
+                user.approveRoles = updatedRoles;
+            }
+        });
+
+        renderUsers();
+    }
+
     function addCardEventListeners() {
-        const cards = document.querySelectorAll('.js-resume-card');
+        const cards = document.querySelectorAll('.edit-user');
         cards.forEach(card => {
             card.addEventListener('click', function (event) {
                 event.preventDefault();
@@ -608,12 +683,28 @@ $(document).ready( function(){
         });
     }
 
-    document.querySelectorAll('.close').forEach(closeBtn => {
+    document.querySelectorAll('.close-edit-modal').forEach(closeBtn => {
         closeBtn.addEventListener('click', () => {
             document.getElementById('detail-data-overlay').style.display = 'none';
+            document.getElementById('role-change-overlay').style.display = 'none';
         });
     });
 
+	document.getElementById('change-role').addEventListener('click', () => {
+		document.getElementById('detail-data-overlay').style.display = 'none';
+        document.getElementById('role-change-overlay').style.display = 'block';
+    });
+
+    document.getElementById('close-role-modal').addEventListener('click', () => {
+        document.getElementById('role-change-overlay').style.display = 'none';
+        document.getElementById('detail-data-overlay').style.display = 'block';
+    });
+
+    document.getElementById('update-approve-role').addEventListener('click', () => {
+        // Add your logic to save role changes here
+        document.getElementById('role-change-overlay').style.display = 'none';
+        document.getElementById('detail-data-overlay').style.display = 'block';
+    });
 
 
     $('#load-more').on('click', async function() {

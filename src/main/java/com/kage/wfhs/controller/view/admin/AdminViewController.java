@@ -62,7 +62,7 @@ public class AdminViewController {
     }
 
     @GetMapping("/form/{form}/user/{user}")
-    public String viewFormDetailsById(@PathVariable Long form, @PathVariable Long user) {
+    public String viewFormDetailsById(@PathVariable String form, @PathVariable String user) {
         return "viewFormDetailsById";
     }
 

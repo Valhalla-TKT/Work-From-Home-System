@@ -9,6 +9,7 @@
 <body>
 
 	<div id="wrap" th:fragment="content">
+
 		<div id="wrap-inner" class="flushed">
 			<div id="content" role="main">
 				<div class="container-medium">
@@ -26,8 +27,8 @@
 								</svg>
 
 								<label for="search-by-staff-name">
-									<input type="text" name="search-input" id="search-by-staff-name"
-										placeholder="Search by staff name..."
+									<input type="search" name="search-input" id="search-by-staff-name"
+										placeholder="Search by name, email, staff ID, or role..."
 										class="js-search-input input-with-outline-only search-input" />
 								</label>
 							</form>
@@ -36,7 +37,7 @@
 								class="display-flex align-center new-opportunities-container justify-space-between margin-b-40 margin-t-40">
 								<div class="add-function">
 									<div class="display-flex align-center">
-										<div class="new-opportunities-heading">All staffs</div>
+										<div class="new-opportunities-heading">Total staffs (<span id="total-count"></span>)</div>
 									</div>
 									<a class="job-banner-cta js-job-cta btn2 add-data visible-hr-only" href="#">
 										<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
@@ -59,49 +60,130 @@
 									<span class="label" title="Filters">Filters</span>
 								</a>
 							</div>
-							<div class="staff-card-container" id="staff-list"
+							<!-- <div class="staff-card-container" id="staff-list"
 								style="margin-top: 50px; display: flex !important; flex-wrap:wrap !important; justify-content: space-between; align-items:center;">
 
+							</div> -->
+							<style>
+								.filters-container {
+									display: flex;
+									flex-wrap: wrap;
+									align-items: center;
+									flex-direction: row;
+									column-gap: 15px;
+									font-family: Arial, sans-serif;
+								}
+
+								.filter {
+									margin-right: 10px;
+								}
+
+								.table-container {
+									overflow-x: auto;
+								}
+								.table {
+									width: 100%;
+									border-collapse: collapse;
+									margin-top: 50px;
+									font-family: Arial, sans-serif;
+								}
+
+								.table th, .table td {
+									border: 1px solid #ddd;
+									padding: 10px 15px;
+									text-align: left;
+									width: 20%;
+									box-sizing: border-box;
+								}
+
+								.table th {
+									background-color: #f8f9fa;
+									color: #333;
+									font-weight: bold;
+								}
+
+								.table tr:nth-child(even) {
+									background-color: #f2f2f2;
+								}
+
+								.table tr:hover {
+									background-color: #e9ecef;
+								}
+
+								.table th, .table td {
+									border-bottom: 1px solid #ddd;
+								}
+
+								.pagination {
+									display: flex;
+									justify-content: end;
+									margin-top: 20px;
+								}
+
+								.page-numbers {
+									margin: 0 5px;
+									padding: 10px 15px;									
+									color: #333;									
+								}
+								
+								.page-link {
+									padding: 5px 10px;
+								}
+
+
+							</style>
+							<div class="filters-container">
+								<div class="filter">
+									<label for="gender-filter">Gender</label>
+									<select id="gender-filter">
+										<option value="all">Filter by Gender</option>
+										<option value="male">Male</option>
+										<option value="female">Female</option>
+									</select>
+								</div>
+								<div class="filter">
+									<label for="division-filter">Division</label>
+									<select id="division-filter">
+										<option value="all">Filter by Division</option>
+										<!-- Add division options here -->
+									</select>
+								</div>
+								<div class="filter">
+									<label for="department-filter">Department</label>
+									<select id="department-filter">
+										<option value="all">Filter by Department</option>
+										<!-- Add department options here -->
+									</select>
+								</div>
+								<div class="filter">
+									<label for="team-filter">Team</label>
+									<select id="team-filter">
+										<option value="all">Filter by Team</option>
+										<!-- Add team options here -->
+									</select>
+								</div>
+							</div>
+
+							<div class="table-container">
+							<table id="staff-table" class="table">
+							    <thead>
+							        <tr>
+							            <th>Name</th>
+							            <th>Staff ID</th>
+							            <th>Division</th>
+							            <th>Department</th>
+							            <th>Team</th>
+										<th>Action</th>
+							        </tr>
+							    </thead>
+							    <tbody id="staff-list"></tbody>
+							</table>
 							</div>
 							<div class="pagination">
 								<span class="page-numbers"></span>
 							</div>
 						</div>
-						<div class="search-filters-container">
-							<div class="search-filters job-board-filters-form js-filters" style="text-align: center;">
-								<span> <img alt="staff" th:src="@{/assets/icons/staff.png}" style="width: 50px">
-								</span> <br>
-								<span>Total Staffs : <span id="total-count"></span></span>
-							</div> <br>
-							<div class="search-filters job-board-filters-form js-filters">
-								<form class="job-filters js-job-search-form" id="options" action="#"
-									accept-charset="UTF-8" method="get">
-									<label for="keyword" class="hide" aria-hidden="true">Filter</label>
-									<input type="text" name="keyword" id="keyword" placeholder="Company, skill, tag…"
-										class="hide js-keyword input-with-outline-only" aria-hidden="true" />
-									<label for="gender-filter">Gender</label>
-									<select type="text" name="" id="gender-filter" placeholder="Enter Location…"
-										class="js-location input-with-outline-only"
-										style="width: 100%; margin-bottom: 10px;">
-										<option value="all">Select Staff Gender</option>
-										<option value="male">Male</option>
-										<option value="female">Female</option>
-									</select>
-									<label for="division-filter">Division</label>
-									<select type="text" name="" id="division-filter" placeholder="Enter Location…"
-										class="js-location input-with-outline-only"
-										style="width: 100%; margin-bottom: 10px;"></select>
-									<label for="department-filter">Department</label>
-									<select type="text" name="" id="department-filter" placeholder="Enter Location…"
-										class="js-location input-with-outline-only"
-										style="width: 100%; margin-bottom: 10px;"></select>
-									<label for="team-filter">Team</label>
-									<select type="text" name="" id="team-filter" placeholder="Enter Location…"
-										class="js-location input-with-outline-only"
-										style="width: 100%; margin-bottom: 10px;"></select>
-								</form>
-							</div>
-						</div>
+
 					</div>
 				</div>
 			</div>
@@ -156,7 +238,7 @@
 				<div class="add-data-modal-content">
 					<div class="form-title">
 						<span class="title">Staff Detail</span>
-						<span class="close">&times;</span>
+						<span class="close close-edit-modal">&times;</span>
 					</div> <br>
 					<form id="detail">
 						<label for="staff-id-detail">Staff ID</label>
@@ -170,8 +252,8 @@
 						<input type="text" id="gender-detail" required="required" style="color: #0d0c22; background: #fff;" disabled>
 						<label for="position-name-detail">His/Her Position</label>
 						<input type="text" id="position-name-detail" placeholder="e.g. Software Engineer" required="required" style="color: #0d0c22; background: #fff;">
-						<label for="approveRoleSelectBoxDetail">Choose Permission</label>
-						<select id="approveRoleSelectBoxDetail" required="required" style="width: 100%" step="any"></select>
+						<!-- <label for="approveRoleSelectBoxDetail">Choose Permission</label>
+						<select id="approveRoleSelectBoxDetail" required="required" style="width: 100%" step="any"></select> -->
 						<div id="team-data-detail">
 							<label for="team-name-detail">Choose Team He/She Has To Join</label>
 							<select id="team-name-detail" required="required" style="width: 100%" step="any"></select>
@@ -182,14 +264,42 @@
 						</div>
 						<div id="division-data-detail">
 							<label for="division-name-detail">Choose division He/She Has To Join</label>
-							<select id="division-name-detail" required="required" style="width: 100%" step="any"></select>
+							 <select id="division-name-detail" required="required" style="width: 100%" step="any"></select>
 						</div>
 						<input type="hidden" id="user-id-detail">
-						<button class="btn2 add-data-btn" type="button" id="update-approve-role">Save Changes</button>
+						<div style="display: flex; justify-content: end; flex-direction: row; column-gap: 20px;">
+						<button class="btn2 add-data-btn" style="width:30%;" type="button" id="change-role">Change Role</button>						
+						<button class="btn2 add-data-btn" style="width:30%;" type="button" id="update-approve-role-1">Save Changes</button>
+						</div>
 					</form>
 				</div>
 			</div>
 		</div>
+		<!-- Role Change Modal -->
+		<div id="role-change-overlay" style="display: none;">
+		    <div id="role-change-modal" class="add-data-modal" style="width: 30%; height: 40%; overflow:auto;">
+		        <div class="add-data-modal-content">
+		            <div class="form-title">
+		                <span class="title">Change Role</span>
+		                <span class="close close-role-modal" id="close-role-modal">&times;</span>
+		            </div> <br>
+		            <form id="role-change-form">
+		            	<label for="name-detail-2">Staff Name</label>
+						<input type="text" id="name-detail-2" placeholder="e.g. John" required="required" style="color: #0d0c22; background: #fff;" disabled>
+		                <label for="approveRoleSelectBoxDetail">Choose Permission</label>
+		                <select id="approveRoleSelectBoxDetail" required="required" style="width: 100%;" step="any"></select>
+						<!-- <div id="division-data-detail">
+							<label for="division-name-detail-2">Choose division</label>
+							<select id="division-name-detail-2" required="required" style="width: 100%" step="any"></select>
+					
+ 							<div id="division-name-detail-2" style="width: 100%"></div>
+ 						</div>		     -->           
+						<button class="btn2 add-data-btn" type="button" id="update-approve-role">Save Changes</button>
+		            </form>
+		        </div>
+		    </div>
+		</div>
+
 	</div>
 </body>
 

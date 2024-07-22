@@ -9,6 +9,7 @@ package com.kage.wfhs.controller.api;
 
 import com.kage.wfhs.dto.auth.CurrentLoginUserDto;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -28,7 +29,12 @@ public class SessionController {
     @PostMapping("/user")
     public ResponseEntity<CurrentLoginUserDto> getUser(HttpSession session) {
         CurrentLoginUserDto currentUser = (CurrentLoginUserDto) session.getAttribute("login-user");
+        if (currentUser == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
         CurrentLoginUserDto sessionUser = userService.getLoginUserBystaffId(currentUser.getStaffId());
         return ResponseEntity.ok(sessionUser);
+        // For testing purposes, you can uncomment the following line to simulate an unauthorized response:
+        // return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
     }
 }

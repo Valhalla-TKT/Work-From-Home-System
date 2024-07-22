@@ -84,10 +84,10 @@
 												<span data-v-741dde45="" class="title">Applicant
 													Information</span>
 											</header>
-											<div id="division-input-container" data-v-741dde45="" class="form-field-container">
+											<div id="division-input-container" data-v-741dde45="" class="form-field-container hide-dept-head-only">
 					                          <span data-v-741dde45="" class="error-marker">
 					                            <div data-v-42dea6db="" data-v-741dde45="" class="">
-					                              <label data-v-42dea6db=""for="jobTitle" class="label">
+					                              <label data-v-42dea6db="" for="division-name" class="label">
 					                                Choose Division
 					                                <span data-v-42dea6db="" class="color-lobster">*</span>
 					                              </label>
@@ -99,10 +99,10 @@
 					                            </div>
 					                          </span>
 					                        </div> 
-											<div id="department-input-container" data-v-741dde45="" class="form-field-container">
+											<div id="department-input-container" data-v-741dde45="" class="form-field-container hide-project-manager-only hide-applicant-only">
 					                          <span data-v-741dde45="" class="error-marker">
 					                            <div data-v-42dea6db="" data-v-741dde45="" class="">
-					                              <label data-v-42dea6db=""for="jobTitle" class="label">
+					                              <label data-v-42dea6db="" for="department-name" class="label">
 					                                Choose Department
 					                                <span data-v-42dea6db="" class="color-lobster">*</span>
 					                              </label>
@@ -113,12 +113,27 @@
 					                              </div>
 					                            </div>
 					                          </span>
-					                        </div> 
+					                        </div>
+											<div id="team-input-container" data-v-741dde45="" class="form-field-container hide-project-manager-only hide-applicant-only">
+					                          <span data-v-741dde45="" class="error-marker">
+					                            <div data-v-42dea6db="" data-v-741dde45="" class="">
+					                              <label data-v-42dea6db="" for="department-name" class="label">
+					                                Choose Team
+					                                <span data-v-42dea6db="" class="color-lobster">*</span>
+					                              </label>
+					                              <div data-v-42dea6db="" class="">
+					                                <span data-v-42dea6db="" class="error-marker">
+					                                  <select data-v-42dea6db="" id="team-name" required="required" step="any" class="select" style="width: 100%; border: 1px solid black;"></select>
+					                                </span>
+					                              </div>
+					                            </div>
+					                          </span>
+											</div>
 											<div data-v-741dde45="" class="form">
 											 <div id="name-select-box-container" data-v-741dde45="" class="form-field-container">
 					                          <span data-v-741dde45="" class="error-marker">
 					                            <div data-v-42dea6db="" data-v-741dde45="" class="">
-					                              <label data-v-42dea6db=""for="name Select" class="label">
+					                              <label data-v-42dea6db=""for="team-member-list" class="label">
 					                                Name
 					                                <span data-v-42dea6db="" class="color-lobster">*</span>
 					                              </label>
@@ -138,7 +153,7 @@
 													class="form-field-container">
 													<span data-v-741dde45="" class="error-marker">
 														<div data-v-42dea6db="" data-v-741dde45="" class="">
-															<label data-v-42dea6db="" for="jobTitle" class="label">
+															<label data-v-42dea6db="" for="name-input-box" class="label">
 																Name <span data-v-42dea6db="" class="color-lobster">*</span>
 															</label>
 															<div data-v-42dea6db="" class="">
@@ -155,40 +170,25 @@
 														</div> <!---->
 													</span>
 												</div>
-												<div data-v-741dde45="" class="form">
-											 <div id="approver-list-container" data-v-741dde45="" class="form-field-container">
-					                          <span data-v-741dde45="" class="error-marker">
-					                            <div data-v-42dea6db="" data-v-741dde45="" class="">
-					                              <label data-v-42dea6db=""for="name Select" class="label">
-					                                Approver Name
-					                                <span data-v-42dea6db="" class="color-lobster">*</span>
-					                              </label>
-					                              <div data-v-42dea6db="" class="">
-					                                <span data-v-42dea6db="" class="error-marker">
-					                                  <select data-v-42dea6db="" id="approver-name" required="required" step="any" class="select" style="width: 100%; color: #0d0c22; border: 1px solid black;" >
-					                                  	<option selected disabled>Choose Name</option>
-					                                  </select>					              
-					                                </span>
-					                              </div>
-					                            </div>
-					                          </span>
-					                        </div> 
-					                       </div>
 
 												<div data-v-741dde45="" class="form-field-container">
-													<label for="staff-id">Staff ID:</label>
-													<div class="staff-id-input-container">
+													<label for="staff-id-input-container">Staff ID:</label>
+													<div class="staff-id-input-container" id="staff-id-input-container">
 														<input type="text" class="input" disabled
-															style="background: #fff; border: 1px solid black;"> <input type="text"
+															style="background: #fff; border: 1px solid black;">
+														<input type="text"
 															class="input" disabled style="background: #fff; border: 1px solid black;">
 														<input type="text" class="input" value="-" disabled
-															style="background: #fff; border: 1px solid black;"> <input type="text"
+															style="background: #fff; border: 1px solid black;">
+														<input type="text"
 															class="input" disabled style="background: #fff; border: 1px solid black;">
 														<input type="text" class="input" disabled
-															style="background: #fff; border: 1px solid black;"> <input type="text"
+															style="background: #fff; border: 1px solid black;">
+														<input type="text"
 															class="input" disabled style="background: #fff; border: 1px solid black;">
 														<input type="text" class="input" disabled
-															style="background: #fff; border: 1px solid black;"> <input type="text"
+															style="background: #fff; border: 1px solid black;">
+														<input type="text"
 															class="input" disabled style="background: #fff; border: 1px solid black;">
 													</div>
 												</div>
@@ -216,19 +216,19 @@
 												<div data-v-741dde45="" class="form-field-container">
 													<span data-v-741dde45="" class="error-marker">
 														<div data-v-42dea6db="" data-v-741dde45="" class="">
-															<label data-v-42dea6db="" for="jobTitle" class="label">
+															<label data-v-42dea6db="" for="team-input-box" class="label">
 																Assigned Project/Team <span data-v-42dea6db=""
 																class="color-lobster">*</span>
 															</label>
 															<div data-v-42dea6db="" class="">
 																<!---->
-																<span data-v-42dea6db="" class="error-marker"> <input
+																<span data-v-42dea6db="" class="error-marker">
+																<input
 																	data-v-42dea6db="" id="team-input-box" type="text"
 																	placeholder="e.g. HIME" style="color: #0d0c22; background: #fff; border: 1px solid black;" disabled step="any"
 																	class="input" />
 																</span>
-																<!---->
-																<!---->
+
 															</div>
 															<!---->
 														</div> <!---->
@@ -285,7 +285,7 @@
 																<span data-v-42dea6db="" class="error-marker"> 
 																	<input
 																		id="working-input-box" type="text" autocomplete="off"
-																		placeholder="e.g. MICT Park" style="border: 1px solid black;" />
+																		placeholder="e.g. Bangkok" style="border: 1px solid black;" />
 																	<select name="region-state" id="region-state-select" style="width: 100%; background: #fff; color: #0d0c22; border: 1px solid black;">															        	
 															      	</select>
 															    	<select name="city-township" id="city-township-select" style="width: 100%; margin-top: 10px; color: #0d0c22; border: 1px solid black;">
@@ -301,7 +301,7 @@
 												<div data-v-741dde45="" class="form-field-container">
 													<span data-v-741dde45="" class="error-marker">
 														<div data-v-42dea6db="" data-v-741dde45="" class="">
-															<label data-v-42dea6db="" for="jobTitle" class="label">
+															<label data-v-42dea6db="" for="radio1" class="label">
 																Work From Home Request Percent <span data-v-42dea6db=""
 																class="color-lobster">*</span>
 															</label>
@@ -343,7 +343,7 @@
 												<div data-v-741dde45="" class="form-field-container">
 													<span class="error-marker">
 														<div>
-															<label data-v-42dea6db="" for="jobTitle" class="label">
+															<label data-v-42dea6db="" for="from-date" class="label">
 																Request Period (From Date) <span class="color-lobster">*</span>
 															</label>
 															<div class="">
@@ -679,8 +679,7 @@
 														<label for="file9" class="file-upload-label"
 															id="file-label-9" ondrop="drop(event, 9)"
 															ondragover="allowDrop(event, 9)">
-															<p style="color: red;">➀ Procedure 1</p>
-																search box and [Enter].</p>
+															<p style="color: red;">➀ Type of Operating System</p>
 															<div class="file-upload-design">
 																<svg viewBox="0 0 640 512" height="1em">
 												        <path
@@ -707,7 +706,7 @@
 														<label for="file10" class="file-upload-label"
 															id="file-label-10" ondrop="drop(event,10)"
 															ondragover="allowDrop(event,10)">
-															<p style="color: red;">➀ Procedure 2</p>
+															<p style="color: red;">➀ Security Patch is updated to latest version.</p>
 															<div class="file-upload-design">
 																<svg viewBox="0 0 640 512" height="1em">
 												        <path
@@ -734,7 +733,7 @@
 														<label for="file11" class="file-upload-label"
 															id="file-label-11" ondrop="drop(event,11)"
 															ondragover="allowDrop(event,11)">
-															<p style="color: red;">➀ Procedure 2</p>
+															<p style="color: red;">➀ Antivirus software(built-in, open source antivirus or third party software).</p>
 															<div class="file-upload-design">
 																<svg viewBox="0 0 640 512" height="1em">
 												        <path
@@ -918,10 +917,11 @@
 					                <span>Antivirus full-scan have finished.</span>
 					            </div>
 					        </div>
+							<button class="btn2" id="hide-checkbox-dialog-form" style="background: none; border: 1px solid black; position:absolute; right: 180px; color: #0d0c22;" type="reset">Cancel</button>
 					        <button class="btn2" style="position:absolute; right: 80px;" type="submit">submit</button>
 					    </form>	
 					</dialog>
-					<!-- FOrm -->
+					<!-- Form -->
 
 
 				</div>

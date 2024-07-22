@@ -75,7 +75,7 @@ public interface UserRepository extends JpaRepository<User,Long> {
 	    List<User> findUpperRoleUser(Long workFlowOrderId);
 	//TEAM
 
-    @Query("SELECT u.name AS username, COALESCE(r.request_percent, 0.0) AS requestPercent " +
+    @Query("SELECT u.name AS username, COALESCE(r.requestPercent, 0.0) AS requestPercent " +
       "FROM User u " +
       "LEFT JOIN u.registerForms r " +
       "ON u.team.id = :teamId " +
@@ -91,7 +91,7 @@ public interface UserRepository extends JpaRepository<User,Long> {
     List<Object[]> getTotalStaffRequestByTeamId(@Param("teamId") String teamId);
 
     
-    @Query("SELECT t.name AS teamName, 100*(SUM(r.request_percent)) / (100 * COUNT(u.id)) AS registrationPercentage " +
+    @Query("SELECT t.name AS teamName, 100*(SUM(r.requestPercent)) / (100 * COUNT(u.id)) AS registrationPercentage " +
       "FROM Team t " +
       "LEFT JOIN User u ON t.id = u.team.id " +
       "LEFT JOIN u.registerForms r " +
@@ -102,7 +102,7 @@ public interface UserRepository extends JpaRepository<User,Long> {
 
 //DEPARTMENT HEAD
     
-    @Query("SELECT t.name AS teamName, AVG(COALESCE(r.request_percent, 0)) AS avgRequestPercent " +
+    @Query("SELECT t.name AS teamName, AVG(COALESCE(r.requestPercent, 0)) AS avgRequestPercent " +
       "FROM Team t " +
       "JOIN User u ON t.id = u.team.id " +
       "LEFT JOIN RegisterForm r ON u.id = r.applicant.id " +
@@ -125,7 +125,7 @@ public interface UserRepository extends JpaRepository<User,Long> {
 
     @Query("SELECT " +
       "d.name AS departmentName, " +
-      "100 * SUM(COALESCE(r.request_percent, 0)) / (100 * COUNT(DISTINCT u.id)) AS registrationPercentage " +
+      "100 * SUM(COALESCE(r.requestPercent, 0)) / (100 * COUNT(DISTINCT u.id)) AS registrationPercentage " +
       "FROM " +
       "User u " +
       "LEFT JOIN u.team t " +
@@ -139,7 +139,7 @@ public interface UserRepository extends JpaRepository<User,Long> {
 //DIVISION HEAD
 
     @Query("SELECT d.name AS departmentName, " +
-      "       AVG(COALESCE(r.request_percent, 0)) AS avgRequestPercent " +
+      "       AVG(COALESCE(r.requestPercent, 0)) AS avgRequestPercent " +
       "FROM Department d " +
       "JOIN d.teams t " +
       "JOIN t.users u " +
@@ -164,7 +164,7 @@ public interface UserRepository extends JpaRepository<User,Long> {
 
     @Query("SELECT " +
       "d.name AS divisionName, " +
-      "100 * SUM(COALESCE(r.request_percent, 0)) / (100 * COUNT(DISTINCT u.id)) AS registrationPercentage " +
+      "100 * SUM(COALESCE(r.requestPercent, 0)) / (100 * COUNT(DISTINCT u.id)) AS registrationPercentage " +
       "FROM " +
       "User u " +
       "LEFT JOIN u.team t " +
@@ -179,7 +179,7 @@ public interface UserRepository extends JpaRepository<User,Long> {
 
 //Others
 
-    @Query("SELECT u.name AS username, COALESCE(r.request_percent, 0.0) AS requestPercent " +
+    @Query("SELECT u.name AS username, COALESCE(r.requestPercent, 0.0) AS requestPercent " +
       "FROM User u " +
       "LEFT JOIN u.registerForms r")
     List<Object[]> getAllUserRequests();

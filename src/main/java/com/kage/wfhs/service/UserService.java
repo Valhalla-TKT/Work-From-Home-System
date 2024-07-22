@@ -40,7 +40,7 @@ public interface UserService {
 	void setUserOnline(User user);
 	void disconnect(User user);
 	List<UserDto> findConnectedUsers();
-	List<UserDto> getUpperRole(Long l);
+	List<UserDto> getUpperRole(Long workFlowOrderId, Long userId);
 	List<Object[]> getUserRequestByTeamId(Long teamId);
 	List<Object[]> getTotalStaffRequestByTeamId(String teamId);
 	Object[] getTeamRegistrationInfo(Long teamId);
@@ -55,7 +55,7 @@ public interface UserService {
 	
 	// Create HR
 	void createHR();
-	boolean changeFirstHRFirstLoginStatus();
+	CurrentLoginUserDto changeFirstHRFirstLoginStatus();
 
     List<UserDto> getAllUserByGender(String gender);
 

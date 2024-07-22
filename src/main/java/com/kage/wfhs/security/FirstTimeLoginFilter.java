@@ -50,7 +50,8 @@ public class FirstTimeLoginFilter extends OncePerRequestFilter {
                 relativeURI.startsWith("/ws/") ||
                 relativeURI.equals("/login") ||
                 relativeURI.equals("/profile") ||
-                relativeURI.equals("/admin/importExcel")) {
+                relativeURI.equals("/admin/importExcel") ||
+                relativeURI.equals("/api/importExcel")) {
             filterChain.doFilter(request, response);
             return;
         }

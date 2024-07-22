@@ -93,6 +93,11 @@ public class ViewController {
     public String helpPage(){
         return "help";
     }
+    
+    @GetMapping("/contactSupport")
+    public String contactSupportPage(){
+        return "contactSupport";
+    }
 
     @GetMapping("/accessDenied")
     public String accessDeniedPage(){

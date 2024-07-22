@@ -95,9 +95,26 @@
 							</ul>
 						</li>
 
-						<li class="nav-v2-main__item">
+						<!-- <li class="nav-v2-main__item">
 							<a th:href="@{/help}">Help</a>
-						</li>						
+						</li>	 -->
+						
+						<li class="nav-v2-main__item nav-v2-main__item--sub-nav"><a data-nav-event-clicked="Hire Designers" href="#">Help</a>
+
+							<ul class="nav-v2-sub">
+							    <li class="nav-v2-sub__item">
+							        <a class="nav-v2-sub__link" data-nav-event-clicked="Add Division" th:href="@{/help}"> FAQs
+							            <span class="nav-v2-sub__subtitle">View frequently asked question here</span>
+							        </a>
+							    </li>
+							    <li class="nav-v2-sub__item">
+							        <a class="nav-v2-sub__link" data-nav-event-clicked="Add Division" th:href="@{/contactSupport}"> Contact Support
+							            <span class="nav-v2-sub__subtitle">Direct message with Service Desk</span>
+							        </a>
+							    </li>
+							</ul>
+							
+						</li>				
 
 						<li class="nav-v2-main__item nav-v2-main__item--divided nav-v2-hide-medium-up">
 							<a data-nav-event-clicked="Sign in" href="session/new.html">Log out</a>
@@ -195,7 +212,7 @@
 					<!-- User profile -->
 					<!-- ============================================================== -->
 					<div class="nav-v2-avatar">
-						<a data-nav-v2-avatar="true" title="Open profile" href="">
+						<a data-nav-v2-avatar="true" title="Open profile" href="#">
 							<img class="nav-v2-avatar__image" width="50px" height="50px" id="nav-profile-img">
 						</a>
 						<div class="nav-v2-profile" data-nav-v2-profile="" data-nav-event-category="Profile">

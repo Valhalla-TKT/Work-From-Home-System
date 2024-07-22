@@ -44,10 +44,10 @@ public class LedgerServiceImplement implements LedgerService {
         ledger.setName(applicant.getName());
         ledger.setEmail(applicant.getName());
         ledger.setApplied_date(registerForm.getSignedDate());
-        ledger.setFrom_date(registerForm.getFrom_date());
-        ledger.setTo_date(registerForm.getTo_date());
-        ledger.setWorkcation(registerForm.getWorking_place());
-        ledger.setRequest_percent(registerForm.getRequest_percent());
+        ledger.setFrom_date(registerForm.getFromDate());
+        ledger.setTo_date(registerForm.getToDate());
+        ledger.setWorkcation(registerForm.getWorkingPlace());
+        ledger.setRequest_percent(registerForm.getRequestPercent());
         ledger.setUse_own_facilities("YES");
         ledger.setEnvironment_facilities("OK");
 
@@ -72,9 +72,7 @@ public class LedgerServiceImplement implements LedgerService {
         ledger.setFinal_approve_date(ceo_approve != null ? ceo_approve.getApprove_date() : registerForm.getSignedDate());
 
         ledger.setSigned_pledge_letter_date(registerForm.getSignedDate());
-        ledger.setReason_for_wfh(registerForm.getRequest_reason());
-
-
+        ledger.setReason_for_wfh(registerForm.getRequestReason());
         ledgerRepo.save(ledger);
     }
 

@@ -65,33 +65,7 @@ window.onload = function () {
     option.selected = newYear === selectedYear;
     calendarYears.appendChild(option);
     newYear++;
-  }
-
-  const leftArrow = document.getElementsByClassName("calendar-left-arrow")[0];
-
-  leftArrow.addEventListener("click", () => {
-    const monthYear = document.getElementsByClassName("calendar-month-year")[0];
-    const month = parseInt(monthYear.getAttribute("data-month") || 0);
-    const year = parseInt(monthYear.getAttribute("data-year") || 0);
-
-    let newMonth = month === 0 ? 11 : month - 1;
-    let newYear = month === 0 ? year - 1 : year;
-    let newDate = new Date(newYear, newMonth, 1);
-    generateCalendarDays(newDate);
-  });
-
-  const rightArrow = document.getElementsByClassName("calendar-right-arrow")[0];
-
-  rightArrow.addEventListener("click", () => {
-    const monthYear = document.getElementsByClassName("calendar-month-year")[0];
-    const month = parseInt(monthYear.getAttribute("data-month") || 0);
-    const year = parseInt(monthYear.getAttribute("data-year") || 0);
-    let newMonth = month + 1;
-    newMonth = newMonth === 12 ? 0 : newMonth;
-    let newYear = newMonth === 0 ? year + 1 : year;
-    let newDate = new Date(newYear, newMonth, 1);
-    generateCalendarDays(newDate);
-  });
+  }  
 
   calendarMonths.addEventListener("change", function () {
     let newDate = new Date(calendarYears.value, calendarMonths.value, 1);

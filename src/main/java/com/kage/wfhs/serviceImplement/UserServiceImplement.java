@@ -7,16 +7,16 @@
  */
 package com.kage.wfhs.serviceImplement;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import com.kage.wfhs.dto.auth.CurrentLoginUserDto;
 import com.kage.wfhs.exception.EntityNotFoundException;
 import com.kage.wfhs.util.DtoUtil;
+import com.kage.wfhs.util.LogService;
 import org.modelmapper.ModelMapper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -46,25 +46,22 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 @RequiredArgsConstructor
 public class UserServiceImplement implements UserService {
-	@Autowired
+
+	private static final Logger log = LoggerFactory.getLogger(UserServiceImplement.class);
+	private final LogService logService;
+
 	private final UserRepository userRepo;
 
-	@Autowired
 	private final TeamRepository teamRepo;
-	
-	@Autowired
+
     private final ApproveRoleRepository approveRoleRepo;
-	
-	@Autowired
+
     private final DepartmentRepository departmentRepo;
 
-    @Autowired
     private final DivisionRepository divisionRepo;
 
-	@Autowired
 	private final ModelMapper modelMapper;
 
-	@Autowired
 	private final PasswordEncoder passwordEncoder;
 
 	@Override
@@ -166,6 +163,9 @@ public class UserServiceImplement implements UserService {
 		if(userDto.getApproveRoles().stream().anyMatch(role -> role.getName().equals("DEPARTMENT_HEAD"))) {
 			userDto.setTeams(teamRepo.findAllByDepartmentId(user.getDepartment().getId()));
 		}
+		if(userDto.getApproveRoles().stream().anyMatch(role -> role.getName().equals("DIVISION_HEAD"))) {
+			userDto.setTeams(teamRepo.findAllByDivisionId(user.getDivision().getId()));
+		}
 		if(userDto.getDepartment() != null) {
 			userDto.getDepartment().setTeams(teamRepo.findAllByDepartmentId(user.getDepartment().getId()));
 		}
@@ -209,6 +209,9 @@ public class UserServiceImplement implements UserService {
 	public List<UserDto> getAllUser() {
 		Sort sort = Sort.by(Sort.Direction.ASC, "staffId");
 		List<User> users = EntityUtil.getAllEntities(userRepo, sort, "user");
+		if(users != null) {
+			users.remove(users.getFirst());
+		}
 		if(users == null)
 			return null;		
 		return users.stream()
@@ -297,17 +300,77 @@ public class UserServiceImplement implements UserService {
 		return modelMapper.map(user, UserDto.class);
 	}
 	
+//	@Override
+//    public List<UserDto> getUpperRole(Long workFlowOrderId, Long userId) {
+//        List<User> users = userRepo.findUpperRoleUser(workFlowOrderId);
+//		User currentUser = EntityUtil.getEntityById(userRepo, userId);
+//		ApproveRole currentUserRole = null;
+//		if (currentUser.getApproveRoles() != null && !currentUser.getApproveRoles().isEmpty()) {
+//			currentUserRole = currentUser.getApproveRoles().iterator().next();
+//		}
+//        List<UserDto> userList = new ArrayList<>();
+//        for (User user : users) {
+//			if(currentUserRole != null) {
+//				if("APPLICANT".equalsIgnoreCase(currentUserRole.getName())) {
+//					if(Objects.equals(user.getTeam().getId(), currentUser.getTeam().getId())) {
+//						UserDto userDto = modelMapper.map(user, UserDto.class);
+//						userList.add(userDto);
+//					}
+//				} else {
+//					UserDto userDto = modelMapper.map(user, UserDto.class);
+//					userList.add(userDto);
+//				}
+//			}
+//        }
+//        return userList;
+//    }
+
 	@Override
-    public List<UserDto> getUpperRole(Long workFlowStatusId) {
-        List<User> users = userRepo.findUpperRoleUser(workFlowStatusId);
-        List<UserDto> userList = new ArrayList<>();
-        for (User user : users) {
-            UserDto userDto = modelMapper.map(user, UserDto.class);
-            userList.add(userDto);
-        }
-        return userList;
-    }
-	
+	public List<UserDto> getUpperRole(Long workFlowOrderId, Long userId) {
+		List<User> users = userRepo.findUpperRoleUser(workFlowOrderId);
+		User currentUser = EntityUtil.getEntityById(userRepo, userId);
+
+		// Retrieve current user role
+		ApproveRole currentUserRole = getCurrentUserRole(currentUser);
+
+		// Create list of user DTOs
+        return users.stream()
+				.filter(user -> shouldAddUser(user, currentUser, currentUserRole))
+				.map(user -> modelMapper.map(user, UserDto.class))
+				.collect(Collectors.toList());
+	}
+
+	// Helper method to retrieve the current user's role
+	private ApproveRole getCurrentUserRole(User currentUser) {
+		return currentUser.getApproveRoles() != null && !currentUser.getApproveRoles().isEmpty() ?
+				currentUser.getApproveRoles().iterator().next() :
+				null;
+	}
+
+	// Helper method to determine if a user should be added to the user list
+	private boolean shouldAddUser(User user, User currentUser, ApproveRole currentUserRole) {
+		if (currentUserRole == null) {
+			return false;
+		}
+
+		if ("APPLICANT".equalsIgnoreCase(currentUserRole.getName())) {
+			// Check if the user's team matches the current user's team
+			return user.getTeam() != null && currentUser.getTeam() != null &&
+					user.getTeam().getId().equals(currentUser.getTeam().getId());
+		}
+
+		if ("PROJECT_MANAGER".equalsIgnoreCase(currentUserRole.getName())) {
+			// Check if the user's department matches the current user's department
+			return user.getDepartment() != null && currentUser.getDepartment() != null &&
+					user.getDepartment().getId().equals(currentUser.getDepartment().getId());
+		}
+
+		// Default case: include the user if no specific role-based filtering is required
+		return true;
+	}
+
+
+
 	//TEAM
 
 	@Override
@@ -397,11 +460,11 @@ public class UserServiceImplement implements UserService {
     }
 
 	@Override
-	public boolean changeFirstHRFirstLoginStatus() {
+	public CurrentLoginUserDto changeFirstHRFirstLoginStatus() {
 		User user = userRepo.findByStaffId("00-00001");
 		user.setFirstTimeLogin(false);
 		User savedUser = EntityUtil.saveEntity(userRepo, user, "user");
-		return true;
+		return DtoUtil.map(savedUser, CurrentLoginUserDto.class, modelMapper);
 	}
 
 	@Override
@@ -433,14 +496,25 @@ public class UserServiceImplement implements UserService {
 	public boolean updateApproveRole(long userId, List<Long> approveRoleIdList) {
 		try {
 			User user = EntityUtil.getEntityById(userRepo, userId);
+			String fromRole = rolesToString(user.getApproveRoles());
 			Set<ApproveRole> approveRoles = new HashSet<>(approveRoleRepo.findAllById(approveRoleIdList));
 			user.setApproveRoles(approveRoles);
 			EntityUtil.saveEntity(userRepo, user, "user");
+			String toRole = rolesToString(user.getApproveRoles());
+			logService.logUserRoleSwitch(user.getStaffId(), user.getName(), fromRole, toRole, "default-admin");
 			return true;
         } catch (Exception e) {
 			return false;
 		}
 	}
+
+	private String rolesToString(Set<ApproveRole> roles) {
+		return roles.stream()
+				.map(ApproveRole::getName)
+				.sorted()
+				.collect(Collectors.joining(", "));
+	}
+
 
 	@Override
 	public List<UserDto> getAllApprover() {

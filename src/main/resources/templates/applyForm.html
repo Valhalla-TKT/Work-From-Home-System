@@ -2,7 +2,7 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org" id="fullscreen-body">
 
-<head th:replace="fragments/header :: header">
+<head th:replace="~{fragments/header :: header}">
     <title>WorkHub</title>
 </head>
 
@@ -10,10 +10,10 @@
     
     
     <!-- header -->
-    <div th:replace="fragments/navigation :: navigation"></div>
+    <div th:replace="~{fragments/navigation :: navigation}"></div>
 	<!-- header -->
 
-    <div th:replace="fragments/form/apply :: content"></div>
+    <div th:replace="~{fragments/form/apply :: content}"></div>
 	<!-- main -->
 
 <div id="signup-overlay" class="overlay ">
@@ -84,32 +84,10 @@
 
 
     <script th:src="@{/assets/packs/js/application.ae6c19f201cd97e78298.js}"></script>
-    
-
-
-<!--    <script th:src="@{/assets/shots-manifest-774f346db3e5e419264b407a465002836f193c259e06bfa2eeff0b6b981a532f.js}"></script>  -->
-<!--    <script>-->
-<!--    $(function() {-->
-
-<!--      Dribbble.Thumbnails.initialize({"page_limit":1,"enable_shot_overlay":true,"cursor":false,"deferredContent":null,"staticParams":null,"showBoostedAds":true,"showSimilarShots":true,"boostedAdPlacement":"Popular Feed","boostedAdParams":null,"numberOfAdsOnFirstPage":3,"numberOfAdsOnSubsequentPages":0,"boostedAdGroupPositions":[1,7,14],"perPage":52});-->
-
-
-<!--      if(Dribbble.Bucket){-->
-<!--        new Dribbble.Bucket({ target: "a[data-bucket-add]" });-->
-<!--      }-->
-
-
-<!--      $(document).on(-->
-<!--        'click',-->
-<!--        'a[data-fav-toggle=shot]',-->
-<!--        Screenshot.Like.Shot.toggle-->
-<!--      )-->
-<!--    });-->
-<!--  </script>	-->
 
 <div id="site-notifications"></div>
 
-<div th:replace="fragments/chat :: chat"></div>
+<div th:replace="~{fragments/chat :: chat}"></div>
  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>    
     <script src="https://cdnjs.cloudflare.com/ajax/libs/datedropper/2.0/datedropper.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/fetch-jsonp/build/fetch-jsonp.min.js"></script>
@@ -365,7 +343,7 @@
 
     </script>
     
-    <div th:replace="fragments/footer :: footer"></div>
+    <div th:replace="~{fragments/footer :: footer}"></div>
     
     
     
