@@ -21,8 +21,11 @@ public class TokenService {
 
     public String generateSecureToken(long formId) {
         String uuid = UUID.randomUUID().toString();
-        return Base64.encodeBase64URLSafeString(uuid.getBytes());
+        String formToken = Base64.encodeBase64URLSafeString(uuid.getBytes());
+        System.out.println("Generated formToken: " + formToken);
+        return formToken;
     }
+
 
     public void storeTokenMapping(String formToken, long formId) {
         tokenStore.put(formToken, formId);

@@ -42,22 +42,71 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     }
 
+    // function setupCardClickHandlers() {
+    //     document.querySelectorAll('.form-history-card').forEach(card => {
+    //         card.addEventListener('click', function () {
+    //             const formId = this.dataset.formId;
+    //             if (formId) {
+    //                 fetch(`${getContextPath()}/form/viewDetail`, {
+    //                     method: 'POST',
+    //                     headers: {
+    //                         'Content-Type': 'application/json'
+    //                     },
+    //                     body: JSON.stringify({ formId })
+    //                 })
+    //                     .then(response => response.json())
+    //                     .then(data => {
+    //                         if (data.success) {
+    //                             window.location.href = `${getContextPath()}/form/viewDetail/${data.formToken}`;
+    //                         } else {
+    //                             console.error('Error in viewing form detail:', data.message);
+    //                         }
+    //                     })
+    //                     .catch(error => {
+    //                         console.error('Error in viewing form detail:', error);
+    //                     });
+    //             }
+    //         });
+    //     });
+    // }
+
     function setupCardClickHandlers() {
         document.querySelectorAll('.form-history-card').forEach(card => {
             card.addEventListener('click', function () {
                 const formId = this.dataset.formId;
-                if (formId) {
+                const jwtToken = getJwtToken();
+                if (formId && jwtToken) {
                     fetch(`${getContextPath()}/form/viewDetail`, {
                         method: 'POST',
                         headers: {
-                            'Content-Type': 'application/json'
+                            'Content-Type': 'application/json',
+                            'Authorization': `Bearer ${jwtToken}` // Include JWT in headers
                         },
                         body: JSON.stringify({ formId })
                     })
                         .then(response => response.json())
                         .then(data => {
                             if (data.success) {
-                                window.location.href = `${getContextPath()}/form/viewDetail/${data.formToken}`;
+                                console.log(data)
+                                const encodedToken = encodeURIComponent(data.formToken);
+
+                                fetch(`${getContextPath()}/form/viewDetail/${encodedToken}`, {
+                                    method: 'GET',
+                                    headers: {
+                                        'Authorization': `Bearer ${jwtToken}`
+                                    }
+                                })
+                                    .then(response => {
+                                        if (response.ok) {
+                                            // Step 3: Redirect to the URL
+                                            window.location.href = `${getContextPath()}/form/viewDetail/${encodedToken}`;
+                                        } else {
+                                            console.error('Error in viewing form detail:', response.statusText);
+                                        }
+                                    })
+                                    .catch(error => {
+                                        console.error('Error in viewing form detail:', error);
+                                    });
                             } else {
                                 console.error('Error in viewing form detail:', data.message);
                             }
@@ -69,6 +118,7 @@ document.addEventListener('DOMContentLoaded', function () {
             });
         });
     }
+
 
     function updatePagination() {
         pageNumbers.innerHTML = '';

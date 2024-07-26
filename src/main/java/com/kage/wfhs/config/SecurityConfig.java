@@ -66,6 +66,7 @@ public class SecurityConfig {
                             return isApplicant ? new org.springframework.security.authorization.AuthorizationDecision(false)
                                     : new org.springframework.security.authorization.AuthorizationDecision(true);
                         })
+                        .requestMatchers("/form/viewDetail").authenticated()
                         .anyRequest().authenticated()
                 )
                 .exceptionHandling(exceptionHandling -> exceptionHandling.accessDeniedPage("/accessDenied"))
@@ -80,10 +81,12 @@ public class SecurityConfig {
                                     String contextPath = request.getContextPath();
                                     String token = jwtUtil.generateToken(authentication.getName());
                                     Cookie cookie = new Cookie("JWT", token);
-                                    cookie.setHttpOnly(true);
+                                    cookie.setHttpOnly(false);
                                     cookie.setPath(contextPath + "/");
                                     cookie.setMaxAge(86400); // 1 day
                                     response.addCookie(cookie);
+                                    response.setHeader("X-JWT-Token", token);
+
                                     CurrentLoginUserDto userDto = userService.getLoginUserBystaffId(authentication.getName());
                                     request.getSession().setAttribute("login-user", userDto);
 //                                    String logMessage = String.format("User logged in: Staff ID=%s, Name=%s, Team Name=%s",
@@ -105,7 +108,7 @@ public class SecurityConfig {
                                 (request, response, authentication) -> {
                                     String contextPath = request.getContextPath();
                                     Cookie cookie = new Cookie("JWT", null);
-                                    cookie.setHttpOnly(true);
+                                    cookie.setHttpOnly(false);
                                     cookie.setPath(contextPath + "/");
                                     cookie.setMaxAge(0);
                                     response.addCookie(cookie);
