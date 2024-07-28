@@ -128,7 +128,7 @@ public class RegisterFormController {
             @RequestPart(value = "signature", required = false) MultipartFile signature
     ) throws Exception {
 
-        registerFormDto.setSignedDate(registerFormDto.getAppliedDate());
+        registerFormDto.setSignedDate(registerFormDto.getSignedDate());
         registerFormDto.setOperationSystemInput(operationSystem);
         registerFormDto.setSecurityPatchInput(securityPatch);
         registerFormDto.setAntivirusSoftwareInput(antivirusSoftware);

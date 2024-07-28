@@ -518,6 +518,27 @@ $(document).ready(function() {
 		// 	}
 		// });
 	});
+	function parseAndFormatDate(inputBox, fromDate) {
+		var dateValue = inputBox.val();
+		var dateComponents = dateValue.split('-');
+		var dateDay = parseInt(dateComponents[0], 10);
+		var dateMonth = parseInt(dateComponents[1], 10) - 1;
+		var dateYear = parseInt(dateComponents[2], 10);
+
+		var dateObj = new Date(dateYear, dateMonth, dateDay);
+		if (!isNaN(dateObj.getTime())) {
+			return dateObj.toISOString().split('T')[0];
+		} else {
+			console.error('Invalid date string:', dateValue);
+			return null;
+		}
+	}
+
+	function formatToISODate(dateString) {
+		let parts = dateString.split('-');
+		return `${parts[2]}-${parts[1]}-${parts[0]}`;
+	}
+
 	async function submitForm() {
 		if (!selfRequestRadioChecked && !otherRequestRadioChecked) {
 			Swal.fire({
@@ -603,8 +624,10 @@ $(document).ready(function() {
 			});
 			return;
 		}
-		var formattedFromDate = new Date(fromDateInputBox.val()).toISOString().split('T')[0];
-		from_date = formattedFromDate;
+		// var formattedFromDate = new Date(fromDateInputBox.val()).toISOString().split('T')[0];
+		from_date = formatToISODate(fromDateInputBox.val());
+
+		// from_date = parseAndFormatDate(fromDateInputBox, true);
 
 		if (!toDateInputBox.val()) {
 			Swal.fire({
@@ -615,21 +638,8 @@ $(document).ready(function() {
 			});
 			return;
 		}
-		var toDateValue = toDateInputBox.val();
-		var dateComponents = toDateValue.split('-');
-		var day = parseInt(dateComponents[0], 10);
-		var month = parseInt(dateComponents[1], 10) - 1;
-		var year = parseInt(dateComponents[2], 10);
 
-		var toDateObj = new Date(year, month, day);
-
-		if (!isNaN(toDateObj.getTime())) {
-			formattedToDate = toDateObj.toISOString().split('T')[0];
-		} else {
-			console.error('Invalid date string:', toDateValue);
-		}
-
-		to_date = formattedToDate;
+		to_date = formatToISODate(toDateInputBox.val());
 
 		os_type = osTypeInputBox.val();
 
@@ -767,6 +777,19 @@ $(document).ready(function() {
 			antivirusSoftware = linuxAntivirusSoftwareInputBox.prop('files')[0];
 
 		}
+
+		if (!signedDateInputBox.val()) {
+			Swal.fire({
+				title: "Error!",
+				text: "Please select a signed date.",
+				icon: "error",
+				confirmButtonText: "OK"
+			});
+			return;
+		}
+
+		signed_date = formatToISODate(signedDateInputBox.val());
+
 		if (!signatureInputBox[0].files.length) {
 			Swal.fire({
 				title: "Error!",
@@ -896,6 +919,7 @@ $(document).ready(function() {
 							requestPercent: request_percent,
 							fromDate: from_date,
 							toDate: to_date,
+							signedDate: signed_date,
 							osType: os_type,
 							approverId: approverId
 						};

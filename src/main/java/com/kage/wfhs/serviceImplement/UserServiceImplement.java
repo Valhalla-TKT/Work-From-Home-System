@@ -521,4 +521,12 @@ public class UserServiceImplement implements UserService {
 		List<User> user = userRepo.findUsersByRoleNotEqual("APPLICANT");
 		return DtoUtil.mapList(user, UserDto.class, modelMapper);
 	}
+
+	@Override
+	public UserDto changePosition(Long userId, String position) {
+		User user = EntityUtil.getEntityById(userRepo, userId);
+		user.setPositionName(position);
+		User savedUser = EntityUtil.saveEntity(userRepo, user, "user");
+		return DtoUtil.map(savedUser, UserDto.class, modelMapper);
+	}
 }

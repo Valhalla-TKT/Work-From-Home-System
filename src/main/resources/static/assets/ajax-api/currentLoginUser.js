@@ -27,15 +27,20 @@ $(document).ready(async function() {
 		var currentUser = JSON.parse(localStorage.getItem('currentUser'));
 	    if (currentUser) {
 	        var userName = currentUser.name;
-	        var currentUserPosition = currentUser.positionName;
-	        if(currentUserPosition)
-	       		var positionName = currentUserPosition.name;
+
+			var positionName = currentUser.positionName;
 	       	var email = currentUser.email;
 	       	var staffId = currentUser.staffId;
+			var teamName, departmentName, divisionName;
 	       	if(currentUser.team) {
-				var departmentName = currentUser.team.name;
-		}
-	      	
+				teamName = currentUser.team.name;
+			}
+		   	if(currentUser.department) {
+				   departmentName = currentUser.department.name;
+			}
+			if(currentUser.division) {
+				divisionName = currentUser.division.name;
+			}
 	      	
 	       	var approveRoles = currentUser.approveRoles;
 			var hasRole = {
@@ -323,10 +328,13 @@ $(document).ready(async function() {
 	        $('.nav-v2-user__name').text(userName);
 	        $('.nav-v2-position').text(positionName);
 	        $('#profile_page_name').text(userName);
-	        $('#profile_page_position_name').text(positionName);
+			$('#profile_page_position').text(positionName);
+	        // $('#profile_page_position_name').text(positionName);
 	        $('#position_page_email').text(email);
 	        $('#position_page_staff_id').text("Staff ID : " + staffId);
+			$('#position_page_team_name').text(teamName);
 	        $('#position_page_department_name').text(departmentName);
+			$('#position_page_division_name').text(divisionName);
 	        // $('#profile_page_role_name').text(userRole);
 	        if (currentUser.profile) {
 				// 	console.log("Hii")

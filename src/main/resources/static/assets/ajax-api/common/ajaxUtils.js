@@ -137,4 +137,6 @@ async function sendRequestWithoutParam(url, method) {
     }
 }
 
-
+document.addEventListener('contextmenu', function (event) {
+    event.preventDefault();
+});

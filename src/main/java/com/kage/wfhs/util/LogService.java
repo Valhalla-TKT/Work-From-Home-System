@@ -44,6 +44,7 @@ public class LogService {
                 deviceInformation);
 
         logger.info(logMessage);
+        System.out.println(currentTime + ": User: " + userDto.getStaffId() + ", " + userDto.getName() + ", " + userDto.getTeam().getName() + " Logged in.");
         writeLoginLog(logMessage);
     }
 
