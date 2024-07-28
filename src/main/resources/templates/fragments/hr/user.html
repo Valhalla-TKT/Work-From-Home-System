@@ -89,29 +89,33 @@
 								}
 
 								.table th, .table td {
-									border: 1px solid #ddd;
+									border: none;
 									padding: 10px 15px;
 									text-align: left;
 									width: 20%;
 									box-sizing: border-box;
 								}
 
-								.table th {
-									background-color: #f8f9fa;
+								.table thead th {
 									color: #333;
 									font-weight: bold;
 								}
 
-								.table tr:nth-child(even) {
+								.table tbody tr:nth-child(even) {
+									background-color: #fff;
+								}
+
+								.table tbody tr:nth-child(even) {
+									background-color: #fff;
+								}
+
+								.table tbody tr:hover {
 									background-color: #f2f2f2;
 								}
 
-								.table tr:hover {
-									background-color: #e9ecef;
-								}
-
-								.table th, .table td {
-									border-bottom: 1px solid #ddd;
+								.table tbody tr th, .table tbody tr  td {
+									border-top: 1px solid rgb(201, 201, 201);
+									border-bottom: 1px solid rgb(201, 201, 201);
 								}
 
 								.pagination {
@@ -121,11 +125,12 @@
 								}
 
 								.page-numbers {
+									display: flex;
 									margin: 0 5px;
-									padding: 10px 15px;									
-									color: #333;									
+									padding: 10px 15px;
+									color: #333;
 								}
-								
+
 								.page-link {
 									padding: 5px 10px;
 								}
@@ -165,19 +170,21 @@
 							</div>
 
 							<div class="table-container">
-							<table id="staff-table" class="table">
-							    <thead>
-							        <tr>
-							            <th>Name</th>
-							            <th>Staff ID</th>
-							            <th>Division</th>
-							            <th>Department</th>
-							            <th>Team</th>
-										<th>Action</th>
-							        </tr>
-							    </thead>
-							    <tbody id="staff-list"></tbody>
-							</table>
+								<table id="staff-table" class="table">
+									<thead>
+										<tr>
+											<th>Name</th>
+											<th>Staff ID</th>
+											<th>Division</th>
+											<th>Department</th>
+											<th>Team</th>
+											<th>Action</th>
+										</tr>
+									</thead>
+									<tbody id="staff-list">
+										<!-- staff data will be automatically injected -->
+									</tbody>
+								</table>
 							</div>
 							<div class="pagination">
 								<span class="page-numbers"></span>

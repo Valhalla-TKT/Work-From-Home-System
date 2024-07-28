@@ -65,4 +65,6 @@ public interface UserService {
 
     boolean updateApproveRole(long userId, List<Long> approveRoleIdList);
 	List<UserDto> getAllApprover();
+
+    UserDto changePosition(Long userId, String position);
 }

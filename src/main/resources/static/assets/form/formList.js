@@ -36,10 +36,10 @@ $(document).ready(function() {
 	if(userRole !== 'PROJECT_MANAGER' || userRole !== 'APPLICANT') {
 		getTeamsPendingForm();
 	}
-	if(userRole === 'DIVISION_HEAD') {
-
-		getDepartmentsPendingForm();
-	}
+	// if(userRole === 'DIVISION_HEAD') {
+	//
+	// 	getDepartmentsPendingForm();
+	// }
 	if(userRole === 'CISO' || userRole === 'CEO' || userRole === 'SERVICE_DESK') {
 		getAllForm();
 	}
@@ -77,6 +77,7 @@ $(document).ready(function() {
                 userId: userId
             },
             success: function(response) {
+
 				console.log(response)
 				var forms = response.forms;
 				var applicantList = response.applicants;
@@ -354,69 +355,48 @@ $(document).ready(function() {
 	// }
 
 	function getTeamsPendingForm() {
-		$.ajax({
-			url: `${getContextPath()}/api/registerform/getAllForms`,
-			type: 'POST',
-			data: {
-				status: status,
-				userId: userId
-			},
-			success: function(response) {
-				console.log(response);
 
-				// Assuming currentUser.teams is an array of team objects
-				var teams = currentUser.teams;
+		var teams = currentUser.teams;
 
-				// Empty the container
-				$("#team-folder-view .form-card-container").empty();
+		// Empty the container
+		$("#team-folder-view .form-card-container").empty();
 
-				teams.forEach(function(team) {
-					// Create folder container
-					var $folderContainer = $("<div>", {
-						class: "folder-container"
-					});
+		teams.forEach(function(team) {
 
-					var $folder = $("<div>", {
-						class: "folder",
-						dblclick: function() {
-							console.log(team.id);
-							console.log("hi");
-							currentTeamId = team.id;
-							getTeamForms(status, team.id, userId);
-						}
-					});
+			var $folderContainer = $("<div>", {
+				class: "folder-container"
+			});
 
-					// Create the inner content
-					var $topDiv = $("<div>", {
-						class: "top"
-					});
+			var $folder = $("<div>", {
+				class: "folder",
+				dblclick: function() {
+					console.log(team.id);
+					console.log("hi");
+					currentTeamId = team.id;
+					getTeamForms(status, team.id, userId);
+				}
+			});
 
-					var $bottomDiv = $("<div>", {
-						class: "bottom"
-					});
+			var $topDiv = $("<div>", {
+				class: "top"
+			});
 
-					// Create title container
-					var $title = $("<div>", {
-						class: "folder-title",
-						text: team.name
-					});
+			var $bottomDiv = $("<div>", {
+				class: "bottom"
+			});
 
-					// Append inner content to folder
-					$folder.append($topDiv, $bottomDiv);
+			var $title = $("<div>", {
+				class: "folder-title",
+				text: team.name
+			});
 
-					// Append folder and title to folder container
-					$folderContainer.append($folder).append($title);
+			$folder.append($topDiv, $bottomDiv);
 
-					// Append folder container to form-card-container
-					$("#team-folder-view .form-card-container").append($folderContainer);
-				});
-				$("#team-folder-view").addClass("team-folder-view").removeClass("resume-card-view").show();
-			},
-			error: function(xhr, status, error) {
-				console.error('Error:', error);
-				console.log('Response:', xhr.responseText);
-			}
+			$folderContainer.append($folder).append($title);
+
+			$("#team-folder-view .form-card-container").append($folderContainer);
 		});
+		$("#team-folder-view").addClass("team-folder-view").removeClass("resume-card-view").show();
 	}
 
 

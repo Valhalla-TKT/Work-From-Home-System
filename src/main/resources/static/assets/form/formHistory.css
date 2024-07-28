@@ -139,121 +139,121 @@
     border-radius: 4px;
 }
 
-.form-history-listing {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: space-between;
-    margin-bottom: 20px;
-}
+/*.form-history-listing {*/
+/*    display: flex;*/
+/*    flex-wrap: wrap;*/
+/*    justify-content: space-between;*/
+/*    margin-bottom: 20px;*/
+/*}*/
 
-.form-history-card {
-    background-color: #fff;
-    width: 48%;
-    margin: 10px;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3), 0 0 0 1px rgba(0, 0, 0, 0.04);
-    border-radius: 8px;
-    overflow: hidden;
-    transition: transform 0.3s;
-}
+/*.form-history-card {*/
+/*    background-color: #fff;*/
+/*    width: 48%;*/
+/*    margin: 10px;*/
+/*    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3), 0 0 0 1px rgba(0, 0, 0, 0.04);*/
+/*    border-radius: 8px;*/
+/*    overflow: hidden;*/
+/*    transition: transform 0.3s;*/
+/*}*/
 
-.form-history-card:hover {
-    transform: scale(1.05);
-}
+/*.form-history-card:hover {*/
+/*    transform: scale(1.05);*/
+/*}*/
 
-.form-history-info {
-    padding: 15px;
-}
+/*.form-history-info {*/
+/*    padding: 15px;*/
+/*}*/
 
-.form-history-title {
-    font-size: 1.5em;
-    margin: 0 0 10px;
-    color: #333;
-}
+/*.form-history-title {*/
+/*    font-size: 1.5em;*/
+/*    margin: 0 0 10px;*/
+/*    color: #333;*/
+/*}*/
 
-.form-history-details {
-    display: flex;
-    justify-content: space-between;
-    margin: 0;
-    color: #666;
-}
+/*.form-history-details {*/
+/*    display: flex;*/
+/*    justify-content: space-between;*/
+/*    margin: 0;*/
+/*    color: #666;*/
+/*}*/
 
-.form-history-status {
-    margin: 0 0 5px;
-    color: #333;
-    padding: 0 20px;
-    border-radius: 4px;
-    display: flex;
-    align-items: center;
-    font-weight: bold;
-}
+/*.form-history-status {*/
+/*    margin: 0 0 5px;*/
+/*    color: #333;*/
+/*    padding: 0 20px;*/
+/*    border-radius: 4px;*/
+/*    display: flex;*/
+/*    align-items: center;*/
+/*    font-weight: bold;*/
+/*}*/
 
-.approve-status {
-    background-color: #4CAF50;
-    color: #fff;
-}
+/*.approve-status {*/
+/*    background-color: #4CAF50;*/
+/*    color: #fff;*/
+/*}*/
 
-.pending-status {
-    background-color: #FF9800;
-    color: #fff;
-}
+/*.pending-status {*/
+/*    background-color: #FF9800;*/
+/*    color: #fff;*/
+/*}*/
 
-.reject-status {
-    background-color: #F44336;
-    color: #fff;
-}
+/*.reject-status {*/
+/*    background-color: #F44336;*/
+/*    color: #fff;*/
+/*}*/
 
-.pagination {
-    text-align: center;
-    margin-top: 20px;
-}
+/*.pagination {*/
+/*    text-align: center;*/
+/*    margin-top: 20px;*/
+/*}*/
 
-.page-link {
-    margin: 0 5px;
-    padding: 10px 15px;
-    background-color: #f0f0f0;
-    color: #333;
-    text-decoration: none;
-    border-radius: 4px;
-    transition: background-color 0.3s;
-}
+/*.page-link {*/
+/*    margin: 0 5px;*/
+/*    padding: 10px 15px;*/
+/*    background-color: #f0f0f0;*/
+/*    color: #333;*/
+/*    text-decoration: none;*/
+/*    border-radius: 4px;*/
+/*    transition: background-color 0.3s;*/
+/*}*/
 
-.page-link:hover {
-    background-color: #e0e0e0;
-}
+/*.page-link:hover {*/
+/*    background-color: #e0e0e0;*/
+/*}*/
 
-/* history.css */
+/*!* history.css *!*/
 
-/* Existing styles... */
+/*!* Existing styles... *!*/
 
-.pagination {
-    text-align: center;
-    margin-top: 20px;
-}
+/*.pagination {*/
+/*    text-align: center;*/
+/*    margin-top: 20px;*/
+/*}*/
 
-.page-link {
-    display: inline-block;
-    margin: 0 5px;
-    padding: 10px 15px;
-    background-color: #f0f0f0;
-    color: #333;
-    text-decoration: none;
-    border-radius: 4px;
-    transition: background-color 0.3s;
-}
+/*.page-link {*/
+/*    display: inline-block;*/
+/*    margin: 0 5px;*/
+/*    padding: 10px 15px;*/
+/*    background-color: #f0f0f0;*/
+/*    color: #333;*/
+/*    text-decoration: none;*/
+/*    border-radius: 4px;*/
+/*    transition: background-color 0.3s;*/
+/*}*/
 
-.page-link:hover {
-    background-color: #e0e0e0;
-}
+/*.page-link:hover {*/
+/*    background-color: #e0e0e0;*/
+/*}*/
 
-.pagination .page-link.active {
-    font-weight: bold;
-    background-color: #ddd;
-}
+/*.pagination .page-link.active {*/
+/*    font-weight: bold;*/
+/*    background-color: #ddd;*/
+/*}*/
 
-.page-link.disabled {
-    pointer-events: none;
-    background-color: #e0e0e0;
-    color: #999;
-}
+/*.page-link.disabled {*/
+/*    pointer-events: none;*/
+/*    background-color: #e0e0e0;*/
+/*    color: #999;*/
+/*}*/
 
 

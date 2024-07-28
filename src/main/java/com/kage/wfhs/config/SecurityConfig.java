@@ -7,8 +7,8 @@
  */
 package com.kage.wfhs.config;
 
-import com.kage.wfhs.dto.UserDto;
 import com.kage.wfhs.dto.auth.CurrentLoginUserDto;
+import com.kage.wfhs.security.CustomAuthenticationEntryPoint;
 import com.kage.wfhs.security.FirstTimeLoginFilter;
 import com.kage.wfhs.service.UserService;
 import com.kage.wfhs.util.LogService;
@@ -33,7 +33,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 
 import com.kage.wfhs.security.JwtAuthenticationFilter;
 import com.kage.wfhs.security.OurUserDetailService;
-import com.kage.wfhs.util.JwtUtil;
+import com.kage.wfhs.jwt.JwtUtil;
 
 import jakarta.servlet.http.Cookie;
 
@@ -58,7 +58,7 @@ public class SecurityConfig {
                 .cors(Customizer.withDefaults())
                 .httpBasic(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/static/**", "/assets/**", "/swagger-ui/**", "/icons/**", "/formImages/**", "/images/**", "/ws/**", "/auth/**").permitAll()
+                        .requestMatchers("/static/**", "/assets/**", "/icons/**", "/formImages/**", "/images/**", "/ws/**", "/auth/**").permitAll()
                         .requestMatchers("/admin/**").access((authentication, context) -> {
                             Authentication authen = authentication.get();
                             boolean isApplicant = authen.getAuthorities().stream()
@@ -66,10 +66,10 @@ public class SecurityConfig {
                             return isApplicant ? new org.springframework.security.authorization.AuthorizationDecision(false)
                                     : new org.springframework.security.authorization.AuthorizationDecision(true);
                         })
-                        .requestMatchers("/form/viewDetail").authenticated()
                         .anyRequest().authenticated()
                 )
-                .exceptionHandling(exceptionHandling -> exceptionHandling.accessDeniedPage("/accessDenied"))
+                .exceptionHandling(exceptionHandling -> exceptionHandling
+                        .authenticationEntryPoint(customAuthenticationEntryPoint()))
                 .addFilterBefore(jwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class)
                 .addFilterAfter(firstTimeLoginFilter, JwtAuthenticationFilter.class)
                 .formLogin(form -> form
@@ -89,11 +89,6 @@ public class SecurityConfig {
 
                                     CurrentLoginUserDto userDto = userService.getLoginUserBystaffId(authentication.getName());
                                     request.getSession().setAttribute("login-user", userDto);
-//                                    String logMessage = String.format("User logged in: Staff ID=%s, Name=%s, Team Name=%s",
-//                                            userDto.getStaffId(), userDto.getName(),
-//                                            userDto.getTeam() != null ? userDto.getTeam().getName() : "No Team");
-//                                    logger.info(logMessage);
-//                                    writeLoginLog(logMessage);
                                     String deviceInfo = request.getParameter("deviceInfo");
                                     logService.logUserLogin(userDto, deviceInfo);
                                     response.sendRedirect(contextPath + "/dashboard");
@@ -120,34 +115,14 @@ public class SecurityConfig {
         return http.build();
     }
 
-//    private void writeLoginLog(String logMessage) {
-//        try (BufferedWriter writer = new BufferedWriter(new FileWriter(LOGIN_LOG_FILE, true))) {
-//            writer.write(logMessage);
-//            writer.newLine();
-//        } catch (IOException e) {
-//            logger.error("Error writing login log: ", e);
-//        }
-//    }
-//
-//    public void logUserLogin(CurrentLoginUserDto userDto) {
-//        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-//        String currentTime = LocalDateTime.now().format(formatter);
-//
-//        String logMessage = String.format("User logged in at %s: Staff ID=%s, Name=%s, Team Name=%s, Department Name=%s, Division Name=%s",
-//                currentTime,
-//                userDto.getStaffId(),
-//                userDto.getName(),
-//                userDto.getTeam() != null ? userDto.getTeam().getName() : "No Team",
-//                userDto.getDepartment() != null ? userDto.getDepartment().getName() : "No Department",
-//                userDto.getDepartment() != null ? userDto.getDivision().getName() : "No Division");
-//
-//        logger.info(logMessage);
-//        writeLoginLog(logMessage);
-//    }
-
     @Bean
     public JwtAuthenticationFilter jwtAuthenticationFilter() {
         return new JwtAuthenticationFilter();
+    }
+
+    @Bean
+    public CustomAuthenticationEntryPoint customAuthenticationEntryPoint() {
+        return new CustomAuthenticationEntryPoint();
     }
 
     @Bean
