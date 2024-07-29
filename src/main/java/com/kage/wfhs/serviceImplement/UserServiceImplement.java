@@ -12,8 +12,7 @@ import java.util.stream.Collectors;
 
 import com.kage.wfhs.dto.auth.CurrentLoginUserDto;
 import com.kage.wfhs.exception.EntityNotFoundException;
-import com.kage.wfhs.util.DtoUtil;
-import com.kage.wfhs.util.LogService;
+import com.kage.wfhs.util.*;
 import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -37,11 +36,11 @@ import com.kage.wfhs.repository.DivisionRepository;
 import com.kage.wfhs.repository.TeamRepository;
 import com.kage.wfhs.repository.UserRepository;
 import com.kage.wfhs.service.UserService;
-import com.kage.wfhs.util.EntityUtil;
-import com.kage.wfhs.util.Helper;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.transaction.annotation.Transactional;
+import org.thymeleaf.context.Context;
+import org.thymeleaf.spring6.SpringTemplateEngine;
 
 @Service
 @RequiredArgsConstructor
@@ -63,6 +62,10 @@ public class UserServiceImplement implements UserService {
 	private final ModelMapper modelMapper;
 
 	private final PasswordEncoder passwordEncoder;
+
+	private final EmailSenderService emailSenderService;
+
+	private final SpringTemplateEngine templateEngine;
 
 	@Override
     public UserDto createUser(UserDto userDto) {
@@ -209,14 +212,14 @@ public class UserServiceImplement implements UserService {
 	public List<UserDto> getAllUser() {
 		Sort sort = Sort.by(Sort.Direction.ASC, "staffId");
 		List<User> users = EntityUtil.getAllEntities(userRepo, sort, "user");
-		if(users != null) {
-			users.remove(users.getFirst());
-		}
 		if(users == null)
-			return null;		
-		return users.stream()
-					.map(user -> modelMapper.map(user, UserDto.class))
-					.collect(Collectors.toList());
+			return null;
+        users.remove(users.getFirst());
+        List<UserDto> userDtos = DtoUtil.mapList(users, UserDto.class, modelMapper);
+		for (UserDto userDto : userDtos) {
+			userDto.setPassword(null);
+		}
+		return userDtos;
 	}
 
 	@Override
@@ -529,4 +532,25 @@ public class UserServiceImplement implements UserService {
 		User savedUser = EntityUtil.saveEntity(userRepo, user, "user");
 		return DtoUtil.map(savedUser, UserDto.class, modelMapper);
 	}
+
+	public boolean sendMailToAll(String subject, String body) {
+		Sort sort = Sort.by(Sort.Direction.ASC, "staffId");
+		List<User> users = EntityUtil.getAllEntities(userRepo, sort, "user");
+		if (users == null)
+			return false;
+		User defaultUser = userRepo.findByStaffId("00-00001");
+		users.remove(defaultUser);
+
+		Context context = new Context();
+		context.setVariable("body", body);
+
+		String processedBody = templateEngine.process("email-template", context);
+
+		for (User user : users) {
+			emailSenderService.sendEmail(user.getEmail(), subject, processedBody);
+		}
+		return true;
+	}
+
+
 }

@@ -33,7 +33,7 @@ $(document).ready(function() {
 		getTeamMembersPendingForm();
 	}
 	// if(userRole === 'DEPARTMENT_HEAD' || userRole === 'DIVISION_HEAD') {
-	if(userRole !== 'PROJECT_MANAGER' || userRole !== 'APPLICANT') {
+	if(userRole !== 'PROJECT_MANAGER') {
 		getTeamsPendingForm();
 	}
 	// if(userRole === 'DIVISION_HEAD') {
@@ -938,11 +938,10 @@ $(document).ready(function() {
         //selectAll();
         var formData = new FormData();
 		for (var i = 0; i < selectedValues.length; i++) {
-		    formData.append('formIds[]', selectedValues[i]);
-			formData.append('userId', userId);
+		    formData.append('formIds', selectedValues[i]);
 			console.log(selectedValues[i], userId)
 		}
-		
+		formData.append('userId', userId);
 		console.log(formData + "hello")
         bulkApprove(formData)
     });

@@ -33,19 +33,24 @@ public class LogService {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
         String currentTime = LocalDateTime.now().format(formatter);
         String deviceInformation = (deviceInfo != null && !deviceInfo.trim().isEmpty()) ? deviceInfo : "Unknown Device";
+        String logMessage = getLogMessage(userDto, currentTime, deviceInformation);
+        logger.info(logMessage);
+        writeLoginLog(logMessage);
+    }
 
-        String logMessage = String.format("User logged in at %s: Staff ID=%s, Name=%s, Team Name=%s, Department Name=%s, Division Name=%s, Device Info=%s",
+    private static String getLogMessage(CurrentLoginUserDto userDto, String currentTime, String deviceInformation) {
+        String teamName = userDto.getTeam() != null ? userDto.getTeam().getName() : "No Team";
+        String departmentName = userDto.getDepartment() != null ? userDto.getDepartment().getName() : "No Department";
+        String divisionName = userDto.getDivision() != null ? userDto.getDivision().getName() : "No Division";
+        System.out.println(currentTime + ": User: " + userDto.getStaffId() + ", " + userDto.getName() + ", team (" + teamName + ") Logged in.");
+        return String.format("User logged in at %s: Staff ID=%s, Name=%s, Team Name=%s, Department Name=%s, Division Name=%s, Device Info=%s",
                 currentTime,
                 userDto.getStaffId(),
                 userDto.getName(),
-                userDto.getTeam() != null ? userDto.getTeam().getName() : "No Team",
-                userDto.getDepartment() != null ? userDto.getDepartment().getName() : "No Department",
-                userDto.getDepartment() != null ? userDto.getDivision().getName() : "No Division",
+                teamName,
+                departmentName,
+                divisionName,
                 deviceInformation);
-
-        logger.info(logMessage);
-        System.out.println(currentTime + ": User: " + userDto.getStaffId() + ", " + userDto.getName() + ", " + userDto.getTeam().getName() + " Logged in.");
-        writeLoginLog(logMessage);
     }
 
     public void writeExcelImportLog(String logMessage) {

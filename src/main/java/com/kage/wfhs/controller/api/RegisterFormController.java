@@ -222,7 +222,6 @@ public class RegisterFormController {
     public ResponseEntity<Map<String, Object>> getAllForms(
             @RequestParam(value = "status") String status,
             @RequestParam(value = "userId") long userId){
-        System.out.println("status = " + status + "userId = " + userId);
         Map<String, Object> responseData = registerFormService.getFormWithStatus(status, 1L, userId, "user");
         return getMapResponseEntity(responseData);
     }
@@ -275,7 +274,7 @@ public class RegisterFormController {
 	}
     
     @PostMapping("/bulkApprove")
-    public ResponseEntity<String> bulkApprove(@RequestParam("formIds[]") List<Long> formIds, @RequestParam("userId") Long userId) throws Exception {
+    public ResponseEntity<String> bulkApprove(@RequestParam("formIds") List<Long> formIds, @RequestParam("userId") Long userId) throws Exception {
         for (long id : formIds) {
             System.out.println(id);
         }

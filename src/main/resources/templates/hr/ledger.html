@@ -15,7 +15,7 @@
 <main th:replace="~{fragments/hr/ledger :: content}"></main>
 <!-- main -->
 
-<div th:replace="fragments/footer :: footer"></div>
+<div th:replace="~{fragments/footer :: footer}"></div>
 <div id="signup-overlay" class="overlay ">
     <div class="lightbox">
         <a href="#" class="close" aria-label="close">
@@ -93,7 +93,7 @@
 
 <div id="site-notifications"></div>
 
-<div th:replace="fragments/chat :: chat"></div>
+<div th:replace="~{fragments/chat :: chat}"></div>
 
 <script th:src="@{/assets/welcome/fullscreen.js}"></script>
 

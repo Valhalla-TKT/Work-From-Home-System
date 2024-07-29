@@ -358,6 +358,12 @@ $(document).ready(async function() {
 				navProfileImg.alt = currentUser.name;
 				const profileImage = $('#profile-page-image')
 				profileImage.attr('src', `${getContextPath()}/assets/profile/${currentUser.profile}`).attr('alt', currentUser.name);
+
+				// to hide edit position button
+				const firstTimeLogin = currentUser.firstTimeLogin;
+				if(firstTimeLogin) {
+					$(".edit-position").hide();
+				}
 			}
 	    }
 	}

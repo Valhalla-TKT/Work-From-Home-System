@@ -36,8 +36,8 @@ public class RegisterForm implements Serializable {
     private Date toDate;
     @Column(columnDefinition = "TEXT")
     private String requestReason;
-    
-    @Column(columnDefinition = "TEXT")
+
+    @Column(columnDefinition = "LONGTEXT")
     private String signature;
     private Date signedDate;
     

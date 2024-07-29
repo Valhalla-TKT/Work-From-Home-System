@@ -28,15 +28,6 @@
         </select>
     </div>
 
-<!--    <div class="form-history-listing">-->
-
-<!--    </div>-->
-
-<!--    <div class="pagination">-->
-<!--        <a href="#" class="page-link" data-page="prev">Previous</a>-->
-<!--        <span class="page-numbers"></span>-->
-<!--        <a href="#" class="page-link" data-page="next">Next</a>-->
-<!--    </div>-->
     <style>
         .form-history-table {
             width: 100%;
@@ -108,6 +99,12 @@
             color: white;
             border-color: #4CAF50;
         }
+        .no-records-message {
+            text-align: center;
+            color: #888;
+            font-size: 1.2em;
+            margin-top: 20px;
+        }
     </style>
 
 
@@ -131,6 +128,7 @@
             <!-- Rows will be dynamically injected here -->
             </tbody>
         </table>
+        <div class="no-records-message" style="display:none;">No records available.</div>
     </div>
     <div class="pagination">
         <span class="page-numbers"></span>

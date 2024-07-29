@@ -68,33 +68,53 @@ $(document).ready(function() {
         toggleButtonAndSelect();
     });
 
-    
 
-    var regionSelect = $('#region-state-select');
-    regionSelect.append('<option value="" disabled selected>Region/State</option>');
-    $.each(regions, function(index, region){
-        regionSelect.append('<option value="' + region.regionState + '">' + region.regionState + '</option>');
-    });
 
-    $('#region-state-select').change(function(){
-        var selectedRegion = $(this).val();
-        var cities = [];
+	var regionSelect = $('#region-state-select');
+	regionSelect.append('<option value="" disabled selected>Region/State</option>');
 
-        $.each(regions, function(index, region){
-            if(region.regionState === selectedRegion) {
-                cities = region.cities;
-                return false;
-            }
-        });
-        
-        $('#city-township-select').empty();
+	regions.sort(function(a, b) {
+		return a.regionState.localeCompare(b.regionState);
+	});
+
+	var uniqueRegions = new Set();
+
+	$.each(regions, function(index, region) {
+		if (!uniqueRegions.has(region.regionState)) {
+			uniqueRegions.add(region.regionState);
+			regionSelect.append('<option value="' + region.regionState + '">' + region.regionState + '</option>');
+		}
+	});
+
+	$('#region-state-select').change(function() {
+		var selectedRegion = $(this).val();
+		var cities = [];
+
+		$.each(regions, function(index, region) {
+			if (region.regionState === selectedRegion) {
+				cities = region.cities;
+				return false;
+			}
+		});
+
+		cities.sort(function(a, b) {
+			return a.city.localeCompare(b.city);
+		});
+
+		$('#city-township-select').empty();
 		$('#city-township-select').append('<option value="" disabled selected>City/Township</option>');
-        $.each(cities, function(index, city){
-			
-            $('#city-township-select').append('<option value="' + city.city + '">' + city.city + '</option>');
-        });
-    });
-    var selectedRegion, selectedCity, workInMyanmar, workInMyanmarBoolean = false;
+
+		var uniqueCities = new Set();
+
+		$.each(cities, function(index, city) {
+			if (!uniqueCities.has(city.city)) {
+				uniqueCities.add(city.city);
+				$('#city-township-select').append('<option value="' + city.city + '">' + city.city + '</option>');
+			}
+		});
+	});
+
+	var selectedRegion, selectedCity, workInMyanmar, workInMyanmarBoolean = false;
     $('#city-township-select').change(function(){
         selectedRegion = $('#region-state-select').val().trim();
         selectedCity = $(this).val();

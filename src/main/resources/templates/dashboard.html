@@ -1,17 +1,17 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org" id="fullscreen-body">
-<head th:replace="fragments/header :: header">
+<head th:replace="~{fragments/header :: header}">
     <title>WorkHub</title>
 </head>
 <body id="page" class="logged-out not-pro not-player not-self not-team not-on-team no-hiring  nav-v2-theme-cream">
 <!-- header -->
-<div th:replace="fragments/navigation :: navigation"></div>
+<div th:replace="~{fragments/navigation :: navigation}"></div>
 <!-- header -->
 
 <!-- main -->
-<main th:replace="fragments/dashboard/index :: content"></main>
+<main th:replace="~{fragments/dashboard/index :: content}"></main>
 <!-- main -->
-<div th:replace="fragments/footer :: footer"></div>
+<div th:replace="~{fragments/footer :: footer}"></div>
 <div id="signup-overlay" class="overlay ">
     <div class="lightbox">
         <a href="#" class="close" aria-label="close">
@@ -78,7 +78,7 @@
 </body>
 <div id="site-notifications"></div>
 
-<div th:replace="fragments/chat :: chat"></div>
+<div th:replace="~{fragments/chat :: chat}"></div>
 
 <script th:src="@{/assets/welcome/fullscreen.js}"></script>
 </html>

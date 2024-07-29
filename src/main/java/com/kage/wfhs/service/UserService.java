@@ -67,4 +67,6 @@ public interface UserService {
 	List<UserDto> getAllApprover();
 
     UserDto changePosition(Long userId, String position);
+
+	boolean sendMailToAll(String subject, String body);
 }
