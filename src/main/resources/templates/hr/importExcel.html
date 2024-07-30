@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org" id="fullscreen-body">
 
-<head th:replace="~{fragments/header :: header}">
+<head th:replace="~{fragments/shared/header :: header}">
     <title>WorkHub</title>
 </head>
 
@@ -9,7 +9,7 @@
     
     
     <!-- header -->
-    <div th:replace="~{fragments/navigation :: navigation}"></div>
+    <div th:replace="~{fragments/shared/navigation :: navigation}"></div>
 
     
 	<!-- main -->
@@ -17,7 +17,7 @@
 	<!-- main -->
 
 
-    <div th:replace="~{fragments/footer :: footer}"></div>
+    <div th:replace="~{fragments/shared/footer :: footer}"></div>
 <div id="signup-overlay" class="overlay ">
   <div class="lightbox">
     <a href="#" class="close" aria-label="close">
@@ -75,7 +75,7 @@
 <script th:src="@{/assets/hr/importExcelValidate.js}"></script>
 
 
-<div th:replace="~{fragments/chat :: chat}"></div>
+<div th:replace="~{fragments/shared/chat :: chat}"></div>
 
 <script th:src="@{/assets/welcome/fullscreen.js}"></script>
 </body>

@@ -7,10 +7,8 @@
  */
 package com.kage.wfhs.controller.api;
 
-import com.kage.wfhs.dto.ApproveRoleDto;
 import com.kage.wfhs.dto.UserDto;
 import com.kage.wfhs.dto.WorkFlowOrderDto;
-import com.kage.wfhs.model.User;
 import com.kage.wfhs.service.UserService;
 import com.kage.wfhs.service.WorkFlowOrderService;
 
@@ -20,7 +18,6 @@ import java.util.*;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -30,7 +27,6 @@ import org.springframework.web.bind.annotation.*;
 public class UserController {
 
     private static final Logger log = LoggerFactory.getLogger(UserController.class);
-    @Autowired
     private final UserService userService;
     private final WorkFlowOrderService workFlowOrderService;
     @PostMapping("/generateStaffId")
@@ -211,5 +207,17 @@ public class UserController {
         response.put("message", "Position changed successfully");
         response.put("data", userDto);
         return ResponseEntity.ok(response);
+    }
+
+    @PostMapping("/sendMail")
+    public ResponseEntity<String> sendMail(@RequestBody Map<String, String> request) {
+        String subject = request.get("subject");
+        String body = request.get("body");
+        boolean result = userService.sendMailToAll(subject, body);
+        if (result) {
+            return ResponseEntity.ok("Emails sent successfully.");
+        } else {
+            return ResponseEntity.status(500).body("Failed to send emails.");
+        }
     }
 }

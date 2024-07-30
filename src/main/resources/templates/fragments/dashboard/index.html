@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org"
+	  xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 
 <head>
 	<title>WorkHub</title>
@@ -17,9 +18,8 @@
 				<div class="home-type-body-large font-weight-500">Get inspired
 					by the productivity and success of millions of remote workers and
 					companies around the world.</div>
-				<br> <a class="margin-t-32 btn2 btn2--large hide-ceo-only" data-track-cta="Get started" th:href="@{/applyForm}">Apply Form Now</a>
-				<a class="margin-t-32 btn2 btn2--large visible-ceo-only" id="ceo-apply-form-btn" data-track-cta="Get started">Apply Form
-					Now</a>
+				<br> <a class="margin-t-32 btn2 btn2--large" sec:authorize="!hasRole('CEO')" data-track-cta="Get started" th:href="@{/applyForm}">Apply Form Now</a>
+				<a class="margin-t-32 btn2 btn2--large" sec:authorize="hasRole('CEO')" id="ceo-apply-form-btn" data-track-cta="Get started">Apply Form Now</a>
 			</div>
 		</section>
 		<div class="home-feed"
@@ -208,7 +208,7 @@
 						</div>
 					</div>
 				</div> <br>
-				<div class="p-manager row g-3 col-lg-12 col-md-12 visible-pm-only" >
+				<div class="p-manager row g-3 col-lg-12 col-md-12 " sec:authorize="hasRole('PROJECT_MANAGER')" >
 					<div class="col-lg-7 col-md-12">
 						<div class="card-widget">
 							<div class="card-header">
@@ -252,7 +252,7 @@
 					</div> <br>
 				</div>
 
-				<div class="dept-head row g-3 col-lg-12 col-md-12 visible-dept-head-only" >
+				<div class="dept-head row g-3 col-lg-12 col-md-12" sec:authorize="hasRole('DEPARTMENT_HEAD')">
 					<div class="col-lg-7 col-md-12">
 						<div class="card-widget">
 							<div class="card-header">
@@ -297,7 +297,7 @@
 					</div> <br>
 				</div>
 
-				<div class="div-head row g-3 col-lg-12 col-md-12 visible-division-head-only" >
+				<div class="div-head row g-3 col-lg-12 col-md-12" sec:authorize="hasRole('DIVISION_HEAD')">
 					<div class="col-lg-7 col-md-12">
 						<div class="card-widget">
 							<div class="card-header">
@@ -341,7 +341,7 @@
 					</div> <br>
 				</div>
 
-				<div class="cch row g-3 col-lg-12 col-md-12 visible-cis-ceo-hr" >
+				<div class="cch row g-3 col-lg-12 col-md-12 visible-cis-ceo-hr" sec:authorize="hasAnyRole('CISO', 'CEO', 'HR')">
 					<div class="col-lg-7 col-md-12">
 						<div class="card-widget">
 							<div class="card-header">

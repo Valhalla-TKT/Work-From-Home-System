@@ -2,7 +2,7 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org" id="fullscreen-body">
 
-<head th:replace="~{fragments/header :: header}">
+<head th:replace="~{fragments/shared/header :: header}">
     <title>WorkHub</title>
 </head>
 
@@ -10,7 +10,7 @@
     
     
     <!-- header -->
-    <div th:replace="~{fragments/navigation :: navigation}"></div>
+    <div th:replace="~{fragments/shared/navigation :: navigation}"></div>
 	<!-- header -->
 
     <div th:replace="~{fragments/form/apply :: content}"></div>
@@ -87,7 +87,7 @@
 
 <div id="site-notifications"></div>
 
-<div th:replace="~{fragments/chat :: chat}"></div>
+<div th:replace="~{fragments/shared/chat :: chat}"></div>
  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>    
     <script src="https://cdnjs.cloudflare.com/ajax/libs/datedropper/2.0/datedropper.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/fetch-jsonp/build/fetch-jsonp.min.js"></script>
@@ -343,7 +343,7 @@
 
     </script>
     
-    <div th:replace="~{fragments/footer :: footer}"></div>
+    <div th:replace="~{fragments/shared/footer :: footer}"></div>
     
     
     

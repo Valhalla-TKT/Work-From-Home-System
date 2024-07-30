@@ -1,5 +1,9 @@
 document.addEventListener('DOMContentLoaded', async function () {
-    const currentUser = await getSessionUser()
+    let currentUser = JSON.parse(localStorage.getItem('currentUser'));
+    if(!currentUser) {
+        currentUser = await getSessionUser()
+    }
+
     const userId = currentUser.id
     if (!currentUser) {
         Swal.fire('Error', 'User not logged in.', 'error');

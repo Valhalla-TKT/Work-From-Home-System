@@ -1,11 +1,11 @@
 <!DOCTYPE html>
 
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org"
+	  xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 
 <head>
 <title>WorkHub</title>
 </head>
-
 <body>
 	<!-- ============================================================== -->
 	<!-- Form -->
@@ -84,7 +84,7 @@
 												<span data-v-741dde45="" class="title">Applicant
 													Information</span>
 											</header>
-											<div id="division-input-container" data-v-741dde45="" class="form-field-container hide-dept-head-only">
+											<div sec:authorize="hasAnyRole('CISO', 'CEO', 'HR')" id="division-input-container" data-v-741dde45="" class="form-field-container">
 					                          <span data-v-741dde45="" class="error-marker">
 					                            <div data-v-42dea6db="" data-v-741dde45="" class="">
 					                              <label data-v-42dea6db="" for="division-name" class="label">
@@ -99,7 +99,7 @@
 					                            </div>
 					                          </span>
 					                        </div> 
-											<div id="department-input-container" data-v-741dde45="" class="form-field-container hide-project-manager-only hide-applicant-only">
+											<div sec:authorize="hasAnyRole('DIVISION_HEAD','CISO', 'CEO', 'HR')" id="department-input-container" data-v-741dde45="" class="form-field-container">
 					                          <span data-v-741dde45="" class="error-marker">
 					                            <div data-v-42dea6db="" data-v-741dde45="" class="">
 					                              <label data-v-42dea6db="" for="department-name" class="label">
@@ -114,7 +114,7 @@
 					                            </div>
 					                          </span>
 					                        </div>
-											<div id="team-input-container" data-v-741dde45="" class="form-field-container hide-project-manager-only hide-applicant-only">
+											<div sec:authorize="hasAnyRole('DEPARTMENT_HEAD', 'DIVISION_HEAD','CISO', 'CEO', 'HR')" id="team-input-container" data-v-741dde45="" class="form-field-container">
 					                          <span data-v-741dde45="" class="error-marker">
 					                            <div data-v-42dea6db="" data-v-741dde45="" class="">
 					                              <label data-v-42dea6db="" for="department-name" class="label">

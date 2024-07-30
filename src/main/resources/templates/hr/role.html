@@ -2,7 +2,7 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org" id="fullscreen-body">
 
-<head th:replace="~{fragments/header :: header}">
+<head th:replace="~{fragments/shared/header :: header}">
 <title>WorkHub</title>
 </head>
 
@@ -11,7 +11,7 @@
 
 
 	<!-- header -->
-	<div th:replace="~{fragments/navigation :: navigation}"></div>
+	<div th:replace="~{fragments/shared/navigation :: navigation}"></div>
 	<!-- header -->
 
 	<div id="g_id_onload"
@@ -137,7 +137,7 @@
 
 	<div id="site-notifications"></div>
 
-	<div th:replace="~{fragments/chat :: chat}"></div>
+	<div th:replace="~{fragments/shared/chat :: chat}"></div>
 
 	<script src="/assets/welcome/fullscreen.js"></script>
 

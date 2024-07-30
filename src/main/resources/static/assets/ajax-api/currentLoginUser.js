@@ -1,14 +1,19 @@
 $(document).ready(async function() {
-	try {
-		const user = await getSessionUser();
-		if (!user) {
+	let user = JSON.parse(localStorage.getItem('currentUser'));
+	if(!user) {
+		try {
+			user = await getSessionUser();
+			if (!user) {
+				handleSessionExpired();
+			} else {
+				getData();
+			}
+		} catch (error) {
+			console.error('Error retrieving user:', error);
 			handleSessionExpired();
-		} else {
-			getData();
 		}
-	} catch (error) {
-		console.error('Error retrieving user:', error);
-		handleSessionExpired();
+	} else {
+		getData()
 	}
 
 	function handleSessionExpired() {
