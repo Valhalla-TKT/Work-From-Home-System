@@ -37,9 +37,7 @@ public interface UserService {
     UserDto getUserById(Long id);
     
     // codes for live chat between Service Desk and User
-	void setUserOnline(User user);
-	void disconnect(User user);
-	List<UserDto> findConnectedUsers();
+
 	List<UserDto> getUpperRole(Long workFlowOrderId, Long userId);
 	List<Object[]> getUserRequestByTeamId(Long teamId);
 	List<Object[]> getTotalStaffRequestByTeamId(String teamId);

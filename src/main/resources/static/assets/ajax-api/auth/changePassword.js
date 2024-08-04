@@ -72,7 +72,7 @@ document.addEventListener('DOMContentLoaded', async function () {
     function updatePositionInLocalStorage(position) {
         const currentUser = JSON.parse(localStorage.getItem('currentUser'));
         if (currentUser) {
-            currentUser.position = position;
+            currentUser.positionName = position;
             localStorage.setItem('currentUser', JSON.stringify(currentUser));
         }
     }
@@ -163,6 +163,7 @@ document.addEventListener('DOMContentLoaded', async function () {
                 .then((result) => {
                     if (result.isConfirmed) {
                         Swal.fire('Please log in again', '', 'info').then(() => {
+                            localStorage.removeItem('currentUser');
                             window.location.href = `${getContextPath()}/signOut`;
                         });
                     }

@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 
-<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<html xmlns:th="http://www.thymeleaf.org"
+	  xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 
 <head>
 <title>WorkHub</title>
@@ -883,7 +884,7 @@
 											</div>																							
 										</section>
 										<section data-v-741dde45="" data-v-115a39aa=""
-												class="user-form-container-2 user-form display-flex visible-service-desk-only" id="service-desk-input-section">
+												class="user-form-container-2 user-form display-flex" sec:authorize="hasAuthority('SERVICE_DESK')" id="service-desk-input-section">
 											<div class="pledge-container">
 												<div class="pledge-heading">
 													<h2>Suggestion Here</h2>

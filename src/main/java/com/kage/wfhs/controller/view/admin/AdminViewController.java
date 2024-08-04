@@ -2,7 +2,9 @@ package com.kage.wfhs.controller.view.admin;
 
 import com.kage.wfhs.dto.ExcelImportDto;
 import com.kage.wfhs.dto.LedgerDto;
+import com.kage.wfhs.dto.auth.CurrentLoginUserDto;
 import com.kage.wfhs.service.LedgerService;
+import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -47,7 +49,11 @@ public class AdminViewController {
     }
 
     @GetMapping("/user")
-    public String addUser() {
+    public String addUser(Model model, HttpSession session) {
+        CurrentLoginUserDto loginUser = (CurrentLoginUserDto) session.getAttribute("login-user");
+        if (loginUser != null) {
+            model.addAttribute("loginUser", loginUser);
+        }
         return "hr/user";
     }
 

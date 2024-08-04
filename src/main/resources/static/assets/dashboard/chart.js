@@ -471,9 +471,11 @@ document.addEventListener('DOMContentLoaded', function () {
   
     // Get the context of the canvas element
     const wfhsDivisionPercentChartJs = document.getElementById('wfh-division-percent-chartjs')
+    console.log(wfhsDivisionPercentChartJs)
     const divisionDonut = document.getElementById('division-gender-distribution-chartjs')
     let myDivisionBarChart, myDivisionDonutChart
     if(wfhsDivisionPercentChartJs) {
+        console.log("hi")
         const divisionbarctx = wfhsDivisionPercentChartJs.getContext('2d');
         const divisiondonutCtx = divisionDonut.getContext('2d');
         // Initialize the chart with empty data
@@ -637,12 +639,15 @@ document.addEventListener('DOMContentLoaded', function () {
   // Call getSessionUser() to fetch user data and update the chart
     getSessionUser().then((user) => {
         if (user) {
-            if (wfhsTeamPercentChartJs)
+            if(wfhsTeamPercentChartJs) {
                 getTeamData();
-            if(wfhsDepartmentPercentChartjs)
-                getDepartmentData();
-            if(wfhsDivisionPercentChartJs)
-                getDivisionData();
+            }
+                if(wfhsDepartmentPercentChartjs) {
+                    getDepartmentData();
+                }
+                if (wfhsDivisionPercentChartJs) {
+                    getDivisionData();
+                }
         } else {
             console.error('No user data found.');
         }

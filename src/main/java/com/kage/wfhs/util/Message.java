@@ -15,6 +15,9 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+
 @Service
 @Getter
 @Setter
@@ -43,4 +46,17 @@ public class Message {
 
     @Value("${error.unexpected}")
     private String unexpectedError;
+
+//    public String getEmailSubjectForOtpByServiceDesk() {
+//        LocalDate now = LocalDate.now();
+//        DateTimeFormatter monthFormatter = DateTimeFormatter.ofPattern("MMMM");
+//        DateTimeFormatter yearFormatter = DateTimeFormatter.ofPattern("yyyy");
+//
+//        String nextMonth = now.plusMonths(1).format(monthFormatter);
+//        String currentYear = now.format(yearFormatter);
+//
+//        return emailSubjectForOtpByServiceDesk
+//                .replace("${nextMonth}", nextMonth)
+//                .replace("${currentYear}", currentYear);
+//    }
 }

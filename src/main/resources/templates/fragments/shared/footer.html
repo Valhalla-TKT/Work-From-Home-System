@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org"
+	  xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 
 <head>
 <title>WorkHub</title>
@@ -22,7 +23,7 @@
 	
 	        <ul class="footer-v2__links">
 	            <li><a class="footer-v2__link" th:href="@{/dashboard}">Home</a></li>
-	            <li><a class="footer-v2__link hide-applicant-only" th:href="@{/admin/viewFormList}">View request list</a></li>
+	            <li><a class="footer-v2__link" sec:authorize="!hasAuthority('APPLICANT')" th:href="@{/admin/viewFormList}">View request list</a></li>
 	            <li><a class="footer-v2__link" th:href="@{/applyForm}">Apply form now</a></li>
 	            <li><a class="footer-v2__link" th:href="@{/historyForm}">View request history </a></li>
 	            <li><a class="footer-v2__link" th:href="@{/help}">FAQs</a></li>

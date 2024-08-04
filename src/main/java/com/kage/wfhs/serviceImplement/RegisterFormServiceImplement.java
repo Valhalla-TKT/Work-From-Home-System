@@ -17,7 +17,7 @@ import com.kage.wfhs.repository.RegisterFormRepository;
 import com.kage.wfhs.repository.UserRepository;
 import com.kage.wfhs.repository.WorkFlowStatusRepository;
 import com.kage.wfhs.service.ApproveRoleService;
-import com.kage.wfhs.service.NotificationService;
+//import com.kage.wfhs.service.NotificationService;
 import com.kage.wfhs.service.RegisterFormService;
 import com.kage.wfhs.service.WorkFlowOrderService;
 import com.kage.wfhs.util.*;
@@ -48,7 +48,7 @@ public class RegisterFormServiceImplement implements RegisterFormService {
 
     private final ModelMapper modelMapper;
 
-    private final NotificationService notificationService;
+//    private final NotificationService notificationService;
 
     private final CaptureRepository captureRepo;
 

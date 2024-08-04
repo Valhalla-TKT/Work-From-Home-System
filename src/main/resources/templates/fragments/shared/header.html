@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 
-<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<html xmlns:th="http://www.thymeleaf.org">
 
 <head th:fragment="header">
     <meta charset="utf-8">
@@ -96,7 +96,8 @@
     <script th:src="@{/assets/vendors/dataTables/datatables.net-buttons/js/dataTables.buttons.js}"></script>
     <script th:src="@{/assets/vendors/dataTables/datatables.net-buttons/js/buttons.html5.min.js}"></script>
     <script th:src="@{/assets/vendors/dataTables/datatables.net/js/dataTables.js}"></script>
-    <script src="https://cdn.datatables.net/2.0.1/js/dataTables.bootstrap5.js"></script>
+    <script th:src="@{/assets/vendors/dataTables/datatables.net-bs5/js/dataTables.bootstrap5.js}"></script>
+<!--    <script src="https://cdn.datatables.net/2.0.1/js/dataTables.bootstrap5.js"></script>-->
 
     <!-- Excel JS -->
     <script th:src="@{/assets/vendors/xlsx/dist/xlsx.full.min.js}"></script>

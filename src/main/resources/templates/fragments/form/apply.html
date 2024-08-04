@@ -84,7 +84,7 @@
 												<span data-v-741dde45="" class="title">Applicant
 													Information</span>
 											</header>
-											<div sec:authorize="hasAnyRole('CISO', 'CEO', 'HR')" id="division-input-container" data-v-741dde45="" class="form-field-container">
+											<div sec:authorize="hasAnyAuthority('CISO', 'CEO', 'HR')" id="division-input-container" data-v-741dde45="" class="form-field-container">
 					                          <span data-v-741dde45="" class="error-marker">
 					                            <div data-v-42dea6db="" data-v-741dde45="" class="">
 					                              <label data-v-42dea6db="" for="division-name" class="label">
@@ -99,7 +99,7 @@
 					                            </div>
 					                          </span>
 					                        </div> 
-											<div sec:authorize="hasAnyRole('DIVISION_HEAD','CISO', 'CEO', 'HR')" id="department-input-container" data-v-741dde45="" class="form-field-container">
+											<div sec:authorize="hasAnyAuthority('DIVISION_HEAD','CISO', 'CEO', 'HR')" id="department-input-container" data-v-741dde45="" class="form-field-container">
 					                          <span data-v-741dde45="" class="error-marker">
 					                            <div data-v-42dea6db="" data-v-741dde45="" class="">
 					                              <label data-v-42dea6db="" for="department-name" class="label">
@@ -114,10 +114,10 @@
 					                            </div>
 					                          </span>
 					                        </div>
-											<div sec:authorize="hasAnyRole('DEPARTMENT_HEAD', 'DIVISION_HEAD','CISO', 'CEO', 'HR')" id="team-input-container" data-v-741dde45="" class="form-field-container">
+											<div sec:authorize="hasAnyAuthority('DEPARTMENT_HEAD', 'DIVISION_HEAD','CISO', 'CEO', 'HR')" id="team-input-container" data-v-741dde45="" class="form-field-container">
 					                          <span data-v-741dde45="" class="error-marker">
 					                            <div data-v-42dea6db="" data-v-741dde45="" class="">
-					                              <label data-v-42dea6db="" for="department-name" class="label">
+					                              <label data-v-42dea6db="" for="team-name" class="label">
 					                                Choose Team
 					                                <span data-v-42dea6db="" class="color-lobster">*</span>
 					                              </label>

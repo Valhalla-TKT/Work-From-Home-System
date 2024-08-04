@@ -78,6 +78,7 @@ public class SecurityConfig {
                         .defaultSuccessUrl("/dashboard")
                         .successHandler(
                                 (request, response, authentication) -> {
+                                    System.out.println("Authentication success handler called");
                                     String contextPath = request.getContextPath();
                                     String token = jwtUtil.generateToken(authentication.getName());
                                     Cookie cookie = new Cookie("JWT", token);

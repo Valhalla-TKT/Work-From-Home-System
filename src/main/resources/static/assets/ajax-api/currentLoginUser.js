@@ -71,7 +71,7 @@ $(document).ready(async function() {
 			// 	}
 			// 	if(userRole === 'APPLICANT') {
 			// 		$('.form-pending-notification-container').hide();
-			// 		$('.hide-applicant-only').hide();
+			// 		$('.').hide();
 			// 	}
 			// 	if(userRole !== 'APPLICANT') {
 			// 		$('.form-status-approve-reject-notification-container').hide();
@@ -199,56 +199,60 @@ $(document).ready(async function() {
 			// 	}
 	        // });
 			//
-			if(!hasRole.SERVICE_DESK) {
-				$('#service-desk-notification').hide();
-				$('.visible-service-desk-only').hide();
-			}
-			if(hasRole.APPLICANT) {
-				$('.form-pending-notification-container').hide();
-				$('.hide-applicant-only').hide();
-			}
-			if(!hasRole.APPLICANT) {
-				$('.form-status-approve-reject-notification-container').hide();
-				$('.visible-applicant-only').hide();
-			}
-			if(!hasRole.HR) {
-				$('.visible-hr-only').hide();
-			}
-			if(hasRole.HR) {
-				$('.hide-hr-only').hide();
-			}
-			if(hasRole.CEO) {
-				$('.hide-ceo-only').hide();
 
-			}
-			if(!hasRole.CEO && !hasRole.CISO && !hasRole.HR) {
-				$('.visible-cis-ceo-hr').hide();
-			}
 
-			if(!hasRole.CEO) {
-				$('.visible-ceo-only').hide();
-			}
-			if(hasRole.CISO) {
-				$('.visible-ciso-hr').show();
-			}
-			if(hasRole.SERVICE_DESK) {
-				$('.hide-service-desk-only').hide();
 
-			}
-			if(!hasRole.PROJECT_MANAGER) {
-				$('.visible-pm-only').hide();
-			}
+			// if(!hasRole.SERVICE_DESK) {
+			// 	$('#service-desk-notification').hide();
+			// 	$('.visible-service-desk-only').hide();
+			// }
+			// if(hasRole.APPLICANT) {
+			// 	//$('.form-pending-notification-container').hide();
+			// 	// $('.hide-applicant-only').hide();
+			// }
+			// if(!hasRole.APPLICANT) {
+			// 	// $('.form-status-approve-reject-notification-container').hide();
+			// 	// $('.visible-applicant-only').hide();
+			// }
+			// if(!hasRole.HR) {
+			// 	$('.visible-hr-only').hide();
+			// }
+			// if(hasRole.HR) {
+			// 	console.log("hi")
+			// 	$('.hide-hr-only').hide();
+			// }
+			// if(hasRole.CEO) {
+			// 	$('.hide-ceo-only').hide();
+			//
+			// }
+			// if(!hasRole.CEO && !hasRole.CISO && !hasRole.HR) {
+			// 	$('.visible-cis-ceo-hr').hide();
+			// }
 
-			if(!hasRole.DEPARTMENT_HEAD) {
-				$('.visible-dept-head-only').hide();
-			}
+			// if(!hasRole.CEO) {
+			// 	$('.visible-ceo-only').hide();
+			// }
+			// if(hasRole.CISO) {
+			// 	$('.visible-ciso-hr').show();
+			// }
+			// if(hasRole.SERVICE_DESK) {
+			// 	$('.hide-service-desk-only').hide();
+			//
+			// }
+			// if(!hasRole.PROJECT_MANAGER) {
+			// 	$('.visible-pm-only').hide();
+			// }
 
-			if(!hasRole.DIVISION_HEAD) {
-				$('.visible-division-head-only').hide();
-			}
+			// if(!hasRole.DEPARTMENT_HEAD) {
+			// 	$('.visible-dept-head-only').hide();
+			// }
+
+			// if(!hasRole.DIVISION_HEAD) {
+			// 	$('.visible-division-head-only').hide();
+			// }
 
 			if(hasRole.PROJECT_MANAGER) {
-				$('.hide-project-manager-only').hide();
+				// $('.hide-project-manager-only').hide();
 				$('#project-manager-approval-output-section').hide();
 				$('#department-head-approval-output-section').hide();
 				$('#division-head-approval-output-section').hide();
@@ -262,7 +266,6 @@ $(document).ready(async function() {
 				$('#service-desk-input-section').hide();
 			}
 			if(hasRole.DEPARTMENT_HEAD) {
-				$('.hide-dept-head-only').hide();
 				$('#project-manager-approval-output-section').show();
 				$('#department-head-approval-output-section').hide();
 				$('#division-head-approval-output-section').hide();
@@ -340,21 +343,7 @@ $(document).ready(async function() {
 			$('#position_page_team_name').text(teamName);
 	        $('#position_page_department_name').text(departmentName);
 			$('#position_page_division_name').text(divisionName);
-	        // $('#profile_page_role_name').text(userRole);
 	        if (currentUser.profile) {
-				// 	console.log("Hii")
-				//     $('.show-profile-is-not-null').hide();
-				//     if (currentUser.gender === "male") {
-				//         $('.show-profile-is-null.male').show();
-				// 		$('.show-profile-is-null.female').hide();
-				//     } else if (currentUser.gender === "female") {
-				// 		$('.show-profile-is-null.male').hide();
-				// 		$('.show-profile-is-null.female').show();
-				//     }
-				// } else {
-				//     $('.show-profile-is-null').show();
-				//     $('.show-profile-is-not-null').show();
-				// }
 				const navModalProfileImg = document.getElementById("nav-modal-profile-img");
 				const navProfileImg = document.getElementById("nav-profile-img");
 				navModalProfileImg.src = `${getContextPath()}/assets/profile/${currentUser.profile}`;

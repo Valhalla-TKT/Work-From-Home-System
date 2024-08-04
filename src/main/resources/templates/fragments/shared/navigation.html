@@ -36,12 +36,12 @@
 						<li class="nav-v2-main__item nav-v2-main__item--sub-nav"><a href="#">Forms</a>
 
 							<ul class="nav-v2-sub">
-								<li class="nav-v2-sub__item hide-applicant-only hide-hr-only">
+								<li class="nav-v2-sub__item" sec:authorize="!hasAnyAuthority('APPLICANT', 'HR')">
 									<a class="nav-v2-sub__link" data-nav-event-clicked="Designer Search" th:href="@{/admin/viewFormList}"> View request list
 										<span class="nav-v2-sub__subtitle">Quickly view work from home form</span>
 									</a>
 								</li>
-								<li class="nav-v2-sub__item visible-hr-only">
+								<li class="nav-v2-sub__item" sec:authorize="hasAuthority('HR')">
 									<a class="nav-v2-sub__link" data-nav-event-clicked="Designer Search" th:href="@{/admin/ledger}"> Ledger
 										<span class="nav-v2-sub__subtitle">Fully view the WFH ledger</span>
 									</a>
@@ -58,8 +58,8 @@
 								</li>
 							</ul>
 						</li>
-						
-						<li class="nav-v2-main__item nav-v2-main__item--sub-nav" sec:authorize="hasAnyRole('PROJECT_MANAGER', 'DEPARTMENT_HEAD', 'DIVISION_HEAD','CISO', 'CEO', 'HR')"><a data-nav-event-clicked="Hire Designers" href="#" >Manage</a>
+
+						<li class="nav-v2-main__item nav-v2-main__item--sub-nav" sec:authorize="!hasAuthority('APPLICANT')"><a data-nav-event-clicked="Hire Designers" href="#" >Manage</a>
 
 							<ul class="nav-v2-sub">
 							    <li class="nav-v2-sub__item">
@@ -82,16 +82,16 @@
 							            <span class="nav-v2-sub__subtitle">Control users</span>
 							        </a>
 							    </li>				
-								<li class="nav-v2-sub__item visible-hr-only">
+								<li class="nav-v2-sub__item" sec:authorize="hasAuthority('HR')">
 							        <a class="nav-v2-sub__link" data-nav-event-clicked="Add User" th:href="@{/admin/importExcel}">Import
 							            <span class="nav-v2-sub__subtitle">Import Excel Here</span>
 							        </a>
 							    </li>
-							    <li class="nav-v2-sub__item visible-hr-only">
-							        <a class="nav-v2-sub__link" data-nav-event-clicked="Add User" th:href="@{/admin/approveRoleSwitch}">Switch
-							            <span class="nav-v2-sub__subtitle">Switch Approve Role Here</span>
-							        </a>
-							    </li>		
+<!--							    <li class="nav-v2-sub__item" sec:authorize="hasAuthority('HR')">-->
+<!--							        <a class="nav-v2-sub__link" data-nav-event-clicked="Add User" th:href="@{/admin/approveRoleSwitch}">Switch-->
+<!--							            <span class="nav-v2-sub__subtitle">Switch Approve Role Here</span>-->
+<!--							        </a>-->
+<!--							    </li>		-->
 							    
 							</ul>
 						</li>
@@ -133,76 +133,6 @@
 			<div class="nav-v2-dynamic" data-nav-v2-dynamic>
 
 				<div class="nav-v2-dynamic__logged-out">
-<!--					&lt;!&ndash; ============================================================== &ndash;&gt;-->
-<!--					&lt;!&ndash; Notifications &ndash;&gt;-->
-<!--					&lt;!&ndash; ============================================================== &ndash;&gt;-->
-<!--					<div class="nav-v2-dynamic__login ">-->
-<!--						<i id="bell-icon" style="font-size: 24px; z-index: 2; position: relative; cursor: pointer;" class="fa-regular fa-bell">-->
-<!--							<span id="applicant-form-count" class="notification-count-container-count visible-applicant-only">0</span>-->
-<!--							<span id="approver-form-count" class="notification-count-container-count hide-applicant-only">0</span>-->
-<!--						</i>						-->
-<!--						<div class="notification-count-container" id="notification-count-container">-->
-<!--							-->
-<!--							<div class="notification-box-container">-->
-<!--								<div class="notification-box-container-header">-->
-<!--									<p class="notification-box-container-title">Notifications</p>-->
-<!--									<p class="notification-box-container-title-new"><span>0</span> New</p>-->
-<!--								</div>-->
-<!--								-->
-<!--								<div class="notification-divider"></div>-->
-<!--								<ul class="notification-container-list">-->
-<!--									<li class="notification-container-list-items form-pending-notification-container" onclick="window.location.href='viewFormList'">-->
-<!--										<img alt="form" width="45" height="45" src="assets/icons/application.png">-->
-<!--										<div class="notification-container-list-text-box">-->
-<!--											<span class="notification-container-list-text-box-title">Form Application Notifications</span>-->
-<!--											<span class="notification-container-list-text-box-text">You have <span id="approver-pending-count">0</span> pending WFHS Forms.</span>-->
-<!--										</div>										-->
-<!--									</li>-->
-<!--									<li class="notification-container-list-items" id="service-desk-notification">-->
-<!--										<img alt="form" width="45" height="45" src="assets/icons/help-desk.png">-->
-<!--										<div class="notification-container-list-text-box">-->
-<!--											<span class="notification-container-list-text-box-title">Customer Support Notifications</span>-->
-<!--											<span class="notification-container-list-text-box-text">You have <span id="message-notification-count">0</span> unread messages.</span>-->
-<!--										</div>										-->
-<!--									</li>	-->
-<!--									<li class="notification-container-list-items" onclick="window.location.href='viewFormList'">-->
-<!--										<img alt="form" width="45" height="45" src="assets/icons/form-approve-reject.png">-->
-<!--										<div class="notification-container-list-text-box">-->
-<!--											<span class="notification-container-list-text-box-title">Form Approve Notifications</span>-->
-<!--											<span class="notification-container-list-text-box-text">You have <span id="form-approve-noti-service-desk-count">0</span> approved WFHS Forms.</span>-->
-<!--										</div>										-->
-<!--									</li>-->
-<!--									<li class="notification-container-list-items" onclick="window.location.href='viewFormList'">-->
-<!--										<img alt="form" width="45" height="45" src="assets/icons/form-approve-reject.png">-->
-<!--										<div class="notification-container-list-text-box">-->
-<!--											<span class="notification-container-list-text-box-title">Form Reject Notifications</span>-->
-<!--											<span class="notification-container-list-text-box-text">You have <span id="form-reject-noti-service-desk-count">0</span> rejected WFHS Forms.</span>-->
-<!--										</div>										-->
-<!--									</li>																-->
-<!--								</ul>-->
-<!--								<div class="notification-divider"></div>-->
-<!--								<div class="notification-box-container-view-all">View all notifications</div>-->
-<!--							</div>-->
-<!--						</div>										-->
-<!--					</div>-->
-<!--					<script>-->
-<!--						document.addEventListener("DOMContentLoaded", function() {-->
-<!--							const bellIcon = document.getElementById('bell-icon');-->
-<!--							const notificationContainer = document.getElementById('notification-count-container');-->
-<!--							-->
-<!--							bellIcon.addEventListener('click', () => {-->
-<!--								event.stopPropagation();-->
-<!--								notificationContainer.style.display = notificationContainer.style.display === 'block' ? 'none' : 'block';-->
-<!--							});-->
-<!--	-->
-<!--							document.addEventListener('click', (event) => {-->
-<!--				                if (!notificationContainer.contains(event.target) && event.target !== bellIcon) {-->
-<!--				                    notificationContainer.style.display = 'none';-->
-<!--				                }-->
-<!--				            });-->
-<!--							-->
-<!--						});-->
-<!--					</script>	-->
 					<!-- ============================================================== -->
 					<!-- Full Screen -->
 					<!-- ============================================================== -->

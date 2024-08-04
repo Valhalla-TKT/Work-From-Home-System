@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 
 <head>
 <title>WorkHub</title>
@@ -22,11 +23,11 @@
                                             <div class="search-summary-details">
                                                 <h1 class="search-summary-title" id="form-list-title">Work from Home Request Form Lists</h1>
                                             </div>
-                                            <button id="bulk-approve-btn" class="btn2 hide-service-desk-only" style="background: white; color: #0d0c22; margin-right: 10px;">Bulk Approve</button>
+                                            <button id="bulk-approve-btn" class="btn2" sec:authorize="!hasAuthority('SERVICE_DESK')" style="background: white; color: #0d0c22; margin-right: 10px;">Bulk Approve</button>
                                             <button id="select-all-btn" class="btn2" type="button">Select All</button>
-                                            <button id="go-upload-page" class="btn2 visible-service-desk-only hide-when-click-upload" style="background: white; color: #0d0c22; margin-right: 10px;">Upload Excel for OTP</button>             
-                                            <button id="service-desk-download-btn" class="btn2 visible-service-desk-only hide-when-click-upload">Download List</button>   
-                                            <button id="go-download-page" class="btn2 visible-service-desk-only show-when-click-upload hide-when-load-download-page">View List Page</button>                                     
+                                            <button id="go-upload-page" class="btn2 hide-when-click-upload" sec:authorize="hasAuthority('SERVICE_DESK')" style="background: white; color: #0d0c22; margin-right: 10px;">Upload Excel for OTP</button>
+                                            <button id="service-desk-download-btn" class="btn2 hide-when-click-upload" sec:authorize="hasAuthority('SERVICE_DESK')">Download List</button>
+                                            <button id="go-download-page" class="btn2 show-when-click-upload hide-when-load-download-page" sec:authorize="hasAuthority('SERVICE_DESK')">View List Page</button>
                                             <div class="designer-search-mobile-actions">
                                                 <a href="#" class="drawer-trigger" onclick="openFilter()">
                                                     <svg viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"
@@ -83,7 +84,7 @@
                                                     </div>
                                                     <select name="status" id="form-status-select" style="width: 100%;">
                                                         <option value="ALL">All</option>
-                                                        <option value="PENDING" class="hide-service-desk-only">Pending</option>
+                                                        <option value="PENDING" sec:authorize="!hasAuthority('SERVICE_DESK')">Pending</option>
                                                         <option value="APPROVE">Approved</option>
                                                         <option value="REJECT">Rejected</option>
                                                     </select>

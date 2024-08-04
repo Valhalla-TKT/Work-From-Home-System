@@ -23,7 +23,7 @@ import org.springframework.stereotype.Service;
 
 import com.kage.wfhs.dto.UserDto;
 import com.kage.wfhs.exception.EntityCreationException;
-import com.kage.wfhs.model.ActiveStatus;
+//import com.kage.wfhs.model.ActiveStatus;
 import com.kage.wfhs.model.ApproveRole;
 import com.kage.wfhs.model.Department;
 import com.kage.wfhs.model.Division;
@@ -210,7 +210,7 @@ public class UserServiceImplement implements UserService {
 
 	@Override
 	public List<UserDto> getAllUser() {
-		Sort sort = Sort.by(Sort.Direction.ASC, "staffId");
+		Sort sort = Sort.by(Sort.Direction.ASC, "createdAt");
 		List<User> users = EntityUtil.getAllEntities(userRepo, sort, "user");
 		if(users == null)
 			return null;
@@ -273,29 +273,29 @@ public class UserServiceImplement implements UserService {
 	}
 
 	// codes for live chat between Service Desk and User
-	@Override
-	public void setUserOnline(User user) {
-		user.setActiveStatus(ActiveStatus.ONLINE);
-		userRepo.save(user);
-	}
-
-	@Override
-	public void disconnect(User user) {
-		var storedUser = EntityUtil.getEntityById(userRepo, user.getId());
-        storedUser.setActiveStatus(ActiveStatus.OFFLINE);
-        userRepo.save(user);
-    }
-
-	@Override
-	public List<UserDto> findConnectedUsers() {
-		List<User> users = userRepo.findAllByActiveStatus(ActiveStatus.ONLINE);
-		List<UserDto> userList = new ArrayList<>();
-		for (User user : users) {
-			UserDto userDto = modelMapper.map(user, UserDto.class);
-			userList.add(userDto);
-		}
-		return userList;
-	}
+//	@Override
+//	public void setUserOnline(User user) {
+//		user.setActiveStatus(ActiveStatus.ONLINE);
+//		userRepo.save(user);
+//	}
+//
+//	@Override
+//	public void disconnect(User user) {
+//		var storedUser = EntityUtil.getEntityById(userRepo, user.getId());
+//        storedUser.setActiveStatus(ActiveStatus.OFFLINE);
+//        userRepo.save(user);
+//    }
+//
+//	@Override
+//	public List<UserDto> findConnectedUsers() {
+//		List<User> users = userRepo.findAllByActiveStatus(ActiveStatus.ONLINE);
+//		List<UserDto> userList = new ArrayList<>();
+//		for (User user : users) {
+//			UserDto userDto = modelMapper.map(user, UserDto.class);
+//			userList.add(userDto);
+//		}
+//		return userList;
+//	}
 
 	@Override
 	public UserDto getUserById(Long id) {
@@ -339,7 +339,14 @@ public class UserServiceImplement implements UserService {
 		// Create list of user DTOs
         return users.stream()
 				.filter(user -> shouldAddUser(user, currentUser, currentUserRole))
-				.map(user -> modelMapper.map(user, UserDto.class))
+				.map(user -> {
+					UserDto userDto = modelMapper.map(user, UserDto.class);
+					ApproveRole userRole = user.getApproveRoles().stream().findFirst().orElse(null);
+					if (userRole != null) {
+						userDto.setApproveRoleName(userRole.getName());
+					}
+					return userDto;
+				})
 				.collect(Collectors.toList());
 	}
 
@@ -443,9 +450,8 @@ public class UserServiceImplement implements UserService {
 		if(user == null) {
 			UserDto userDto = new UserDto();
 			userDto.setStaffId("00-00001");
-			userDto.setName("HR");
-			userDto.setEmail("hr@diracetechnology.com");
-			userDto.setPhoneNumber("000 000 000");
+			userDto.setName("Admin");
+			userDto.setEmail("defaultAdmin@diracetechnology.com");
 			userDto.setPassword(passwordEncoder.encode("123@dirace"));
 			userDto.setEnabled(true);
 			userDto.setGender("female");

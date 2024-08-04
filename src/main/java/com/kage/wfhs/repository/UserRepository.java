@@ -59,7 +59,7 @@ public interface UserRepository extends JpaRepository<User,Long> {
     @Query("SELECT u FROM User u JOIN u.approveRoles ar WHERE ar.name = :roleName")
     List<User> findByApproveRoleName(@Param("roleName") String roleName);
 
-	List<User> findAllByActiveStatus(ActiveStatus online);
+//	List<User> findAllByActiveStatus(ActiveStatus online);
 	
 	User findByApproveRoles_Name(String roleName);
 	

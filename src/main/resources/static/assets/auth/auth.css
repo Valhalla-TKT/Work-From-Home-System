@@ -62,6 +62,24 @@ form input {
   padding: 0 14px;
 }
 
+.password-container {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.password-container input {
+  padding-right: 40px;
+}
+
+.password-container span {
+  position: absolute;
+  top: 18px;
+  right: 10px;
+  cursor: pointer;
+  user-select: none;
+}
+
 form input:focus {
   outline: none;
   border-color: #000;
@@ -127,6 +145,13 @@ form a {
 
 .link .forgot:hover {
   text-decoration: underline;
+}
+
+#capsLockMessage {
+  display: none;
+  color: red;
+  font-size: 0.875rem;
+  margin-bottom: 15px;
 }
 
 @media (max-width: 900px) {

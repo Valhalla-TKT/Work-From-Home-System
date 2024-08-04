@@ -12,6 +12,7 @@ import java.util.Set;
 @NoArgsConstructor
 @AllArgsConstructor
 @ToString
+@Builder
 public class CurrentLoginUserDto {
     private Long id;
     private String staffId, name, email, gender, positionName, teamName, approveRoleName, departmentName, divisionName, profile;

@@ -43,7 +43,7 @@ public class ViewController {
     private final UserService userService;
     private final LedgerService ledgerService;
     private final ApproveRoleService approveRoleService;
-    private final NotificationTypeService notificationTypeService;
+//    private final NotificationTypeService notificationTypeService;
     private final DivisionRepository divisionRepo;
     private final DepartmentRepository departmentRepo;
     private final TeamRepository teamRepo;
@@ -64,10 +64,10 @@ public class ViewController {
         if(authentication != null && authentication.isAuthenticated()){
             CurrentLoginUserDto userDto = userService.getLoginUserBystaffId(authentication.getName());
             //session.setAttribute("login-user", userDto);
-            int notificationTypeCount = notificationTypeService.getAllNotificationTypes().size();
-            if(notificationTypeCount == 0) {
-                notificationTypeService.addAllNotificationTypes();
-            }
+//            int notificationTypeCount = notificationTypeService.getAllNotificationTypes().size();
+//            if(notificationTypeCount == 0) {
+//                notificationTypeService.addAllNotificationTypes();
+//            }
             Set<ApproveRole> userApproveRoles = userDto.getApproveRoles();
             for (ApproveRole userApproveRole : userApproveRoles) {
                 if (userApproveRole.getName().equalsIgnoreCase("HR") && userDto.isFirstTimeLogin()) {

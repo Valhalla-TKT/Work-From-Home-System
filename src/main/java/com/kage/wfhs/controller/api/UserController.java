@@ -66,6 +66,7 @@ public class UserController {
         WorkFlowOrderDto upperRole = workFlowOrderService.getWorkFlowOrderByUserId(userId);
         List<UserDto> memberList = userService.getAllTeamMember(teamId);
         List<UserDto> upperUserList = userService.getUpperRole(upperRole.getId() -1, userId);
+        upperUserList.forEach(userDto -> userDto.setName(userDto.getName() + " (" + userDto.getApproveRoleName() + ")"));
         Set<UserDto> userSet = new HashSet<>();
         userSet.addAll(upperUserList);
         userSet.addAll(memberList);
@@ -202,6 +203,7 @@ public class UserController {
     @PutMapping("/changePosition/{userId}")
     public ResponseEntity<Map<String, Object>> changePosition(@PathVariable Long userId, @RequestParam String position) {
         UserDto userDto = userService.changePosition(userId, position);
+        System.out.println("HElloooooo");
         Map<String, Object> response = new HashMap<>();
         response.put("status", "success");
         response.put("message", "Position changed successfully");

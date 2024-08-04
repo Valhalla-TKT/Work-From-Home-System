@@ -11,7 +11,7 @@ import com.kage.wfhs.dto.WorkFlowStatusDto;
 import com.kage.wfhs.model.*;
 import com.kage.wfhs.repository.*;
 import com.kage.wfhs.service.LedgerService;
-import com.kage.wfhs.service.NotificationService;
+//import com.kage.wfhs.service.NotificationService;
 import com.kage.wfhs.service.WorkFlowStatusService;
 import com.kage.wfhs.util.EntityUtil;
 import com.kage.wfhs.util.Helper;
@@ -42,8 +42,8 @@ public class WorkFlowStatusServiceImplement implements WorkFlowStatusService {
     @Autowired
     private final Helper helper;
     
-    @Autowired
-    private final NotificationService notificationService;
+//    @Autowired
+//    private final NotificationService notificationService;
     
     @Autowired
     private final LedgerService ledgerService;
@@ -161,7 +161,7 @@ public class WorkFlowStatusServiceImplement implements WorkFlowStatusService {
             RegisterForm registerForm = EntityUtil.getEntityById(registerFormRepo, workFlowStatusDto.getRegisterFormId());
             registerForm.setStatus(Status.REJECT);
             registerFormRepo.save(registerForm);
-            notificationService.sendPendingApproveRejectNotificationToServiceDesk(registerForm.getId(), registerForm.getApplicant().getId(), registerForm.getRequester().getId(), registerForm.getStatus().name());
+//            notificationService.sendPendingApproveRejectNotificationToServiceDesk(registerForm.getId(), registerForm.getApplicant().getId(), registerForm.getRequester().getId(), registerForm.getStatus().name());
         } 
         
 

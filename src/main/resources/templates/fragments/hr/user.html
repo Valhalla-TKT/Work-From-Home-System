@@ -1,14 +1,15 @@
 <!DOCTYPE html>
 
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org"
+	  xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 
 <head>
 	<title>WorkHub</title>
 </head>
 
 <body>
-
 	<div id="wrap" th:fragment="content">
+
 
 		<div id="wrap-inner" class="flushed">
 			<div id="content" role="main">
@@ -39,7 +40,7 @@
 									<div class="display-flex align-center">
 										<div class="new-opportunities-heading">Total staffs (<span id="total-count"></span>)</div>
 									</div>
-									<a class="job-banner-cta js-job-cta btn2 add-data visible-hr-only" href="#">
+									<a class="job-banner-cta js-job-cta btn2 add-data" sec:authorize="hasAuthority('HR')" href="#">
 										<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
 											viewBox="0 0 24 24" fill="none" role="img" class="icon">
 											<path d="M12 5V19M5 12H19" stroke="currentColor" stroke-width="2"
@@ -178,7 +179,7 @@
 											<th>Division</th>
 											<th>Department</th>
 											<th>Team</th>
-											<th>Action</th>
+											<th sec:authorize="hasAuthority('HR')">Action</th>
 										</tr>
 									</thead>
 									<tbody id="staff-list">
@@ -196,44 +197,128 @@
 			</div>
 		</div>
 
+		<style>
+			.custum-file-upload {
+				height: 200px;
+				width: 300px;
+				display: flex;
+				flex-direction: column;
+				gap: 20px;
+				cursor: pointer;
+				align-items: center;
+				justify-content: center;
+				border: 2px dashed #cacaca;
+				background-color: rgba(255, 255, 255, 1);
+				padding: 1.5rem;
+				border-radius: 10px;
+				box-shadow: 0px 48px 35px -48px rgba(0,0,0,0.1);
+			}
+
+			.custum-file-upload .icon {
+				display: flex;
+				align-items: center;
+				justify-content: center;
+			}
+
+			.custum-file-upload .icon svg {
+				height: 80px;
+				fill: rgba(75, 85, 99, 1);
+			}
+
+			.custum-file-upload .text {
+				display: flex;
+				align-items: center;
+				justify-content: center;
+			}
+
+			.custum-file-upload .text span {
+				font-weight: 400;
+				color: rgba(75, 85, 99, 1);
+			}
+
+			.custum-file-upload input {
+				display: none;
+			}
+
+
+			#loading-overlay {
+				position: fixed;
+				top: 0;
+				left: 0;
+				width: 100%;
+				height: 100%;
+				background-color: rgba(0, 0, 0, 0.5);
+				display: flex;
+				align-items: center;
+				justify-content: center;
+				z-index: 9999;
+			}
+
+			#loading-spinner .container {
+				width: fit-content;
+				gap: 10px;
+			}
+
+			.folder {
+				width: min-content;
+				margin: auto;
+				animation: float 2s infinite linear;
+			}
+
+			.folder .top {
+				background-color: #FF8F56;
+				width: 60px;
+				height: 12px;
+				border-top-right-radius: 10px;
+			}
+
+			.folder .bottom {
+				background-color: #FFCE63;
+				width: 100px;
+				height: 70px;
+				box-shadow: 5px 5px 0 0 #283149;
+				border-top-right-radius: 8px;
+			}
+
+			.container .title {
+				font-size: 2em;
+				color: #000;
+				text-align: center;
+				margin-top: 15px;
+				z-index: 9999;
+			}
+
+			@keyframes float {
+				0% {
+					transform: translatey(0px);
+				}
+				50% {
+					transform: translatey(-25px);
+				}
+				100% {
+					transform: translatey(0px);
+				}
+			}
+
+		</style>
+
 		<div id="add-data-overlay">
-			<div id="add-data-modal" class="add-data-modal" style="width: 30%; height: 60%; overflow:auto;">
+			<div id="add-data-modal" class="add-data-modal">
 				<div class="add-data-modal-content">
-					<div class="form-title">
-						<span class="title">Add Staff</span>
-						<span class="close">&times;</span>
-					</div> <br>
-					<form id="addForm">
-						<label for="staff-id">Staff ID</label>
-						<input type="tel" id="staff-id" placeholder="xx-xxxxx"
-							required="required" step="any">
-						<label for="name">Staff Name</label>
-						<input type="text" id="name" placeholder="e.g. John" required="required">
-						<label for="email">Email</label>
-						<input type="email" id="email" placeholder="e.g. xxx@diracetechnology.com" required="required">
-						<label for="gender">Choose Gender</label>
-						<select id="gender" required="required" style="width: 100%" step="any">
-							<option selected="selected" disabled="disabled"> Select Gender</option>
-							<option value="M">Male</option>
-							<option value="F">Female</option>
-						</select>
-						<label for="position-name">His/Her Position</label>
-						<input type="text" id="position-name" placeholder="e.g. Software Engineer" required="required">
-						<label for="approveRoleSelectBox">Choose Permission</label>
-						<select id="approveRoleSelectBox" required="required" style="width: 100%" step="any"></select>
-						<div id="team-data">
-							<label for="team-name">Choose Team He/She Has To Join</label>
-							<select id="team-name" required="required" style="width: 100%" step="any"></select>
-						</div>
-						<div id="department-data">
-							<label for="department-name">Choose department He/She Has To Join</label>
-							<select id="department-name" required="required" style="width: 100%" step="any"></select>
-						</div>
-						<div id="division-data">
-							<label for="division-name">Choose division He/She Has To Join</label>
-							<select id="division-name" required="required" style="width: 100%" step="any"></select>
-						</div>
-						<button class="btn2 add-data-btn" type="button" id="create-staff">Add Staff</button>
+					<span class="title">Import Excel</span>
+					<span class="close">&times;</span>
+					<form id="uploadForm" th:action="@{/api/importExcel}" method="post" enctype="multipart/form-data" onsubmit="return false;">
+						<label for="file">Ledger</label>
+						<label class="custum-file-upload" for="file">
+							<div class="icon">
+								<svg xmlns="http://www.w3.org/2000/svg" fill="" viewBox="0 0 24 24"><g stroke-width="0" id="SVGRepo_bgCarrier"></g><g stroke-linejoin="round" stroke-linecap="round" id="SVGRepo_tracerCarrier"></g><g id="SVGRepo_iconCarrier"> <path fill="" d="M10 1C9.73478 1 9.48043 1.10536 9.29289 1.29289L3.29289 7.29289C3.10536 7.48043 3 7.73478 3 8V20C3 21.6569 4.34315 23 6 23H7C7.55228 23 8 22.5523 8 22C8 21.4477 7.55228 21 7 21H6C5.44772 21 5 20.5523 5 20V9H10C10.5523 9 11 8.55228 11 8V3H18C18.5523 3 19 3.44772 19 4V9C19 9.55228 19.4477 10 20 10C20.5523 10 21 9.55228 21 9V4C21 2.34315 19.6569 1 18 1H10ZM9 7H6.41421L9 4.41421V7ZM14 15.5C14 14.1193 15.1193 13 16.5 13C17.8807 13 19 14.1193 19 15.5V16V17H20C21.1046 17 22 17.8954 22 19C22 20.1046 21.1046 21 20 21H13C11.8954 21 11 20.1046 11 19C11 17.8954 11.8954 17 13 17H14V16V15.5ZM16.5 11C14.142 11 12.2076 12.8136 12.0156 15.122C10.2825 15.5606 9 17.1305 9 19C9 21.2091 10.7909 23 13 23H20C22.2091 23 24 21.2091 24 19C24 17.1305 22.7175 15.5606 20.9844 15.122C20.7924 12.8136 18.858 11 16.5 11Z" clip-rule="evenodd" fill-rule="evenodd"></path> </g></svg>
+							</div>
+							<div class="text"> <span>Click to upload File</span>
+							</div>
+							<input type="file" name="file" id="file" accept=".xls, .xlsx, application/vnd.ms-excel, .csv, text/csv" />
+						</label>
+						<input type="hidden" id="sheetNameInput" name="sheetName" />
+						<button class="btn2 add-data-btn" type="button" id="import" disabled>Import Now</button>
 					</form>
 				</div>
 			</div>
@@ -252,36 +337,40 @@
 						<input type="tel" id="staff-id-detail" style="color: #0d0c22; background: #fff;" placeholder="xx-xxxxx"
 							   required="required" step="any" disabled>
 						<label for="name-detail">Staff Name</label>
-						<input type="text" id="name-detail" placeholder="e.g. John" required="required" style="color: #0d0c22; background: #fff;" disabled>
+						<input type="text" id="name-detail" placeholder="" style="color: #0d0c22; background: #fff;" disabled>
 						<label for="email-detail">Email</label>
-						<input type="email" id="email-detail" placeholder="e.g. xxx@gmail.com" required="required" style="color: #0d0c22; background: #fff;" disabled>
-						<label for="gender-detail">Choose Gender</label>
-						<input type="text" id="gender-detail" required="required" style="color: #0d0c22; background: #fff;" disabled>
-						<label for="position-name-detail">His/Her Position</label>
-						<input type="text" id="position-name-detail" placeholder="e.g. Software Engineer" required="required" style="color: #0d0c22; background: #fff;">
-						<!-- <label for="approveRoleSelectBoxDetail">Choose Permission</label>
-						<select id="approveRoleSelectBoxDetail" required="required" style="width: 100%" step="any"></select> -->
-						<div id="team-data-detail">
-							<label for="team-name-detail">Choose Team He/She Has To Join</label>
-							<select id="team-name-detail" required="required" style="width: 100%" step="any"></select>
-						</div>
-						<div id="department-data-detail">
-							<label for="department-name-detail">Choose department He/She Has To Join</label>
-							<select id="department-name-detail" required="required" style="width: 100%" step="any"></select>
-						</div>
-						<div id="division-data-detail">
-							<label for="division-name-detail">Choose division He/She Has To Join</label>
-							 <select id="division-name-detail" required="required" style="width: 100%" step="any"></select>
-						</div>
+						<input type="email" id="email-detail" placeholder="" style="color: #0d0c22; background: #fff;" disabled>
+						<label for="gender-detail">Gender</label>
+						<input type="text" id="gender-detail"style="color: #0d0c22; background: #fff; text-transform: capitalize;" disabled>
+						<label for="position-name-detail">Position</label>
+						<input type="text" id="position-name-detail" placeholder=""style="color: #0d0c22; background: #fff;" disabled>
+						<label for="team-name-detail">Team</label>
+						<input type="text" id="team-name-detail" placeholder="" style="color: #0d0c22; background: #fff;" disabled>
+						<label for="department-name-detail">Department</label>
+						<input type="text" id="department-name-detail" placeholder="" style="color: #0d0c22; background: #fff;" disabled>
+						<label for="division-name-detail">Division</label>
+						<input type="text" id="division-name-detail" placeholder="" style="color: #0d0c22; background: #fff;" disabled>
 						<input type="hidden" id="user-id-detail">
 						<div style="display: flex; justify-content: end; flex-direction: row; column-gap: 20px;">
 						<button class="btn2 add-data-btn" style="width:30%;" type="button" id="change-role">Change Role</button>						
-						<button class="btn2 add-data-btn" style="width:30%;" type="button" id="update-approve-role-1">Save Changes</button>
 						</div>
 					</form>
 				</div>
 			</div>
 		</div>
+
+		<div id="loading-overlay" style="display: none;">
+			<div id="loading-spinner">
+				<div class="container">
+					<div class="folder">
+						<div class="top"></div>
+						<div class="bottom"></div>
+					</div>
+					<div class="title">importing excel please wait...</div>
+				</div>
+			</div>
+		</div>
+
 		<!-- Role Change Modal -->
 		<div id="role-change-overlay" style="display: none;">
 		    <div id="role-change-modal" class="add-data-modal" style="width: 30%; height: 40%; overflow:auto;">

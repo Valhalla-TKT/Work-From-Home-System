@@ -9,6 +9,7 @@ package com.kage.wfhs.controller.api;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -34,10 +35,13 @@ public class TeamController {
     @PostMapping("/teamList")
     public ResponseEntity<?> getAllTeam(){
         List<TeamDto> teamList = teamService.getAllTeam();
-        if(teamList == null)
-            return ResponseEntity.ok("No department found."); 
-        else 
-            return ResponseEntity.ok(teamList);
+        return ResponseEntity.ok(Objects.requireNonNullElse(teamList, "No team found."));
+    }
+
+    @PostMapping("/myTeamList")
+    public ResponseEntity<?> getMyTeam(){
+        List<TeamDto> teamList = teamService.getAllTeam();
+        return ResponseEntity.ok(Objects.requireNonNullElse(teamList, "No team found."));
     }
 
     @PostMapping("/department/{departmentId}")

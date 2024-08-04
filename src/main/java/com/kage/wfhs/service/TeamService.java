@@ -22,6 +22,8 @@ public interface TeamService {
 	
 	List<TeamDto> getAllTeam();
 
+	List<TeamDto> getMyTeam();
+
 	void updateTeam(TeamDto teamDto);
 
 	void deleteTeamById(Long id);
