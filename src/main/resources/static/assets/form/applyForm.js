@@ -33,6 +33,7 @@ $(document).ready(function() {
     const signedDateInputBox = $('#signed-date');
     
     const checkBoxModalDialog = $("#checkbox-dialog");
+	const applyFormPageUpdateProfile = $("#apply-form-page-update-profile")
     
     // Generate from date to date
 	var currentDate = new Date();
@@ -48,6 +49,8 @@ $(document).ready(function() {
 	$('#work-in-others-button').hide();
     $('#region-state-select').hide();
     $('#city-township-select').hide();
+
+	applyFormPageUpdateProfile.show()
 
     function toggleButtonAndSelect() {
         $('#working-input-box').val('');        
@@ -249,6 +252,7 @@ $(document).ready(function() {
     selfRequestRadio.on('change', function() {
 		selfRequestRadioChecked = true;
 		otherRequestRadioChecked = false;
+		applyFormPageUpdateProfile.show()
 	    if ($(this).prop('checked')) {
 	    	$('#name-select-box-container').hide();
 	        $('#name-input-container').show();
@@ -275,6 +279,7 @@ $(document).ready(function() {
 	otherRequestRadio.on('change', function() {
 		selfRequestRadioChecked = false;
 		otherRequestRadioChecked = true;
+		applyFormPageUpdateProfile.hide()
 		if ($(this).prop('checked')) {
 	    	$('#name-select-box-container').show();
 	        $('#name-input-container').hide();
