@@ -38,6 +38,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -73,50 +74,6 @@ public class RegisterFormController {
     
     private final ExcelService excelService;
 
-//    @PostMapping("/create")
-//    public ResponseEntity<String> createForm(
-//    		@RequestParam(value = "applicantId") Long applicantId,
-//            @RequestParam(value = "requesterId") Long requesterId,
-//            @RequestParam(value = "positionName") String positionName,
-//            @RequestParam(value = "working_place") String workingPlace,
-//            @RequestParam(value = "request_reason") String requestReason,
-//            @RequestParam(value = "request_percent") double requestPercent,
-//            @RequestParam(value = "from_date") @DateTimeFormat(pattern = "yyyy-MM-dd") Date fromDate,
-//            @RequestParam(value = "to_date") @DateTimeFormat(pattern = "yyyy-MM-dd") Date toDate,
-//            @RequestParam(value = "os_type") String osType,
-//            @RequestParam(value = "applied_date") Date appliedDate,
-//            @RequestParam(value = "operationSystem", required = false) MultipartFile operationSystem,
-//            @RequestParam(value = "securityPatch", required = false) MultipartFile securityPatch,
-//            @RequestParam(value = "antivirusSoftware", required = false) MultipartFile antivirusSoftware,
-//            @RequestParam(value = "antivirusPattern", required = false) MultipartFile antivirusPattern,
-//            @RequestParam(value = "antivirusFullScan", required = false) MultipartFile antivirusFullScan,
-//            @RequestParam(value = "signature", required = false) MultipartFile signature,
-//            @RequestParam(value = "approverId") Long approverId
-//    	) throws Exception {
-//        RegisterFormDto registerFormDto = new RegisterFormDto();
-//        registerFormDto.setApplicantId(applicantId);
-//        registerFormDto.setRequesterId(requesterId);
-//        registerFormDto.setPositionName(positionName);
-//        registerFormDto.setWorking_place(workingPlace);
-//        registerFormDto.setRequest_reason(requestReason);
-//        registerFormDto.setRequest_percent(requestPercent);
-//        registerFormDto.setFrom_date(fromDate);
-//        registerFormDto.setTo_date(toDate);
-//        registerFormDto.setOs_type(osType);
-//        registerFormDto.setSignedDate(appliedDate);
-//        registerFormDto.setOperationSystemInput(operationSystem);
-//        registerFormDto.setSecurityPatchInput(securityPatch);
-//
-//        registerFormDto.setAntivirusSoftwareInput(antivirusSoftware);
-//        registerFormDto.setAntivirusPatternInput(antivirusPattern);
-//        registerFormDto.setAntivirusFullScanInput(antivirusFullScan);
-//        registerFormDto.setSignatureInput(signature);
-//        registerFormDto.setApproverId(approverId);
-//        registerFormService.createRegisterForm(registerFormDto);
-//        workFlowStatusService.createWorkFlowStatus(registerFormDto.getApplicantId(), registerFormService.getFormLastId(), approverId);
-//        return ResponseEntity.ok("Request Form Successful....");
-//    }
-
     @PostMapping("/create")
     public ResponseEntity<String> createForm(
             @RequestPart("data") RegisterFormDto registerFormDto,
@@ -141,7 +98,7 @@ public class RegisterFormController {
     }
 
     @PostMapping("/getFormById")
-    public ResponseEntity<Map<String, Object>> getForm(@RequestParam(value = "formId") long formId, @RequestParam(value = "userId") long userId) {
+    public ResponseEntity<Map<String, Object>> getForm(@RequestParam(value = "formId") long formId, @RequestParam(value = "userId") long userId, Model model) {
         RegisterFormDto registerForm = registerFormService.getRegisterForm(formId);
         CaptureDto captureDto = captureService.getCaptureByRegisterForm(formId);
         WorkFlowStatusDto workFlowStatusDto = workFlowStatusService.getByUserIdAndFormId(userId, formId);
@@ -155,6 +112,8 @@ public class RegisterFormController {
         responseData.put("capture", captureDto);
         responseData.put("applicant", applicant);
         responseData.put("requester", requester);
+        model.addAttribute("responseData", responseData);
+        
         return new ResponseEntity<>(responseData,HttpStatus.OK);
     }
     

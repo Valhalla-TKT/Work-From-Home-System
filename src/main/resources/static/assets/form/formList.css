@@ -22780,6 +22780,7 @@ div.rsvp-mod {
     gap: 20px;
     justify-items: center;
     justify-content: start;
+    grid-template-columns: repeat(2, 1fr);
 }
 
 .team-folder-view .form-card-container {

@@ -76,7 +76,10 @@
 													class="name" value="self-request">Self Request</span>
 												</label> <label class="radio"> <input type="radio" disabled
 													name="radio" id="other-request-radio-output"> <span
-													class="name" value="other-request">Other Request</span>
+													class="name">Other Request</span>
+													<th:block th:if="${applicant.id != requester.id}">
+		                                                <span style="position: absolute; bottom: -25px; left: 50%;" th:text="'(by ' + ${requester.name} + ')'"></span>
+		                                            </th:block>
 												</label>
 											</div>
 											<br>
