@@ -63,22 +63,27 @@ form input {
 }
 
 .password-container {
-  position: relative;
-  display: flex;
-  align-items: center;
+	position: relative;
+	display: flex;
+  	align-items: center;
 }
 
-.password-container input {
-  padding-right: 40px;
+.password-container input[type="password"],
+.password-container input[type="text"] {
+	width: 100%;
+	padding-right: 2.5rem;
 }
 
-.password-container span {
-  position: absolute;
-  top: 18px;
-  right: 10px;
-  cursor: pointer;
-  user-select: none;
+.password-container .fa-eye,
+.password-container .fa-eye-slash {
+	position: absolute;
+	right: 0.75rem;
+	top: 42%;
+	transform: translateY(-50%);
+	cursor: pointer;
+	color: #333;
 }
+
 
 form input:focus {
   outline: none;
