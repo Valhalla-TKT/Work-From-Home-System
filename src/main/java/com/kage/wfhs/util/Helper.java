@@ -55,29 +55,29 @@ public class Helper {
 
     private static final SecureRandom random = new SecureRandom();
 
-    public static String saveImage(MultipartFile file) {
-        String storageFileName = null;
-        if (file != null) {
-
-            Date createdAt = new Date();
-            storageFileName = createdAt.getTime() + "_" + file.getOriginalFilename();
-
-            try {
-                Path uploadPath = Paths.get(uploadDir);
-                if (!Files.exists(uploadPath)) {
-                    Files.createDirectories(uploadPath);
-                }
-                try (InputStream inputStream = file.getInputStream()) {
-                    Files.copy(inputStream, Paths.get(uploadDir + storageFileName),
-                            StandardCopyOption.REPLACE_EXISTING);
-                }
-            } catch (Exception ex) {
-
-                System.out.println("Exception : " + ex.getMessage());
-            }
-        }
-        return "/assets/formImages" + storageFileName;
-    }
+//    public static String saveImage(MultipartFile file) {
+//        String storageFileName = null;
+//        if (file != null) {
+//
+//            Date createdAt = new Date();
+//            storageFileName = createdAt.getTime() + "_" + file.getOriginalFilename();
+//
+//            try {
+//                Path uploadPath = Paths.get(uploadDir);
+//                if (!Files.exists(uploadPath)) {
+//                    Files.createDirectories(uploadPath);
+//                }
+//                try (InputStream inputStream = file.getInputStream()) {
+//                    Files.copy(inputStream, Paths.get(uploadDir + storageFileName),
+//                            StandardCopyOption.REPLACE_EXISTING);
+//                }
+//            } catch (Exception ex) {
+//
+//                System.out.println("Exception : " + ex.getMessage());
+//            }
+//        }
+//        return "/assets/formImages" + storageFileName;
+//    }
 
 
     public static String updateImage(MultipartFile newFile, String oldImage) {

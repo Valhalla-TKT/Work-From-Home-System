@@ -614,8 +614,9 @@ $(document).ready(function() {
     }
     
     function selectAll() {
-
+	selectedValues = [];
         $("input[type='checkbox']").each(function() {
+			
             selectedValues.push($(this).val());
 			$(this).closest('.resume-card').addClass('shadow');
 			updateFormListSelectCount();
@@ -650,7 +651,6 @@ $(document).ready(function() {
 			console.log(selectedValues[i], userId)
 		}
 		formData.append('userId', userId);
-		console.log(formData + "hello")
         bulkApprove(formData)
     });
     
@@ -659,19 +659,28 @@ $(document).ready(function() {
 		event.preventDefault();
 
 		await Swal.fire({
-			title: 'Choose Approver Name',
-			html: `<select id="approver-name" class="select" style="width: 100%; color: #0d0c22; border: 1px solid black;">
-                   <option selected disabled>Choose Approver Name</option>
+			title: 'Approval Details',
+			html: `
+				<textarea id="reason" placeholder="Enter the reason for approval here..." style="width: 100%; height: 100px; margin-bottom: 10px;"></textarea>
+				<select id="approver-name" class="select" style="width: 100%; color: #0d0c22; border: 1px solid black;">
+                   	<option selected disabled>Choose Approver Name</option>
                </select>`,
 			didOpen: async () => {
 				await getAllApprover();
 			},
 			preConfirm: () => {
+				const reason = Swal.getPopup().querySelector('#reason').value;
 				const approverName = Swal.getPopup().querySelector('#approver-name').value;
+				if (!reason) {
+                	Swal.showValidationMessage(`Please enter a reason`);
+                	return false;
+            	}
 				if (!approverName) {
 					Swal.showValidationMessage(`Please choose an approver`);
+					return false;
 				}
-				return approverName;
+				//return approverName;
+				return { reason, approverId };
 			},
 			showCancelButton: true,
 			confirmButtonText: 'Select',
@@ -679,7 +688,9 @@ $(document).ready(function() {
 		}).then((result) => {
 			if (result.isConfirmed) {
 				const approverName = $('#approver-name').find('option:selected').text();
-
+				console.log(result)
+				const { reason, approverId } = result.value
+				console.log(reason)
 				Swal.fire({
 					title: 'Are you sure?',
 					text: `You selected ${approverName}. Do you want to proceed?`,
@@ -689,8 +700,11 @@ $(document).ready(function() {
 					cancelButtonText: 'No, change selection'
 				}).then((confirmResult) => {
 					if (confirmResult.isConfirmed) {
+						/*formData.append('reason', reason);
+                    	formData.append('approverId', approverId);*/
 						$.ajax({
-							url: `${getContextPath()}/api/registerform/bulkApprove?approverId=${approverId}`,
+							url: `${getContextPath()}/api/registerform/bulkApprove?approverId=${approverId}&reason=${reason}`,
+							//url: `${getContextPath()}/api/registerform/bulkApprove`,
 							type: 'POST',
 							data: formData,
 							processData: false,

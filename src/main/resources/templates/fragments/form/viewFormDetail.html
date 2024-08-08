@@ -122,9 +122,7 @@
                                                     <input type="text" class="input" disabled
                                                            style="background: #fff; border: 1px solid black;" th:value="${applicant.staffId.length() > 0 ? applicant.staffId[0] : ''}">
                                                     <input type="text" class="input" disabled
-                                                           style="background: #fff; border: 1px solid black;" th:value="${applicant.staffId.length() > 1 ? applicant.staffId[1] : ''}">
-                                                    <input type="text" class="input" value="-" disabled
-                                                           style="background: #fff; border: 1px solid black;">
+                                                           style="background: #fff; border: 1px solid black;" th:value="${applicant.staffId.length() > 1 ? applicant.staffId[1] : ''}">                                                  
                                                     <input type="text" class="input" disabled
                                                            style="background: #fff; border: 1px solid black;" th:value="${applicant.staffId.length() > 2 ? applicant.staffId[2] : ''}">
                                                     <input type="text" class="input" disabled
@@ -135,6 +133,8 @@
                                                            style="background: #fff; border: 1px solid black;" th:value="${applicant.staffId.length() > 5 ? applicant.staffId[5] : ''}">
                                                     <input type="text" class="input" disabled
                                                            style="background: #fff; border: 1px solid black;" th:value="${applicant.staffId.length() > 6 ? applicant.staffId[6] : ''}">
+                                                    <input type="text" class="input" disabled
+                                                           style="background: #fff; border: 1px solid black;" th:value="${applicant.staffId.length() > 7 ? applicant.staffId[7] : ''}">
                                                 </div>
                                             </div>
 
@@ -620,7 +620,7 @@
                                                                     th:value="${#dates.format(registerForm.signedDate, 'dd-MM-yyyy')}"
                                                                     required="required" step="any" class="input"
                                                                     style="color: #0d0c22; background: #fff; border: 1px solid black;"
-                                                                    disabled
+                                                                    disabled>
 															</span>
                                                             <!---->
 														</div>

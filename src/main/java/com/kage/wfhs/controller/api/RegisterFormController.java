@@ -112,7 +112,6 @@ public class RegisterFormController {
         responseData.put("capture", captureDto);
         responseData.put("applicant", applicant);
         responseData.put("requester", requester);
-        model.addAttribute("responseData", responseData);
         
         return new ResponseEntity<>(responseData,HttpStatus.OK);
     }
@@ -233,18 +232,19 @@ public class RegisterFormController {
 	}
     
     @PostMapping("/bulkApprove")
-    public ResponseEntity<String> bulkApprove(@RequestParam("formIds") List<Long> formIds, @RequestParam("userId") Long userId) throws Exception {
+    public ResponseEntity<String> bulkApprove(@RequestParam("formIds") List<Long> formIds, @RequestParam("userId") Long userId, @RequestParam("approverId") Long approverId, @RequestParam("reason") String reason) throws Exception {
         for (long id : formIds) {
             System.out.println(id);
         }
     	for (long id : formIds) {
-            WorkFlowStatus workFlowStatus = workFlowStatusRepo.findByUserIdAndRegisterFormId(userId, id) ;
+            WorkFlowStatus workFlowStatus = workFlowStatusRepo.findByUserIdAndRegisterFormId(userId, id);
             WorkFlowStatusDto workFlowStatusDto = new WorkFlowStatusDto();
             workFlowStatusDto.setState(true);
             workFlowStatusDto.setRegisterFormId((id));
             workFlowStatusDto.setApproverId(userId);
             workFlowStatusDto.setApproveDate(new Date());
-            workFlowStatusDto.setReason("Approve with Bulk Approve Process.");
+            workFlowStatusDto.setReason(reason);
+            workFlowStatusDto.setNewApproverId(approverId);
             workFlowStatusService.updateStatus(workFlowStatus.getId(),workFlowStatusDto);
         }
         return ResponseEntity.ok("Bulk Approve Success");

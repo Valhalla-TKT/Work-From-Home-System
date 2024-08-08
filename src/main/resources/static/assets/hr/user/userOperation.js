@@ -15,10 +15,7 @@ $(document).ready( function(){
     const pagination = document.querySelector('.pagination');
     const pageNumbers = pagination.querySelector('.page-numbers');
      getAllUser(1, true);
-    toggleSections();
-    $('#join-date').dateDropper({
-        format: 'd-m-Y',
-    });
+    toggleSections();   
     getAllTeam(), getAllDepartment(), getAllDivision(), getAllApproveRole()
     $('#team-filter').on('change', async function() {
         await getAllUser(1);

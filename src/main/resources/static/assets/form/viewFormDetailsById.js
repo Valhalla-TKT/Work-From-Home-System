@@ -23,6 +23,7 @@ $(document).ready(function () {
     const divisionHeadApproveDateInputBox = $('#division-head-approve-date');
     const cisoApproveDateInputBox = $('#ciso-approve-date');
     const finalApprovalApproveDateInputBox = $('#final-approval-approve-date');
+    const requesterNameDisplay= $('#requester-name-display')
 
     pmApproveDateInputBox.dateDropper({
         format: 'd-m-Y',
@@ -196,7 +197,9 @@ $(document).ready(function () {
                 if (requester.id !== applicant.id) {
                     $('#self-request-radio-output').prop('checked', false);
                     $('#other-request-radio-output').prop('checked', true);
-                } else {
+                    console.log(requesterNameDisplay)
+                    requesterNameDisplay.text(`(by ${requester.name})`);
+                } else {				
                     $('#self-request-radio-output').prop('checked', true);
                     $('#other-request-radio-output').prop('checked', false);
                 }
