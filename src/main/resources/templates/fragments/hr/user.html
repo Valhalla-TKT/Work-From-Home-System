@@ -318,7 +318,7 @@
 
 		<!-- Detail Modal -->
 		<div id="detail-data-overlay" style="display: none;">
-			<div id="detail-data-modal" class="add-data-modal" style="width: 30%; height: 60%; overflow:auto;">
+			<div id="detail-data-modal" class="add-data-modal" style="width: 40%; height: 60%; overflow:auto;">
 				<div class="add-data-modal-content">
 					<div class="form-title">
 						<span class="title">Staff Detail</span>
@@ -379,21 +379,23 @@
 		</style>
 		<!-- Role Change Modal -->
 		<div id="role-change-overlay" style="display: none;">
-		    <div id="role-change-modal" class="add-data-modal" style="width: 60%; height: 40%; overflow:auto;">
+		    <div id="role-change-modal" class="add-data-modal" style="width: 60%; height: 60%; overflow:auto;">
 		        <div class="add-data-modal-content">
 		            <div class="form-title">
 		                <span class="title">Change Role</span>
 		                <span class="close close-role-modal" id="close-role-modal">&times;</span>
 		            </div> <br>
+		            <p style="color: #555; font-size: 16px;">
+	                    <strong>Note:</strong> Based on your selection, specific checkboxes will appear:
+	                    <br>- If you choose "Project Manager," the team selection will be displayed.
+	                    <br>- If you choose "Department Head," the department selection will be displayed.
+	                    <br>- If you choose "Division Head," the division selection will be displayed.
+	                </p>
 		            <form id="role-change-form">
 		            	<label for="name-detail-2">Staff Name</label>
 						<input type="text" id="name-detail-2" placeholder="e.g. John" required="required" style="color: #0d0c22; background: #fff;" disabled>
 		                <label for="approveRoleSelectBoxDetail">Choose Permission</label>
 		                <select id="approveRoleSelectBoxDetail" required="required" style="width: 100%;" step="any"></select>
-						<!-- <div id="division-data-detail">
-							<label for="division-name-detail-2">Choose division</label>
- 							<div id="division-name-detail-2" style="width: 100%"></div>
- 						</div>		     -->
 						<div id="team-detail-checkbox-container">
 							<label for="team-checkbox-container">Choose Team</label>
 							<div id="team-checkbox-container" style="width: 100%"></div>

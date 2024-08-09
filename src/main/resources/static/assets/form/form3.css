@@ -20491,7 +20491,7 @@ div.page a:hover {
     cursor: pointer;
 }
 
-#edit-data-overlay, #add-data-overlay {
+#edit-data-overlay, #add-data-overlay, #role-change-overlay, #detail-data-overlay {
     position: fixed;
     top: 0;
     left: 0;

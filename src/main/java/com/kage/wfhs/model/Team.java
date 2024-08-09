@@ -12,7 +12,6 @@ import jakarta.persistence.*;
 import lombok.*;
 import java.io.Serializable;
 import java.util.List;
-import java.util.Set;
 
 @Entity
 @Table(name="team")
@@ -44,11 +43,6 @@ public class Team implements Serializable {
     @ToString.Exclude
     @JsonIgnore
     private List<User> users;
-
-    @ManyToMany(mappedBy = "teams")
-    @ToString.Exclude
-    @JsonIgnore
-    private Set<ApproveRole> approveRoles;
 
     @PrePersist
     protected void onCreate() {createdAt = System.currentTimeMillis();}

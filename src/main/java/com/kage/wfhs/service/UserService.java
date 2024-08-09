@@ -11,7 +11,6 @@ import com.kage.wfhs.dto.UserDto;
 import com.kage.wfhs.dto.auth.CurrentLoginUserDto;
 import com.kage.wfhs.model.ApproveRole;
 import com.kage.wfhs.model.Team;
-import com.kage.wfhs.model.User;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -61,7 +60,7 @@ public interface UserService {
 	List<UserDto> getAllUserByDepartmentIdAndGender(Long departmentId, String gender);
 	List<UserDto> getAllUserByDivisionIdAndGender(Long divisionId, String gender);
 
-    boolean updateApproveRole(long userId, List<Long> approveRoleIdList);
+    boolean updateApproveRole(long userId, List<Long> approveRoleIdList, List<Long> teamIds, List<Long> departmentIds, List<Long> divisionIds);
 	List<UserDto> getAllApprover();
 
     UserDto changePosition(Long userId, String position);
