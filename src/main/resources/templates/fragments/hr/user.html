@@ -57,10 +57,6 @@
 									<span class="label" title="Filters">Filters</span>
 								</a>
 							</div>
-							<!-- <div class="staff-card-container" id="staff-list"
-								style="margin-top: 50px; display: flex !important; flex-wrap:wrap !important; justify-content: space-between; align-items:center;">
-
-							</div> -->
 							<style>
 								.filters-container {
 									display: flex;
@@ -367,9 +363,23 @@
 			</div>
 		</div>
 
+		<style>
+
+			#team-checkbox-container,
+			#department-checkbox-container,
+			#division-checkbox-container {
+				display: grid;
+				grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+				gap: 10px;
+			}
+			.form-check-label {
+				top:-20px;
+				position:relative;
+			}
+		</style>
 		<!-- Role Change Modal -->
 		<div id="role-change-overlay" style="display: none;">
-		    <div id="role-change-modal" class="add-data-modal" style="width: 30%; height: 40%; overflow:auto;">
+		    <div id="role-change-modal" class="add-data-modal" style="width: 60%; height: 40%; overflow:auto;">
 		        <div class="add-data-modal-content">
 		            <div class="form-title">
 		                <span class="title">Change Role</span>
@@ -382,10 +392,20 @@
 		                <select id="approveRoleSelectBoxDetail" required="required" style="width: 100%;" step="any"></select>
 						<!-- <div id="division-data-detail">
 							<label for="division-name-detail-2">Choose division</label>
-							<select id="division-name-detail-2" required="required" style="width: 100%" step="any"></select>
-					
  							<div id="division-name-detail-2" style="width: 100%"></div>
- 						</div>		     -->           
+ 						</div>		     -->
+						<div id="team-detail-checkbox-container">
+							<label for="team-checkbox-container">Choose Team</label>
+							<div id="team-checkbox-container" style="width: 100%"></div>
+						</div>
+						<div id="department-detail-checkbox-container">
+							<label for="department-checkbox-container">Choose Department</label>
+							<div id="department-checkbox-container" style="width: 100%"></div>
+						</div>
+						<div id="division-detail-checkbox-container">
+							<label for="division-checkbox-container">Choose Division</label>
+							<div id="division-checkbox-container" style="width: 100%"></div>
+						</div>
 						<button class="btn2 add-data-btn" type="button" id="update-approve-role">Save Changes</button>
 		            </form>
 		        </div>

@@ -118,16 +118,27 @@ $(document).ready( function(){
                     });
                     selectBox.append(option);
                 }
-                // var selectBoxDetail = $('#team-name-detail');
-                // selectBoxDetail.empty();
-                // selectBoxDetail.append('<option value="all" selected>Select Team Name</option>');
-                // for (var d = 0; d < response.length; d++) {
-                //     var optionDetail = $('<option>', {
-                //         value: response[d].id,
-                //         text: response[d].name,
-                //     });
-                //     selectBoxDetail.append(optionDetail);
-                // }
+                // Add checkboxes to the team-checkbox-container
+                var checkboxContainer = $('#team-checkbox-container');
+                checkboxContainer.empty();  // Clear any existing checkboxes
+                for (var i = 0; i < response.length; i++) {
+                    var checkbox = $('<div>', {
+                        class: 'form-check'
+                    }).append(
+                        $('<input>', {
+                            class: 'form-check-input',
+                            type: 'checkbox',
+                            id: 'team-checkbox-' + response[i].id,
+                            value: response[i].id
+                        }),
+                        $('<label>', {
+                            class: 'form-check-label',
+                            for: 'team-checkbox-' + response[i].id,
+                            text: response[i].name
+                        })
+                    );
+                    checkboxContainer.append(checkbox);
+                }
 
             })
             .catch(error => {
@@ -535,13 +546,32 @@ $(document).ready( function(){
         event.preventDefault();
         var userId = $('#user-id-detail').val();
         var approveRoleIdList = $('#approveRoleSelectBoxDetail').val();
+        var selectedTeamIds = $('#team-checkbox-container input[type="checkbox"]:checked').map(function() {
+            return $(this).val();
+        }).get() || [];
+        var selectedDepartmentIds = $('#department-checkbox-container input[type="checkbox"]:checked').map(function() {
+            return $(this).val();
+        }).get() || [];
+        var selectedDivisionIds = $('#division-checkbox-container input[type="checkbox"]:checked').map(function() {
+            return $(this).val();
+        }).get() || [];
+        var data = $.param({
+            userId: userId,
+            approveRoleId: approveRoleIdList,
+            teamIds: selectedTeamIds,
+            departmentIds: selectedDepartmentIds,
+            divisionIds: selectedDivisionIds
+        }, true);
+
+
+        console.log(selectedTeamIds)
+        console.log(selectedDepartmentIds)
+        console.log(selectedDivisionIds)
         $.ajax({
             url: `${getContextPath()}/api/user/updateApproveRole`,
             type: 'POST',
-            data: {
-                userId: userId,
-                approveRoleId: approveRoleIdList
-            },
+            data: data,
+            traditional: true,
             success: function(response) {
                 Swal.fire({
                     title: 'Success!',

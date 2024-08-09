@@ -661,7 +661,7 @@ $(document).ready(function() {
 		await Swal.fire({
 			title: 'Approval Details',
 			html: `
-				<textarea id="reason" placeholder="Enter the reason for approval here..." style="width: 100%; height: 100px; margin-bottom: 10px;"></textarea>
+				<textarea id="reason" placeholder="Enter the reason for approval here..." style="width: 100%; height: 100px; margin-bottom: 10px; border: 1px solid black;"></textarea>
 				<select id="approver-name" class="select" style="width: 100%; color: #0d0c22; border: 1px solid black;">
                    	<option selected disabled>Choose Approver Name</option>
                </select>`,
@@ -688,7 +688,6 @@ $(document).ready(function() {
 		}).then((result) => {
 			if (result.isConfirmed) {
 				const approverName = $('#approver-name').find('option:selected').text();
-				console.log(result)
 				const { reason, approverId } = result.value
 				console.log(reason)
 				Swal.fire({
@@ -700,11 +699,8 @@ $(document).ready(function() {
 					cancelButtonText: 'No, change selection'
 				}).then((confirmResult) => {
 					if (confirmResult.isConfirmed) {
-						/*formData.append('reason', reason);
-                    	formData.append('approverId', approverId);*/
 						$.ajax({
 							url: `${getContextPath()}/api/registerform/bulkApprove?approverId=${approverId}&reason=${reason}`,
-							//url: `${getContextPath()}/api/registerform/bulkApprove`,
 							type: 'POST',
 							data: formData,
 							processData: false,
@@ -739,7 +735,6 @@ $(document).ready(function() {
 	getAllApprover()
 	async function getAllApprover() {
 		const response = await fetchApprovers();
-		console.log(response)
 		var selectBox = $('#approver-name');
 		selectBox.empty();
 		selectBox.append('<option value="" selected>Choose Approver Name</option>');

@@ -13,6 +13,7 @@ import lombok.*;
 
 import java.io.Serializable;
 import java.util.List;
+import java.util.Set;
 
 @Entity
 @Table(name = "department")
@@ -49,6 +50,11 @@ public class Department implements Serializable {
     @ToString.Exclude
     @JsonIgnore
     private List<User> users;
+
+    @ManyToMany(mappedBy = "departments")
+    @ToString.Exclude
+    @JsonIgnore
+    private Set<ApproveRole> approveRoles;
 
     @PrePersist
     protected void onCreate() {createdAt = System.currentTimeMillis();}

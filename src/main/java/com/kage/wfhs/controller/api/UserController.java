@@ -47,11 +47,16 @@ public class UserController {
     @PostMapping("/updateApproveRole")
     public ResponseEntity<String> updateApproveRole(
     		@RequestParam(value = "userId") long userId,
-    		@RequestParam(value = "approveRoleId") List<Long> approveRoleIdList
+    		@RequestParam(value = "approveRoleId") List<Long> approveRoleIdList,
+            @RequestParam(value = "teamIds", required = false) List<Long> teamIds,
+            @RequestParam(value = "departmentIds", required = false) List<Long> departmentIds,
+            @RequestParam(value = "divisionIds", required = false) List<Long> divisionIds
     		) {
-        for (Long approveRoleDto : approveRoleIdList) {
-            System.out.println(approveRoleDto + " ");
-        }
+        System.out.println("User ID: " + userId);
+        System.out.println("Approve Role IDs: " + approveRoleIdList);
+        System.out.println("Team IDs: " + teamIds);
+        System.out.println("Department IDs: " + departmentIds);
+        System.out.println("Division IDs: " + divisionIds);
         boolean approveRoleSaved = userService.updateApproveRole(userId, approveRoleIdList);
         if (approveRoleSaved) {
             return ResponseEntity.ok("Update Approve Role Success...");
