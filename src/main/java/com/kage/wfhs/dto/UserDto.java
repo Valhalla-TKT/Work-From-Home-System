@@ -7,7 +7,6 @@
  */
 package com.kage.wfhs.dto;
 
-import java.util.Date;
 import java.util.List;
 import java.util.Set;
 
@@ -39,5 +38,5 @@ public class UserDto {
     private Division division;
     private Set<ApproveRole> approveRoles;
     private List<WorkFlowOrder> workFlowOrders;
-    private MultipartFile profileInput;     
+    private MultipartFile profileInput;
 }

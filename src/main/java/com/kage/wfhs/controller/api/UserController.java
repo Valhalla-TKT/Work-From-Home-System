@@ -16,8 +16,6 @@ import lombok.AllArgsConstructor;
 
 import java.util.*;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -26,7 +24,6 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/api/user")
 public class UserController {
 
-    private static final Logger log = LoggerFactory.getLogger(UserController.class);
     private final UserService userService;
     private final WorkFlowOrderService workFlowOrderService;
     @PostMapping("/generateStaffId")
@@ -47,12 +44,12 @@ public class UserController {
     @PostMapping("/updateApproveRole")
     public ResponseEntity<String> updateApproveRole(
     		@RequestParam(value = "userId") long userId,
-    		@RequestParam(value = "approveRoleId") List<Long> approveRoleIdList
+    		@RequestParam(value = "approveRoleId") List<Long> approveRoleIdList,
+            @RequestParam(value = "teamIds", required = false) List<Long> teamIds,
+            @RequestParam(value = "departmentIds", required = false) List<Long> departmentIds,
+            @RequestParam(value = "divisionIds", required = false) List<Long> divisionIds
     		) {
-        for (Long approveRoleDto : approveRoleIdList) {
-            System.out.println(approveRoleDto + " ");
-        }
-        boolean approveRoleSaved = userService.updateApproveRole(userId, approveRoleIdList);
+        boolean approveRoleSaved = userService.updateApproveRole(userId, approveRoleIdList, teamIds, departmentIds, divisionIds);
         if (approveRoleSaved) {
             return ResponseEntity.ok("Update Approve Role Success...");
         } else {

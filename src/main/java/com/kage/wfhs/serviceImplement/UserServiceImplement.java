@@ -14,9 +14,6 @@ import com.kage.wfhs.dto.auth.CurrentLoginUserDto;
 import com.kage.wfhs.exception.EntityNotFoundException;
 import com.kage.wfhs.util.*;
 import org.modelmapper.ModelMapper;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -29,11 +26,17 @@ import com.kage.wfhs.model.Department;
 import com.kage.wfhs.model.Division;
 import com.kage.wfhs.model.Team;
 import com.kage.wfhs.model.User;
+import com.kage.wfhs.model.UserApproveRoleDepartment;
+import com.kage.wfhs.model.UserApproveRoleDivision;
+import com.kage.wfhs.model.UserApproveRoleTeam;
 import com.kage.wfhs.model.WorkFlowOrder;
 import com.kage.wfhs.repository.ApproveRoleRepository;
 import com.kage.wfhs.repository.DepartmentRepository;
 import com.kage.wfhs.repository.DivisionRepository;
 import com.kage.wfhs.repository.TeamRepository;
+import com.kage.wfhs.repository.UserApproveRoleDepartmentRepository;
+import com.kage.wfhs.repository.UserApproveRoleDivisionRepository;
+import com.kage.wfhs.repository.UserApproveRoleTeamRepository;
 import com.kage.wfhs.repository.UserRepository;
 import com.kage.wfhs.service.UserService;
 
@@ -46,7 +49,6 @@ import org.thymeleaf.spring6.SpringTemplateEngine;
 @RequiredArgsConstructor
 public class UserServiceImplement implements UserService {
 
-	private static final Logger log = LoggerFactory.getLogger(UserServiceImplement.class);
 	private final LogService logService;
 
 	private final UserRepository userRepo;
@@ -66,6 +68,12 @@ public class UserServiceImplement implements UserService {
 	private final EmailSenderService emailSenderService;
 
 	private final SpringTemplateEngine templateEngine;
+	
+	private final UserApproveRoleTeamRepository userApproveRoleTeamRepo;
+	
+	private final UserApproveRoleDepartmentRepository userApproveRoleDepartmentRepo;
+	
+	private final UserApproveRoleDivisionRepository userApproveRoleDivisionRepo;
 
 	@Override
     public UserDto createUser(UserDto userDto) {
@@ -208,17 +216,20 @@ public class UserServiceImplement implements UserService {
 		return userRepo.findLastStaffIdByGender(lowerCaseGender);
 	}
 
+	public List<User> removeDefaultAdmin(List<User> users) {
+		if(users == null)
+			return null;
+		User defaultAdmin = userRepo.findByStaffId("00-00001");
+        users.remove(defaultAdmin);
+        return users;
+	}
+	
 	@Override
 	public List<UserDto> getAllUser() {
 		Sort sort = Sort.by(Sort.Direction.ASC, "createdAt");
 		List<User> users = EntityUtil.getAllEntities(userRepo, sort, "user");
-		if(users == null)
-			return null;
-        users.remove(users.getFirst());
-        List<UserDto> userDtos = DtoUtil.mapList(users, UserDto.class, modelMapper);
-		for (UserDto userDto : userDtos) {
-			userDto.setPassword(null);
-		}
+        List<User> retUserList = removeDefaultAdmin(users);
+        List<UserDto> userDtos = DtoUtil.mapList(retUserList, UserDto.class, modelMapper);
 		return userDtos;
 	}
 
@@ -231,12 +242,9 @@ public class UserServiceImplement implements UserService {
 	@Override
 	public List<UserDto> getAllTeamMember(Long id) {
 		List<User> users = userRepo.findByTeamId(id);
-		List<UserDto> userList = new ArrayList<>();
-		for (User user : users) {
-			UserDto userDto = modelMapper.map(user, UserDto.class);
-			userList.add(userDto);
-		}
-		return userList;
+		List<User> retUserList = removeDefaultAdmin(users);
+        List<UserDto> userDtos = DtoUtil.mapList(retUserList, UserDto.class, modelMapper);
+		return userDtos;		
 	}
 
 	@Override
@@ -464,7 +472,7 @@ public class UserServiceImplement implements UserService {
 			Set<ApproveRole> approveRoles = new HashSet<>();
 			approveRoles.add(approveRole);
 			HR.setApproveRoles(approveRoles);
-			User savedUser = EntityUtil.saveEntity(userRepo, HR, "user");
+			EntityUtil.saveEntity(userRepo, HR, "user");
 		}
     }
 
@@ -502,12 +510,59 @@ public class UserServiceImplement implements UserService {
 
 	@Override
 	@Transactional
-	public boolean updateApproveRole(long userId, List<Long> approveRoleIdList) {
+	public boolean updateApproveRole(long userId, List<Long> approveRoleIdList, List<Long> teamIds, List<Long> departmentIds, List<Long> divisionIds) {
 		try {
 			User user = EntityUtil.getEntityById(userRepo, userId);
 			String fromRole = rolesToString(user.getApproveRoles());
 			Set<ApproveRole> approveRoles = new HashSet<>(approveRoleRepo.findAllById(approveRoleIdList));
 			user.setApproveRoles(approveRoles);
+			ApproveRole firstApproveRole = null;
+			Long approveRoleId = null;
+			if (!approveRoles.isEmpty()) {
+			    firstApproveRole = approveRoles.iterator().next();
+			    approveRoleId = firstApproveRole.getId();
+			    
+			    if("PROJECT_MANAGER".equals(firstApproveRole.getName())) {
+			    	List<UserApproveRoleTeam> existingUserApproveRoleTeam = userApproveRoleTeamRepo.findByUserId(user.getId());
+			        
+			        if (existingUserApproveRoleTeam != null && !existingUserApproveRoleTeam.isEmpty()) {
+			            userApproveRoleTeamRepo.deleteAll(existingUserApproveRoleTeam);
+			        }
+					for(Long teamId : teamIds) {
+						UserApproveRoleTeam userApproveRoleTeam = new UserApproveRoleTeam();
+						userApproveRoleTeam.setTeam(EntityUtil.getEntityById(teamRepo, teamId));
+						userApproveRoleTeam.setUser(user);
+						userApproveRoleTeam.setApproveRole(EntityUtil.getEntityById(approveRoleRepo, approveRoleId));
+						EntityUtil.saveEntity(userApproveRoleTeamRepo, userApproveRoleTeam, "UserApproveRoleTeam");
+					}
+			    } else if ("DEPARTMENT_HEAD".equals(firstApproveRole.getName())) {
+			    	List<UserApproveRoleDepartment> existingUserApproveRoleDepartment = userApproveRoleDepartmentRepo.findByUserId(user.getId());
+			        
+			        if (existingUserApproveRoleDepartment != null && !existingUserApproveRoleDepartment.isEmpty()) {
+			        	userApproveRoleDepartmentRepo.deleteAll(existingUserApproveRoleDepartment);
+			        }
+			    	for(Long departmentId : departmentIds) {
+						UserApproveRoleDepartment userApproveRoleDepartment = new UserApproveRoleDepartment();
+						userApproveRoleDepartment.setDepartment(EntityUtil.getEntityById(departmentRepo, departmentId));
+						userApproveRoleDepartment.setUser(user);
+						userApproveRoleDepartment.setApproveRole(EntityUtil.getEntityById(approveRoleRepo, approveRoleId));
+						EntityUtil.saveEntity(userApproveRoleDepartmentRepo, userApproveRoleDepartment, "UserApproveRoleDepartment");
+					}
+			    } else if ("DIVISION_HEAD".equals(firstApproveRole.getName())) {
+			    	List<UserApproveRoleDivision> existingUserApproveRoleDivision = userApproveRoleDivisionRepo.findByUserId(user.getId());
+			        
+			        if (existingUserApproveRoleDivision != null && !existingUserApproveRoleDivision.isEmpty()) {
+			        	userApproveRoleDivisionRepo.deleteAll(existingUserApproveRoleDivision);
+			        }
+			    	for(Long divisionId : divisionIds) {
+						UserApproveRoleDivision userApproveRoleDivision = new UserApproveRoleDivision();
+						userApproveRoleDivision.setDivision(EntityUtil.getEntityById(divisionRepo, divisionId));
+						userApproveRoleDivision.setUser(user);
+						userApproveRoleDivision.setApproveRole(EntityUtil.getEntityById(approveRoleRepo, approveRoleId));
+						EntityUtil.saveEntity(userApproveRoleDivisionRepo, userApproveRoleDivision, "UserApproveRoleDivision");
+					}
+			    }
+			}
 			EntityUtil.saveEntity(userRepo, user, "user");
 			String toRole = rolesToString(user.getApproveRoles());
 			logService.logUserRoleSwitch(user.getStaffId(), user.getName(), fromRole, toRole, "default-admin");

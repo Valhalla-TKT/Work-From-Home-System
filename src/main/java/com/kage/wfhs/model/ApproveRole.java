@@ -44,4 +44,5 @@ public class ApproveRole implements Serializable {
 	@ToString.Exclude
 	@JsonIgnore
 	private List<WorkFlowStatus> workFlowStatuses;
+
 }

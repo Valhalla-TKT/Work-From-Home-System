@@ -799,7 +799,6 @@ $(document).ready(function() {
 		}).then((result) => {
 			if (result.isConfirmed) {
 				const approverName = $('#approver-name').find('option:selected').text();
-
 				Swal.fire({
 					title: 'Are you sure?',
 					text: `You selected ${approverName}. Do you want to proceed?`,

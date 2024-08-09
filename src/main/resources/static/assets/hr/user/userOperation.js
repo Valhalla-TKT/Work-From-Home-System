@@ -70,23 +70,26 @@ $(document).ready( function(){
         event.preventDefault();
         createUser();
     });
+    $('#team-detail-checkbox-container').hide()  
+    $('#department-detail-checkbox-container').hide()  
+    $('#division-detail-checkbox-container').hide()    
     function toggleSections(approverOption) {
-        if (approverOption === 'PROJECT_MANAGER' || approverOption === 'APPLICANT') {
-            $('#team-data').show();
-            $('#department-data').hide();
-            $('#division-data').hide();
+    	 if (approverOption === 'PROJECT_MANAGER') {
+           	$('#team-detail-checkbox-container').show()  
+           	$('#department-detail-checkbox-container').hide()  
+           	$('#division-detail-checkbox-container').hide()    
         } else if (approverOption === 'DEPARTMENT_HEAD') {
-            $('#team-data').hide();
-            $('#department-data').show();
-            $('#division-data').hide();
+            $('#team-detail-checkbox-container').hide() 
+            $('#department-detail-checkbox-container').show()
+            $('#division-detail-checkbox-container').hide()
         } else if (approverOption === 'DIVISION_HEAD') {
-            $('#team-data').hide();
-            $('#department-data').hide();
-            $('#division-data').show();
+            $('#team-detail-checkbox-container').hide() 
+            $('#department-detail-checkbox-container').hide()
+            $('#division-detail-checkbox-container').show()
         } else {
-            $('#team-data').hide();
-            $('#department-data').hide();
-            $('#division-data').hide();
+            $('#team-detail-checkbox-container').hide() 
+            $('#department-detail-checkbox-container').hide()  
+           	$('#division-detail-checkbox-container').hide()   
         }
     }
 
@@ -118,16 +121,27 @@ $(document).ready( function(){
                     });
                     selectBox.append(option);
                 }
-                // var selectBoxDetail = $('#team-name-detail');
-                // selectBoxDetail.empty();
-                // selectBoxDetail.append('<option value="all" selected>Select Team Name</option>');
-                // for (var d = 0; d < response.length; d++) {
-                //     var optionDetail = $('<option>', {
-                //         value: response[d].id,
-                //         text: response[d].name,
-                //     });
-                //     selectBoxDetail.append(optionDetail);
-                // }
+
+                var checkboxContainer = $('#team-checkbox-container');
+                checkboxContainer.empty();
+                for (var i = 0; i < response.length; i++) {
+                    var checkbox = $('<div>', {
+                        class: 'form-check'
+                    }).append(
+                        $('<input>', {
+                            class: 'form-check-input',
+                            type: 'checkbox',
+                            id: 'team-checkbox-' + response[i].id,
+                            value: response[i].id
+                        }),
+                        $('<label>', {
+                            class: 'form-check-label',
+                            for: 'team-checkbox-' + response[i].id,
+                            text: response[i].name
+                        })
+                    );
+                    checkboxContainer.append(checkbox);
+                }
 
             })
             .catch(error => {
@@ -189,16 +203,28 @@ $(document).ready( function(){
                     });
                     selectBox.append(option);
                 }
-                // var selectBox = $('#department-name-detail');
-                // selectBox.empty();
-                // selectBox.append('<option value="" disabled selected>Select Department Name</option>');
-                // for (var i = 0; i < response.length; i++) {
-                //     var option = $('<option>', {
-                //         value: response[i].id,
-                //         text: response[i].name,
-                //     });
-                //     selectBox.append(option);
-                // }
+      
+                var checkboxContainer = $('#department-checkbox-container');
+                checkboxContainer.empty();
+                for (var i = 0; i < response.length; i++) {
+                    var checkbox = $('<div>', {
+                        class: 'form-check'
+                    }).append(
+                        $('<input>', {
+                            class: 'form-check-input',
+                            type: 'checkbox',
+                            id: 'department-checkbox-' + response[i].id,
+                            value: response[i].id
+                        }),
+                        $('<label>', {
+                            class: 'form-check-label',
+                            for: 'department-checkbox-' + response[i].id,
+                            text: response[i].name
+                        })
+                    );
+                    checkboxContainer.append(checkbox);
+                }
+
             })
             .catch(error => {
                 console.error('Error:', error);
@@ -282,26 +308,26 @@ $(document).ready( function(){
                     });
                     selectBox.append(option);
                 }
-                // var selectBox = $('#division-name-detail');
-                // selectBox.empty();
-                // selectBox.append('<option value="" disabled selected>Choose Division Name</option>');
-                // for (var i = 0; i < response.length; i++) {
-                //     var option = $('<option>', {
-                //         value: response[i].id,
-                //         text: response[i].name,
-                //     });
-                //     selectBox.append(option);
-                // }
-                /*var selectBox = $('#division-name-detail-2');
-                selectBox.empty();
-                selectBox.append('<option value="" disabled selected>Choose Division Name</option>');
+                 var checkboxContainer = $('#division-checkbox-container');
+                checkboxContainer.empty();
                 for (var i = 0; i < response.length; i++) {
-                    var option = $('<option>', {
-                        value: response[i].id,
-                        text: response[i].name,
-                    });
-                    selectBox.append(option);
-                }*/
+                    var checkbox = $('<div>', {
+                        class: 'form-check'
+                    }).append(
+                        $('<input>', {
+                            class: 'form-check-input',
+                            type: 'checkbox',
+                            id: 'division-checkbox-' + response[i].id,
+                            value: response[i].id
+                        }),
+                        $('<label>', {
+                            class: 'form-check-label',
+                            for: 'division-checkbox-' + response[i].id,
+                            text: response[i].name
+                        })
+                    );
+                    checkboxContainer.append(checkbox);
+                }
             })
             .catch(error => {
                 console.error('Error:', error);
@@ -535,13 +561,28 @@ $(document).ready( function(){
         event.preventDefault();
         var userId = $('#user-id-detail').val();
         var approveRoleIdList = $('#approveRoleSelectBoxDetail').val();
+        var selectedTeamIds = $('#team-checkbox-container input[type="checkbox"]:checked').map(function() {
+            return $(this).val();
+        }).get() || [];
+        var selectedDepartmentIds = $('#department-checkbox-container input[type="checkbox"]:checked').map(function() {
+            return $(this).val();
+        }).get() || [];
+        var selectedDivisionIds = $('#division-checkbox-container input[type="checkbox"]:checked').map(function() {
+            return $(this).val();
+        }).get() || [];
+        var data = $.param({
+            userId: userId,
+            approveRoleId: approveRoleIdList,
+            teamIds: selectedTeamIds,
+            departmentIds: selectedDepartmentIds,
+            divisionIds: selectedDivisionIds
+        }, true);
+
         $.ajax({
             url: `${getContextPath()}/api/user/updateApproveRole`,
             type: 'POST',
-            data: {
-                userId: userId,
-                approveRoleId: approveRoleIdList
-            },
+            data: data,
+            traditional: true,
             success: function(response) {
                 Swal.fire({
                     title: 'Success!',
@@ -552,13 +593,18 @@ $(document).ready( function(){
                     if (result.isConfirmed) {
                         $('#message').text(response);
 
+	                    $('#team-checkbox-container input[type="checkbox"]').prop('checked', false);
+	                    $('#department-checkbox-container input[type="checkbox"]').prop('checked', false);
+	                    $('#division-checkbox-container input[type="checkbox"]').prop('checked', false);
+                        $('#team-detail-checkbox-container').hide()  
+					    $('#department-detail-checkbox-container').hide()  
+					    $('#division-detail-checkbox-container').hide()   
                         const updatedRoles = $('#approveRoleSelectBoxDetail option:selected').map(function() {
                             return {
                                 id: $(this).val(),
                                 name: $(this).text()
                             };
                         }).get();
-
                         updateUserRoleInList(userId, updatedRoles);
                     }
                 });

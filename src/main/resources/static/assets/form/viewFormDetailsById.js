@@ -596,7 +596,7 @@ $(document).ready(function () {
             cancelButtonText: 'Cancel'
         }).then((result) => {
             if (result.isConfirmed) {
-                const approverName = result.value;
+                const approverName = $('#approver-name').find('option:selected').text();
                 newApproverId = result.value;
                 formData.append('newApproverId', newApproverId);
 
