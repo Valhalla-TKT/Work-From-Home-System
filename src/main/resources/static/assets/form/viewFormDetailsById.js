@@ -265,7 +265,7 @@ $(document).ready(function () {
                 });
 
                 if (formAlreadyProcessed) {
-                    $('.button-container#approve-reject-button-container').html('<div class="margin-l-8 form-sub" id="go-home-btn" onclick="window.location.href=\'' + getContextPath() + '/admin/viewFormList\';">Go Back</div>');
+                    $('.button-container#approve-reject-button-container').html('<div class="margin-l-8 form-sub" id="go-home-btn" onclick="history.back();">Go Back</div>');
                 } else {
                     $('.button-container#approve-reject-button-container').html(`
                     <div id="reject-form-btn" class="margin-l-8 form-sub" style="background: transparent; color: red; border: 2px solid red;">Reject</div>

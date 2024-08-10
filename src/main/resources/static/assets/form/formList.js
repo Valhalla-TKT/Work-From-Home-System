@@ -29,7 +29,7 @@ $(document).ready(function() {
 	}
 	// role
 	if(userRole === 'PROJECT_MANAGER') {
-		formListTitle.text(`${currentUser.teamName} Team Form List`);
+		formListTitle.text(`${currentUser.managedTeamName} Form List`);
 		getTeamMembersPendingForm();
 	}
 	// if(userRole === 'DEPARTMENT_HEAD' || userRole === 'DIVISION_HEAD') {
@@ -644,7 +644,6 @@ $(document).ready(function() {
     });
     
     $("#bulk-approve-btn").click(function() {
-        //selectAll();
         var formData = new FormData();
 		for (var i = 0; i < selectedValues.length; i++) {
 		    formData.append('formIds', selectedValues[i]);
@@ -679,7 +678,6 @@ $(document).ready(function() {
 					Swal.showValidationMessage(`Please choose an approver`);
 					return false;
 				}
-				//return approverName;
 				return { reason, approverId };
 			},
 			showCancelButton: true,

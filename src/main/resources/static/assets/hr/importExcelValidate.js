@@ -55,9 +55,14 @@ document.addEventListener('DOMContentLoaded', function () {
                 if (result.isConfirmed) {
                     document.getElementById('sheetNameInput').value = result.value;
                     document.getElementById('import').disabled = false;
+                    const selectedSheetIcon = document.getElementById('selected-sheet-icon');
+                    const selectedSheetName = document.getElementById('selected-sheet-name');
+                    selectedSheetName.textContent = `Selected Sheet: ${result.value}`;
+                    selectedSheetIcon.style.display = 'flex';
                 } else {
                     document.getElementById('sheetNameInput').value = '';
                     document.getElementById('import').disabled = true;
+                    document.getElementById('selected-sheet-icon').style.display = 'none';
                 }
             });
         };

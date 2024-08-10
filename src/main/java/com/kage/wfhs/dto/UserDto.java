@@ -39,4 +39,7 @@ public class UserDto {
     private Set<ApproveRole> approveRoles;
     private List<WorkFlowOrder> workFlowOrders;
     private MultipartFile profileInput;
+    private List<Team> managedTeams;
+    private List<Department> managedDepartments;
+    private List<Division> managedDivisions;
 }
