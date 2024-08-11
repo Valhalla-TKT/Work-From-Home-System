@@ -183,8 +183,8 @@ public class RegisterFormController {
         Map<String, Object> responseData = registerFormService.getFormWithStatus(status, 1L, userId, "user");
         return getMapResponseEntity(responseData);
     }
-    
-    
+
+
     @PostMapping("/update")
     public ResponseEntity<String> updateStatus(
     		@RequestParam(value = "workFlowStatusId") long workFlowStatusId,
@@ -192,16 +192,16 @@ public class RegisterFormController {
     		@RequestParam(value = "registerFormId") long registerFormId,
     		@RequestParam(value = "state") boolean state,
     		@RequestParam(value = "reason") String reason,
-    		@RequestParam(value = "approveDate") @DateTimeFormat(pattern = "yyyy-MM-dd") Date approveDate,
+    		@RequestParam(value = "approveDate", required = false) @DateTimeFormat(pattern = "yyyy-MM-dd") Date approveDate,
             @RequestParam(value = "newApproverId") long newApproverId
             ) throws Exception{
     	WorkFlowStatusDto workFlowStatusDto = new WorkFlowStatusDto();
     	workFlowStatusDto.setId(workFlowStatusId);
-    	workFlowStatusDto.setApproverId(approverId);    	
+    	workFlowStatusDto.setApproverId(approverId);
     	workFlowStatusDto.setRegisterFormId(registerFormId);
     	workFlowStatusDto.setState(state);
     	workFlowStatusDto.setReason(reason);
-    	workFlowStatusDto.setApproveDate(approveDate);
+        workFlowStatusDto.setApproveDate(approveDate != null ? approveDate : new Date());
         workFlowStatusDto.setNewApproverId(newApproverId);
         workFlowStatusService.updateStatus(workFlowStatusDto.getId(),workFlowStatusDto);
         return ResponseEntity.ok("Work Flow Status is Update Success....");
@@ -280,6 +280,16 @@ public class RegisterFormController {
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("An unexpected error occurred");
         }
+    }
+
+    @PostMapping("/updateForm")
+    public ResponseEntity<String> updateForm(
+            @RequestPart("data") RegisterFormDto registerFormDto,
+            @RequestPart(value = "operatingSystem", required = false) MultipartFile operationSystem
+            ) throws Exception {
+        registerFormDto.setOperationSystemInput(operationSystem);
+        registerFormService.updateForm(registerFormDto, operationSystem);
+        return null;
     }
 
 }

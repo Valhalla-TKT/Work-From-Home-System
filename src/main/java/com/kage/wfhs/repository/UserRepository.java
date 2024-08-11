@@ -101,13 +101,14 @@ public interface UserRepository extends JpaRepository<User,Long> {
 
 
 //DEPARTMENT HEAD
-    
-    @Query("SELECT t.name AS teamName, AVG(COALESCE(r.requestPercent, 0)) AS avgRequestPercent " +
-      "FROM Team t " +
-      "JOIN User u ON t.id = u.team.id " +
-      "LEFT JOIN RegisterForm r ON u.id = r.applicant.id " +
-      "WHERE t.department.id = :departmentId " +
-      "GROUP BY t.id, t.name")
+
+    @Query("SELECT t.name AS teamName, " +
+            "       (SUM(CASE WHEN r.id IS NOT NULL THEN 1 ELSE 0 END) * 100.0 / COUNT(u.id)) AS avgRequestPercent " +
+            "FROM Team t " +
+            "JOIN User u ON t.id = u.team.id " +
+            "LEFT JOIN RegisterForm r ON u.id = r.applicant.id " +
+            "WHERE t.department.id = :departmentId " +
+            "GROUP BY t.id, t.name")
     List<Object[]> getAllTeamRequestByDepartmentId(@Param("departmentId") Long departmentId);
 
     @Query("SELECT SUM(usersWithRequest) AS totalUsersWithRequest, " +
@@ -203,4 +204,7 @@ public interface UserRepository extends JpaRepository<User,Long> {
     
     @Query("SELECT u FROM User u JOIN u.approveRoles ar WHERE ar.name != :roleName AND u.staffId != '00-00001'")
     List<User> findUsersByRoleNotEqual(@Param("roleName") String roleName);
+
+    @Query("SELECT u FROM User u JOIN u.approveRoles ar WHERE ar.id = :roleId AND u.staffId != '00-00001'")
+    List<User> findUsersByRoleId(@Param("roleId") Long roleId);
 }

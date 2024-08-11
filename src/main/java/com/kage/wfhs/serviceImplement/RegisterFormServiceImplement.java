@@ -20,6 +20,7 @@ import com.kage.wfhs.service.ApproveRoleService;
 //import com.kage.wfhs.service.NotificationService;
 import com.kage.wfhs.service.RegisterFormService;
 import com.kage.wfhs.service.WorkFlowOrderService;
+import com.kage.wfhs.service.WorkFlowStatusService;
 import com.kage.wfhs.util.*;
 
 import jakarta.servlet.http.HttpServletResponse;
@@ -29,6 +30,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.time.LocalDate;
@@ -63,6 +65,8 @@ public class RegisterFormServiceImplement implements RegisterFormService {
 
     private final ApproveRoleService approveRoleService;
 
+    private final WorkFlowStatusService workFlowStatusService;
+
     @Override
     public void createRegisterForm(RegisterFormDto registerFormDto) throws Exception {
         User applicant = EntityUtil.getEntityById(userRepo, registerFormDto.getApplicantId());
@@ -89,13 +93,27 @@ public class RegisterFormServiceImplement implements RegisterFormService {
     private void checkOsTypeAndSave(RegisterFormDto registerFormDto, Long formId, Capture capture) {
         capture.setOs_type(registerFormDto.getOsType());
         if (capture.getOs_type().equalsIgnoreCase("window")) {
-            capture.setAntivirusPattern(ImageUtil.convertImageToBase64(registerFormDto.getAntivirusPatternInput()));
-            capture.setAntivirusFullScan(ImageUtil.convertImageToBase64(registerFormDto.getAntivirusFullScanInput()));
+            MultipartFile antivirusPatternInput = registerFormDto.getAntivirusPatternInput();
+            MultipartFile antivirusFullScan = registerFormDto.getAntivirusFullScanInput();
+            if(!antivirusPatternInput.isEmpty()) {
+                capture.setAntivirusPattern(ImageUtil.convertImageToBase64(antivirusPatternInput));
+            }
+            if(!antivirusFullScan.isEmpty()) {
+                capture.setAntivirusFullScan(ImageUtil.convertImageToBase64(antivirusFullScan));
+            }
         }
-        capture.setOperationSystem(ImageUtil.convertImageToBase64(registerFormDto.getOperationSystemInput()));
-        capture.setAntivirusSoftware(ImageUtil.convertImageToBase64(registerFormDto.getAntivirusSoftwareInput()));
-        capture.setSecurityPatch(ImageUtil.convertImageToBase64(registerFormDto.getSecurityPatchInput()));
-
+        MultipartFile operatingSystem = registerFormDto.getOperationSystemInput();
+        MultipartFile antivirusSoftware = registerFormDto.getOperationSystemInput();
+        MultipartFile securityPatch = registerFormDto.getOperationSystemInput();
+        if(!operatingSystem.isEmpty()) {
+            capture.setOperationSystem(ImageUtil.convertImageToBase64(operatingSystem));
+        }
+        if(!antivirusSoftware.isEmpty()) {
+            capture.setAntivirusSoftware(ImageUtil.convertImageToBase64(antivirusSoftware));
+        }
+        if(!securityPatch.isEmpty()) {
+            capture.setSecurityPatch(ImageUtil.convertImageToBase64(securityPatch));
+        }
         capture.setRegisterForm(formId > 0 ? EntityUtil.getEntityById(registerFormRepo, formId) : null);
         captureRepo.save(capture);
     }
@@ -255,7 +273,7 @@ public class RegisterFormServiceImplement implements RegisterFormService {
 
         long orderId = workFlowOrderService.getWorkFlowOrderByApproveRoleId(approveRole.getId()).getId();
 
-        long approveRoleId = approveRoleService.getIdByWorkFlowOrderId(orderId);
+        Long approveRoleId = approveRoleService.getIdByWorkFlowOrderId(orderId);
 
         Map<String, Object> responseData = new HashMap<>();
         List<FormListDto> registerFormDtoList = new ArrayList<>();
@@ -352,6 +370,26 @@ public class RegisterFormServiceImplement implements RegisterFormService {
         registerFormDto.setRequestPercent(100);
         registerFormDto.setSignedDate(new Date());
         createRegisterForm(registerFormDto);
+    }
+
+    @Override
+    public void updateForm(RegisterFormDto registerFormDto, MultipartFile operationSystem) throws Exception {
+        Long formId = registerFormDto.getId();
+        RegisterForm registerForm = EntityUtil.getEntityById(registerFormRepo, formId);
+        registerForm.setWorkingPlace(registerFormDto.getWorkingPlace());
+        registerForm.setRequestReason(registerFormDto.getRequestReason());
+        registerForm.setFromDate(registerFormDto.getFromDate());
+        registerForm.setToDate(registerFormDto.getToDate());
+        registerForm.setSignedDate(registerFormDto.getSignedDate());
+        registerForm.setStatus(Status.PENDING);
+        registerFormRepo.save(registerForm);
+        Capture capture = registerForm.getCapture();
+        registerFormDto.setOsType(registerFormDto.getOsType());
+        checkOsTypeAndSave(registerFormDto, formId, capture);
+//        workFlowStatusService.createWorkFlowStatus(registerFormDto.getApplicantId(), registerFormDto.getId(), registerFormDto.getApproverId());
+        WorkFlowStatus workFlowStatus = workFlowStatusRepo.findByUserIdAndRegisterFormId(registerFormDto.getApproverId(), formId);
+        workFlowStatus.setStatus(Status.PENDING);
+        workFlowStatusRepo.save(workFlowStatus);
     }
 
 //    @Override

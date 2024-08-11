@@ -66,4 +66,6 @@ public interface UserService {
     UserDto changePosition(Long userId, String position);
 
 	boolean sendMailToAll(String subject, String body);
+
+	List<UserDto> getApproversByApproveRoleId(Long approveRoleId);
 }

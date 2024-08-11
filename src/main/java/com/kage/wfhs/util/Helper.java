@@ -36,8 +36,6 @@ import lombok.AllArgsConstructor;
 @Service
 public class Helper {
 
-    private static final String uploadDir = "src/main/resources/static/formImages/";
-
     @Autowired
     private final WorkFlowOrderRepository workFlowOrderRepo;
 
@@ -57,59 +55,6 @@ public class Helper {
     }
 
     private static final SecureRandom random = new SecureRandom();
-
-//    public static String saveImage(MultipartFile file) {
-//        String storageFileName = null;
-//        if (file != null) {
-//
-//            Date createdAt = new Date();
-//            storageFileName = createdAt.getTime() + "_" + file.getOriginalFilename();
-//
-//            try {
-//                Path uploadPath = Paths.get(uploadDir);
-//                if (!Files.exists(uploadPath)) {
-//                    Files.createDirectories(uploadPath);
-//                }
-//                try (InputStream inputStream = file.getInputStream()) {
-//                    Files.copy(inputStream, Paths.get(uploadDir + storageFileName),
-//                            StandardCopyOption.REPLACE_EXISTING);
-//                }
-//            } catch (Exception ex) {
-//
-//                System.out.println("Exception : " + ex.getMessage());
-//            }
-//        }
-//        return "/assets/formImages" + storageFileName;
-//    }
-
-
-    public static String updateImage(MultipartFile newFile, String oldImage) {
-        String storageFileName = null;
-        if (newFile != null) {
-            try {
-                if (!newFile.isEmpty()) {
-                    Date createdAt = new Date();
-                    storageFileName = createdAt.getTime() + "_" + newFile.getOriginalFilename();
-                    try (InputStream inputStream = newFile.getInputStream()) {
-                        Files.copy(inputStream, Paths.get(uploadDir + storageFileName),
-                                StandardCopyOption.REPLACE_EXISTING);
-                    }
-                    if (oldImage != null) {
-                        if (oldImage.equals("default-female.jfif") || oldImage.equals("default-male.png")) {
-                        } else {
-                            Path oldImagePath = Paths.get(uploadDir + oldImage);
-                            Files.delete(oldImagePath);
-                        }
-                    }
-                }
-            } catch (Exception ex) {
-                System.out.println("IOException occurred: " + ex.getMessage());
-                return ex.getMessage();
-            }
-
-        }
-        return storageFileName;
-    }
 
     public static String generateOTP(String email, String staffID) {
         try {

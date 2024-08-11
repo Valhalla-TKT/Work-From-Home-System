@@ -551,6 +551,48 @@ async function fetchApprovers() {
     }
 }
 
+async function fetchApproversByApproveRoleId(approveRoleId) {
+    try {
+        const responseData = await sendRequestWithOneParam(`/api/user/getApproversByApproveRoleId`, 'POST', "approveRoleId", approveRoleId);
+        const contentType = responseData.headers.get('content-type');
+        if (contentType && contentType.includes('application/json')) {
+            return await responseData.json();
+        } else {
+            return await responseData.text();
+        }
+    } catch (error) {
+        console.error('Error:', error);
+    }
+}
+
+async function fetchAllApproveRole() {
+    try {
+        const responseData = await sendRequest(`/api/approveRole/approveRoleList`, 'POST', {});
+        const contentType = responseData.headers.get('content-type');
+        if (contentType && contentType.includes('application/json')) {
+            return await responseData.json();
+        } else {
+            return await responseData.text();
+        }
+    } catch (error) {
+        console.error('Error:', error);
+    }
+}
+
+async function fetchApproveRoleWithoutApplicant() {
+    try {
+        const responseData = await sendRequest(`/api/approveRole/approveRoleListWithoutApplicant`, 'POST', {});
+        const contentType = responseData.headers.get('content-type');
+        if (contentType && contentType.includes('application/json')) {
+            return await responseData.json();
+        } else {
+            return await responseData.text();
+        }
+    } catch (error) {
+        console.error('Error:', error);
+    }
+}
+
 async function fetchTeamWithStatus(status, teamId, userId) {
     try {
         const responseData = await sendRequestWithThreeParams("/api/registerform/getTeamWithStatus", "POST", "status", status, "teamId", teamId, "userId", userId)
@@ -564,6 +606,5 @@ async function fetchTeamWithStatus(status, teamId, userId) {
         console.error('Error:', error);
     }
 }
-
 
 // fetchData('/api/protected-endpoint');

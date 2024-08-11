@@ -22792,6 +22792,23 @@ div.rsvp-mod {
     grid-template-columns: repeat(2, 1fr);
 }
 
+.folder-container {
+    display: inline-block;
+    margin: 10px;
+    padding: 10px 15px 5px 15px;
+    transition: background-color 0.3s;
+    border-radius: 5px;
+}
+
+.folder-container:hover {
+    background-color: #e0e0e0;
+}
+
+.folder-container.selected {
+    background-color: #0078d4;
+    color: #ffffff;
+}
+
 .folder {
     width: min-content;
     margin: auto;
@@ -22816,6 +22833,11 @@ div.rsvp-mod {
 .folder-title {
     text-align: center;
     margin-top: 5px;
+    transition: color 0.3s;
+}
+
+.folder-container.selected .folder-title {
+    color: #ffffff;
 }
 
 .resume-card {

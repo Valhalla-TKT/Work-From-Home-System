@@ -35,4 +35,11 @@ public interface WorkFlowStatusRepository extends JpaRepository<WorkFlowStatus,L
             JOIN register_form rf ON wfs.register_form_id = rf.id WHERE ar.name = :approveRoleName AND rf.id = :registerFormId
             """, nativeQuery = true)
     WorkFlowStatus findByApproveRoleNameAndFormId(Long registerFormId, String approveRoleName);
+
+    @Query(value = """
+        SELECT wfs.* FROM work_flow_status wfs
+        JOIN approve_role ar ON wfs.approve_role_id = ar.id
+        WHERE wfs.register_form_id = :registerFormId AND ar.name = :approveRoleName
+        """, nativeQuery = true)
+    List<WorkFlowStatus> findByRegisterFormIdAndApproveRoleName(Long registerFormId, String approveRoleName);
 }

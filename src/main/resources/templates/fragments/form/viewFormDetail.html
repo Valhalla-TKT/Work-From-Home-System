@@ -75,7 +75,7 @@
                                                                                   id="other-request-radio-output" th:checked="${applicant.id != requester.id}"> <span
                                                 class="name">Other Request</span>
                                             <th:block th:if="${applicant.id != requester.id}">
-                                                <span style="position: absolute; bottom: -25px; left: 50%;" th:text="'(by ' + ${requester.name} + ')'"></span>
+                                                <span style="position: absolute; bottom: -25px; left: 50%; color: #ff5555;" th:text="'(by ' + ${requester.name} + ')'"></span>
                                             </th:block>
                                         </label>
                                         </div>
@@ -141,7 +141,7 @@
                                             <div data-v-741dde45="" class="form-field-container">
 													<span data-v-741dde45="" class="error-marker">
 														<div data-v-42dea6db="" data-v-741dde45="" class="">
-															<label data-v-42dea6db="" for="jobTitle" class="label">
+															<label data-v-42dea6db="" for="position-display-by-form-id" class="label">
 																Position <span data-v-42dea6db="" class="color-lobster">*</span>
 															</label>
 															<div data-v-42dea6db="" class="">
@@ -163,7 +163,7 @@
                                             <div data-v-741dde45="" class="form-field-container">
 													<span data-v-741dde45="" class="error-marker">
 														<div data-v-42dea6db="" data-v-741dde45="" class="">
-															<label data-v-42dea6db="" for="jobTitle" class="label">
+															<label data-v-42dea6db="" for="team-display-by-form-i" class="label">
 																Assigned Project/Team <span data-v-42dea6db=""
                                                                                             class="color-lobster">*</span>
 															</label>
@@ -219,14 +219,15 @@
                                                  style="padding-top: 0px;">
 													<span data-v-741dde45="" class="error-marker">
 														<div data-v-42dea6db="" data-v-741dde45="" class="">
-															<label data-v-42dea6db="" for="jobTitle" class="label">
+															<label data-v-42dea6db="" class="label">
 																Working Place <span data-v-42dea6db=""
                                                                                     class="color-lobster">*</span>
 															</label>
-															<div data-v-42dea6db="" class="">
+															<div data-v-42dea6db="" class="text-field-edit" style="position: relative;">
 																<!---->
-																<span data-v-42dea6db="" class="error-marker">
+																<span data-v-42dea6db="" class="error-marker ">
 																<input
+                                                                        class="editable-input"
                                                                         id="working-place-display-by-form-id"
                                                                         type="text"
                                                                         th:value="${registerForm.workingPlace}"
@@ -234,8 +235,7 @@
                                                                         disabled
                                                                         placeholder="e.g. MICT Park"/>
 																</span>
-                                                                <!---->
-                                                                <!---->
+                                                                <i class="edit-icon-view-detail fas fa-edit" title="Edit this field" style="display: inline; position: absolute; right: 10px; top: 50%; transform: translateY(-50%); cursor: pointer;"></i>
 															</div>
                                                             <!---->
 														</div> <!---->
@@ -244,11 +244,11 @@
                                             <div data-v-741dde45="" class="form-field-container">
 													<span data-v-741dde45="" class="error-marker">
 														<div data-v-42dea6db="" data-v-741dde45="" class="">
-															<label data-v-42dea6db="" for="jobTitle" class="label">
+															<label data-v-42dea6db="" for="radio-button-container" class="label">
 																Work From Home Request Percent <span data-v-42dea6db=""
                                                                                                      class="color-lobster">*</span>
 															</label>
-															<div data-v-42dea6db="" class="radio-button-container">
+															<div data-v-42dea6db="" id="radio-button-container" class="radio-button-container">
 																<div class="radio-button">
 																	<input id="radio1" type="radio"
                                                                            class="radio-button__input" disabled
@@ -293,11 +293,11 @@
                                             <div data-v-741dde45="" class="form-field-container">
 													<span class="error-marker">
 														<div>
-															<label data-v-42dea6db="" for="jobTitle" class="label">
+															<label data-v-42dea6db="" for="from-date-display-by-form-id" class="label">
 																Request Period (From Date) <span
                                                                     class="color-lobster">*</span>
 															</label>
-															<div class="">
+															<div class="text-field-edit" style="position: relative;">
 																<!---->
 																<span class="error-marker"> <input
                                                                         id="from-date-display-by-form-id"
@@ -305,7 +305,8 @@
                                                                         style="color: #0d0c22; background: #fff; border: 1px solid black;"
                                                                         th:value="${#dates.format(registerForm.fromDate, 'dd-MM-yyyy')}"
                                                                         disabled
-                                                                        required="required" step="any" class="input"/>
+                                                                        required="required" step="any" class="input editable-input"/>
+                                                                    <i class="edit-icon-view-detail fas fa-edit" title="Edit this field" style="display: inline; position: absolute; right: 10px; top: 50%; transform: translateY(-50%); cursor: pointer;"></i>
 																</span>
                                                                 <!---->
 															</div>
@@ -317,11 +318,11 @@
                                             <div data-v-741dde45="" class="form-field-container">
 													<span class="error-marker">
 														<div>
-															<label data-v-42dea6db="" for="jobTitle" class="label">
+															<label data-v-42dea6db="" for="to-date-display-by-form-id" class="label">
 																Request Period (To Date) <span
                                                                     class="color-lobster">*</span>
 															</label>
-															<div class="">
+															<div class="text-field-edit" style="position: relative;">
 																<!---->
 																<span class="error-marker"> <input
                                                                         id="to-date-display-by-form-id"
@@ -329,7 +330,8 @@
                                                                         style="color: #0d0c22; background: #fff; border: 1px solid black;"
                                                                         disabled
                                                                         th:value="${#dates.format(registerForm.toDate, 'dd-MM-yyyy')}"
-                                                                        required="required" step="any" class="input"/>
+                                                                        required="required" step="any" class="input editable-input"/>
+                                                                <i class="edit-icon-view-detail fas fa-edit" title="Edit this field" style="display: inline; position: absolute; right: 10px; top: 50%; transform: translateY(-50%); cursor: pointer;"></i>
 																</span>
                                                                 <!---->
 															</div>
@@ -338,34 +340,16 @@
 													</span>
                                             </div>
 
-                                            <div data-v-741dde45="" class="form-field-container">
+                                            <div data-v-741dde45="" class="form-field-container text-field-edit" style="position: relative;">
 													<span data-v-741dde45="" class="error-marker">
 														<div data-v-3ab916fa="" data-v-741dde45=""
                                                              class="wysiwyg-texteditor">
-															<label class="label"> Request Reason <span
+															<label class="label" for="form-request-reason-display-detail"> Request Reason <span
                                                                     data-v-3ab916fa="" data-test="required"
                                                                     class="required">*</span>
 															</label>
-															<div data-v-3ab916fa="" class="container"
-                                                                 style="border: 1px solid black;">
-
-																<div data-v-3e4e869a="" data-v-3ab916fa=""
-                                                                     class="editable-textarea text-field inline"
-                                                                     data-test="editor" value="">
-																	<!---->
-																	<div data-v-3e4e869a="" class="outlined">
-																		<div data-v-3e4e869a="" class="editor">
-																			<div contenteditable="true" translate="no"
-                                                                                 class="ProseMirror request-reason-display-by-form-id" th:text="${registerForm.requestReason}"
-                                                                                 tabindex="0">
-																				<p class="is-empty is-editor-empty">
-																					<br class="ProseMirror-trailingBreak"/>
-																				</p>
-																			</div>
-																		</div>
-																	</div>
-																</div>
-															</div>
+                                                            <textarea style="height: 200px; border: 1px solid black; color: #0d0c22; background: #fff;" placeholder="e.g. For Emergency Only"  id="form-request-reason-display-detail" disabled class="editable-input">[[${registerForm.requestReason}]]</textarea>
+                                                            <i class="edit-icon-view-detail fas fa-edit" title="Edit this field" style="display: inline; position: absolute; right: 10px; top: 30%; transform: translateY(-50%); cursor: pointer;"></i>
 														</div> <!---->
 													</span>
                                             </div>
@@ -381,7 +365,6 @@
 
                                 <div id="capture-section" class="display-none">
                                     <div class="radio-os">
-                                        <!-- First set of radio buttons -->
                                         <label class="radio"> <input type="radio" disabled
                                                                      name="radio1" value="Window" th:checked="${capture.os_type == 'Window'}">
                                             <span
@@ -402,33 +385,34 @@
                                     </div>
 
                                     <div id="window">
-                                        <section data-v-741dde45="" data-v-115a39aa=""
-                                                 class="user-form-container-2 user-form">
-                                            <div data-v-741dde45="" class="form">
+                                        <section data-v-741dde45="" data-v-115a39aa="" class="user-form-container-2 user-form">
+                                            <div data-v-741dde45="" class="form" style="position:relative;">
                                                 <div class="file-upload-form">
                                                     <label class="file-upload-label">
                                                         <p style="color: red;">➀ Press win key in keyboard.</p>
-                                                        <p style="color: red;">➁ Type [winver] in windows
-                                                            search box and [Enter].</p>
+                                                        <p style="color: red;">➁ Type [winver] in windows search box and [Enter].
+                                                            <i class="edit-image-icon-view-detail fas fa-edit" title="Edit this field" style="margin-left: 20px;display: inline; cursor: pointer; color: black"></i>
+                                                        </p>
                                                         <div class="file-upload-design">
-                                                            <img id="window-operating-system-display-by-form-id" th:src="'data:image/png;base64,' + ${capture.operationSystem}"
-                                                                 alt="Preview Image">
+                                                            <img class="file-upload-preview-view-detail" id="window-operating-system-display-by-form-id" th:src="'data:image/png;base64,' + ${capture.operationSystem}" alt="Preview Image">
                                                         </div>
                                                     </label>
                                                 </div>
                                             </div>
+                                            <input type="file" class="file-upload-input-view-detail" id="window-operating-system-input-by-form-id-view-detail" style="display: none;" accept="image/*">
                                         </section>
+
                                         <section data-v-741dde45="" data-v-115a39aa=""
                                                  class="user-form-container-2 user-form">
-                                            <div data-v-741dde45="" class="form">
+                                            <div data-v-741dde45="" class="form" style="position:relative;">
 
-                                                <div class="file-upload-form">
+                                                <div class="file-upload-form" >
                                                     <label class="file-upload-label">
                                                         <p style="color: red;">➀ Press win key in keyboard.</p>
                                                         <p style="color: red;">➁ Type [windows security] in
                                                             windows search box and [Enter].</p>
                                                         <p style="color: red;">➂ Select [Device Performance &
-                                                            Health].</p>
+                                                            Health].<i class="edit-image-icon-view-detail fas fa-edit" title="Edit this field" style="margin-left: 20px;display: inline; cursor: pointer; color: black"></i></p>
                                                         <div class="file-upload-design">
                                                             <img id="window-securityPatch-display-by-form-id" th:src="'data:image/png;base64,' + ${capture.securityPatch}"
                                                                  alt="Preview Image">
@@ -436,6 +420,7 @@
                                                     </label>
                                                 </div>
                                             </div>
+                                            <input type="file" class="file-upload-input-view-detail" id="window-security-path-input-by-form-id-view-detail" style="display: none;" accept="image/*">
                                         </section>
                                         <section data-v-741dde45="" data-v-115a39aa=""
                                                  class="user-form-container-2 user-form">
@@ -446,7 +431,7 @@
                                                         <p style="color: red;">➀ Press win key in keyboard.</p>
                                                         <p style="color: red;">➁ Type [appwiz.cpl] in windows
                                                             search box and [Enter].</p>
-                                                        <p style="color: red;">➂ Select [Antivirus Name].</p>
+                                                        <p style="color: red;">➂ Select [Antivirus Name].<i class="edit-image-icon-view-detail fas fa-edit" title="Edit this field" style="margin-left: 20px;display: inline; cursor: pointer; color: black"></i></p>
                                                         <div class="file-upload-design">
                                                             <img id="window-antivirusSoftware-display-by-form-id" th:src="'data:image/png;base64,' + ${capture.antivirusSoftware}"
                                                                  alt="Preview Image">
@@ -454,6 +439,7 @@
                                                     </label>
                                                 </div>
                                             </div>
+                                            <input type="file" class="file-upload-input-view-detail" id="window-antivirusSoftware-input-by-form-id-view-detail" style="display: none;" accept="image/*">
                                         </section>
                                         <section data-v-741dde45="" data-v-115a39aa=""
                                                  class="user-form-container-2 user-form">
@@ -463,7 +449,7 @@
                                                     <label for="window-antivirusPattern-display-by-form-id" class="file-upload-label">
                                                         <p style="color: red;">➀ Open Kaspersky application.</p>
                                                         <p style="color: red;">➁ Select [Task].</p>
-                                                        <p style="color: red;">➂ Update database need to be up to date.</p>
+                                                        <p style="color: red;">➂ Update database need to be up to date.<i class="edit-image-icon-view-detail fas fa-edit" title="Edit this field" style="margin-left: 20px;display: inline; cursor: pointer; color: black"></i></p>
                                                         <div class="file-upload-design">
                                                             <img id="window-antivirusPattern-display-by-form-id" th:src="'data:image/png;base64,' + ${capture.antivirusPattern}"
                                                                  alt="Preview Image">
@@ -471,6 +457,7 @@
                                                     </label>
                                                 </div>
                                             </div>
+                                            <input type="file" class="file-upload-input-view-detail" id="window-antivirusPattern-input-by-form-id-view-detail" style="display: none;" accept="image/*">
                                         </section>
                                         <section data-v-741dde45="" data-v-115a39aa=""
                                                  class="user-form-container-2 user-form">
@@ -479,7 +466,7 @@
                                                 <div class="file-upload-form">
                                                     <label for="window-antivirusFullScan-display-by-form-id" class="file-upload-label">
                                                         <p style="color: red;">➀ Open Kaspersky application.</p>
-                                                        <p style="color: red;">➁ Select [Task].</p>
+                                                        <p style="color: red;">➁ Select [Task].<i class="edit-image-icon-view-detail fas fa-edit" title="Edit this field" style="margin-left: 20px;display: inline; cursor: pointer; color: black"></i></p>
                                                         <div class="file-upload-design">
                                                             <img id="window-antivirusFullScan-display-by-form-id" th:src="'data:image/png;base64,' + ${capture.antivirusFullScan}"
                                                                  alt="Preview Image">
@@ -487,6 +474,7 @@
                                                     </label>
                                                 </div>
                                             </div>
+                                            <input type="file" class="file-upload-input-view-detail" id="window-antivirusFullScan-input-by-form-id-view-detail" style="display: none;" accept="image/*">
                                         </section>
                                     </div>
 
@@ -496,7 +484,7 @@
                                             <div data-v-741dde45="" class="form">
                                                 <div class="file-upload-form">
                                                     <label for="mac-operating-system-display-by-form-id" class="file-upload-label">
-                                                        <p style="color: red;">➀ Type of Operating System</p>
+                                                        <p style="color: red;">➀ Type of Operating System<i class="edit-image-icon-view-detail fas fa-edit" title="Edit this field" style="margin-left: 20px;display: inline; cursor: pointer; color: black"></i></p>
                                                         <div class="file-upload-design">
                                                             <img id="mac-operating-system-display-by-form-id" th:src="'data:image/png;base64,' + ${capture.operationSystem}"
                                                                  alt="Preview Image">
@@ -512,7 +500,7 @@
                                                 <div class="file-upload-form">
                                                     <label for="mac-securityPatch-display-by-form-id" class="file-upload-label">
                                                         <p style="color: red;">➀ Apple Menu >> System
-                                                            Preferences>>Software Update</p>
+                                                            Preferences>>Software Update<i class="edit-image-icon-view-detail fas fa-edit" title="Edit this field" style="margin-left: 20px;display: inline; cursor: pointer; color: black"></i></p>
                                                         <div class="file-upload-design">
                                                             <img id="mac-securityPatch-display-by-form-id" th:src="'data:image/png;base64,' + ${capture.securityPatch}"
                                                                  alt="Preview Image">
@@ -531,7 +519,7 @@
                                                             Mac</p>
                                                         <p style="color: red;">➁ Tap on System Report > Software >
                                                             Installation.</p>
-                                                        <p style="color: red;">➂ Look for XProtectPlistConfigData.</p>
+                                                        <p style="color: red;">➂ Look for XProtectPlistConfigData.<i class="edit-image-icon-view-detail fas fa-edit" title="Edit this field" style="margin-left: 20px;display: inline; cursor: pointer; color: black"></i></p></p>
                                                         <div class="file-upload-design">
                                                             <img id="mac-antivirusSoftware-display-by-form-id" th:src="'data:image/png;base64,' + ${capture.antivirusSoftware}"
                                                                  alt="Preview Image">
@@ -548,8 +536,8 @@
                                             <div data-v-741dde45="" class="form">
                                                 <div class="file-upload-form">
                                                     <label for="linux-operating-system-display-by-form-id" class="file-upload-label">
-                                                        <p style="color: red;">➀ Procedure 1</p>
-                                                        search box and [Enter].</p>
+                                                        <p style="color: red;">➀ Type of Operating Syste</p>
+                                                        search box and [Enter].<i class="edit-image-icon-view-detail fas fa-edit" title="Edit this field" style="margin-left: 20px;display: inline; cursor: pointer; color: black"></i>
                                                         <div class="file-upload-design">
                                                             <img id="linux-operating-system-display-by-form-id" th:src="'data:image/png;base64,' + ${capture.operationSystem}"
                                                                  alt="Preview Image">
@@ -564,7 +552,7 @@
 
                                                 <div class="file-upload-form">
                                                     <label for="linux-securityPatch-display-by-form-id" class="file-upload-label">
-                                                        <p style="color: red;">➀ Procedure 2</p>
+                                                        <p style="color: red;">➀ Security Patch is updated to latest version.<i class="edit-image-icon-view-detail fas fa-edit" title="Edit this field" style="margin-left: 20px;display: inline; cursor: pointer; color: black"></i></p>
                                                         <div class="file-upload-design">
                                                             <img id="linux-securityPatch-display-by-form-id" th:src="'data:image/png;base64,' + ${capture.securityPatch}"
                                                                  alt="Preview Image">
@@ -579,12 +567,13 @@
 
                                                 <div class="file-upload-form">
                                                     <label for="linux-antivirusSoftware-display-by-form-id" class="file-upload-label">
-                                                        <p style="color: red;">➀ Procedure 3</p>
+                                                        <p style="color: red;">➀ Antivirus software(built-in, open source antivirus or third party software).<i class="edit-image-icon-view-detail fas fa-edit" title="Edit this field" style="margin-left: 20px;display: inline; cursor: pointer; color: black"></i></p>
                                                         <div class="file-upload-design">
                                                             <img id="linux-antivirusSoftware-display-by-form-id" th:src="'data:image/png;base64,' + ${capture.antivirusSoftware}"
                                                                  alt="Preview Image">
                                                         </div>
                                                     </label>
+                                                    <input type="file" id="image-upload-input" style="display: block;" accept="image/*">
                                                 </div>
                                             </div>
                                         </section>
@@ -612,17 +601,16 @@
 														<label data-v-42dea6db="" for="signed-date-display-by-form-id" class="label">
 															Signed Date <span class="color-lobster">*</span>
 														</label>
-														<div class="">
-															<!---->
+														<div class="text-field-edit">
 															<span class="error-marker"> <input
                                                                     id="signed-date-display-by-form-id"
                                                                     type="text"
                                                                     th:value="${#dates.format(registerForm.signedDate, 'dd-MM-yyyy')}"
-                                                                    required="required" step="any" class="input"
+                                                                    required="required" step="any" class="input editable-input"
                                                                     style="color: #0d0c22; background: #fff; border: 1px solid black;"
                                                                     disabled>
+                                                                <i class="edit-icon-view-detail fas fa-edit" title="Edit this field" style="display: inline; position: absolute; right: 10px; top: 50%; transform: translateY(-50%); cursor: pointer;"></i>
 															</span>
-                                                            <!---->
 														</div>
                                                         <!---->
 													</div>
@@ -633,7 +621,7 @@
                                                 <label for="signature-display-by-form-id" class="file-upload-label"
                                                        id="file-label-12" ondrop="drop(event, 12)"
                                                        ondragover="allowDrop(event, 12)">
-                                                    <p style="color: red;">➀ Please import your signature here.</p>
+                                                    <p style="color: red;">➀ Please import your signature here.<i class="edit-image-icon-view-detail fas fa-edit" title="Edit this field" style="margin-left: 20px;display: inline; cursor: pointer; color: black"></i></p>
                                                     <div class="file-upload-design">
                                                         <img id="signature-display-by-form-id" alt="Preview Image" th:src="'data:image/png;base64,' + ${registerForm.signature}">
                                                     </div>
@@ -643,7 +631,8 @@
                                     </section>
                                     <div id="approval-sections-container"></div>
                                     <footer class="button-container display-flex justify-flex-end" id="approve-reject-button-container">
-                                        <div class="margin-l-8 form-sub" id="go-home-btn" onclick="history.back();">Go Back</div>
+                                        <div id="go-home-btn" class="margin-l-8 form-sub" style="background: transparent; color: black; border: 2px solid black;" onclick="history.back();">Go Back</div>
+                                        <div class="margin-l-8 form-sub" id="view-detail-update-btn">Update</div>
                                     </footer>
                                 </div>
                             </section>

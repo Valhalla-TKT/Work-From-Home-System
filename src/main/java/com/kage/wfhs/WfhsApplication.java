@@ -24,6 +24,8 @@ public class WfhsApplication extends SpringBootServletInitializer {
 		SpringApplication.run(WfhsApplication.class, args);
 		long endTime = System.currentTimeMillis();
         double startupTimeSeconds = (endTime - startTime) / 1000.0;
+		String ဟိုင်း = "ဟိုင်း";
+    	System.out.println(ဟိုင်း);
         System.out.printf("Started WfhsApplication in %.3f seconds%n", startupTimeSeconds);
 	}
 

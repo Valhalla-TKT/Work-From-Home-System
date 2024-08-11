@@ -137,6 +137,14 @@ async function sendRequestWithoutParam(url, method) {
     }
 }
 
+function mapTeamDtoToTeam(teamDto) {
+    return {
+        id: teamDto.id,
+        name: teamDto.name,
+        createdAt: teamDto.createdAt
+    };
+}
+
 // document.addEventListener('contextmenu', function (event) {
 //     event.preventDefault();
 // });

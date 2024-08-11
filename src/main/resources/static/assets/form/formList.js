@@ -1,5 +1,5 @@
 $(document).ready(function() {
-	
+
 	var selectedValues = [];
 	var currentUser = JSON.parse(localStorage.getItem('currentUser'));
 	const formListTitle = $("#form-list-title")
@@ -16,8 +16,12 @@ $(document).ready(function() {
     if(currentUser.department) {
 		var departmentId = currentUser.department.id;	
 	}
-        
-    var divisionId = currentUser.division.id;
+
+	var divisionId;
+	if(currentUser.division) {
+		divisionId = currentUser.division.id;
+	}
+
     const formStatusSelect = $('#form-status-select');
 	const formListSelectedCount = $('#formListSelectedCount')
 
@@ -40,9 +44,9 @@ $(document).ready(function() {
 	//
 	// 	getDepartmentsPendingForm();
 	// }
-	if(userRole === 'CISO' || userRole === 'CEO' || userRole === 'SERVICE_DESK') {
-		getAllForm();
-	}
+	// if(userRole === 'CISO' || userRole === 'CEO' || userRole === 'SERVICE_DESK') {
+	// 	getAllForm();
+	// }
 	// role
 	    
     formStatusSelect.change(function() {
@@ -50,22 +54,14 @@ $(document).ready(function() {
         if(userRole === 'PROJECT_MANAGER') {
 			getTeamMembersPendingForm();
 		}
-		if(userRole === 'DEPARTMENT_HEAD') {
-			// getTeamsPendingForm();
+		if(userRole !== 'PROJECT_MANAGER') {
 			if (currentTeamId) {
 				getTeamForms(status, currentTeamId, userId);
 			} else {
 				getTeamsPendingForm();
 			}
 		}
-		if(userRole === 'DIVISION_HEAD') {
-			getDepartmentsPendingForm();
-		}
-		if(userRole === 'CISO'  || userRole === 'CEO' || userRole === 'SERVICE_DESK') {
-			getAllForm();			
-		}	
     });
-		
 
     function getTeamMembersPendingForm() {
 		$.ajax({
@@ -193,24 +189,39 @@ $(document).ready(function() {
 		});
 	}
 
-	function getTeamsPendingForm() {
+	$(document).on('click', function() {
+		$('.folder-container').removeClass('selected');
+	});
 
-		var teams = currentUser.teams;
+	async function getTeamsPendingForm() {
 
-		// Empty the container
+		$('#bulk-approve-btn').hide()
+		$('#select-all-btn').hide()
+
+		var teams;
+		if(userRole === 'DEPARTMENT_HEAD' || userRole === 'DIVISION_HEAD') {
+			teams = currentUser.teams;
+		} else {
+			teams = await fetchTeams()
+		}
+
 		$("#team-folder-view .form-card-container").empty();
 
 		teams.forEach(function(team) {
 
 			var $folderContainer = $("<div>", {
-				class: "folder-container"
+				class: "folder-container",
+				title: `Double click to view all forms for ${team.name} team.`,
+				click: function() {
+					$(".folder-container").removeClass("selected");
+					$(this).addClass("selected");
+					event.stopPropagation();
+				},
 			});
 
 			var $folder = $("<div>", {
 				class: "folder",
 				dblclick: function() {
-					console.log(team.id);
-					console.log("hi");
 					currentTeamId = team.id;
 					getTeamForms(status, team.id, userId);
 				}
@@ -239,12 +250,10 @@ $(document).ready(function() {
 	}
 
 	async function getTeamForms(status, teamId, userId) {
-		console.log(teamId, status, userId);
+		window.scrollTo(0, 0);
 		var response = await fetchTeamWithStatus(status, teamId, userId);
-		console.log(response);
 		var forms = response.forms;
 		var applicantList = response.applicants;
-		console.log('Success:', applicantList);
 		$("#form-list-view .form-card-container").empty();
 
 		forms.forEach(function(form, index) {
@@ -285,24 +294,15 @@ $(document).ready(function() {
 			}).append(
 				$("<p>").append(
 					$("<span>", {
-						class: "resume-card-location",
-						text: applicant.positionName
-					}),
-					// $("<span>", {
-					// 	class: "resume-card-middot",
-					// 	text: "•"
-					// }),
-					$("<br />"),
-					$("<span>", {
 						text: applicant.teamName
 					}),
-					// $("<br />", {
-					// 	class: "resume-card-middot",
-					// 	text: "•"
-					// }),
-					// $("<span>", {
-					// 	text: applicant.departmentName
-					// }),
+					$("<br />", {
+						class: "resume-card-middot",
+						text: "•"
+					}),
+					$("<span>", {
+						text: applicant.departmentName
+					}),
 				),
 				$("<input>", {
 					type: "checkbox",
@@ -353,13 +353,23 @@ $(document).ready(function() {
 		$("#form-list-view").show();
 		$("#team-folder-view").hide();
 		$("#go-back-btn").show();
+		if(forms.length > 0) {
+			$('#bulk-approve-btn').show()
+			$('#select-all-btn').show()
+		}
 	}
 
 	$("#go-back-btn").on('click', function() {
 		$("#form-list-view").hide();
 		$("#team-folder-view").show();
 		$("#go-back-btn").hide();
+		$('#bulk-approve-btn').hide()
+		$('#select-all-btn').hide()
 		currentTeamId = null
+		selectedValues.length = 0;
+		window.scrollTo(0, 0);
+		updateFormListSelectCount()
+		formStatusSelect.val('ALL').trigger('change');
 	});
 
 
@@ -644,6 +654,15 @@ $(document).ready(function() {
     });
     
     $("#bulk-approve-btn").click(function() {
+		if (selectedValues.length === 0) {
+			Swal.fire({
+				title: 'No Selection',
+				text: 'Please select at least one form to approve.',
+				icon: 'warning',
+				confirmButtonText: 'OK'
+			});
+			return;
+		}
         var formData = new FormData();
 		for (var i = 0; i < selectedValues.length; i++) {
 		    formData.append('formIds', selectedValues[i]);
@@ -661,21 +680,44 @@ $(document).ready(function() {
 			title: 'Approval Details',
 			html: `
 				<textarea id="reason" placeholder="Enter the reason for approval here..." style="width: 100%; height: 100px; margin-bottom: 10px; border: 1px solid black;"></textarea>
+				<select id="approve-role" class="select" style="width: 100%; color: #0d0c22; border: 1px solid black; text-transform: capitalize;">
+					<option selected value="" disabled>Choose Approver Role</option>
+				</select>
+				<br/><br/>
 				<select id="approver-name" class="select" style="width: 100%; color: #0d0c22; border: 1px solid black;">
-                   	<option selected disabled>Choose Approver Name</option>
+                   <option selected value="" disabled>Choose Approver Name</option>
                </select>`,
 			didOpen: async () => {
-				await getAllApprover();
+				const approveRoleResponse = await fetchApproveRoleWithoutApplicant();
+				const approveRoleSelect = Swal.getPopup().querySelector('#approve-role');
+				const formatRoleName = (roleName) => {
+					return roleName
+						.replace(/_/g, ' ')
+						.toLowerCase()
+						.replace(/\b\w/g, char => char.toUpperCase());
+				};
+				approveRoleResponse.forEach(role => {
+					const option = document.createElement('option');
+					option.value = role.id;
+					option.text = formatRoleName(role.name);
+					approveRoleSelect.add(option);
+				});
+
+				approveRoleSelect.addEventListener('change', async () => {
+					const selectedRoleId = approveRoleSelect.value;
+					await getAllApprover(selectedRoleId, currentUser.name);
+				});
 			},
 			preConfirm: () => {
 				const reason = Swal.getPopup().querySelector('#reason').value;
+				const approverRole = Swal.getPopup().querySelector('#approve-role').value;
 				const approverName = Swal.getPopup().querySelector('#approver-name').value;
 				if (!reason) {
                 	Swal.showValidationMessage(`Please enter a reason`);
                 	return false;
             	}
-				if (!approverName) {
-					Swal.showValidationMessage(`Please choose an approver`);
+				if (!approverRole || !approverName) {
+					Swal.showValidationMessage(`Please choose both an approver role and an approver name.`);
 					return false;
 				}
 				return { reason, approverId };
@@ -711,7 +753,15 @@ $(document).ready(function() {
 									confirmButtonText: 'OK'
 								}).then(() => {
 									$('#message').text(response);
-									getAllForm()
+									//getAllForm()
+									Swal.fire({
+										title: 'Operation Completed',
+										text: 'The bulk approval has been successfully completed.',
+										icon: 'info',
+										confirmButtonText: 'Refresh Page'
+									}).then(() => {
+										location.reload();
+									});
 								});
 							}, error: function (xhr, error) {
 								console.error('Error:', error);
@@ -730,14 +780,14 @@ $(document).ready(function() {
 
 	}
 
-	getAllApprover()
-	async function getAllApprover() {
-		const response = await fetchApprovers();
+	async function getAllApprover(approveRoleId, name) {
+		const response = await fetchApproversByApproveRoleId(approveRoleId);
+		console.log(response)
 		var selectBox = $('#approver-name');
 		selectBox.empty();
 		selectBox.append('<option value="" selected>Choose Approver Name</option>');
 		for (var i = 0; i < response.length; i++) {
-			if (response[i].name !== currentUser.name) {
+			if (response[i].name !== name) {
 				var option = $('<option>', {
 					value: response[i].id,
 					text: response[i].name,

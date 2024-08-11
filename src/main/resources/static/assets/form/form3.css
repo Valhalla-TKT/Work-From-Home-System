@@ -3516,8 +3516,8 @@ input[type='radio'] {
 
 input:checked[type='checkbox'],
 input:checked[type='radio'] {
-    border-color: #ea64d9;
-    background-color: #ea64d9
+    border-color: black;
+    background: black !important;
 }
 
 input[type='checkbox']:checked:after {

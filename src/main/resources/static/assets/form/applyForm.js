@@ -779,17 +779,41 @@ $(document).ready(function() {
 		event.preventDefault();
 
 		await Swal.fire({
-			title: 'Choose Approver Name',
-			html: `<select id="approver-name" class="select" style="width: 100%; color: #0d0c22; border: 1px solid black;">
-                   <option selected disabled>Choose Approver Name</option>
+			title: 'Choose Approve Role and Name',
+			html: `
+				<select id="approve-role" class="select" style="width: 100%; color: #0d0c22; border: 1px solid black; text-transform: capitalize;">
+					<option selected value="" disabled>Choose Approver Role</option>
+				</select>
+				<br/><br/>
+				<select id="approver-name" class="select" style="width: 100%; color: #0d0c22; border: 1px solid black;">
+                   <option selected value="" disabled>Choose Approver Name</option>
                </select>`,
 			didOpen: async () => {
-				await getAllApprover();
+				const approveRoleResponse = await fetchApproveRoleWithoutApplicant();
+				const approveRoleSelect = Swal.getPopup().querySelector('#approve-role');
+				const formatRoleName = (roleName) => {
+					return roleName
+						.replace(/_/g, ' ')
+						.toLowerCase()
+						.replace(/\b\w/g, char => char.toUpperCase());
+				};
+				approveRoleResponse.forEach(role => {
+					const option = document.createElement('option');
+					option.value = role.id;
+					option.text = formatRoleName(role.name);
+					approveRoleSelect.add(option);
+				});
+
+				approveRoleSelect.addEventListener('change', async () => {
+					const selectedRoleId = approveRoleSelect.value;
+					await getAllApprover(selectedRoleId, currentUser.name);
+				});
 			},
 			preConfirm: () => {
+				const approverRole = Swal.getPopup().querySelector('#approve-role').value;
 				const approverName = Swal.getPopup().querySelector('#approver-name').value;
-				if (!approverName) {
-					Swal.showValidationMessage(`Please choose an approver`);
+				if (!approverRole || !approverName) {
+					Swal.showValidationMessage(`Please choose both an approver role and an approver name.`);
 				}
 				return approverName;
 			},
@@ -870,6 +894,27 @@ $(document).ready(function() {
 		});
 	}
 
+	async function getAllApprover(approveRoleId, name) {
+		const response = await fetchApproversByApproveRoleId(approveRoleId);
+		console.log(response)
+		var selectBox = $('#approver-name');
+		selectBox.empty();
+		selectBox.append('<option value="" selected>Choose Approver Name</option>');
+		for (var i = 0; i < response.length; i++) {
+			if (response[i].name !== name) {
+				var option = $('<option>', {
+					value: response[i].id,
+					text: response[i].name,
+					'data-staff-id': response[i].staffId,
+				});
+				selectBox.append(option);
+			}
+		}
+		selectBox.on('change', function() {
+			approverId = $(this).val()
+		});
+	}
+
 	async function getTeamMemberById(teamId, userId) {
 		try {
 			const response = await fetchTeamMemberByUserId(teamId, userId);
@@ -901,35 +946,6 @@ $(document).ready(function() {
 		} catch (error) {
 			console.error('Error:', error);
 		}
-	}
-	
-
-	async function getAllApprover() {
-		const response = await fetchApprovers();
-		var selectBox = $('#approver-name');
-		selectBox.empty();
-		selectBox.append('<option value="" selected>Choose Approver Name</option>');
-		for (var i = 0; i < response.length; i++) {
-			if (response[i].name !== currentUser.name) {
-				var option = $('<option>', {
-					value: response[i].id,
-					text: response[i].name,
-					'data-staff-id': response[i].staffId,
-				});
-				selectBox.append(option);
-			}
-		}
-		selectBox.on('change', function() {
-			var selectedValue = $(this).val();
-			console.log('Selected value:', selectedValue);
-			approverId = selectedValue
-
-			var selectedText = $(this).find('option:selected').text();
-			console.log('Selected text:', selectedText);
-
-			var selectedStaffId = $(this).find('option:selected').data('staff-id');
-			console.log('Selected staff ID:', selectedStaffId);
-		});
 	}
 
 	async function getAllDivision() {
@@ -1170,7 +1186,8 @@ $(document).ready(function() {
 		}
 	}
 
-	getAllApprover(), getAllDivision(), getAllDepartment(), getAllTeam();
+	// getAllApprover(),
+	getAllDivision(), getAllDepartment(), getAllTeam();
 	async function getDepartmentsByDivisionId(divisionId) {
 		return await fetchDepartmentsByDivisionId(divisionId)
 	}

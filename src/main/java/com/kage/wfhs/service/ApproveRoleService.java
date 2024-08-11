@@ -42,4 +42,6 @@ public interface ApproveRoleService {
      * @throws Exception if an error occurs during the initialization process.
      */
     void initializeRoles(List<String> roles) throws Exception;
+
+    List<ApproveRoleDto> getApproveRoleListWithoutApplicant();
 }

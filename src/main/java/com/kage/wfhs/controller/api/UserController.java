@@ -197,6 +197,13 @@ public class UserController {
         return ResponseEntity.ok(userService.getAllApprover());
     }
 
+    @PostMapping("/getApproversByApproveRoleId")
+    public ResponseEntity<?> getApproversByApproveRoleId(
+            @RequestParam("approveRoleId") Long approveRoleId
+    ){
+        return ResponseEntity.ok(userService.getApproversByApproveRoleId(approveRoleId));
+    }
+
     @PutMapping("/changePosition/{userId}")
     public ResponseEntity<Map<String, Object>> changePosition(@PathVariable Long userId, @RequestParam String position) {
         UserDto userDto = userService.changePosition(userId, position);

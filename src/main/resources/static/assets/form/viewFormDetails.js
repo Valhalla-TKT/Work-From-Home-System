@@ -1,11 +1,137 @@
 $(document).ready(function () {
+
+    const viewDetailUpdateBtn = $('#view-detail-update-btn')
+    if (viewDetailUpdateBtn) {
+        viewDetailUpdateBtn.hide();
+    }
+
+    const workingPlaceDisplayByFormId = $('#working-place-display-by-form-id')
+    const fromDateDisplayByFormId = $('#from-date-display-by-form-id')
+    const toDateDisplayByFormId = $('#to-date-display-by-form-id')
+    const formRequestReasonDisplayDetail = $('#form-request-reason-display-detail')
+    const signedDateDisplayByFormId = $("#signed-date-display-by-form-id")
+    const windowOperatingSystemInputByFormId = $('#window-operating-system-input-by-form-id-view-detail')
+
+    $(document).on('click', '.edit-icon-view-detail', function() {
+        const inputField = $(this).closest('.text-field-edit').find('.editable-input');
+        inputField.prop('disabled', false).focus();
+        inputField[0].setSelectionRange(inputField.val().length, inputField.val().length);
+        $(this).hide();
+        viewDetailUpdateBtn.show();
+    });
+
+    $(document).on('blur', '.editable-input', function() {
+        $(this).prop('disabled', true);
+        $(this).closest('.text-field-edit').find('.edit-icon-view-detail').show();
+    });
+
+    $(document).on('click', '.edit-image-icon-view-detail', function() {
+        const fileInput = $(this).closest('.user-form-container-2').find('.file-upload-input-view-detail');
+        const fileUploadDesign = $(this).closest('.user-form-container-2').find('.file-upload-design');
+        fileInput.show().focus();
+        fileUploadDesign.hide();
+        viewDetailUpdateBtn.show();
+    });
+
+    $(document).on('change', '.file-upload-input-view-detail', function() {
+        const file = this.files[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const preview = $(this).closest('.user-form-container-2').find('.file-upload-preview-view-detail');
+                preview.attr('src', e.target.result).show();
+                const fileUploadDesign = $(this).closest('.user-form-container-2').find('.file-upload-design');
+                fileUploadDesign.show()
+                $(this).hide();
+            }.bind(this);
+            reader.readAsDataURL(file);
+        }
+    });
+
+
+    function formatDateInput(dateString) {
+        const [day, month, year] = dateString.split('-').map(Number);
+        const date = new Date(year, month - 1, day);
+        const formattedYear = date.getFullYear();
+        const formattedMonth = String(date.getMonth() + 1).padStart(2, '0');
+        const formattedDay = String(date.getDate()).padStart(2, '0');
+        return `${formattedYear}-${formattedMonth}-${formattedDay}`;
+    }
+
+    viewDetailUpdateBtn.click(function(event) {
+        event.preventDefault();
+        const formData = new FormData();
+        const workingPlaceDisplayByFormIdValue = workingPlaceDisplayByFormId.val()
+        formData.append('workingPlace', workingPlaceDisplayByFormIdValue);
+
+        const fromDateDisplayByFormIdValue = fromDateDisplayByFormId.val()
+        const formattedFromDate = formatDateInput(fromDateDisplayByFormIdValue);
+        formData.append('fromDate', formattedFromDate);
+
+        const toDateDisplayByFormIdValue = toDateDisplayByFormId.val()
+        const formattedToDate = formatDateInput(toDateDisplayByFormIdValue);
+        formData.append('toDate', formattedToDate);
+
+        const formRequestReasonDisplayDetailValue = formRequestReasonDisplayDetail.val()
+        formData.append('reason', formRequestReasonDisplayDetailValue);
+
+        const signedDateDisplayByFormIdValue = signedDateDisplayByFormId.val()
+        const formattedSignedDate = formatDateInput(signedDateDisplayByFormIdValue)
+        formData.append('signedDate', formattedSignedDate);
+
+        const data = {
+            id: formId,
+            workingPlace: workingPlaceDisplayByFormIdValue,
+            requestReason: formRequestReasonDisplayDetailValue,
+            fromDate: formattedFromDate,
+            toDate: formattedToDate,
+            signedDate: formattedSignedDate,
+        };
+
+        formData.append("data", new Blob([JSON.stringify(data)], { type: "application/json" }));
+        const windowOperatingSystem = windowOperatingSystemInputByFormId[0].files[0];
+        if (windowOperatingSystem) {
+            formData.append('operatingSystem', windowOperatingSystem);
+        } else {
+            console.log("No file selected.");
+        }
+
+        $.ajax({
+            url: `${getContextPath()}/api/registerform/updateForm`,
+            type: 'POST',
+            data: formData,
+            processData: false,
+            contentType: false,
+            success: function(response) {
+                Swal.fire({
+                    title: "Success!",
+                    text: "Form updated successfully.",
+                    icon: "success",
+                    confirmButtonText: "OK"
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        window.location.href = `${getContextPath()}/historyForm`;
+                    }
+                });
+            },
+            error: function(xhr, status, error) {
+                Swal.fire({
+                    title: "Error!",
+                    text: "There was an error submitting the form.",
+                    icon: "error",
+                    confirmButtonText: "OK"
+                });
+            }
+        });
+
+    });
+
     const currentUser = JSON.parse(localStorage.getItem('currentUser'));
     const formIdInput = $("#form-id-display-by-form-data")
     const userId = currentUser.id;
     var formId = formIdInput.val()
     $('#continue-button').click(function(event) {
         event.preventDefault();
-
         showNextDiv();
     });
 
@@ -82,15 +208,21 @@ $(document).ready(function () {
             success: function (response) {
 
                 var workFlowStatuses = response.workFlowStatus;
-
+                const formatRoleName = (roleName) => {
+                    return roleName
+                        .replace(/_/g, ' ')
+                        .toLowerCase()
+                        .replace(/\b\w/g, char => char.toUpperCase());
+                };
                 workFlowStatuses.forEach(function(status) {
                     if (status.status.toLowerCase() !== 'pending') {
+                        var approveRoleName = formatRoleName(status.approveRole.name)
                         var approvalSectionHtml = `
                             <section data-v-741dde45="" data-v-115a39aa="" id="${status.approveRole.name.toLowerCase()}-approval-output-section"
                                     class="user-form-container-2 user-form display-flex">
                                 <div class="pledge-container">
                                     <div class="pledge-heading">
-                                        <h2>${status.approveRole.name} Approval <span style="font-size: 18px;">(${status.approverName})</span></h2>
+                                        <h2>${approveRoleName} Approval <span style="font-size: 18px;">(${status.approverName})</span></h2>
                                     </div>
                                 </div>
                                 <div class="final-form">
@@ -99,13 +231,13 @@ $(document).ready(function () {
                                         <div class="final-display-input" id="${status.approveRole.name.toLowerCase()}-approval-status">
                                             <div class="display-flex w-50">
                                                 <div class="display-data">
-                                                    <input class="radio-button__input" style="background-color: black; border-color: transparent; transform: scale(0.8); box-shadow: 0 0 20px #0d0c22;" type="radio" name="${status.approveRole.name.toLowerCase()}-approval" value="yes" ${status.state ? 'checked' : ''} disabled>
+                                                    <input class="radio-button__input" style="border: 1px solid black;" type="radio" name="${status.approveRole.name.toLowerCase()}-approval" value="yes" ${status.state ? 'checked' : ''} disabled>
                                                 </div>
                                                 <div class="display-data" style="margin-right: 10px;">Approve</div>
                                             </div>
                                             <div class="display-flex w-50">
                                                 <div class="display-data">
-                                                    <input class="radio-button__input" style="border: 1px solid black; background: #fff;" type="radio" name="${status.approveRole.name.toLowerCase()}-approval" value="no" ${!status.state ? 'checked' : ''} disabled>
+                                                    <input class="radio-button__input" style="border: 1px solid black;" type="radio" name="${status.approveRole.name.toLowerCase()}-approval" value="no" ${!status.state ? 'checked' : ''} disabled>
                                                 </div>
                                                 <div class="display-data" style="margin-right: 10px;">Reject</div>
                                             </div>

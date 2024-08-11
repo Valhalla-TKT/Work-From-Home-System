@@ -22,7 +22,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-
+@ToString
 public class RegisterForm implements Serializable {
 	private static final long serialVersionUID = 1L;
 	

@@ -216,6 +216,7 @@ document.addEventListener('DOMContentLoaded', function () {
                     // Update chart data
                     myDepartmentBarChart.data.labels = Names;
                     myDepartmentBarChart.data.datasets[0].data = formCounts;
+                    myDepartmentBarChart.data.datasets[0].backgroundColor = formCounts.map(() => getRandomColor());
   
                     // Update the chart
                     myDepartmentBarChart.update();
@@ -273,29 +274,40 @@ document.addEventListener('DOMContentLoaded', function () {
             console.error("Unable to fetch department ID.");
         }
       }
-  
-  function updateDepartmentInfo(departmentName) {
+
+    function getRandomColor() {
+        const letters = '0123456789ABCDEF';
+        let color = '#';
+        for (let i = 0; i < 6; i++) {
+            color += letters[Math.floor(Math.random() * 16)];
+        }
+        return color;
+    }
+
+    function updateDepartmentInfo(departmentName) {
       // Get the container element
       const departmentContainer = document.querySelector('.dept');
+      const departmentNamePieChart = document.querySelector('#department_name_pie_chart');
+
       console.log(departmentName)
       const dName = departmentName[0];
       const dpercent = departmentName[1];
       console.log(dName)
       console.log(dpercent)
-      // Clear previous content
+
       departmentContainer.innerHTML = '';
-  
-      // Create a div for department name
+
       const departmentNameDiv = document.createElement('div');
       departmentNameDiv.classList.add('display-7', 'me-3');
-      departmentNameDiv.innerHTML = `<i class="bi bi-bag-check me-2 text-success"></i> Department: ${dName}`;
+      departmentNameDiv.innerHTML = `<i class="bi bi-building me-2 text-success"></i> Department: ${dName}`;
+      departmentNamePieChart.innerHTML = `Department: ${dName}`;
       departmentContainer.appendChild(departmentNameDiv);
-  
-      // Create a span for registration percentage
+
       const registrationSpan = document.createElement('span');
       registrationSpan.classList.add('text-success');
       registrationSpan.innerHTML = `<i class="bi bi-arrow-up me-1 small"></i>${dpercent.toFixed(2)}%`;
       departmentContainer.appendChild(registrationSpan);
+
   }
   
     // Get the context of the canvas element
@@ -313,34 +325,27 @@ document.addEventListener('DOMContentLoaded', function () {
                 datasets: [{
                     label: 'Form Request Percent(%) This Month',
                     data: [],
-                    backgroundColor: [
-                        'rgba(255, 99, 132, 0.2)',
-                        'rgba(255, 159, 64, 0.2)',
-                        'rgba(255, 205, 86, 0.2)',
-                        'rgba(75, 192, 192, 0.2)',
-                        'rgba(54, 162, 235, 0.2)',
-                        'rgba(153, 102, 255, 0.2)',
-                        'rgba(201, 203, 207, 0.2)'
-                    ],
-                    borderColor: [
-                        'rgb(255, 99, 132)',
-                        'rgb(255, 159, 64)',
-                        'rgb(255, 205, 86)',
-                        'rgb(75, 192, 192)',
-                        'rgb(54, 162, 235)',
-                        'rgb(153, 102, 255)',
-                        'rgb(201, 203, 207)'
-                    ],
+                    backgroundColor: [],
+                    borderColor: [],
                     borderWidth: 1
                 }]
             },
             options: {
                 scales: {
                     y: {
-                        beginAtZero: true
+                        max: 100,
+                        beginAtZero: true,
+                        reverse: false,
+                        ticks: {
+                            stepSize: 10,
+                            callback: function(value) {
+                                return value + '%';
+                            }
+                        }
                     }
                 }
             }
+
         });
 
         myDepartmentDonutChart = new Chart(departmentdonutCtx, {

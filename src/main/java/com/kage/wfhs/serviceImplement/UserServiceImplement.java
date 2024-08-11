@@ -621,5 +621,11 @@ public class UserServiceImplement implements UserService {
 		return true;
 	}
 
+	@Override
+	public List<UserDto> getApproversByApproveRoleId(Long approveRoleId) {
+		List<User> users = userRepo.findUsersByRoleId(approveRoleId);
+		return DtoUtil.mapList(users, UserDto.class, modelMapper);
+	}
+
 
 }
