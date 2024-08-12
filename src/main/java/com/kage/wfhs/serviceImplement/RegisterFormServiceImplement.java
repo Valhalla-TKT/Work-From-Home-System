@@ -387,23 +387,9 @@ public class RegisterFormServiceImplement implements RegisterFormService {
         registerFormDto.setOsType(registerFormDto.getOsType());
         checkOsTypeAndSave(registerFormDto, formId, capture);
 //        workFlowStatusService.createWorkFlowStatus(registerFormDto.getApplicantId(), registerFormDto.getId(), registerFormDto.getApproverId());
-        WorkFlowStatus workFlowStatus = workFlowStatusRepo.findByUserIdAndRegisterFormId(registerFormDto.getApproverId(), formId);
-        workFlowStatus.setStatus(Status.PENDING);
-        workFlowStatusRepo.save(workFlowStatus);
+//        WorkFlowStatus workFlowStatus = workFlowStatusRepo.findByUserIdAndRegisterFormId(registerFormDto.getApproverId(), formId);
+//        workFlowStatus.setStatus(Status.PENDING);
+//        workFlowStatusRepo.save(workFlowStatus);
     }
-
-//    @Override
-//    public Map<String, Object> getDepartmentWithStatus(String status, long departmentId, long userId) {
-//        User user = EntityUtil.getEntityById(userRepo, userId);
-//        ApproveRole approveRole = helper.getMaxOrder(user.getApproveRoles());
-//        long orderId = workFlowOrderService.getWorkFlowOrderByApproveRoleId(approveRole.getId()).getId();
-//        long approveRoleId = approveRoleService.getIdByWorkFlowOrderId(orderId);
-//        Map<String, Object> responseData = new HashMap<>();
-//        List<RegisterFormDto> registerFormDtoList;
-//        if (status.equalsIgnoreCase("ALL")) {
-//            registerFormDtoList = get
-//        }
-//        return null;
-//    }
 
 }

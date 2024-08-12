@@ -8,8 +8,6 @@
 package com.kage.wfhs.serviceImplement;
 
 import java.util.*;
-import java.util.function.Consumer;
-import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import com.kage.wfhs.dto.auth.CurrentLoginUserDto;
@@ -21,8 +19,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.kage.wfhs.dto.UserDto;
-import com.kage.wfhs.exception.EntityCreationException;
-//import com.kage.wfhs.model.ActiveStatus;
 import com.kage.wfhs.model.ApproveRole;
 import com.kage.wfhs.model.Department;
 import com.kage.wfhs.model.Division;
@@ -521,6 +517,7 @@ public class UserServiceImplement implements UserService {
 	public boolean updateApproveRole(long userId, List<Long> approveRoleIdList, List<Long> teamIds, List<Long> departmentIds, List<Long> divisionIds) {
 		try {
 			User user = EntityUtil.getEntityById(userRepo, userId);
+			Long userIdToSearch = user.getId();
 			String fromRole = rolesToString(user.getApproveRoles());
 			Set<ApproveRole> approveRoles = new HashSet<>(approveRoleRepo.findAllById(approveRoleIdList));
 			user.setApproveRoles(approveRoles);
@@ -529,46 +526,25 @@ public class UserServiceImplement implements UserService {
 			if (!approveRoles.isEmpty()) {
 			    firstApproveRole = approveRoles.iterator().next();
 			    approveRoleId = firstApproveRole.getId();
-			    
-			    if("PROJECT_MANAGER".equals(firstApproveRole.getName())) {
-			    	List<UserApproveRoleTeam> existingUserApproveRoleTeam = userApproveRoleTeamRepo.findByUserId(user.getId());
-			        
-			        if (existingUserApproveRoleTeam != null && !existingUserApproveRoleTeam.isEmpty()) {
-			            userApproveRoleTeamRepo.deleteAll(existingUserApproveRoleTeam);
-			        }
-					for(Long teamId : teamIds) {
-						UserApproveRoleTeam userApproveRoleTeam = new UserApproveRoleTeam();
-						userApproveRoleTeam.setTeam(EntityUtil.getEntityById(teamRepo, teamId));
-						userApproveRoleTeam.setUser(user);
-						userApproveRoleTeam.setApproveRole(EntityUtil.getEntityById(approveRoleRepo, approveRoleId));
-						EntityUtil.saveEntity(userApproveRoleTeamRepo, userApproveRoleTeam, "UserApproveRoleTeam");
-					}
+			    if("APPLICANT".equals(firstApproveRole.getName())) {
+			    	deleteApproveRoleEntities("Team", userIdToSearch);
+			        deleteApproveRoleEntities("Department", userIdToSearch);
+					deleteApproveRoleEntities("Division", userIdToSearch);
+			    } else if("PROJECT_MANAGER".equals(firstApproveRole.getName())) {
+			    	deleteApproveRoleEntities("Team", userIdToSearch);
+					saveApproveRoleEntities("Team", teamIds, user, approveRoleId);
+					deleteApproveRoleEntities("Department", userIdToSearch);
+					deleteApproveRoleEntities("Division", userIdToSearch);
 			    } else if ("DEPARTMENT_HEAD".equals(firstApproveRole.getName())) {
-			    	List<UserApproveRoleDepartment> existingUserApproveRoleDepartment = userApproveRoleDepartmentRepo.findByUserId(user.getId());
-			        
-			        if (existingUserApproveRoleDepartment != null && !existingUserApproveRoleDepartment.isEmpty()) {
-			        	userApproveRoleDepartmentRepo.deleteAll(existingUserApproveRoleDepartment);
-			        }
-			    	for(Long departmentId : departmentIds) {
-						UserApproveRoleDepartment userApproveRoleDepartment = new UserApproveRoleDepartment();
-						userApproveRoleDepartment.setDepartment(EntityUtil.getEntityById(departmentRepo, departmentId));
-						userApproveRoleDepartment.setUser(user);
-						userApproveRoleDepartment.setApproveRole(EntityUtil.getEntityById(approveRoleRepo, approveRoleId));
-						EntityUtil.saveEntity(userApproveRoleDepartmentRepo, userApproveRoleDepartment, "UserApproveRoleDepartment");
-					}
+			        deleteApproveRoleEntities("Department", userIdToSearch);
+			    	saveApproveRoleEntities("Department", departmentIds, user, approveRoleId);
+			    	deleteApproveRoleEntities("Team", userIdToSearch);		       
+			        deleteApproveRoleEntities("Division", userIdToSearch);
 			    } else if ("DIVISION_HEAD".equals(firstApproveRole.getName())) {
-			    	List<UserApproveRoleDivision> existingUserApproveRoleDivision = userApproveRoleDivisionRepo.findByUserId(user.getId());
-			        
-			        if (existingUserApproveRoleDivision != null && !existingUserApproveRoleDivision.isEmpty()) {
-			        	userApproveRoleDivisionRepo.deleteAll(existingUserApproveRoleDivision);
-			        }
-			    	for(Long divisionId : divisionIds) {
-						UserApproveRoleDivision userApproveRoleDivision = new UserApproveRoleDivision();
-						userApproveRoleDivision.setDivision(EntityUtil.getEntityById(divisionRepo, divisionId));
-						userApproveRoleDivision.setUser(user);
-						userApproveRoleDivision.setApproveRole(EntityUtil.getEntityById(approveRoleRepo, approveRoleId));
-						EntityUtil.saveEntity(userApproveRoleDivisionRepo, userApproveRoleDivision, "UserApproveRoleDivision");
-					}
+			    	deleteApproveRoleEntities("Division", userIdToSearch);
+			    	saveApproveRoleEntities("Division", divisionIds, user, approveRoleId);
+			    	deleteApproveRoleEntities("Team", userIdToSearch);
+			        deleteApproveRoleEntities("Department", userIdToSearch);
 			    }
 			}
 			EntityUtil.saveEntity(userRepo, user, "user");
@@ -577,6 +553,92 @@ public class UserServiceImplement implements UserService {
 			return true;
         } catch (Exception e) {
 			return false;
+		}
+	}
+	
+	/**
+	 * Deletes the approve role entities (UserApproveRoleTeam, UserApproveRoleDepartment, UserApproveRoleDivision)
+	 * associated with the given user ID based on the specified entity name.
+	 *
+	 * @param entityName the name of the entity type to delete ("Team", "Department", or "Division").
+	 * @param userIdToSearch the ID of the user whose approve role entities are to be deleted.
+	 * @throws IllegalArgumentException if the provided entity name does not match any of the expected values.
+	 */
+	private void deleteApproveRoleEntities(String entityName, Long userIdToSearch) {
+		switch(entityName) {
+			case "Team" : {
+				List<UserApproveRoleTeam> existingUserApproveRoleTeam = userApproveRoleTeamRepo.findByUserId(userIdToSearch);
+		    	
+		    	if (existingUserApproveRoleTeam != null && !existingUserApproveRoleTeam.isEmpty()) {
+		            userApproveRoleTeamRepo.deleteAll(existingUserApproveRoleTeam);
+		        }
+				break;
+			}
+			case "Department" : {
+				List<UserApproveRoleDepartment> existingUserApproveRoleDepartment = userApproveRoleDepartmentRepo.findByUserId(userIdToSearch);
+		        
+		        if (existingUserApproveRoleDepartment != null && !existingUserApproveRoleDepartment.isEmpty()) {
+		        	userApproveRoleDepartmentRepo.deleteAll(existingUserApproveRoleDepartment);
+		        }
+				break;
+			}
+			case "Division" : {
+				List<UserApproveRoleDivision> existingUserApproveRoleDivision = userApproveRoleDivisionRepo.findByUserId(userIdToSearch);
+		        
+		        if (existingUserApproveRoleDivision != null && !existingUserApproveRoleDivision.isEmpty()) {
+		        	userApproveRoleDivisionRepo.deleteAll(existingUserApproveRoleDivision);
+		        }
+				break;
+			}
+			default:
+	            throw new IllegalArgumentException("Invalid entity name: " + entityName);
+		}
+	}
+	
+	/**
+	 * Saves the approve role entities (UserApproveRoleTeam, UserApproveRoleDepartment, UserApproveRoleDivision)
+	 * for the specified user based on the given entity name and entity ID list.
+	 *
+	 * @param entityName the name of the entity type to save ("Team", "Department", or "Division").
+	 * @param entityIdList a list of entity IDs that correspond to the teams, departments, or divisions to be saved.
+	 * @param user the user for whom the approve role entities are to be saved.
+	 * @param approveRoleId the ID of the approve role associated with the entities.
+	 * @throws IllegalArgumentException if the provided entity name does not match any of the expected values.
+	 */
+	private void saveApproveRoleEntities(String entityName, List<Long> entityIdList, User user, Long approveRoleId) {
+		switch(entityName) {
+			case "Team" : {
+				for(Long teamId : entityIdList) {
+					UserApproveRoleTeam userApproveRoleTeam = new UserApproveRoleTeam();
+					userApproveRoleTeam.setTeam(EntityUtil.getEntityById(teamRepo, teamId));
+					userApproveRoleTeam.setUser(user);
+					userApproveRoleTeam.setApproveRole(EntityUtil.getEntityById(approveRoleRepo, approveRoleId));
+					EntityUtil.saveEntity(userApproveRoleTeamRepo, userApproveRoleTeam, "UserApproveRoleTeam");
+				}
+				break;
+			}
+			case "Department" : {
+				for(Long departmentId : entityIdList) {
+					UserApproveRoleDepartment userApproveRoleDepartment = new UserApproveRoleDepartment();
+					userApproveRoleDepartment.setDepartment(EntityUtil.getEntityById(departmentRepo, departmentId));
+					userApproveRoleDepartment.setUser(user);
+					userApproveRoleDepartment.setApproveRole(EntityUtil.getEntityById(approveRoleRepo, approveRoleId));
+					EntityUtil.saveEntity(userApproveRoleDepartmentRepo, userApproveRoleDepartment, "UserApproveRoleDepartment");
+				}
+				break;
+			}
+			case "Division" : {
+				for(Long divisionId : entityIdList) {
+					UserApproveRoleDivision userApproveRoleDivision = new UserApproveRoleDivision();
+					userApproveRoleDivision.setDivision(EntityUtil.getEntityById(divisionRepo, divisionId));
+					userApproveRoleDivision.setUser(user);
+					userApproveRoleDivision.setApproveRole(EntityUtil.getEntityById(approveRoleRepo, approveRoleId));
+					EntityUtil.saveEntity(userApproveRoleDivisionRepo, userApproveRoleDivision, "UserApproveRoleDivision");
+				}
+				break;
+			}
+			default:
+	            throw new IllegalArgumentException("Invalid entity name: " + entityName);
 		}
 	}
 

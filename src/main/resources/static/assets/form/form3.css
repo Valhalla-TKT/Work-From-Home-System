@@ -3514,11 +3514,36 @@ input[type='radio'] {
     appearance: none
 }
 
-input:checked[type='checkbox'],
 input:checked[type='radio'] {
     border-color: black;
     background: black !important;
 }
+
+input[type='checkbox'] {
+    appearance: none;
+    width: 20px;
+    height: 20px;
+    border-radius: 3px;
+    background: white;
+    position: relative;
+    cursor: pointer;
+    outline: none;
+}
+
+input:checked {
+    background: #ea64d9;
+    border-color: #ea64d9;
+}
+
+input:checked::after {
+    content: "\2714";
+    position: absolute;
+    left: 5px;
+    top: 2px;
+    color: white;
+    font-size: 16px; 
+}
+
 
 input[type='checkbox']:checked:after {
     content: '';

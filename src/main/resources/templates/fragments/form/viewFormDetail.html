@@ -301,7 +301,7 @@
 																<!---->
 																<span class="error-marker"> <input
                                                                         id="from-date-display-by-form-id"
-                                                                        type="text" placeholder="e.g. 1/1/2000"
+                                                                        type="text" placeholder="e.g. 01-01-2024"
                                                                         style="color: #0d0c22; background: #fff; border: 1px solid black;"
                                                                         th:value="${#dates.format(registerForm.fromDate, 'dd-MM-yyyy')}"
                                                                         disabled
@@ -326,7 +326,7 @@
 																<!---->
 																<span class="error-marker"> <input
                                                                         id="to-date-display-by-form-id"
-                                                                        type="text" placeholder="e.g. 1/1/2000"
+                                                                        type="text" placeholder="e.g. 01-01-2024"
                                                                         style="color: #0d0c22; background: #fff; border: 1px solid black;"
                                                                         disabled
                                                                         th:value="${#dates.format(registerForm.toDate, 'dd-MM-yyyy')}"
@@ -608,6 +608,7 @@
                                                                     th:value="${#dates.format(registerForm.signedDate, 'dd-MM-yyyy')}"
                                                                     required="required" step="any" class="input editable-input"
                                                                     style="color: #0d0c22; background: #fff; border: 1px solid black;"
+                                                                    placeholder="01-01-2024"
                                                                     disabled>
                                                                 <i class="edit-icon-view-detail fas fa-edit" title="Edit this field" style="display: inline; position: absolute; right: 10px; top: 50%; transform: translateY(-50%); cursor: pointer;"></i>
 															</span>

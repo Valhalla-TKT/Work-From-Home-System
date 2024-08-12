@@ -94,9 +94,9 @@ $(document).ready( function(){
         }
     }
 
-    function renderCheckboxes(userTeams, userDepartments, userDivisions) {
-        $('#team-checkbox-container').empty();
+    function renderCheckboxes(userTeams, userDepartments, userDivisions) {        
         if(userTeams !== null) {
+			$('#team-checkbox-container').empty();
             teams.forEach(team => {
                 const isChecked = userTeams.some(userTeam => userTeam.id === team.id) ? 'checked' : '';
                 $('#team-checkbox-container').append(`
@@ -106,9 +106,9 @@ $(document).ready( function(){
                     </div>
                 `);
             });
-        }
-        $('#department-checkbox-container').empty();
+        }        
         if(userDepartments !== null) {
+			$('#department-checkbox-container').empty();
             departments.forEach(department => {
                 const isChecked = userDepartments.some(userDepartment => userDepartment.id === department.id) ? 'checked' : '';
                 $('#department-checkbox-container').append(`
@@ -118,10 +118,9 @@ $(document).ready( function(){
                     </div>
                 `);
             });
-        }
-
-        $('#division-checkbox-container').empty();
+        }        
         if (userDivisions !== null) {
+			$('#division-checkbox-container').empty();
             divisions.forEach(division => {
                 const isChecked = userDivisions.some(userDivision => userDivision.id === division.id) ? 'checked' : '';
                 $('#division-checkbox-container').append(`
@@ -168,26 +167,27 @@ $(document).ready( function(){
                     selectBox.append(option);
                 }
 
-                // var checkboxContainer = $('#team-checkbox-container');
-                // checkboxContainer.empty();
-                // for (var i = 0; i < response.length; i++) {
-                //     var checkbox = $('<div>', {
-                //         class: 'form-check'
-                //     }).append(
-                //         $('<input>', {
-                //             class: 'form-check-input',
-                //             type: 'checkbox',
-                //             id: 'team-checkbox-' + response[i].id,
-                //             value: response[i].id
-                //         }),
-                //         $('<label>', {
-                //             class: 'form-check-label',
-                //             for: 'team-checkbox-' + response[i].id,
-                //             text: response[i].name
-                //         })
-                //     );
-                //     checkboxContainer.append(checkbox);
-                // }
+                var checkboxContainer = $('#team-checkbox-container');
+				checkboxContainer.empty();
+				for (var i = 0; i < response.length; i++) {
+				    var checkbox = $('<div>', {
+				        class: 'form-check'
+				    }).append(
+				        $('<input>', {
+				            class: 'form-check-input',
+				            type: 'checkbox',
+				            id: 'team-checkbox-' + response[i].id,
+				            value: response[i].id
+				        }),
+				        $('<label>', {
+				            class: 'form-check-label',
+				            for: 'team-checkbox-' + response[i].id,
+				            text: response[i].name
+				        })
+				    );
+				    checkboxContainer.append(checkbox);
+				}
+
 
             })
             .catch(error => {
@@ -254,26 +254,26 @@ $(document).ready( function(){
                     selectBox.append(option);
                 }
       
-                // var checkboxContainer = $('#department-checkbox-container');
-                // checkboxContainer.empty();
-                // for (var i = 0; i < response.length; i++) {
-                //     var checkbox = $('<div>', {
-                //         class: 'form-check'
-                //     }).append(
-                //         $('<input>', {
-                //             class: 'form-check-input',
-                //             type: 'checkbox',
-                //             id: 'department-checkbox-' + response[i].id,
-                //             value: response[i].id
-                //         }),
-                //         $('<label>', {
-                //             class: 'form-check-label',
-                //             for: 'department-checkbox-' + response[i].id,
-                //             text: response[i].name
-                //         })
-                //     );
-                //     checkboxContainer.append(checkbox);
-                // }
+                var checkboxContainer = $('#department-checkbox-container');
+				checkboxContainer.empty();
+				for (var i = 0; i < response.length; i++) {
+				    var checkbox = $('<div>', {
+				        class: 'form-check'
+				    }).append(
+				        $('<input>', {
+				            class: 'form-check-input',
+				            type: 'checkbox',
+				            id: 'department-checkbox-' + response[i].id,
+				            value: response[i].id
+				        }),
+				        $('<label>', {
+				            class: 'form-check-label',
+				            for: 'department-checkbox-' + response[i].id,
+				            text: response[i].name
+				        })
+				    );
+				    checkboxContainer.append(checkbox);
+				}
 
             })
             .catch(error => {
