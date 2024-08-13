@@ -14,11 +14,9 @@ import com.kage.wfhs.dto.WorkFlowStatusDto;
 import com.kage.wfhs.dto.form.FormHistoryDto;
 import com.kage.wfhs.dto.form.FormListDto;
 import com.kage.wfhs.exception.EntityNotFoundException;
-import com.kage.wfhs.model.ApproveRole;
 import com.kage.wfhs.model.WorkFlowStatus;
 import com.kage.wfhs.repository.WorkFlowStatusRepository;
 import com.kage.wfhs.service.*;
-import com.kage.wfhs.util.Helper;
 
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.AllArgsConstructor;
@@ -57,15 +55,6 @@ public class RegisterFormController {
     
     @Autowired
     private final UserService userService;
-    
-    @Autowired
-    private final WorkFlowOrderService workFlowOrderService;
-    
-    @Autowired
-    private final ApproveRoleService approveRoleService;
-    
-    @Autowired
-    private final Helper helper;
     
     @Autowired
     private final ModelMapper modelMapper;
@@ -285,10 +274,19 @@ public class RegisterFormController {
     @PostMapping("/updateForm")
     public ResponseEntity<String> updateForm(
             @RequestPart("data") RegisterFormDto registerFormDto,
-            @RequestPart(value = "operatingSystem", required = false) MultipartFile operationSystem
+            @RequestPart(value = "operatingSystem", required = false) MultipartFile operationSystem,
+            @RequestPart(value = "securityPath", required = false) MultipartFile securityPath,
+            @RequestPart(value = "antivirusSoftware", required = false) MultipartFile antivirusSoftware,
+            @RequestPart(value = "antivirusPattern", required = false) MultipartFile antivirusPattern,
+            @RequestPart(value = "antivirusFullScan", required = false) MultipartFile antivirusFullScan,
+            @RequestParam(value = "hasApprover") boolean hasApprover
             ) throws Exception {
         registerFormDto.setOperationSystemInput(operationSystem);
-        registerFormService.updateForm(registerFormDto, operationSystem);
+        registerFormDto.setSecurityPatchInput(securityPath);
+        registerFormDto.setAntivirusSoftwareInput(antivirusSoftware);
+        registerFormDto.setAntivirusPatternInput(antivirusPattern);
+        registerFormDto.setAntivirusFullScanInput(antivirusFullScan);
+        registerFormService.updateForm(registerFormDto, hasApprover);
         return null;
     }
 

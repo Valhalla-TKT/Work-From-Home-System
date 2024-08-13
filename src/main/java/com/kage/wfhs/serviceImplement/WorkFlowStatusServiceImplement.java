@@ -53,13 +53,18 @@ public class WorkFlowStatusServiceImplement implements WorkFlowStatusService {
     @Override
     public void createWorkFlowStatus(Long userId, Long formId, Long approverId) throws Exception {
         //User applicant = EntityUtil.getEntityById(userRepo, userId);
-        System.out.println(userId + " " + formId + " " + approverId);
         User approver = EntityUtil.getEntityById(userRepo, approverId);
         List<User> users = new ArrayList<>();
         users.add(approver);
         ApproveRole approveRole = approveRoleRepository.findByUsers(users);
         RegisterForm registerForm = EntityUtil.getEntityById(registerFormRepo, formId);
-        WorkFlowStatus workFlowStatus = new WorkFlowStatus();
+        WorkFlowStatus existingWorkFlowStatus = workFlowStatusRepo.findByUserIdAndRegisterFormId(approverId, formId);
+        WorkFlowStatus workFlowStatus;
+        if(existingWorkFlowStatus != null) {
+            workFlowStatus = existingWorkFlowStatus;
+        } else {
+            workFlowStatus = new WorkFlowStatus();
+        }
         workFlowStatus.setStatus(Status.PENDING);
         workFlowStatus.setRegisterForm(formId > 0 ? registerForm : null);
         workFlowStatus.setUser(approver);

@@ -15,7 +15,7 @@
                 <div class="job-board-gradient"></div>
                 <div class="header">
                     <div class="inner-header">
-                        <div class="go-back display-none" id="go-back" onclick="goBack()">
+                        <div class="go-back display-none" id="go-back">
                             <button>
                                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
                                      fill="currentColor" class="bi bi-arrow-left"
@@ -25,7 +25,7 @@
                                 </svg>
                             </button>
                         </div>
-                        <div class="go-back display-none" id="go-back-1" onclick="goBack1()">
+                        <div class="go-back display-none" id="go-back-1">
                             <button>
                                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
                                      fill="currentColor" class="bi bi-arrow-left"
@@ -92,6 +92,12 @@
                                                     type="hidden"
                                                     th:value="${registerForm.id}"
                                                     />
+                                            <input
+                                                    data-v-42dea6db="" id="os-type-display-by-form-data"
+                                                    type="hidden"
+                                                    th:value="${capture.os_type}"
+                                                    />
+                                                    
 
 
                                             <div id="name-input-container" data-v-741dde45=""
@@ -383,8 +389,8 @@
                                     </span>
                                     </label>
                                     </div>
-
-                                    <div id="window">
+                                    
+                                    <div id="window" th:if="${capture.os_type == 'Window'}">
                                         <section data-v-741dde45="" data-v-115a39aa="" class="user-form-container-2 user-form">
                                             <div data-v-741dde45="" class="form" style="position:relative;">
                                                 <div class="file-upload-form">
@@ -414,7 +420,7 @@
                                                         <p style="color: red;">➂ Select [Device Performance &
                                                             Health].<i class="edit-image-icon-view-detail fas fa-edit" title="Edit this field" style="margin-left: 20px;display: inline; cursor: pointer; color: black"></i></p>
                                                         <div class="file-upload-design">
-                                                            <img id="window-securityPatch-display-by-form-id" th:src="'data:image/png;base64,' + ${capture.securityPatch}"
+                                                            <img class="file-upload-preview-view-detail" id="window-securityPatch-display-by-form-id" th:src="'data:image/png;base64,' + ${capture.securityPatch}"
                                                                  alt="Preview Image">
                                                         </div>
                                                     </label>
@@ -433,7 +439,7 @@
                                                             search box and [Enter].</p>
                                                         <p style="color: red;">➂ Select [Antivirus Name].<i class="edit-image-icon-view-detail fas fa-edit" title="Edit this field" style="margin-left: 20px;display: inline; cursor: pointer; color: black"></i></p>
                                                         <div class="file-upload-design">
-                                                            <img id="window-antivirusSoftware-display-by-form-id" th:src="'data:image/png;base64,' + ${capture.antivirusSoftware}"
+                                                            <img class="file-upload-preview-view-detail" id="window-antivirusSoftware-display-by-form-id" th:src="'data:image/png;base64,' + ${capture.antivirusSoftware}"
                                                                  alt="Preview Image">
                                                         </div>
                                                     </label>
@@ -451,7 +457,7 @@
                                                         <p style="color: red;">➁ Select [Task].</p>
                                                         <p style="color: red;">➂ Update database need to be up to date.<i class="edit-image-icon-view-detail fas fa-edit" title="Edit this field" style="margin-left: 20px;display: inline; cursor: pointer; color: black"></i></p>
                                                         <div class="file-upload-design">
-                                                            <img id="window-antivirusPattern-display-by-form-id" th:src="'data:image/png;base64,' + ${capture.antivirusPattern}"
+                                                            <img class="file-upload-preview-view-detail" id="window-antivirusPattern-display-by-form-id" th:src="'data:image/png;base64,' + ${capture.antivirusPattern}"
                                                                  alt="Preview Image">
                                                         </div>
                                                     </label>
@@ -468,7 +474,7 @@
                                                         <p style="color: red;">➀ Open Kaspersky application.</p>
                                                         <p style="color: red;">➁ Select [Task].<i class="edit-image-icon-view-detail fas fa-edit" title="Edit this field" style="margin-left: 20px;display: inline; cursor: pointer; color: black"></i></p>
                                                         <div class="file-upload-design">
-                                                            <img id="window-antivirusFullScan-display-by-form-id" th:src="'data:image/png;base64,' + ${capture.antivirusFullScan}"
+                                                            <img class="file-upload-preview-view-detail" id="window-antivirusFullScan-display-by-form-id" th:src="'data:image/png;base64,' + ${capture.antivirusFullScan}"
                                                                  alt="Preview Image">
                                                         </div>
                                                     </label>
@@ -478,7 +484,7 @@
                                         </section>
                                     </div>
 
-                                    <div id="mac" class="display-none">
+                                    <div id="mac" th:if="${capture.os_type == 'Mac'}">
                                         <section data-v-741dde45="" data-v-115a39aa=""
                                                  class="user-form-container-2 user-form">
                                             <div data-v-741dde45="" class="form">
@@ -530,7 +536,7 @@
                                         </section>
                                     </div>
 
-                                    <div id="linux" class="display-none">
+                                    <div id="linux" th:if="${capture.os_type == 'Linux'}">
                                         <section data-v-741dde45="" data-v-115a39aa=""
                                                  class="user-form-container-2 user-form">
                                             <div data-v-741dde45="" class="form">

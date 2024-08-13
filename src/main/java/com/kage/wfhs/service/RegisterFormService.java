@@ -18,7 +18,6 @@ import org.springframework.stereotype.Service;
 import com.kage.wfhs.dto.RegisterFormDto;
 
 import jakarta.servlet.http.HttpServletResponse;
-import org.springframework.web.multipart.MultipartFile;
 
 @Service
 public interface RegisterFormService {
@@ -56,7 +55,7 @@ public interface RegisterFormService {
 
 	void createCeoForm(Long userId, Date fromDate, Date toDate) throws Exception;
 
-    void updateForm(RegisterFormDto registerFormDto, MultipartFile operationSystem) throws Exception;
+    void updateForm(RegisterFormDto registerFormDto, boolean hasApprover) throws Exception;
 
 //	Map<String, Object> getDepartmentWithStatus(String status, long departmentId, long userId);
 }

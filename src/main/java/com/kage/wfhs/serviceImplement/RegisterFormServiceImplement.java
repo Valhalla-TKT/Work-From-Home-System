@@ -17,10 +17,8 @@ import com.kage.wfhs.repository.RegisterFormRepository;
 import com.kage.wfhs.repository.UserRepository;
 import com.kage.wfhs.repository.WorkFlowStatusRepository;
 import com.kage.wfhs.service.ApproveRoleService;
-//import com.kage.wfhs.service.NotificationService;
 import com.kage.wfhs.service.RegisterFormService;
 import com.kage.wfhs.service.WorkFlowOrderService;
-import com.kage.wfhs.service.WorkFlowStatusService;
 import com.kage.wfhs.util.*;
 
 import jakarta.servlet.http.HttpServletResponse;
@@ -64,8 +62,6 @@ public class RegisterFormServiceImplement implements RegisterFormService {
     private final Helper helper;
 
     private final ApproveRoleService approveRoleService;
-
-    private final WorkFlowStatusService workFlowStatusService;
 
     @Override
     public void createRegisterForm(RegisterFormDto registerFormDto) throws Exception {
@@ -387,7 +383,7 @@ public class RegisterFormServiceImplement implements RegisterFormService {
     }
 
     @Override
-    public void updateForm(RegisterFormDto registerFormDto, MultipartFile operationSystem) throws Exception {
+    public void updateForm(RegisterFormDto registerFormDto, boolean hasApprover) throws Exception {
         Long formId = registerFormDto.getId();
         RegisterForm registerForm = EntityUtil.getEntityById(registerFormRepo, formId);
         registerForm.setWorkingPlace(registerFormDto.getWorkingPlace());
@@ -396,21 +392,20 @@ public class RegisterFormServiceImplement implements RegisterFormService {
         registerForm.setToDate(registerFormDto.getToDate());
         registerForm.setSignedDate(registerFormDto.getSignedDate());
         if(registerForm.getStatus() == Status.REJECT)
-            registerForm.setStatus(Status.PENDING); // x chin lr p
-        registerFormRepo.save(registerForm);
+            registerForm.setStatus(Status.PENDING);
+        //registerFormRepo.save(registerForm);
+        EntityUtil.saveEntityWithoutReturn(registerFormRepo, registerForm, "Register Form");
         Capture capture = registerForm.getCapture();
         registerFormDto.setOsType(capture.getOs_type());
         checkOsTypeAndSave(registerFormDto, formId, capture);
+        if(hasApprover && (registerFormDto.getApproverId() != null || registerFormDto.getApproverId() != 0)) {
+            WorkFlowStatus workFlowStatus = workFlowStatusRepo.findByUserIdAndRegisterFormId(registerFormDto.getApproverId(), formId);
+            workFlowStatus.setStatus(Status.PENDING);
+            workFlowStatus.setReason(null);
+            workFlowStatus.setApprove_date(null);
+            EntityUtil.saveEntity(workFlowStatusRepo, workFlowStatus, "Work Flow Status");
+        }
 //        workFlowStatusService.createWorkFlowStatus(registerFormDto.getApplicantId(), registerFormDto.getId(), registerFormDto.getApproverId());
-//        List<WorkFlowStatus> workFlowStatusList = workFlowStatusRepo.findByRegisterFormIdAndStatus(formId, Status.REJECT);
-//        if (!workFlowStatusList.isEmpty()) {
-//            WorkFlowStatus workFlowStatus = workFlowStatusList.getLast();
-//            workFlowStatus.setStatus(Status.PENDING);
-//            workFlowStatus.setReason(" ");
-//            workFlowStatusRepo.save(workFlowStatus);
-//        }
-//        workFlowStatus.setStatus(Status.PENDING);
-//        workFlowStatusRepo.save(workFlowStatus);
     }
 
 }
