@@ -42,4 +42,6 @@ public interface WorkFlowStatusRepository extends JpaRepository<WorkFlowStatus,L
         WHERE wfs.register_form_id = :registerFormId AND ar.name = :approveRoleName
         """, nativeQuery = true)
     List<WorkFlowStatus> findByRegisterFormIdAndApproveRoleName(Long registerFormId, String approveRoleName);
+
+    List<WorkFlowStatus> findByRegisterFormIdAndStatus(Long formId, Status status);
 }

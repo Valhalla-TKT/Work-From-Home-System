@@ -58,7 +58,11 @@ $(document).ready(function () {
         return `${formattedYear}-${formattedMonth}-${formattedDay}`;
     }
 
+    let approverId
     viewDetailUpdateBtn.click(function(event) {
+        //
+
+        //
         event.preventDefault();
         const formData = new FormData();
         const workingPlaceDisplayByFormIdValue = workingPlaceDisplayByFormId.val()

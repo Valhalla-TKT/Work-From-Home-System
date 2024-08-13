@@ -93,26 +93,40 @@ public class RegisterFormServiceImplement implements RegisterFormService {
     private void checkOsTypeAndSave(RegisterFormDto registerFormDto, Long formId, Capture capture) {
         capture.setOs_type(registerFormDto.getOsType());
         if (capture.getOs_type().equalsIgnoreCase("window")) {
-            MultipartFile antivirusPatternInput = registerFormDto.getAntivirusPatternInput();
-            MultipartFile antivirusFullScan = registerFormDto.getAntivirusFullScanInput();
-            if(!antivirusPatternInput.isEmpty()) {
-                capture.setAntivirusPattern(ImageUtil.convertImageToBase64(antivirusPatternInput));
+            if(registerFormDto.getAntivirusPatternInput() != null && !registerFormDto.getAntivirusPatternInput().isEmpty()) {
+                MultipartFile antivirusPatternInput = registerFormDto.getAntivirusPatternInput();
+                if(!antivirusPatternInput.isEmpty()) {
+                    capture.setAntivirusPattern(ImageUtil.convertImageToBase64(antivirusPatternInput));
+                }
             }
-            if(!antivirusFullScan.isEmpty()) {
-                capture.setAntivirusFullScan(ImageUtil.convertImageToBase64(antivirusFullScan));
+
+            if(registerFormDto.getAntivirusFullScanInput() != null && !registerFormDto.getAntivirusFullScanInput().isEmpty()) {
+                MultipartFile antivirusFullScan = registerFormDto.getAntivirusFullScanInput();
+                if(!antivirusFullScan.isEmpty()) {
+                    capture.setAntivirusFullScan(ImageUtil.convertImageToBase64(antivirusFullScan));
+                }
             }
         }
-        MultipartFile operatingSystem = registerFormDto.getOperationSystemInput();
-        MultipartFile antivirusSoftware = registerFormDto.getOperationSystemInput();
-        MultipartFile securityPatch = registerFormDto.getOperationSystemInput();
-        if(!operatingSystem.isEmpty()) {
-            capture.setOperationSystem(ImageUtil.convertImageToBase64(operatingSystem));
+        if(registerFormDto.getOperationSystemInput() != null && !registerFormDto.getOperationSystemInput().isEmpty()) {
+            MultipartFile operatingSystem = registerFormDto.getOperationSystemInput();
+            if(!operatingSystem.isEmpty()) {
+                capture.setOperationSystem(ImageUtil.convertImageToBase64(operatingSystem));
+            }
         }
-        if(!antivirusSoftware.isEmpty()) {
-            capture.setAntivirusSoftware(ImageUtil.convertImageToBase64(antivirusSoftware));
+
+        if(registerFormDto.getAntivirusSoftwareInput() != null && !registerFormDto.getAntivirusSoftwareInput().isEmpty()) {
+            MultipartFile antivirusSoftware = registerFormDto.getAntivirusSoftwareInput();
+            if(!antivirusSoftware.isEmpty()) {
+                capture.setAntivirusSoftware(ImageUtil.convertImageToBase64(antivirusSoftware));
+            }
         }
-        if(!securityPatch.isEmpty()) {
-            capture.setSecurityPatch(ImageUtil.convertImageToBase64(securityPatch));
+
+        if(registerFormDto.getSecurityPatchInput() != null && !registerFormDto.getSecurityPatchInput().isEmpty()) {
+            MultipartFile securityPatch = registerFormDto.getSecurityPatchInput();
+
+            if(!securityPatch.isEmpty()) {
+                capture.setSecurityPatch(ImageUtil.convertImageToBase64(securityPatch));
+            }
         }
         capture.setRegisterForm(formId > 0 ? EntityUtil.getEntityById(registerFormRepo, formId) : null);
         captureRepo.save(capture);
@@ -381,13 +395,20 @@ public class RegisterFormServiceImplement implements RegisterFormService {
         registerForm.setFromDate(registerFormDto.getFromDate());
         registerForm.setToDate(registerFormDto.getToDate());
         registerForm.setSignedDate(registerFormDto.getSignedDate());
-        registerForm.setStatus(Status.PENDING);
+        if(registerForm.getStatus() == Status.REJECT)
+            registerForm.setStatus(Status.PENDING); // x chin lr p
         registerFormRepo.save(registerForm);
         Capture capture = registerForm.getCapture();
-        registerFormDto.setOsType(registerFormDto.getOsType());
+        registerFormDto.setOsType(capture.getOs_type());
         checkOsTypeAndSave(registerFormDto, formId, capture);
 //        workFlowStatusService.createWorkFlowStatus(registerFormDto.getApplicantId(), registerFormDto.getId(), registerFormDto.getApproverId());
-//        WorkFlowStatus workFlowStatus = workFlowStatusRepo.findByUserIdAndRegisterFormId(registerFormDto.getApproverId(), formId);
+//        List<WorkFlowStatus> workFlowStatusList = workFlowStatusRepo.findByRegisterFormIdAndStatus(formId, Status.REJECT);
+//        if (!workFlowStatusList.isEmpty()) {
+//            WorkFlowStatus workFlowStatus = workFlowStatusList.getLast();
+//            workFlowStatus.setStatus(Status.PENDING);
+//            workFlowStatus.setReason(" ");
+//            workFlowStatusRepo.save(workFlowStatus);
+//        }
 //        workFlowStatus.setStatus(Status.PENDING);
 //        workFlowStatusRepo.save(workFlowStatus);
     }
