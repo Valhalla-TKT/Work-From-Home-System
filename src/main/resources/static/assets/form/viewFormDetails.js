@@ -15,6 +15,7 @@ $(document).ready(function () {
     const windowAntivirusSoftwareInputByFormId = $('#window-antivirusSoftware-input-by-form-id-view-detail')
     const windowAntivirusPatternInputByFormId = $('#window-antivirusPattern-input-by-form-id-view-detail')
     const windowAntivirusFullScanInputByFormId = $('#window-antivirusFullScan-input-by-form-id-view-detail')
+    
     const osTypeInput = $("#os-type-display-by-form-data")
     let osType
     if(osTypeInput) {

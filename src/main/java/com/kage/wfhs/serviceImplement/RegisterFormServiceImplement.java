@@ -401,7 +401,6 @@ public class RegisterFormServiceImplement implements RegisterFormService {
         if(hasApprover && (registerFormDto.getApproverId() != null || registerFormDto.getApproverId() != 0)) {
             WorkFlowStatus workFlowStatus = workFlowStatusRepo.findByUserIdAndRegisterFormId(registerFormDto.getApproverId(), formId);
             workFlowStatus.setStatus(Status.PENDING);
-            workFlowStatus.setReason(null);
             workFlowStatus.setApprove_date(null);
             EntityUtil.saveEntity(workFlowStatusRepo, workFlowStatus, "Work Flow Status");
         }

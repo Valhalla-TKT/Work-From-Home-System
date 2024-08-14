@@ -177,6 +177,16 @@ $(document).ready(function () {
     finalApprovalApproveDateInputBox.on('blur', function () {
         $(this).removeAttr('readonly');
     });
+
+    function getTodayDate() {
+        let today = new Date();
+        let year = today.getFullYear();
+        let month = (today.getMonth() + 1).toString().padStart(2, '0');
+        let day = today.getDate().toString().padStart(2, '0');
+    
+        return `${year}-${month}-${day}`;
+    }
+
     //
     var flowStatusId;
     getFormDetailsById(formId, userId);
@@ -275,16 +285,22 @@ $(document).ready(function () {
                         approveBtn.text("OK")
                     }
                     approveBtn.click(function(event) {
-                        if (!approveDate || approveDate.trim() === "") {
-                            Swal.fire({
-                                title: 'Input Required',
-                                text: 'Please provide an approve date.',
-                                icon: 'warning',
-                                confirmButtonText: 'OK'
-                            });
-                            return;
+                        if(userRole !== "SERVICE_DESK") {
+                            if (!approveDate || approveDate.trim() === "") {
+                                Swal.fire({
+                                    title: 'Input Required',
+                                    text: 'Please provide an approve date.',
+                                    icon: 'warning',
+                                    confirmButtonText: 'OK'
+                                });
+                                return;
+                            }
+                        } else if(userRole === "SERVICE_DESK") {
+                            if (!approveDate || approveDate.trim() === "") {
+                                approveDate = getTodayDate();
+                                console.log("Approve date set to:", approveDate);                            
+                            }
                         }
-
                         workFlowStatusId = flowStatusId
                         approverId = currentUser.id
                         registerFormId = formId

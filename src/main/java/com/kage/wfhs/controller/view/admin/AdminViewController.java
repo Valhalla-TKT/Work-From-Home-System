@@ -67,6 +67,11 @@ public class AdminViewController {
         return "formList";
     }
 
+    @GetMapping("/viewFormListGrid")
+    public String viewFormListGridView() {
+        return "forms/formListGrid";
+    }
+
     @GetMapping("/form/{form}/user/{user}")
     public String viewFormDetailsById(@PathVariable String form, @PathVariable String user) {
         return "viewFormDetailsById";

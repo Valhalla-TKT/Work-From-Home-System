@@ -16,6 +16,8 @@ import com.kage.wfhs.service.WorkFlowStatusService;
 import com.kage.wfhs.util.EntityUtil;
 import com.kage.wfhs.util.Helper;
 import lombok.AllArgsConstructor;
+
+import org.apache.xmlbeans.impl.xb.xsdschema.Attribute.Use;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -155,7 +157,7 @@ public class WorkFlowStatusServiceImplement implements WorkFlowStatusService {
     @Override
     public void updateStatus(Long id, WorkFlowStatusDto workFlowStatusDto) throws Exception {
     	WorkFlowStatus workFlowStatus = EntityUtil.getEntityById(workFlowStatusRepo, id);      
-        RegisterForm form = registerFormRepo.findByWorkFlowStatusId(id);
+        // RegisterForm form = registerFormRepo.findByWorkFlowStatusId(id);
         Status newStatus = workFlowStatusDto.isState() ? Status.APPROVE : Status.REJECT;
         workFlowStatus.setStatus(newStatus);
         workFlowStatus.setApprove_date(workFlowStatusDto.getApproveDate());
@@ -172,16 +174,17 @@ public class WorkFlowStatusServiceImplement implements WorkFlowStatusService {
 
         if (Objects.equals(userRole, "CISO")) {
             if (workFlowStatusDto.isState()) {
-                createApproval(workFlowStatusDto.getRegisterFormId(), "CEO");
-                List<WorkFlowStatus> existingApproval = workFlowStatusRepo.findByUserApproveRolesNameAndRegisterFormId("SERVICE_DESK", workFlowStatusDto.getRegisterFormId() );
+                createApproval(workFlowStatusDto.getRegisterFormId(), "CEO", false);
+                List<WorkFlowStatus> existingApproval = workFlowStatusRepo.findByUserApproveRolesNameAndRegisterFormId("SERVICE_DESK", workFlowStatusDto.getRegisterFormId());
                 if (existingApproval != null) {
                     workFlowStatusRepo.deleteAll(existingApproval);
                 }
             } else {
-                createApproval(workFlowStatusDto.getRegisterFormId(), "SERVICE_DESK");
+                createApproval(workFlowStatusDto.getRegisterFormId(), "SERVICE_DESK", false);
             }
-        } else if (Objects.equals(userRole, "CEO") && workFlowStatusDto.isState()) {
-            createApproval(workFlowStatusDto.getRegisterFormId(), "SERVICE_DESK");
+        }
+         else if (Objects.equals(userRole, "CEO") && workFlowStatusDto.isState()) {
+            createApproval(workFlowStatusDto.getRegisterFormId(), "SERVICE_DESK", true);
             RegisterForm registerForm = EntityUtil.getEntityById(registerFormRepo, workFlowStatusDto.getRegisterFormId());
             registerForm.setStatus(Status.APPROVE);
             registerFormRepo.save(registerForm);
@@ -215,10 +218,13 @@ public class WorkFlowStatusServiceImplement implements WorkFlowStatusService {
         return modelMapper.map(workFlowStatus, WorkFlowStatusDto.class);
     }
 
-    private void createApproval(Long registerFormId, String roleName) {
+    private void createApproval(Long registerFormId, String roleName, boolean isApproved) {
         List<User> users = userRepo.findByApproveRoleName(roleName);
         for(User user : users){
             WorkFlowStatus workFlowStatus = new WorkFlowStatus();
+            if(isApproved) {
+                workFlowStatus.setStatus(Status.APPROVE);    
+            }
             workFlowStatus.setStatus(Status.PENDING);
             workFlowStatus.setRegisterForm(EntityUtil.getEntityById(registerFormRepo, registerFormId));
             workFlowStatus.setUser(user);
