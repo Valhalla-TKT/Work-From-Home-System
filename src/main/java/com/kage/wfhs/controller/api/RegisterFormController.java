@@ -289,5 +289,29 @@ public class RegisterFormController {
         registerFormService.updateForm(registerFormDto, hasApprover);
         return null;
     }
+    
+    @PostMapping("/getFormsByUserId")
+    public ResponseEntity<Map<String, Object>> getFormsByUserId(
+            @RequestParam(value = "status") String status,
+            @RequestParam(value = "userId") long userId){
+        Map<String, Object> responseData = new HashMap<>();
+        List<UserDto> applicantList = new ArrayList<>();
+        List<UserDto> requesterList = new ArrayList<>();
+        List<FormListDto> formList = registerFormService.getFormsByUserIdAndStatus(userId, status);
+        if(formList == null || formList.isEmpty()) {
+        	return new ResponseEntity<>(responseData, HttpStatus.OK);
+        } else {
+        	responseData.put("forms", formList);       
+            for(FormListDto registerFormdto : formList) {
+                applicantList.add(modelMapper.map(userService.getUserById(registerFormdto.getApplicant().getId()), UserDto.class));
+                requesterList.add(modelMapper.map(userService.getUserById(registerFormdto.getRequester().getId()), UserDto.class));
+            }
+            responseData.put("applicants", applicantList);
+            responseData.put("requesters", requesterList);
+            return new ResponseEntity<>(responseData, HttpStatus.OK);
+        }        
+       // return getMapResponseEntity(responseData);
+    }
+    
 
 }

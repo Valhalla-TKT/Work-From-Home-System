@@ -21,7 +21,7 @@ import org.springframework.stereotype.Repository;
 public interface WorkFlowStatusRepository extends JpaRepository<WorkFlowStatus,Long> {
 	Optional<WorkFlowStatus> findById(Long id);
     List<WorkFlowStatus> findByRegisterFormId(Long id);
-    WorkFlowStatus findByUserId(Long id);
+    List<WorkFlowStatus> findByUserId(Long id);
     List<WorkFlowStatus> findByUserApproveRolesNameAndRegisterFormId(String approveRoleName, Long formId);
     boolean existsByRegisterFormIdAndStatus(Long registerFormId, Status status);
     @Query(value = "SELECT * FROM work_flow_status ws WHERE ws.user_id = :userId AND ws.register_form_id = :formId",nativeQuery = true)
@@ -44,4 +44,5 @@ public interface WorkFlowStatusRepository extends JpaRepository<WorkFlowStatus,L
     List<WorkFlowStatus> findByRegisterFormIdAndApproveRoleName(Long registerFormId, String approveRoleName);
 
     List<WorkFlowStatus> findByRegisterFormIdAndStatus(Long formId, Status status);
+    List<WorkFlowStatus> findByUserIdAndStatus(Long userId, Status status);
 }

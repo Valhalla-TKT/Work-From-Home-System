@@ -212,11 +212,11 @@ public class WorkFlowStatusServiceImplement implements WorkFlowStatusService {
         }
     }
 
-    @Override
-    public WorkFlowStatusDto getWorkFlowStatusWithApprover(Long id) {
-        WorkFlowStatus workFlowStatus = workFlowStatusRepo.findByUserId(id);
-        return modelMapper.map(workFlowStatus, WorkFlowStatusDto.class);
-    }
+//    @Override
+//    public WorkFlowStatusDto getWorkFlowStatusWithApprover(Long id) {
+//        WorkFlowStatus workFlowStatus = workFlowStatusRepo.findByUserId(id);
+//        return modelMapper.map(workFlowStatus, WorkFlowStatusDto.class);
+//    }
 
     private void createApproval(Long registerFormId, String roleName, boolean isApproved) {
         List<User> users = userRepo.findByApproveRoleName(roleName);

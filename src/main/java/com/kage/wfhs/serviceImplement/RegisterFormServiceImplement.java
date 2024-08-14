@@ -406,5 +406,35 @@ public class RegisterFormServiceImplement implements RegisterFormService {
         }
 //        workFlowStatusService.createWorkFlowStatus(registerFormDto.getApplicantId(), registerFormDto.getId(), registerFormDto.getApproverId());
     }
+    
+    @Override
+    public List<FormListDto> getFormsByUserIdAndStatus(Long userId, String status) {
+    	List<WorkFlowStatus> workFlowSatusList = new ArrayList<>();
+    	if("ALL".equals(status)) {
+    		workFlowSatusList = workFlowStatusRepo.findByUserId(userId);
+    	} else {
+    		try {
+                Status enumStatus = Status.valueOf(status.toUpperCase());
+                workFlowSatusList = workFlowStatusRepo.findByUserIdAndStatus(userId, enumStatus);
+                if(workFlowSatusList == null || workFlowSatusList.isEmpty()) {
+            		return null;
+            	}
+            } catch (IllegalArgumentException e) {
+                throw new IllegalArgumentException("Invalid status value: " + status);
+            }
+    	}
+
+		List<RegisterForm> registerFormList = new ArrayList<>();
+    	for(WorkFlowStatus workFlowStatus : workFlowSatusList) {
+    		RegisterForm registerForm = workFlowStatus.getRegisterForm();
+    		registerFormList.add(registerForm);
+    	}
+    	List<FormListDto> formList = DtoUtil.mapList(registerFormList, FormListDto.class, modelMapper);
+    	for(FormListDto form : formList) {
+    		form.setCurrentStatus(getFormStatusByApproveId(userId, form.getId()));
+    	}
+    	return formList;
+    	   	
+    }
 
 }
