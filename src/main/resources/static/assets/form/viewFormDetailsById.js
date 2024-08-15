@@ -25,6 +25,7 @@ $(document).ready(function () {
     const finalApprovalApproveDateInputBox = $('#final-approval-approve-date');
     const requesterNameDisplay= $('#requester-name-display')
 
+
     pmApproveDateInputBox.dateDropper({
         format: 'd-m-Y',
     });
@@ -375,13 +376,14 @@ $(document).ready(function () {
                 };
                 workFlowStatuses.forEach(function(status) {
                     if (status.status.toLowerCase() !== 'pending') {
+                        var isApprover = (status.approverName === currentUser.name);
                         var approveRoleName = formatRoleName(status.approveRole.name)
                         var approvalSectionHtml = `
                             <section data-v-741dde45="" data-v-115a39aa="" id="${status.approveRole.name.toLowerCase()}-approval-output-section"
                                     class="user-form-container-2 user-form display-flex">
                                 <div class="pledge-container">
                                     <div class="pledge-heading">
-                                        <h2>${approveRoleName} Approval <span style="font-size: 18px;">(${status.approverName})</span></h2>
+                                        <h2>${approveRoleName} Approval <span style="font-size: 18px;">(${status.approverName})</span>${isApprover ? '<i class="fa fa-edit edit-icon" style="margin-left: 10px; cursor: pointer; font-size: 16px;" id="edit-icon-' + status.approveRole.name.toLowerCase() + '"></i>' : ''}</h2>
                                     </div>
                                 </div>
                                 <div class="final-form">
@@ -418,9 +420,28 @@ $(document).ready(function () {
                             </section>
                         `;
                         $('#approval-sections-container').append(approvalSectionHtml);
+                        if (isApprover) {
+                            $(`#edit-icon-${status.approveRole.name.toLowerCase()}`).on('click', function() {
+                                $(`#${status.approveRole.name.toLowerCase()}-approval-output-section input`).removeAttr('disabled');
+                                $(`#${status.approveRole.name.toLowerCase()}-approval-output-section textarea`).removeAttr('disabled');
+
+                                if (!$('#update-approver-form-btn').length) {
+                                    const updateBtnHtml = `
+                                        <div id="update-approver-form-btn" class="margin-l-8 form-sub" style="background: transparent; color: black; border: 2px solid black;">Update</div>
+                                    `;
+                                    $('.button-container#approve-reject-button-container').append(updateBtnHtml);
+
+                                    // Attach event handler to the Update button
+                                    $('#update-approver-form-btn').click(function() {
+                                        updateByApprover(status.approveRole.name);
+                                    });
+                                }
+                            });
+                        }
                         if (formAlreadyProcessed) {
                             $(`#${status.approveRole.name.toLowerCase()}-approval-input-section`).hide();
                         }
+
                     }
                 });
             },
@@ -429,6 +450,39 @@ $(document).ready(function () {
             }
         });
     }
+
+    async function updateByApprover(role) {
+        //  Retrieve the input values
+        console.log(role)
+        const approvalStatus = $('input[name="status-approval"]:checked').val();
+        const approvedDate = $('#approved-date-input').val();
+        const approvalReason = $('#approval-reason-input').val();
+        console.log(approvalStatus)
+        console.log(approvedDate)
+        console.log(approvalReason)
+    }
+    // $(document).on('click', '.edit-icon', function() {
+    //     const updateBtnHtml = `
+    //     <div id="update-approver-form-btn" class="margin-l-8 form-sub" style="background: transparent; color: black; border: 2px solid black;">Update</div>
+    // `;
+    //     $('.button-container#approve-reject-button-container').append(updateBtnHtml);
+    //
+    //     $('#update-approver-form-btn').click(async function() {
+    //         console.log("Update button clicked!");
+    //         await updateByApprover()
+    //     });
+    // });
+    //
+    // async function updateByApprover() {
+    //     const approvalStatus = $('input[name="status-approval"]:checked').val();
+    //     const approvedDate = $('#approved-date-input').val();
+    //     const approvalReason = $('#approval-reason-textarea').val();
+    //
+    //     // Log the retrieved values to ensure they are correct
+    //     console.log("Approval Status:", approvalStatus);
+    //     console.log("Approved Date:", approvedDate);
+    //     console.log("Approval Reason:", approvalReason);
+    // }
 
     function handleApprovalOrRejection(isApproval) {
         if(userRole !== "SERVICE_DESK") {

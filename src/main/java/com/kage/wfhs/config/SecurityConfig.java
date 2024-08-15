@@ -84,7 +84,7 @@ public class SecurityConfig {
                                     Cookie cookie = new Cookie("JWT", token);
                                     cookie.setHttpOnly(false);
                                     cookie.setPath(contextPath + "/");
-                                    cookie.setMaxAge(86400); // 1 day
+                                    cookie.setMaxAge(86400);
                                     response.addCookie(cookie);
                                     response.setHeader("X-JWT-Token", token);
 

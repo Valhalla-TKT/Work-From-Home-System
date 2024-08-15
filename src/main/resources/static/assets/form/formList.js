@@ -117,6 +117,16 @@ $(document).ready(function() {
 		updatePagination();
 	}
 
+	$(document).on('change', 'input[type="checkbox"]', function() {
+		console.log("Checkbox changed");
+		if ($(this).is(':checked')) {
+			selectedValues.push($(this).val());
+		} else {
+			selectedValues = selectedValues.filter(value => value !== $(this).val());
+		}
+		console.log(selectedValues);
+	});
+
 	function updatePagination() {
 		
         pageNumbers.innerHTML = '';
