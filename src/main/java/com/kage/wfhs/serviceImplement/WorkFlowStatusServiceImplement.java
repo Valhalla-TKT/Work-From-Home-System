@@ -14,10 +14,8 @@ import com.kage.wfhs.service.LedgerService;
 //import com.kage.wfhs.service.NotificationService;
 import com.kage.wfhs.service.WorkFlowStatusService;
 import com.kage.wfhs.util.EntityUtil;
-import com.kage.wfhs.util.Helper;
 import lombok.AllArgsConstructor;
 
-import org.apache.xmlbeans.impl.xb.xsdschema.Attribute.Use;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -40,10 +38,7 @@ public class WorkFlowStatusServiceImplement implements WorkFlowStatusService {
     
     @Autowired
     private final ApproveRoleRepository approveRoleRepo;
-    
-    @Autowired
-    private final Helper helper;
-    
+           
 //    @Autowired
 //    private final NotificationService notificationService;
     
@@ -107,29 +102,25 @@ public class WorkFlowStatusServiceImplement implements WorkFlowStatusService {
 
     }
 
-    private List<User> findApprovers(User applicant, ApproveRole approveRole) {
-        List<User> approverList = userRepo.findByTeamAndApproveRole(applicant.getTeam().getId(), approveRole.getId());
-
-        if (isValidApprovers(approverList)) {
-            return approverList;
-        }
-        approverList = userRepo.findByDepartmentAndApproveRole(applicant.getTeam().getDepartment().getId(), approveRole.getId());
-        if (isValidApprovers(approverList)) {
-            return approverList;
-        }
-        approverList = userRepo.findByDivisionAndApproveRole(applicant.getTeam().getDepartment().getDivision().getId(), approveRole.getId());
-        if (isValidApprovers(approverList)) {
-            return approverList;
-        }
-        if (approveRole.getName().equals("CISO")) {
-            return userRepo.findByApproveRoleName("CISO");
-        } else {
-            return userRepo.findByApproveRole(approveRole.getId());
-        }
-    }
-    private boolean isValidApprovers(List<User> approverList) {
-        return approverList != null && !approverList.isEmpty();
-    }
+	/*
+	 * private List<User> findApprovers(User applicant, ApproveRole approveRole) {
+	 * List<User> approverList =
+	 * userRepo.findByTeamAndApproveRole(applicant.getTeam().getId(),
+	 * approveRole.getId());
+	 * 
+	 * if (isValidApprovers(approverList)) { return approverList; } approverList =
+	 * userRepo.findByDepartmentAndApproveRole(applicant.getTeam().getDepartment().
+	 * getId(), approveRole.getId()); if (isValidApprovers(approverList)) { return
+	 * approverList; } approverList =
+	 * userRepo.findByDivisionAndApproveRole(applicant.getTeam().getDepartment().
+	 * getDivision().getId(), approveRole.getId()); if
+	 * (isValidApprovers(approverList)) { return approverList; } if
+	 * (approveRole.getName().equals("CISO")) { return
+	 * userRepo.findByApproveRoleName("CISO"); } else { return
+	 * userRepo.findByApproveRole(approveRole.getId()); } } private boolean
+	 * isValidApprovers(List<User> approverList) { return approverList != null &&
+	 * !approverList.isEmpty(); }
+	 */
 
 
 
@@ -189,7 +180,6 @@ public class WorkFlowStatusServiceImplement implements WorkFlowStatusService {
             registerForm.setStatus(Status.APPROVE);
             registerFormRepo.save(registerForm);
             ledgerService.createLedger(registerForm.getId());
-            //notificationService.sendPendingApproveRejectNotificationToServiceDesk(registerForm.getId(), registerForm.getApplicant().getId(), registerForm.getStatus().name());
         } else if (Objects.equals(userRole, "SERVICE_DESK") && !workFlowStatusDto.isState()) {
             RegisterForm registerForm = EntityUtil.getEntityById(registerFormRepo, workFlowStatusDto.getRegisterFormId());
             registerForm.setStatus(Status.REJECT);
@@ -259,5 +249,15 @@ public class WorkFlowStatusServiceImplement implements WorkFlowStatusService {
             return null;
         }
     }
+
+	@Override
+	public void updateApproverStatus(Long id, boolean state, Date approveDate, String reason) {
+		WorkFlowStatus workFlowStatus = EntityUtil.getEntityById(workFlowStatusRepo, id);
+		Status newStatus = state ? Status.APPROVE : Status.REJECT;
+        workFlowStatus.setStatus(newStatus);
+        workFlowStatus.setApprove_date(approveDate);
+        workFlowStatus.setReason(reason);
+        EntityUtil.saveEntity(workFlowStatusRepo, workFlowStatus, "Work Flow Status");
+	}
 
 }

@@ -607,4 +607,18 @@ async function fetchTeamWithStatus(status, teamId, userId) {
     }
 }
 
+async function updateApproverStatus(id, state, approveDate, reason) {
+    try {
+        const responseData = await sendRequestWithFourParams(`/api/workflowstatus/updateApproverStatus`, 'POST', 'id', id, "state", state, "approveDate", approveDate, "reason", reason);
+        const contentType = responseData.headers.get('content-type');
+        if (contentType && contentType.includes('application/json')) {
+            return await responseData.json();
+        } else {
+            return await responseData.text();
+        }
+    } catch (error) {
+        console.error('Error:', error);
+    }
+}
+
 // fetchData('/api/protected-endpoint');

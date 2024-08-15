@@ -114,6 +114,29 @@ async function sendRequestWithThreeParams(url, method, param1Name, param1, param
     }
 }
 
+async function sendRequestWithFourParams(url, method, param1Name, param1, param2Name, param2, param3Name, param3, param4Name, param4) {
+    try {
+        const contextPath = getContextPath();
+        const fullUrl = `${contextPath}${url}?${param1Name}=${param1}&${param2Name}=${param2}&${param3Name}=${param3}&${param4Name}=${param4}`;
+
+        const response = await fetch(fullUrl, {
+            method: method,
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        });
+
+        if (!response.ok) {
+            const errorMessage = await response.text();
+            throw new Error(errorMessage || 'Request failed');
+        }
+
+        return response;
+    } catch (error) {
+        throw new Error('Error sending request: ' + error.message);
+    }
+}
+
 async function sendRequestWithoutParam(url, method) {
     try {
         const contextPath = getContextPath();

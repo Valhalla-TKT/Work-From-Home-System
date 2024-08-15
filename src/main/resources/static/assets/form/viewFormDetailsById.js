@@ -392,13 +392,13 @@ $(document).ready(function () {
                                         <div class="final-display-input" id="${status.approveRole.name.toLowerCase()}-approval-status">
                                             <div class="display-flex w-50">
                                                 <div class="display-data">
-                                                    <input class="radio-button__input" style="border: 1px solid black;" type="radio" name="${status.approveRole.name.toLowerCase()}-approval" value="yes" ${status.state ? 'checked' : ''} disabled>
+                                                    <input class="radio-button__input" style="border: 1px solid black;" id="${status.approveRole.name.toLowerCase()}-approval-radio-button" type="radio" name="${status.approveRole.name.toLowerCase()}-approval" value="yes" ${status.state ? 'checked' : ''} disabled>
                                                 </div>
                                                 <div class="display-data" style="margin-right: 10px;">Approve</div>
                                             </div>
                                             <div class="display-flex w-50">
                                                 <div class="display-data">
-                                                    <input class="radio-button__input" style="border: 1px solid black;" type="radio" name="${status.approveRole.name.toLowerCase()}-approval" value="no" ${!status.state ? 'checked' : ''} disabled>
+                                                    <input class="radio-button__input" style="border: 1px solid black;" id="${status.approveRole.name.toLowerCase()}-approval-radio-button" type="radio" name="${status.approveRole.name.toLowerCase()}-approval" value="no" ${!status.state ? 'checked' : ''} disabled>
                                                 </div>
                                                 <div class="display-data" style="margin-right: 10px;">Reject</div>
                                             </div>
@@ -407,13 +407,14 @@ $(document).ready(function () {
                                     <div class="display-flex approval-final">
                                         <span>Approved Date :</span>
                                         <div class="display-flex final-display-input">
-                                            <input type="text" value="${status.approveDate ? formatDate(status.approveDate) : ''}" style="color: #0d0c22; background: #fff; border: 1px solid black;" disabled>
+                                            <input type="text" value="${status.approveDate ? formatDate(status.approveDate) : ''}" id="${status.approveRole.name.toLowerCase()}-approval-date" style="color: #0d0c22; background: #fff; border: 1px solid black;" disabled>
                                         </div>
                                     </div>
+                                    <input type="hidden" value="${status.id}" id="${status.approveRole.name.toLowerCase()}-status-id">
                                     <div class="display-flex approval-final">
                                         <span>Reason of Approval :</span>
                                         <div class="display-flex final-display-input">
-                                            <textarea type="text" style="color: #0d0c22; background: #fff; border: 1px solid black;" disabled>${status.reason}</textarea>
+                                            <textarea type="text" style="color: #0d0c22; background: #fff; border: 1px solid black;" id="${status.approveRole.name.toLowerCase()}-approval-reason" disabled>${status.reason}</textarea>
                                         </div>
                                     </div>
                                 </div>
@@ -433,7 +434,7 @@ $(document).ready(function () {
 
                                     // Attach event handler to the Update button
                                     $('#update-approver-form-btn').click(function() {
-                                        updateByApprover(status.approveRole.name);
+                                        updateByApprover(status.approveRole.name.toLowerCase());
                                     });
                                 }
                             });
@@ -452,14 +453,53 @@ $(document).ready(function () {
     }
 
     async function updateByApprover(role) {
-        //  Retrieve the input values
-        console.log(role)
-        const approvalStatus = $('input[name="status-approval"]:checked').val();
-        const approvedDate = $('#approved-date-input').val();
-        const approvalReason = $('#approval-reason-input').val();
-        console.log(approvalStatus)
-        console.log(approvedDate)
-        console.log(approvalReason)
+        const statusId = $(`#${role}-status-id`).val();
+        const approvalStatus = $(`input[name="${role}-approval"]:checked`).val();
+	    const approvedDate = $(`#${role}-approval-date`).val();
+	    const approvalReason = $(`#${role}-approval-reason`).val();	    
+	    const formattedApprovedDate = formatDateInput(approvedDate);	   
+	
+	    // Log the retrieved values to the console
+	    console.log("Status Id:", statusId);
+	    console.log("Approval Status:", approvalStatus);
+	    console.log("Approved Date:", formattedApprovedDate);
+	    console.log("Approval Reason:", approvalReason);
+        Swal.fire({
+            title: 'Are you sure?',
+            text: "Do you want to proceed with updating the form?",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonText: 'Yes, update it!',
+            cancelButtonText: 'No, cancel!'
+        }).then(async (result) => {
+            if (result.isConfirmed) {
+				try {
+		            await updateApproverStatus(statusId, approvalStatus, formattedApprovedDate, approvalReason);
+		            Swal.fire({
+		                title: 'Updated!',
+		                text: 'The form has been successfully updated.',
+		                icon: 'success',
+		                confirmButtonText: 'OK'
+		            });
+		        } catch (error) {
+		            Swal.fire({
+		                title: 'Error!',
+		                text: 'There was an issue updating the form. Please try again.',
+		                icon: 'error',
+		                confirmButtonText: 'OK'
+		            });
+		        }
+			}
+		})	    
+    }
+    
+    function formatDateInput(dateString) {
+        const [day, month, year] = dateString.split('-').map(Number);
+        const date = new Date(year, month - 1, day);
+        const formattedYear = date.getFullYear();
+        const formattedMonth = String(date.getMonth() + 1).padStart(2, '0');
+        const formattedDay = String(date.getDate()).padStart(2, '0');
+        return `${formattedYear}-${formattedMonth}-${formattedDay}`;
     }
     // $(document).on('click', '.edit-icon', function() {
     //     const updateBtnHtml = `

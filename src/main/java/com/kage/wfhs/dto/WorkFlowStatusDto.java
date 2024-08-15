@@ -10,7 +10,6 @@ package com.kage.wfhs.dto;
 import com.kage.wfhs.model.ApproveRole;
 import com.kage.wfhs.model.RegisterForm;
 import com.kage.wfhs.model.Status;
-import com.kage.wfhs.model.User;
 import lombok.*;
 
 import java.util.Date;
