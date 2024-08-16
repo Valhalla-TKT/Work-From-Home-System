@@ -7,6 +7,7 @@
  */
 package com.kage.wfhs.repository;
 
+import com.kage.wfhs.model.RegisterForm;
 import com.kage.wfhs.model.Status;
 import com.kage.wfhs.model.WorkFlowStatus;
 
@@ -45,4 +46,5 @@ public interface WorkFlowStatusRepository extends JpaRepository<WorkFlowStatus,L
 
     List<WorkFlowStatus> findByRegisterFormIdAndStatus(Long formId, Status status);
     List<WorkFlowStatus> findByUserIdAndStatus(Long userId, Status status);
+	void deleteByRegisterFormAndStatus(RegisterForm registerForm, Status pending);
 }

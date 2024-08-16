@@ -3,8 +3,7 @@ package com.kage.wfhs.serviceImplement;
 import java.io.InputStream;
 import java.sql.*;
 import java.sql.Date;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 import java.util.*;
 
 import com.kage.wfhs.util.EmailSenderService;
@@ -38,6 +37,8 @@ public class ExcelServiceImplement implements ExcelService {
     private final DepartmentRepository departmentRepository;
     private final TeamRepository teamRepository;
     private final ApproveRoleRepository approveRoleRepository;
+    private final WorkFlowStatusRepository workFlowStatusRepository;
+    private final RegisterFormRepository registerFormRepository;
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final EmailSenderService emailService;
@@ -377,7 +378,27 @@ public class ExcelServiceImplement implements ExcelService {
                 Cell otpCell = row.getCell(4);
 
                 if (emailCell != null && otpCell != null) {
-                    String email = emailCell.toString().trim();
+                    String email = emailCell.toString().trim();                    
+//                    workFlowStatusRepository.deleteAll(
+//                    	workFlowStatusRepository.findByUserId(userRepository.findByEmail(email).getId()).stream()
+//                    	    .filter(workFlowStatus -> "PENDING".equals(workFlowStatus.getStatus().name()))
+//                    	    .collect(Collectors.toList())
+//                    );
+                    Long userId = userRepository.findByEmail(email).getId();
+                    int currentMonth = LocalDate.now().getMonthValue();
+                    Optional<RegisterForm> registerFormOptional = registerFormRepository.findByUserIdAndSignedMonthNative(userId, currentMonth);
+                    if (registerFormOptional.isPresent()) {
+                        RegisterForm registerForm = registerFormOptional.get();
+                        List<WorkFlowStatus> workFlowStatusList = workFlowStatusRepository.findByRegisterFormId(registerForm.getId());
+                        List<WorkFlowStatus> workFlowStatusListToSave = new ArrayList<>();
+                        for(WorkFlowStatus workFlowStatus : workFlowStatusList) {
+                        	workFlowStatus.setStatus(Status.APPROVE);
+                        	workFlowStatusListToSave.add(workFlowStatus);
+                        }
+                        workFlowStatusRepository.saveAll(workFlowStatusListToSave);
+                    } else {
+                    }
+                    
                     String otp = otpCell.toString().trim();
 
                     String emailOTPInfo = email + "_" + otp;
@@ -393,8 +414,8 @@ public class ExcelServiceImplement implements ExcelService {
                 String otp = parts[1];
                 String emailBodyForOTPByServiceDeskPart1 = message.getEmailBodyForOTPByServiceDeskPart1();
                 String emailBodyForOTPByServiceDeskPart2 = message.getEmailBodyForOTPByServiceDeskPart2();
-                String emailSubjectForOtpByServiceDesk = message.getEmailSubjectForOtpByServiceDesk();
-
+                String emailSubjectForOtpByServiceDesk = message.getFormattedEmailSubjectForOtpByServiceDesk();
+                
                 emailService.sendMail(email, emailSubjectForOtpByServiceDesk, emailBodyForOTPByServiceDeskPart1 + otp + "\n" + emailBodyForOTPByServiceDeskPart2);
             }
         }

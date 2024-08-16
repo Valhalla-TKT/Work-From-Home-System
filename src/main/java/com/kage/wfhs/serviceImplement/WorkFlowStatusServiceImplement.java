@@ -194,6 +194,8 @@ public class WorkFlowStatusServiceImplement implements WorkFlowStatusService {
                 }
                 workFlowStatusRepo.deleteAll(workFlowStatusList);
             }
+        } else if (Objects.equals(userRole, "SERVICE_DESK") && workFlowStatusDto.isState()) {
+        	
         }
         else {
         	if(workFlowStatusDto.isState()) {
