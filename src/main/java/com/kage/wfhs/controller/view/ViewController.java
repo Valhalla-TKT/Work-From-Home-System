@@ -58,7 +58,7 @@ public class ViewController {
         return "login";
     }
    
-    @GetMapping("/dashboard")
+    @GetMapping("/home")
     public String home(HttpSession session, ModelMap model){
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if(authentication != null && authentication.isAuthenticated()){

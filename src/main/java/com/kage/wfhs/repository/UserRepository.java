@@ -13,6 +13,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -75,12 +76,29 @@ public interface UserRepository extends JpaRepository<User,Long> {
 	    List<User> findUpperRoleUser(Long workFlowOrderId);
 	//TEAM
 
-    @Query("SELECT u.name AS username, COALESCE(r.requestPercent, 0.0) AS requestPercent " +
-      "FROM User u " +
-      "LEFT JOIN u.registerForms r " +
-      "ON u.team.id = :teamId " +
-      "WHERE u.team.id = :teamId")
+    // to delete
+    @Query("SELECT u.name AS username, " +
+            "       (SUM(CASE WHEN r.id IS NOT NULL THEN 1 ELSE 0 END) * 100.0 / COUNT(r.id)) AS avgRequestPercent " +
+            "FROM User u " +
+            "LEFT JOIN RegisterForm r ON u.id = r.applicant.id " +
+            "WHERE u.team.id = :teamId " +
+            "GROUP BY u.id, u.name")
     List<Object[]> getUserRequestByTeamId(@Param("teamId") Long teamId);
+    // to delete
+    @Query("SELECT u.name AS username, " +
+            "       u.team.id AS teamId, " +
+            "       COALESCE(AVG(r.requestPercent), 0) AS avgRequestPercent " +
+            "FROM User u " +
+            "LEFT JOIN RegisterForm r ON u.id = r.applicant.id " +
+            "AND r.signedDate >= :startOfMonth " +
+            "AND r.signedDate <= :endOfMonth " +
+            "WHERE u.team.id IN :teamIds " +
+            "GROUP BY u.name, u.team.id")
+    List<Object[]> getUserRequestByTeamIds(
+            @Param("teamIds") List<Long> teamIds,
+            @Param("startOfMonth") Date startOfMonth,
+            @Param("endOfMonth") Date endOfMonth);
+
 
 
     @Query(value = "SELECT SUM(CASE WHEN r.id IS NOT NULL THEN 1 ELSE 0 END) AS usersWithRequest, " +
@@ -90,7 +108,17 @@ public interface UserRepository extends JpaRepository<User,Long> {
       "WHERE u.team_id = :teamId", nativeQuery = true)
     List<Object[]> getTotalStaffRequestByTeamId(@Param("teamId") String teamId);
 
-    
+    @Query(value = "SELECT u.team_id AS teamId, " +
+            "SUM(CASE WHEN r.id IS NOT NULL THEN 1 ELSE 0 END) AS usersWithRequest, " +
+            "SUM(CASE WHEN r.id IS NULL THEN 1 ELSE 0 END) AS usersWithoutRequest " +
+            "FROM user u " +
+            "LEFT JOIN register_form r ON u.id = r.applicant_id " +
+            "WHERE u.team_id IN :teamIds " +
+            "GROUP BY u.team_id", nativeQuery = true)
+    List<Object[]> getTotalStaffRequestByTeamIds(@Param("teamIds") List<Long> teamIds);
+
+
+
     @Query("SELECT t.name AS teamName, 100*(SUM(r.requestPercent)) / (100 * COUNT(u.id)) AS registrationPercentage " +
       "FROM Team t " +
       "LEFT JOIN User u ON t.id = u.team.id " +
@@ -98,6 +126,16 @@ public interface UserRepository extends JpaRepository<User,Long> {
       "WHERE t.id = :teamId " +
       "GROUP BY t.name")
     Object[] getTeamRegistrationInfo(@Param("teamId") Long teamId);
+
+    @Query("SELECT 'All Teams' AS teamName, " +
+            "       100 * (SUM(r.requestPercent)) / (100 * COUNT(u.id)) AS registrationPercentage " +
+            "FROM Team t " +
+            "LEFT JOIN User u ON t.id = u.team.id " +
+            "LEFT JOIN u.registerForms r " +
+            "WHERE t.id IN :teamIds")
+    Object[] getAggregatedTeamRegistrationInfo(@Param("teamIds") List<Long> teamIds);
+
+
 
 
 //DEPARTMENT HEAD

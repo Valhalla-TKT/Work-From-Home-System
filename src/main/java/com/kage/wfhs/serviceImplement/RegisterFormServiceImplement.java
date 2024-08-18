@@ -388,6 +388,7 @@ public class RegisterFormServiceImplement implements RegisterFormService {
         RegisterForm registerForm = EntityUtil.getEntityById(registerFormRepo, formId);
         registerForm.setWorkingPlace(registerFormDto.getWorkingPlace());
         registerForm.setRequestReason(registerFormDto.getRequestReason());
+        registerForm.setRequestPercent(registerFormDto.getRequestPercent());
         registerForm.setFromDate(registerFormDto.getFromDate());
         registerForm.setToDate(registerFormDto.getToDate());
         registerForm.setSignedDate(registerFormDto.getSignedDate());

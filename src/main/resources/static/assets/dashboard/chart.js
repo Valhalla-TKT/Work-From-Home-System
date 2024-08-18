@@ -25,7 +25,6 @@ document.addEventListener('DOMContentLoaded', function () {
     if (wfhsTeamPercentChartJs) {
         teambarctx = wfhsTeamPercentChartJs.getContext('2d');
         teamdonutCtx = teamDonut.getContext('2d');
-        // Initialize the chart with empty data
         myTeamBarChart = new Chart(teambarctx, {
             type: 'bar',
             data: {
@@ -57,7 +56,15 @@ document.addEventListener('DOMContentLoaded', function () {
             options: {
                 scales: {
                     y: {
-                        beginAtZero: true
+                        max: 100,
+                        beginAtZero: true,
+                        reverse: false,
+                        ticks: {
+                            stepSize: 10,
+                            callback: function(value) {
+                                return value + '%';
+                            }
+                        }
                     }
                 }
             }
@@ -68,7 +75,6 @@ document.addEventListener('DOMContentLoaded', function () {
             data: {
                 labels: ['Requester','Non-Requester'],
                 datasets: [{
-                    label: 'Gender Distribution',
                     data: [],
                     backgroundColor: [
                         'rgb(255, 99, 132)',
@@ -77,36 +83,46 @@ document.addEventListener('DOMContentLoaded', function () {
                     hoverOffset: 4
                 }]
             },
+            options: {
+                plugins: {
+                    tooltip: {
+                        callbacks: {
+                            label: function(context) {
+                                const labelIndex = context.dataIndex;
+                                const label = context.chart.data.labels[labelIndex];
+                                const value = context.raw;
+                                return `${label}: ${value}`;
+                            }
+                        }
+                    }
+                }
+            }
+
         });
     }
 
-
-    // Function to fetch data for the chart
   function getTeamData() {
       var currentUser = JSON.parse(localStorage.getItem('currentUser'));
       if (currentUser) {
-          var teamId = currentUser.team.id;
-          console.log("Team ID:", teamId); // For debugging
+          var managedTeamName = currentUser.managedTeamName;
+          var teamId = currentUser.team.id
+          console.log("managedTeamName:", managedTeamName);
 
-          // Ajax call to fetch data from backend and update the chart
           $.ajax({
               url: `${getContextPath()}/api/user/userRequest`,
               type: 'GET',
               data: {
-                  teamId: teamId
+                  managedTeamName: managedTeamName
               },
               success: function(data) {
-                  console.log(data); // For debugging
+                  console.log(data);
 
-                  // Extracting data from the response
                   const userNames = data.map(entry => entry[0]);
-                  const formCounts = data.map(entry => entry[1]);
+                  const formCounts = data.map(entry => entry[2]);
 
-                  // Update chart data
                   myTeamBarChart.data.labels = userNames;
                   myTeamBarChart.data.datasets[0].data = formCounts;
 
-                  // Update the chart
                   myTeamBarChart.update();
               },
               error: function(xhr, status, error) {
@@ -118,15 +134,14 @@ document.addEventListener('DOMContentLoaded', function () {
             url: `${getContextPath()}/api/user/teamRegistrationInfo`,
             type: 'GET',
             data: {
-                teamId: teamId
+                managedTeamName: managedTeamName
             },
             success: function(data) {
-                console.log("Team Registration Percentage:", data); // For debugging
+                console.log("Team Registration Percentage:", data);
 
-                // Extracting data from the response
                 const teamName = data[0];
+                console.log(teamName)
 
-                // Update HTML content with registration percentage
                 updateTeamInfo(teamName);
             },
             error: function(xhr, status, error) {
@@ -138,20 +153,17 @@ document.addEventListener('DOMContentLoaded', function () {
         url: `${getContextPath()}/api/user/requestStaff`,
         type: 'GET',
         data: {
-            teamId: teamId
+            managedTeamName: managedTeamName
         },
         success: function(data) {
-            console.log(data); // For debugging
-
-
-            // Extract the values from the response data
-            const requesterCount = data[0][0];
-            const nonRequesterCount = data[0][1];
-
-            // Update the data array of the chart
-            myTeamDonutChart.data.datasets[0].data = [requesterCount, nonRequesterCount];
-
-            // Update chart 2
+            console.log(data);
+            let totalRequesterCount = 0;
+            let totalNonRequesterCount = 0;
+            data.forEach(teamData => {
+                totalRequesterCount += teamData[1];  // usersWithRequest
+                totalNonRequesterCount += teamData[2];  // usersWithoutRequest
+            });
+            myTeamDonutChart.data.datasets[0].data = [totalRequesterCount, totalNonRequesterCount];
             myTeamDonutChart.update();
         },
         error: function(xhr, status, error) {
@@ -164,26 +176,28 @@ document.addEventListener('DOMContentLoaded', function () {
   }
 
   function updateTeamInfo(teamName) {
-    // Get the container element
+      var currentUser = JSON.parse(localStorage.getItem('currentUser'));
     const teamContainer = document.querySelector('.pm');
-    console.log(teamName)
-    const tName = teamName[0];
+
+    const tName = currentUser.managedTeamName.replace(/\|/g, ',');
     const tpercent = teamName[1];
     console.log(tName)
     console.log(tpercent)
-    // Clear previous content
+
     teamContainer.innerHTML = '';
 
-    // Create a div for team name
     const teamNameDiv = document.createElement('div');
     teamNameDiv.classList.add('display-7', 'me-3');
-    teamNameDiv.innerHTML = `<i class="bi bi-bag-check me-2 text-success"></i> Team: ${tName}`;
-    teamContainer.appendChild(teamNameDiv);
+      teamNameDiv.innerHTML = `<i class="bi bi-people-fill me-2 text-success"></i> Team: ${tName}`;
 
-    // Create a span for registration percentage
+      teamContainer.appendChild(teamNameDiv);
+
+      const teamNameHomePage = document.getElementById("teamName");
+      teamNameHomePage.innerHTML = ` Team: ${tName}`;
+      teamNameHomePage.style.color = "#0d0c22";
     const registrationSpan = document.createElement('span');
     registrationSpan.classList.add('text-success');
-    registrationSpan.innerHTML = `<i class="bi bi-arrow-up me-1 small"></i>${tpercent.toFixed(2)}%`;
+    // registrationSpan.innerHTML = `<i class="bi bi-arrow-up me-1 small"></i>${tpercent.toFixed(2)}%`;
     teamContainer.appendChild(registrationSpan);
 }
 
@@ -216,7 +230,7 @@ document.addEventListener('DOMContentLoaded', function () {
                     // Update chart data
                     myDepartmentBarChart.data.labels = Names;
                     myDepartmentBarChart.data.datasets[0].data = formCounts;
-                    myDepartmentBarChart.data.datasets[0].backgroundColor = formCounts.map(() => getRandomColor());
+                    // myDepartmentBarChart.data.datasets[0].backgroundColor = formCounts.map(() => getRandomColor());
   
                     // Update the chart
                     myDepartmentBarChart.update();
@@ -233,12 +247,10 @@ document.addEventListener('DOMContentLoaded', function () {
                   departmentId: departmentId
               },
               success: function(data) {
-                  console.log("Department Registration Percentage:", data); // For debugging
-  
-                  // Extracting data from the response
+                  console.log("Department Registration Percentage:", data);
+
                   const departmentName = data[0];
-  
-                  // Update HTML content with registration percentage
+
                   updateDepartmentInfo(departmentName);
               },
               error: function(xhr, status, error) {
@@ -305,7 +317,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
       const registrationSpan = document.createElement('span');
       registrationSpan.classList.add('text-success');
-      registrationSpan.innerHTML = `<i class="bi bi-arrow-up me-1 small"></i>${dpercent.toFixed(2)}%`;
+      // registrationSpan.innerHTML = `<i class="bi bi-arrow-up me-1 small"></i>${dpercent.toFixed(2)}%`;
       departmentContainer.appendChild(registrationSpan);
 
   }
@@ -325,8 +337,24 @@ document.addEventListener('DOMContentLoaded', function () {
                 datasets: [{
                     label: 'Form Request Percent(%) This Month',
                     data: [],
-                    backgroundColor: [],
-                    borderColor: [],
+                    backgroundColor: [
+                        'rgba(255, 99, 132, 0.2)',
+                        'rgba(255, 159, 64, 0.2)',
+                        'rgba(255, 205, 86, 0.2)',
+                        'rgba(75, 192, 192, 0.2)',
+                        'rgba(54, 162, 235, 0.2)',
+                        'rgba(153, 102, 255, 0.2)',
+                        'rgba(201, 203, 207, 0.2)'
+                    ],
+                    borderColor: [
+                        'rgb(255, 99, 132)',
+                        'rgb(255, 159, 64)',
+                        'rgb(255, 205, 86)',
+                        'rgb(75, 192, 192)',
+                        'rgb(54, 162, 235)',
+                        'rgb(153, 102, 255)',
+                        'rgb(201, 203, 207)'
+                    ],
                     borderWidth: 1
                 }]
             },

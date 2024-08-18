@@ -39,8 +39,12 @@ public interface UserService {
 
 	List<UserDto> getUpperRole(Long workFlowOrderId, Long userId);
 	List<Object[]> getUserRequestByTeamId(Long teamId);
-	List<Object[]> getTotalStaffRequestByTeamId(String teamId);
-	Object[] getTeamRegistrationInfo(Long teamId);
+	List<Object[]> getUserRequestByTeamIds(List<Long> teamIds);
+	List<Object[]> getUserRequestByManagedTeam(String managedTeamName);
+	List<Object[]> getTotalStaffRequestByTeamId(String teamId);// to delete
+	List<Object[]> getTotalStaffRequestByByManagedTeam(String managedTeamName);
+	Object[] getTeamRegistrationInfo(Long teamId);// to delete
+	Object[] getTeamRegistrationInfoByManagedTeam(String managedTeamName);
 	List<Object[]> getAllTeamRequestByDepartmentId(Long departmentId);
 	List<Object[]> getTotalTeamRequestByDepartmentId(String departmentId);
 	Object[] getDepartmentRegistrationInfo(Long departmentId);
@@ -68,4 +72,6 @@ public interface UserService {
 	boolean sendMailToAll(String subject, String body);
 
 	List<UserDto> getApproversByApproveRoleId(Long approveRoleId);
+
+	boolean deleteUserById(Long userId);
 }

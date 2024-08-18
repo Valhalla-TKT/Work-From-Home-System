@@ -16,6 +16,7 @@ import lombok.AllArgsConstructor;
 
 import java.util.*;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -131,21 +132,20 @@ public class UserController {
             return ResponseEntity.ok(userList);
     }
     
-  //TEAM
-
+    // TEAM
     @GetMapping("/userRequest")
-    public List<Object[]> getUserRequestByTeamId(@RequestParam Long teamId) {
-        return userService.getUserRequestByTeamId(teamId);
+    public List<Object[]> getUserRequestByTeamId(@RequestParam String managedTeamName) {
+        return userService.getUserRequestByManagedTeam(managedTeamName);
     }
 
     @GetMapping("/requestStaff")
-    public List<Object[]> getTotalStaffRequestByTeamId(@RequestParam("teamId") String teamId) {
-        return userService.getTotalStaffRequestByTeamId(teamId);
+    public List<Object[]> getTotalStaffRequestByTeamId(@RequestParam("managedTeamName") String managedTeamName) {
+        return userService.getTotalStaffRequestByByManagedTeam(managedTeamName);
     }
-    
+
     @GetMapping("/teamRegistrationInfo")
-    public Object[] getTeamRegistrationInfo(@RequestParam Long teamId) {
-        return userService.getTeamRegistrationInfo(teamId);
+    public Object[] getTeamRegistrationInfo(@RequestParam String managedTeamName) {
+        return userService.getTeamRegistrationInfoByManagedTeam(managedTeamName);
     }
 
     //DEPARTMENT HEAD
@@ -226,4 +226,21 @@ public class UserController {
             return ResponseEntity.status(500).body("Failed to send emails.");
         }
     }
+
+    @DeleteMapping("")
+    public ResponseEntity<String> deleteUser(@RequestParam("userId") Long userId) {
+        try {
+            boolean deleted = userService.deleteUserById(userId);
+            if (deleted) {
+                return ResponseEntity.ok("User with ID " + userId + " was successfully deleted.");
+            } else {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                        .body("User with ID " + userId + " not found.");
+            }
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("An error occurred while deleting the user with ID " + userId + ": " + e.getMessage());
+        }
+    }
+
 }

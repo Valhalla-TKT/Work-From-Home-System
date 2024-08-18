@@ -12,6 +12,8 @@ import java.util.stream.Collectors;
 
 import com.kage.wfhs.dto.auth.CurrentLoginUserDto;
 import com.kage.wfhs.exception.EntityNotFoundException;
+import com.kage.wfhs.model.*;
+import com.kage.wfhs.repository.*;
 import com.kage.wfhs.util.*;
 import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Sort;
@@ -19,23 +21,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.kage.wfhs.dto.UserDto;
-import com.kage.wfhs.model.ApproveRole;
-import com.kage.wfhs.model.Department;
-import com.kage.wfhs.model.Division;
-import com.kage.wfhs.model.Team;
-import com.kage.wfhs.model.User;
-import com.kage.wfhs.model.UserApproveRoleDepartment;
-import com.kage.wfhs.model.UserApproveRoleDivision;
-import com.kage.wfhs.model.UserApproveRoleTeam;
-import com.kage.wfhs.model.WorkFlowOrder;
-import com.kage.wfhs.repository.ApproveRoleRepository;
-import com.kage.wfhs.repository.DepartmentRepository;
-import com.kage.wfhs.repository.DivisionRepository;
-import com.kage.wfhs.repository.TeamRepository;
-import com.kage.wfhs.repository.UserApproveRoleDepartmentRepository;
-import com.kage.wfhs.repository.UserApproveRoleDivisionRepository;
-import com.kage.wfhs.repository.UserApproveRoleTeamRepository;
-import com.kage.wfhs.repository.UserRepository;
 import com.kage.wfhs.service.UserService;
 
 import lombok.RequiredArgsConstructor;
@@ -72,6 +57,7 @@ public class UserServiceImplement implements UserService {
 	private final UserApproveRoleDepartmentRepository userApproveRoleDepartmentRepo;
 	
 	private final UserApproveRoleDivisionRepository userApproveRoleDivisionRepo;
+	private final RegisterFormRepository registerFormRepository;
 
 	@Override
     public UserDto createUser(UserDto userDto) {
@@ -127,6 +113,7 @@ public class UserServiceImplement implements UserService {
 	public CurrentLoginUserDto getLoginUserBystaffId(String staffId) {
 		User user = userRepo.findByStaffId(staffId);
 		CurrentLoginUserDto userDto = modelMapper.map(user, CurrentLoginUserDto.class);
+		Long userId = userDto.getId();
 		if(userDto.getApproveRoles().stream().anyMatch(role -> role.getName().equals("DEPARTMENT_HEAD"))) {
 			userDto.setTeams(teamRepo.findAllByDepartmentId(user.getDepartment().getId()));
 		}
@@ -136,9 +123,9 @@ public class UserServiceImplement implements UserService {
 		if(userDto.getDepartment() != null) {
 			userDto.getDepartment().setTeams(teamRepo.findAllByDepartmentId(user.getDepartment().getId()));
 		}
-		List<UserApproveRoleTeam> userApproveRoleTeams = userApproveRoleTeamRepo.findByUserId(userDto.getId());
-		List<UserApproveRoleDepartment> userApproveRoleDepartments = userApproveRoleDepartmentRepo.findByUserId(userDto.getId());
-		List<UserApproveRoleDivision> userApproveRoleDivisions = userApproveRoleDivisionRepo.findByUserId(userDto.getId());
+		List<UserApproveRoleTeam> userApproveRoleTeams = userApproveRoleTeamRepo.findByUserId(userId);
+		List<UserApproveRoleDepartment> userApproveRoleDepartments = userApproveRoleDepartmentRepo.findByUserId(userId);
+		List<UserApproveRoleDivision> userApproveRoleDivisions = userApproveRoleDivisionRepo.findByUserId(userId);
 
 		String managedTeamName = Helper.getNames(userApproveRoleTeams, UserApproveRoleTeam::getTeam, Team::getName);
 		String managedDepartmentName = Helper.getNames(userApproveRoleDepartments, UserApproveRoleDepartment::getDepartment, Department::getName);
@@ -147,7 +134,22 @@ public class UserServiceImplement implements UserService {
 		userDto.setManagedTeamName(managedTeamName);
 		userDto.setManagedDepartmentName(managedDepartmentName);
 		userDto.setManagedDivisionName(managedDivisionName);
+
+		userDto.setRegisteredForThisMonth(checkRegistrationForCurrentMonth(userId));
         return userDto;
+	}
+
+	public boolean checkRegistrationForCurrentMonth(Long userId) {
+		List<RegisterForm> registerForms = registerFormRepository.findByApplicantId(userId);
+
+		Date[] monthRange = Helper.getStartAndEndOfCurrentMonth();
+		Date startOfMonth = monthRange[0];
+		Date endOfMonth = monthRange[1];
+
+        return registerForms.stream()
+				.anyMatch(form -> form.getSignedDate() != null &&
+						form.getSignedDate().compareTo(startOfMonth) >= 0 &&
+						form.getSignedDate().compareTo(endOfMonth) <= 0);
 	}
 
 	@Override
@@ -375,20 +377,58 @@ public class UserServiceImplement implements UserService {
 
 	//TEAM
 
+	// to delete
 	@Override
     public List<Object[]> getUserRequestByTeamId(Long teamId) {
         return userRepo.getUserRequestByTeamId(teamId);
     }
+	// to delete
 
+	@Override
+	public List<Object[]> getUserRequestByTeamIds(List<Long> teamIds) {
+		return null;
+	}
+
+	@Override
+	public List<Object[]> getUserRequestByManagedTeam(String managedTeamName) {
+		String[] teamNames = managedTeamName.split("\\|\\s*");
+		List<Long> teamIds = teamRepo.findIdsByNames(List.of(teamNames));
+
+		Date[] monthRange = Helper.getStartAndEndOfCurrentMonth();
+		Date startOfMonth = monthRange[0];
+		Date endOfMonth = monthRange[1];
+
+		return userRepo.getUserRequestByTeamIds(teamIds, startOfMonth, endOfMonth);
+	}
+
+	// to delete
 	@Override
     public List<Object[]> getTotalStaffRequestByTeamId(String teamId) {
         return userRepo.getTotalStaffRequestByTeamId(teamId);
     }
+	// to delete
+	@Override
+	public List<Object[]> getTotalStaffRequestByByManagedTeam(String managedTeamName) {
+		String[] teamNames = managedTeamName.split("\\|\\s*");
+		List<Long> teamIds = teamRepo.findIdsByNames(List.of(teamNames));
+    System.out.println(teamIds.toString());
+		return userRepo.getTotalStaffRequestByTeamIds(teamIds);
+	}
 
+	// to delete
 	@Override
     public Object[] getTeamRegistrationInfo(Long teamId) {
         return userRepo.getTeamRegistrationInfo(teamId);
     }
+	// to delete
+
+	@Override
+	public Object[] getTeamRegistrationInfoByManagedTeam(String managedTeamName) {
+		String[] teamNames = managedTeamName.split("\\|\\s*");
+		List<Long> teamIds = teamRepo.findIdsByNames(List.of(teamNames));
+    System.out.println(teamIds.toString());
+		return userRepo.getAggregatedTeamRegistrationInfo(teamIds);
+	}
 
 	//DEPARTMENT HEAD
 
@@ -687,6 +727,11 @@ public class UserServiceImplement implements UserService {
 	public List<UserDto> getApproversByApproveRoleId(Long approveRoleId) {
 		List<User> users = userRepo.findUsersByRoleId(approveRoleId);
 		return DtoUtil.mapList(users, UserDto.class, modelMapper);
+	}
+
+	@Override
+	public boolean deleteUserById(Long userId) {
+		return false;
 	}
 
 

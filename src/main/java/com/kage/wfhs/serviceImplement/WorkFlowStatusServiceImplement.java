@@ -159,9 +159,7 @@ public class WorkFlowStatusServiceImplement implements WorkFlowStatusService {
             RegisterForm registerForm = EntityUtil.getEntityById(registerFormRepo, workFlowStatusDto.getRegisterFormId());
             registerForm.setStatus(Status.REJECT);
             registerFormRepo.save(registerForm);
-//            notificationService.sendPendingApproveRejectNotificationToServiceDesk(registerForm.getId(), registerForm.getApplicant().getId(), registerForm.getRequester().getId(), registerForm.getStatus().name());
-        } 
-        
+        }
 
         if (Objects.equals(userRole, "CISO")) {
             if (workFlowStatusDto.isState()) {
@@ -194,8 +192,6 @@ public class WorkFlowStatusServiceImplement implements WorkFlowStatusService {
                 }
                 workFlowStatusRepo.deleteAll(workFlowStatusList);
             }
-        } else if (Objects.equals(userRole, "SERVICE_DESK") && workFlowStatusDto.isState()) {
-        	
         }
         else {
         	if(workFlowStatusDto.isState()) {

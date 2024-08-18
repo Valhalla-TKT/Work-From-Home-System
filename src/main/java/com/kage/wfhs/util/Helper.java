@@ -144,6 +144,18 @@ public class Helper {
                 .map(mapper)
                 .filter(Objects::nonNull)
                 .map(nameExtractor)
-                .collect(Collectors.joining(", "));
+                .collect(Collectors.joining("| "));
+    }
+
+    public static Date[] getStartAndEndOfCurrentMonth() {
+        Calendar cal = Calendar.getInstance();
+        cal.set(Calendar.DAY_OF_MONTH, 1);
+        Date startOfMonth = cal.getTime();
+
+        cal.add(Calendar.MONTH, 1);
+        cal.set(Calendar.DAY_OF_MONTH, 0);
+        Date endOfMonth = cal.getTime();
+
+        return new Date[] { startOfMonth, endOfMonth };
     }
 }

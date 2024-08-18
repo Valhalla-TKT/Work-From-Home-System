@@ -22,7 +22,7 @@ $(document).ready(function() {
 	}
 	// role
 	if(userRole === 'PROJECT_MANAGER') {
-		formListTitle.text(`${currentUser.managedTeamName} Form List`);
+		formListTitle.text(`${currentUser.managedTeamName.replace(/\|/g, ',')} Form List`);
 		//getTeamMembersPendingForm();
 	}
 
@@ -37,7 +37,14 @@ $(document).ready(function() {
 	const pagination = document.querySelector('.pagination');
     const pageNumbers = pagination.querySelector('.page-numbers');
 	var currentPage = 1;
-	var formsPerPage = 10;
+	const formPerPageSelectBox = $('#forms-per-page-select')
+	var formsPerPage = parseInt(formPerPageSelectBox.val());
+
+	formPerPageSelectBox.on('change', function() {
+		formsPerPage = parseInt($(this).val());
+		currentPage = 1;
+		renderForms();
+	});
 	let filteredFormData = [];
 	var totalForms = 0;
 
@@ -55,10 +62,12 @@ $(document).ready(function() {
 				console.log(response)
 				$('#form-list').empty();
 				 if (!response || !response.forms || response.forms.length === 0) {
-	                $('#form-list').append('<tr><td colspan="6" style="text-align: center;">No records avavilable.</td></tr>');
+	                $('#form-list').append('<tr><td colspan="6" style="text-align: center;">No records available.</td></tr>');
 	                pageNumbers.innerHTML = '';
 	                $('#bulk-approve-btn').hide()
 	                $('#select-all-btn').hide()
+					 filteredFormData = []
+					 totalForms = []
 	            } else {
 					var forms = response.forms;
 					filteredFormData = response.forms;
@@ -84,10 +93,11 @@ $(document).ready(function() {
 		const start = (currentPage - 1) * formsPerPage;
 		const end = start + formsPerPage;
 		const pageData = filteredFormData.slice(start, end);
+		console.log(pageData)
 
 		$('#form-list').empty();
 		if (pageData.length === 0) {
-	        $('#form-list').append('<tr><td colspan="6" style="text-align: center;">No records found</td></tr>');
+	        $('#form-list').append('<tr><td colspan="6" style="text-align: center;">No records available.</td></tr>');
 	        pageNumbers.innerHTML = '';
 	        return;
 	    }
@@ -224,17 +234,24 @@ $(document).ready(function() {
     // for service desk
     var serviceDeskDownloadBtn = $("#service-desk-download-btn")
 	serviceDeskDownloadBtn.click(function() {
-        selectAll();
+		if (selectedValues.length === 0) {
+			Swal.fire({
+				title: 'No Selection',
+				text: 'Please select at least one form to approve.',
+				icon: 'warning',
+				confirmButtonText: 'OK'
+			});
+			return;
+		}
         var formData = new FormData();
 		for (var i = 0; i < selectedValues.length; i++) {
-			console.log(selectedValues[i] + "hello there")
 		    formData.append('formIds[]', selectedValues[i]);
 		}
 		
 		console.log(formData + "hello")
         downloadForms(formData)
     });
-    
+
     $("#bulk-approve-btn").click(function() {
 		if (selectedValues.length === 0) {
 			Swal.fire({
@@ -257,50 +274,59 @@ $(document).ready(function() {
     let approverId
     async function bulkApprove(formData) {
 		event.preventDefault();
+		let htmlContent = `
+        <textarea id="reason" placeholder="Enter the reason for approval here..." style="width: 100%; height: 100px; margin-bottom: 10px; border: 1px solid black;"></textarea>`;
 
+		if (userRole !== "CEO") {
+			htmlContent += `
+            <select id="approve-role" class="select" style="width: 100%; color: #0d0c22; border: 1px solid black; text-transform: capitalize;">
+                <option selected value="" disabled>Choose Approver Role</option>
+            </select>
+            <br/><br/>
+            <select id="approver-name" class="select" style="width: 100%; color: #0d0c22; border: 1px solid black;">
+                <option selected value="" disabled>Choose Approver Name</option>
+            </select>`;
+		}
 		await Swal.fire({
 			title: 'Approval Details',
-			html: `
-				<textarea id="reason" placeholder="Enter the reason for approval here..." style="width: 100%; height: 100px; margin-bottom: 10px; border: 1px solid black;"></textarea>
-				<select id="approve-role" class="select" style="width: 100%; color: #0d0c22; border: 1px solid black; text-transform: capitalize;">
-					<option selected value="" disabled>Choose Approver Role</option>
-				</select>
-				<br/><br/>
-				<select id="approver-name" class="select" style="width: 100%; color: #0d0c22; border: 1px solid black;">
-                   <option selected value="" disabled>Choose Approver Name</option>
-               </select>`,
+			html: htmlContent,
 			didOpen: async () => {
-				const approveRoleResponse = await fetchApproveRoleWithoutApplicant();
-				const approveRoleSelect = Swal.getPopup().querySelector('#approve-role');
-				const formatRoleName = (roleName) => {
-					return roleName
-						.replace(/_/g, ' ')
-						.toLowerCase()
-						.replace(/\b\w/g, char => char.toUpperCase());
-				};
-				approveRoleResponse.forEach(role => {
-					const option = document.createElement('option');
-					option.value = role.id;
-					option.text = formatRoleName(role.name);
-					approveRoleSelect.add(option);
-				});
+				if (userRole !== "CEO") {
+					const approveRoleResponse = await fetchApproveRoleWithoutApplicant();
+					const approveRoleSelect = Swal.getPopup().querySelector('#approve-role');
+					const formatRoleName = (roleName) => {
+						return roleName
+							.replace(/_/g, ' ')
+							.toLowerCase()
+							.replace(/\b\w/g, char => char.toUpperCase());
+					};
+					approveRoleResponse.forEach(role => {
+						const option = document.createElement('option');
+						option.value = role.id;
+						option.text = formatRoleName(role.name);
+						approveRoleSelect.add(option);
+					});
 
-				approveRoleSelect.addEventListener('change', async () => {
-					const selectedRoleId = approveRoleSelect.value;
-					await getAllApprover(selectedRoleId, currentUser.name);
-				});
+					approveRoleSelect.addEventListener('change', async () => {
+						const selectedRoleId = approveRoleSelect.value;
+						await getAllApprover(selectedRoleId, currentUser.name);
+					});
+					}
 			},
 			preConfirm: () => {
 				const reason = Swal.getPopup().querySelector('#reason').value;
-				const approverRole = Swal.getPopup().querySelector('#approve-role').value;
-				const approverName = Swal.getPopup().querySelector('#approver-name').value;
+
 				if (!reason) {
                 	Swal.showValidationMessage(`Please enter a reason`);
                 	return false;
             	}
-				if (!approverRole || !approverName) {
-					Swal.showValidationMessage(`Please choose both an approver role and an approver name.`);
-					return false;
+				if (userRole !== "CEO") {
+					const approverRole = Swal.getPopup().querySelector('#approve-role').value;
+					const approverName = Swal.getPopup().querySelector('#approver-name').value;
+					if (!approverRole || !approverName) {
+						Swal.showValidationMessage(`Please choose both an approver role and an approver name.`);
+						return false;
+					}
 				}
 				return { reason, approverId };
 			},
@@ -312,49 +338,85 @@ $(document).ready(function() {
 				const approverName = $('#approver-name').find('option:selected').text();
 				const { reason, approverId } = result.value
 				console.log(reason)
-				Swal.fire({
-					title: 'Are you sure?',
-					text: `You selected ${approverName}. Do you want to proceed?`,
-					icon: 'warning',
-					showCancelButton: true,
-					confirmButtonText: 'Yes, proceed',
-					cancelButtonText: 'No, change selection'
-				}).then((confirmResult) => {
-					if (confirmResult.isConfirmed) {
-						$.ajax({
-							url: `${getContextPath()}/api/registerform/bulkApprove?approverId=${approverId}&reason=${reason}`,
-							type: 'POST',
-							data: formData,
-							processData: false,
-							contentType: false,
-							success: function (response) {
-								Swal.fire({
-									title: 'Success!',
-									text: 'Bulk Approve Successfully.',
-									icon: 'success',
-									confirmButtonText: 'OK'
-								}).then(() => {
-									$('#message').text(response);
-									//getAllForm()
+				console.log(approverId)
+				if (userRole !== "CEO") {
+					Swal.fire({
+						title: 'Are you sure?',
+						text: `You selected ${approverName}. Do you want to proceed?`,
+						icon: 'warning',
+						showCancelButton: true,
+						confirmButtonText: 'Yes, proceed',
+						cancelButtonText: 'No, change selection'
+					}).then((confirmResult) => {
+						if (confirmResult.isConfirmed) {
+							$.ajax({
+								url: `${getContextPath()}/api/registerform/bulkApprove?approverId=${approverId}&reason=${reason}`,
+								type: 'POST',
+								data: formData,
+								processData: false,
+								contentType: false,
+								success: function (response) {
 									Swal.fire({
-										title: 'Operation Completed',
-										text: 'The bulk approval has been successfully completed.',
-										icon: 'info',
-										confirmButtonText: 'Refresh Page'
+										title: 'Success!',
+										text: 'Bulk Approve Successfully.',
+										icon: 'success',
+										confirmButtonText: 'OK'
 									}).then(() => {
-										location.reload();
+										$('#message').text(response);
+										//getAllForm()
+										Swal.fire({
+											title: 'Operation Completed',
+											text: 'The bulk approval has been successfully completed.',
+											icon: 'info',
+											confirmButtonText: 'Refresh Page'
+										}).then(() => {
+											location.reload();
+										});
 									});
+								}, error: function (xhr, error) {
+									console.error('Error:', error);
+									console.log('Response:', xhr.responseText);
+								}
+							});
+						} else {
+							console.log('Approver selection was canceled');
+							bulkApprove()
+						}
+					});
+				} else {
+					let approverId = 0
+					$.ajax({
+						url: `${getContextPath()}/api/registerform/bulkApprove?approverId=${approverId}&reason=${reason}`,
+						type: 'POST',
+						data: formData,
+						processData: false,
+						contentType: false,
+						success: function (response) {
+							Swal.fire({
+								title: 'Success!',
+								text: 'Bulk Approve Successfully.',
+								icon: 'success',
+								confirmButtonText: 'OK'
+							}).then(() => {
+								$('#message').text(response);
+								//getAllForm()
+								Swal.fire({
+									title: 'Operation Completed',
+									text: 'The bulk approval has been successfully completed.',
+									icon: 'info',
+									confirmButtonText: 'Refresh Page'
+								}).then(() => {
+									location.reload();
 								});
-							}, error: function (xhr, error) {
-								console.error('Error:', error);
-								console.log('Response:', xhr.responseText);
-							}
-						});
-					} else {
-						console.log('Approver selection was canceled');
-						bulkApprove()
-					}
-				});
+							});
+						}, error: function (xhr, error) {
+							console.error('Error:', error);
+							console.log('Response:', xhr.responseText);
+						}
+					});
+				}
+
+
 			} else {
 				console.log('Approver selection was canceled');
 			}
@@ -416,6 +478,7 @@ $(document).ready(function() {
 	$("#go-upload-page").click(function() {
     	$(".hide-when-click-upload").hide()
     	$(".hide-when-load-download-page").show();
+		$('#select-all-btn').hide()
     });
     $(".hide-when-load-download-page").hide();
     $("#go-download-page").click(function() {
@@ -423,40 +486,52 @@ $(document).ready(function() {
 		$(".hide-when-load-download-page").hide();
 		$(".hide-when-click-upload").show()
     	$("#go-download-page").hide();
+		$('#select-all-btn').show()
     });
-    $("#upload-otp-excel").change(function() {
+	$("#upload-otp-excel").change(function() {
 		handleFileSelect();
 	});
-    function handleFileSelect() {
-		const fileInput = $('#upload-otp-excel');
-    	const files = fileInput.prop('files');
-    	const file = files[0];
-		var formData = new FormData();
-	    formData.append('file', file);
-	
-	    $.ajax({
-	        url: `${getContextPath()}/api/registerform/uploadExcelServiceDesk`,
-	        type: 'POST',
-	        data: formData,
-	        contentType: false,
-	        processData: false,
-	        success: function(response) {
-				Swal.fire({
-	                title: "Success!",
-	                text: "OTP has been sent to all applicants.",
-	                icon: "success",
-	                timer: 3000,
-	                timerProgressBar: true,
-	                showConfirmButton: false
-	            }).then(() => {
-	                window.location.href = `${getContextPath()}/dashboard`;
-	            });
-	            console.log('File uploaded successfully:', response);
-	        },
-	        error: function(xhr, status, error) {
-	            console.error('Error uploading file:', error);
-	        }
-	    });
+
+	function handleFileSelect() {
+		Swal.fire({
+			title: "Are you sure?",
+			text: "Do you want to upload this Excel file?",
+			icon: "warning",
+			showCancelButton: true,
+			confirmButtonText: "Yes, upload it!",
+			cancelButtonText: "No, cancel",
+		}).then((result) => {
+			if (result.isConfirmed) {
+				const fileInput = $('#upload-otp-excel');
+				const files = fileInput.prop('files');
+				const file = files[0];
+				var formData = new FormData();
+				formData.append('file', file);
+
+				$.ajax({
+					url: `${getContextPath()}/api/registerform/uploadExcelServiceDesk`,
+					type: 'POST',
+					data: formData,
+					contentType: false,
+					processData: false,
+					success: function(response) {
+						Swal.fire({
+							title: "Success!",
+							text: "OTP has been sent to all applicants.",
+							icon: "success",
+							confirmButtonText: 'OK'
+						}).then(() => {
+							window.location.href = `${getContextPath()}/home`;
+						});
+						console.log('File uploaded successfully:', response);
+					},
+					error: function(xhr, status, error) {
+						console.error('Error uploading file:', error);
+					}
+				});
+			}
+		});
 	}
-    
+
+
 });

@@ -39,6 +39,13 @@
 								<div class="add-function">
 									<div class="display-flex align-center">
 										<div class="new-opportunities-heading">Total staffs (<span id="total-count"></span>)</div>
+										<label for="users-per-page-select" style="margin-left: 10px;"></label><select id="users-per-page-select">
+											<option value="5">5</option>
+											<option value="10" selected>10</option>
+											<option value="20">20</option>
+											<option value="50">50</option>
+										</select>
+										<span style="margin-left: 10px;">(Note: You can adjust the number of results per page.)</span>
 									</div>
 									<a class="job-banner-cta js-job-cta btn2 add-data" sec:authorize="hasAuthority('HR')" href="#">
 										<i class="fa-solid fa-file-import"></i>

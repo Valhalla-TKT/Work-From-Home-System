@@ -32,6 +32,8 @@ import java.util.Map;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.ss.usermodel.WorkbookFactory;
 import org.modelmapper.ModelMapper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
@@ -62,6 +64,8 @@ public class RegisterFormController {
     private final WorkFlowStatusRepository workFlowStatusRepo;
     
     private final ExcelService excelService;
+
+    private static final Logger logger = LoggerFactory.getLogger(RegisterFormController.class);
 
     @PostMapping("/create")
     public ResponseEntity<String> createForm(
@@ -214,17 +218,14 @@ public class RegisterFormController {
             excelService.readAndSendEmail(inputStream, sheetName, workbook);
             return ResponseEntity.ok("pass");
         } catch (IOException e) {
-            e.printStackTrace();
-            return ResponseEntity.ok("Fail");
+            logger.error("Error occurred while uploading Excel file", e);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Fail");
         }
     	    			
 	}
     
     @PostMapping("/bulkApprove")
-    public ResponseEntity<String> bulkApprove(@RequestParam("formIds") List<Long> formIds, @RequestParam("userId") Long userId, @RequestParam("approverId") Long approverId, @RequestParam("reason") String reason) throws Exception {
-        for (long id : formIds) {
-            System.out.println(id);
-        }
+    public ResponseEntity<String> bulkApprove(@RequestParam("formIds") List<Long> formIds, @RequestParam("userId") Long userId, @RequestParam(value = "approverId", required = false) Long approverId, @RequestParam("reason") String reason) throws Exception {
     	for (long id : formIds) {
             WorkFlowStatus workFlowStatus = workFlowStatusRepo.findByUserIdAndRegisterFormId(userId, id);
             WorkFlowStatusDto workFlowStatusDto = new WorkFlowStatusDto();

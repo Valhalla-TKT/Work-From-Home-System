@@ -24,7 +24,7 @@
                                                 <h1 class="search-summary-title" id="form-list-title">Work from Home Request Form Lists</h1>
                                             </div>
                                             <button id="bulk-approve-btn" class="btn2" sec:authorize="!hasAuthority('SERVICE_DESK')" style="background: white; color: #0d0c22; margin-right: 10px;">Bulk Approve</button>
-                                            <button id="select-all-btn" class="btn2" type="button">Select All</button>
+                                            <button id="select-all-btn" class="btn2" type="button" style="margin-right: 10px;">Select All</button>
                                             <button id="go-upload-page" class="btn2 hide-when-click-upload" sec:authorize="hasAuthority('SERVICE_DESK')" style="background: white; color: #0d0c22; margin-right: 10px;">Upload Excel for OTP</button>
                                             <button id="service-desk-download-btn" class="btn2 hide-when-click-upload" sec:authorize="hasAuthority('SERVICE_DESK')">Download List</button>
                                             <button id="go-download-page" class="btn2 show-when-click-upload hide-when-load-download-page" sec:authorize="hasAuthority('SERVICE_DESK')">View List Page</button>
@@ -177,7 +177,14 @@
                                     <table id="staff-table" class="table">
                                         <thead>
                                             <tr>
-                                                <th style="width: 5%;"></th>
+                                                <th style="width: 5%;">
+                                                    <select title="You can adjust the number of results per page." id="forms-per-page-select">
+                                                        <option value="5">5</option>
+                                                        <option value="10" selected>10</option>
+                                                        <option value="20">20</option>
+                                                        <option value="50">50</option>
+                                                    </select>
+                                                </th>
                                                 <th>Name</th>
                                                 <th>Staff ID</th>
                                                 <th>Status</th>                                               
@@ -195,7 +202,7 @@
                                 </div>
                             </div>
 
-                            <div class="hide-when-load-download-page">
+                            <div class="hide-when-load-download-page" sec:authorize="hasAuthority('SERVICE_DESK')">
 								<input type="file" id="upload-otp-excel">                 
                             </div>
                             
@@ -266,25 +273,7 @@
                                                     </select>
 
                                                 </div>
-                                                <div class="form-field-wrapper">
-                                                    <div class="label-flag heading-label">
-                                                        <label>Specific</label>
-                                                    </div>
-                                                    <select name="specific" id="" style="width: 100%;">
-                                                        <option value="all">All</option>
-                                                        <option value="name">Name</option>
-                                                        <option value="position">Position</option>
-                                                        <option value="role">Role</option>
-                                                    </select>
-                                                </div>
-                                                <div class="form-field-wrapper">
-                                                    <div class="label-flag heading-label">
-                                                        <label>Location</label>
-                                                    </div>
-                                                    <select name="" id="" style="width: 100%;">
-                                                        <option value="all">All</option>
-                                                    </select>
-                                                </div>
+
                                             </fieldset>
                                         </form>
                                     </div>

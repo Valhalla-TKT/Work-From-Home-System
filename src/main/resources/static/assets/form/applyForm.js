@@ -486,7 +486,7 @@ $(document).ready(function() {
 	                timerProgressBar: true,
 	                showConfirmButton: false
 	            }).then(() => {
-	                window.location.href = `${getContextPath()}/dashboard`;
+	                window.location.href = `${getContextPath()}/home`;
 	            });
 		    },
 		    error: function(error) {
@@ -534,6 +534,15 @@ $(document).ready(function() {
 			applicantId = parseInt(currentUser.id, 10);
 			requesterId = currentUser.id;
 			requesterId = parseInt(currentUser.id, 10);
+			if(currentUser.registeredForThisMonth) {
+				Swal.fire({
+					title: "Registration Warning",
+					text: "You've already submitted the WFHS form for this month. To make changes, go to the history page and click 'View Details' on the form.",
+					icon: "warning",
+					confirmButtonText: "Got it",
+				});
+				return;
+			}
 		} else if(otherRequestRadioChecked) {
 			if (!selectedTeamMemberId) {
 				Swal.fire({
@@ -870,7 +879,7 @@ $(document).ready(function() {
 									confirmButtonText: "OK"
 								}).then((result) => {
 									if (result.isConfirmed) {
-										window.location.href = `${getContextPath()}/dashboard`;
+										window.location.href = `${getContextPath()}/home`;
 									}
 								});
 							},

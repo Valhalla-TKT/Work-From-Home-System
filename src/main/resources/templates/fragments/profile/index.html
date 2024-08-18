@@ -9,7 +9,28 @@
 
 <body>
 <div id="wrap" th:fragment="content" class="warp">
-	<section class="profile-pro-masthead">
+    <style>
+        .password-input-container {
+            position: relative;
+            display: flex;
+            align-items: center;
+        }
+
+        .password-input-container button {
+            margin-left: 10px;
+            cursor: pointer;
+        }
+
+        .password-input-container i {
+            position: absolute;
+            right: 20px;
+            cursor: pointer;
+            font-size: 18px;
+            color: #666;
+        }
+    </style>
+
+    <section class="profile-pro-masthead">
           <div class="container-large">
               <div class="masthead-content show-profile-is-null male">
 
@@ -21,7 +42,6 @@
                               <p id="profile_page_position"><!-- position will add with ajax --></p>
                               <button class="btn2 edit-position" title="Edit Position"><i class="fas fa-edit"></i></button>
                           </div>
-<!--                          <p class="user-email">&lt;!&ndash; email will add with ajax &ndash;&gt;</p>-->
                       </div>
                   </div>
                   <div id="masthead" name="masthead" class="masthead-intro">
@@ -42,19 +62,35 @@
       <div class="container-large">
           <div class="change-password-form" id="changePasswordForm">  	
               <form class="form-fields" accept-charset="UTF-8">
+                  <div style="display: flex; flex-direction: column">
+                      <h4 class="change-password-form-title" style="font-weight: 600;">Change Password</h4>
+                      <span class="change-password-form-description" style="color: #666; margin: 15px 0;">Password must contain at least 1 letter and 1 number. Minimum length is 8 characters.</span>
+                  </div>
                   <div>
                       <fieldset>
                           <label for="currentPassword" class="password">Current Password </label>
-                          <input type="password" name="password" id="currentPassword" value="" tabindex="1" class="text-input" data-cypress="password">
+                          <div class="password-input-container">
+                              <input type="password" name="password" id="currentPassword" value="" tabindex="1" class="text-input" data-cypress="password">
+                              <i class="fas fa-eye toggle-password" id="toggleCurrentPassword"></i>
+                          </div>
+                          <p id="currentPasswordError" class="error-message" style="color: red; display: block; margin: 5px 0;"></p>
                       </fieldset>
                       <fieldset>
-                          <label for="newPassword" class="password">New Password </label>
-                          <input type="password" name="newPassword" id="newPassword" value="" tabindex="2" class="text-input" data-cypress="password">
+                          <label for="newPassword" class="password" style="margin-top: 10px;">New Password </label>
+                          <div class="password-input-container">
+                              <input type="password" name="newPassword" id="newPassword" value="" tabindex="2" class="text-input" data-cypress="password">
+                              <i class="fas fa-eye toggle-password" id="toggleNewPassword"></i>
+                          </div>
+                          <p id="newPasswordError" class="error-message" style="color: red; display: block; margin: 5px 0;"></p>
                       </fieldset>
                       <fieldset>
-                        <label for="confirmPassword" class="password">Retype New Password </label>
-                        <input type="password" name="password" id="confirmPassword" value="" tabindex="3" class="text-input" data-cypress="password">
-                    </fieldset>
+                          <label for="confirmPassword" class="password" style="margin-top: 10px;">Retype New Password </label>
+                          <div class="password-input-container">
+                              <input type="password" name="confirmPassword" id="confirmPassword" value="" tabindex="3" class="text-input" data-cypress="password">
+                              <i class="fas fa-eye toggle-password" id="toggleConfirmPassword"></i>
+                          </div>
+                          <p id="confirmPasswordError" class="error-message" style="color: red; display: block; margin: 5px 0;"></p>
+                      </fieldset>
                   </div>
                   <input class="btn2 margin-t-20 profile-btn" type="submit" value="Confirm" tabindex="4" style="width: 100px;"/>
               </form>

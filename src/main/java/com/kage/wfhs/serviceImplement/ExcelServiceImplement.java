@@ -11,6 +11,8 @@ import com.kage.wfhs.util.Message;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.apache.poi.ss.usermodel.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -24,7 +26,8 @@ import com.kage.wfhs.model.*;
 @RequiredArgsConstructor
 public class ExcelServiceImplement implements ExcelService {
 
-	@Value("${spring.datasource.url}")
+    private static final Logger log = LoggerFactory.getLogger(ExcelServiceImplement.class);
+    @Value("${spring.datasource.url}")
     private String dbUrl;
 
     @Value("${spring.datasource.username}")
@@ -378,12 +381,7 @@ public class ExcelServiceImplement implements ExcelService {
                 Cell otpCell = row.getCell(4);
 
                 if (emailCell != null && otpCell != null) {
-                    String email = emailCell.toString().trim();                    
-//                    workFlowStatusRepository.deleteAll(
-//                    	workFlowStatusRepository.findByUserId(userRepository.findByEmail(email).getId()).stream()
-//                    	    .filter(workFlowStatus -> "PENDING".equals(workFlowStatus.getStatus().name()))
-//                    	    .collect(Collectors.toList())
-//                    );
+                    String email = emailCell.toString().trim();
                     Long userId = userRepository.findByEmail(email).getId();
                     int currentMonth = LocalDate.now().getMonthValue();
                     Optional<RegisterForm> registerFormOptional = registerFormRepository.findByUserIdAndSignedMonthNative(userId, currentMonth);
@@ -396,7 +394,6 @@ public class ExcelServiceImplement implements ExcelService {
                         	workFlowStatusListToSave.add(workFlowStatus);
                         }
                         workFlowStatusRepository.saveAll(workFlowStatusListToSave);
-                    } else {
                     }
                     
                     String otp = otpCell.toString().trim();
@@ -415,8 +412,9 @@ public class ExcelServiceImplement implements ExcelService {
                 String emailBodyForOTPByServiceDeskPart1 = message.getEmailBodyForOTPByServiceDeskPart1();
                 String emailBodyForOTPByServiceDeskPart2 = message.getEmailBodyForOTPByServiceDeskPart2();
                 String emailSubjectForOtpByServiceDesk = message.getFormattedEmailSubjectForOtpByServiceDesk();
-                
-                emailService.sendMail(email, emailSubjectForOtpByServiceDesk, emailBodyForOTPByServiceDeskPart1 + otp + "\n" + emailBodyForOTPByServiceDeskPart2);
+
+                String finalEmailBody = emailBodyForOTPByServiceDeskPart1 + otp + "<br/>" + emailBodyForOTPByServiceDeskPart2;
+                emailService.sendMail(email, emailSubjectForOtpByServiceDesk, finalEmailBody);
             }
         }
 

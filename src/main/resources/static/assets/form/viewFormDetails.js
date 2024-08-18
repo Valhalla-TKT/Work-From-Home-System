@@ -15,7 +15,7 @@ $(document).ready(function () {
     const windowAntivirusSoftwareInputByFormId = $('#window-antivirusSoftware-input-by-form-id-view-detail')
     const windowAntivirusPatternInputByFormId = $('#window-antivirusPattern-input-by-form-id-view-detail')
     const windowAntivirusFullScanInputByFormId = $('#window-antivirusFullScan-input-by-form-id-view-detail')
-    
+
     const osTypeInput = $("#os-type-display-by-form-data")
     let osType
     if(osTypeInput) {
@@ -58,6 +58,16 @@ $(document).ready(function () {
         }
     });
 
+    function checkSelectedRadio() {
+        const selectedRadio = $('#radio-button-container input[name="radio-group"]:checked');
+        if (selectedRadio.length) {
+            viewDetailUpdateBtn.show();
+        }
+    }
+
+    $('#radio-button-container input[name="radio-group"]').on('change', function() {
+        checkSelectedRadio();
+    });
 
     function formatDateInput(dateString) {
         const [day, month, year] = dateString.split('-').map(Number);
@@ -67,206 +77,6 @@ $(document).ready(function () {
         const formattedDay = String(date.getDate()).padStart(2, '0');
         return `${formattedYear}-${formattedMonth}-${formattedDay}`;
     }
-
-    // let approverId
-    // let hasApprover = false
-    // viewDetailUpdateBtn.click(function(event) {
-    //     //
-
-    //     //
-    //     event.preventDefault();
-    //     Swal.fire({
-    //         title: 'Are you sure?',
-    //         text: "Do you want to proceed with updating the form?",
-    //         icon: 'warning',
-    //         showCancelButton: true,
-    //         confirmButtonText: 'Yes, update it!',
-    //         cancelButtonText: 'No, cancel!'
-    //     }).then((result) => {
-    //         if (result.isConfirmed) {
-    //             Swal.fire({
-    //                 title: 'Approve with or without approver?',
-    //                 text: "Do you want to approve with an approver?",
-    //                 icon: 'question',
-    //                 showCancelButton: true,
-    //                 confirmButtonText: 'Yes, with approver',
-    //                 cancelButtonText: 'No, without approver'
-    //             }).then((secondResult) => {
-    //                 if (secondResult.isConfirmed) {
-    //                     hasApprover = true;
-    //                     Swal.fire({
-    //                         title: 'Approver Details',
-    //                         html: `
-    //                             <select id="approve-role" class="select" style="width: 100%; color: #0d0c22; border: 1px solid black; text-transform: capitalize;">
-    //                                 <option selected value="" disabled>Choose Approver Role</option>
-    //                             </select>
-    //                             <br/><br/>
-    //                             <select id="approver-name" class="select" style="width: 100%; color: #0d0c22; border: 1px solid black;">
-    //                                <option selected value="" disabled>Choose Approver Name</option>
-    //                            </select>`,
-    //                         didOpen: async () => {
-    //                             const approveRoleResponse = await fetchApproveRoleWithoutApplicant();
-    //                             const approveRoleSelect = Swal.getPopup().querySelector('#approve-role');
-    //                             const formatRoleName = (roleName) => {
-    //                                 return roleName
-    //                                     .replace(/_/g, ' ')
-    //                                     .toLowerCase()
-    //                                     .replace(/\b\w/g, char => char.toUpperCase());
-    //                             };
-    //                             approveRoleResponse.forEach(role => {
-    //                                 const option = document.createElement('option');
-    //                                 option.value = role.id;
-    //                                 option.text = formatRoleName(role.name);
-    //                                 approveRoleSelect.add(option);
-    //                             });
-                
-    //                             approveRoleSelect.addEventListener('change', async () => {
-    //                                 const selectedRoleId = approveRoleSelect.value;
-    //                                 await getAllApprover(selectedRoleId, currentUser.name);
-    //                             });
-    //                         },
-    //                         preConfirm: () => {
-    //                             const approverRole = Swal.getPopup().querySelector('#approve-role').value;
-    //                             const approverNameValue = Swal.getPopup().querySelector('#approver-name').value;
-    //                             if (!reason) {
-    //                                 Swal.showValidationMessage(`Please enter a reason`);
-    //                                 return false;
-    //                             }
-    //                             if (!approverRole || !approverNameValue) {
-    //                                 Swal.showValidationMessage(`Please choose both an approver role and an approver name.`);
-    //                                 return false;
-    //                             }
-    //                             return { reason, approverNameValue };
-    //                         },
-    //                         showCancelButton: true,
-    //                         confirmButtonText: 'Select',
-    //                         cancelButtonText: 'Cancel'
-    //                     }).then((result) => {
-    //                         if (result.isConfirmed) {
-    //                             const approverName = $('#approver-name').find('option:selected').text();
-    //                             const { reason, approverNameValue } = result.value
-    //                             console.log(reason)
-    //                             Swal.fire({
-    //                                 title: 'Are you sure?',
-    //                                 text: `You selected ${approverName}. Do you want to proceed?`,
-    //                                 icon: 'warning',
-    //                                 showCancelButton: true,
-    //                                 confirmButtonText: 'Yes, proceed',
-    //                                 cancelButtonText: 'No, change selection'
-    //                             }).then((confirmResult) => {
-    //                                 if (confirmResult.isConfirmed) {
-    //                                     approverId = approverNameValue
-    //                                 } else {
-    //                                     console.log("Cancel");
-    //                                 }
-    //                             })
-    //                         }
-    //                     });
-    //                 } else {
-    //                     hasApprover = false;
-    //                 }
-    //                 const formData = new FormData();
-    //                 const workingPlaceDisplayByFormIdValue = workingPlaceDisplayByFormId.val()
-    //                 // formData.append('workingPlace', workingPlaceDisplayByFormIdValue);
-
-    //                 const fromDateDisplayByFormIdValue = fromDateDisplayByFormId.val()
-    //                 const formattedFromDate = formatDateInput(fromDateDisplayByFormIdValue);
-    //                 // formData.append('fromDate', formattedFromDate);
-
-    //                 const toDateDisplayByFormIdValue = toDateDisplayByFormId.val()
-    //                 const formattedToDate = formatDateInput(toDateDisplayByFormIdValue);
-    //                 // formData.append('toDate', formattedToDate);
-
-    //                 const formRequestReasonDisplayDetailValue = formRequestReasonDisplayDetail.val()
-    //                 // formData.append('reason', formRequestReasonDisplayDetailValue);
-
-    //                 const signedDateDisplayByFormIdValue = signedDateDisplayByFormId.val()
-    //                 const formattedSignedDate = formatDateInput(signedDateDisplayByFormIdValue)
-    //                 // formData.append('signedDate', formattedSignedDate);
-
-    //                 const data = {
-    //                     id: formId,
-    //                     workingPlace: workingPlaceDisplayByFormIdValue,
-    //                     requestReason: formRequestReasonDisplayDetailValue,
-    //                     fromDate: formattedFromDate,
-    //                     toDate: formattedToDate,
-    //                     signedDate: formattedSignedDate,
-    //                     approverId: approverId
-    //                 };
-    //                 formData.append("data", new Blob([JSON.stringify(data)], { type: "application/json" }));
-
-    //                 if(osType === "Window") {
-    //                     const windowOperatingSystem = windowOperatingSystemInputByFormId[0].files[0];
-    //                     if (windowOperatingSystem) {
-    //                         formData.append('operatingSystem', windowOperatingSystem);
-    //                     } else {
-    //                         console.log("No file selected.");
-    //                     }
-                
-    //                     const windowSecurityPath = windowSecurityPathInputByFormId[0].files[0];
-    //                     if (windowSecurityPath) {
-    //                         formData.append('securityPath', windowSecurityPath);
-    //                     } else {
-    //                         console.log("No file selected.");
-    //                     }
-                
-    //                     const windowAntivirusSoftware = windowAntivirusSoftwareInputByFormId[0].files[0];
-    //                     if (windowAntivirusSoftware) {
-    //                         formData.append('antivirusSoftware', windowAntivirusSoftware);
-    //                     } else {
-    //                         console.log("No file selected.");
-    //                     }
-                
-    //                     const windowAntivirusPattern = windowAntivirusPatternInputByFormId[0].files[0];
-    //                     if (windowAntivirusPattern) {
-    //                         formData.append('antivirusPattern', windowAntivirusPattern);
-    //                     } else {
-    //                         console.log("No file selected.");
-    //                     }
-                
-    //                     const windowAntivirusFullScan = windowAntivirusFullScanInputByFormId[0].files[0];
-    //                     if (windowAntivirusPattern) {
-    //                         formData.append('antivirusFullScan', windowAntivirusFullScan);
-    //                     } else {
-    //                         console.log("No file selected.");
-    //                     }
-    //                 } else if(osType === "Mac") {
-            
-    //                 }
-                    
-
-    //                 formData.append('hasApprover', hasApprover);
-    //                 $.ajax({
-    //                     url: `${getContextPath()}/api/registerform/updateForm`,
-    //                     type: 'POST',
-    //                     data: formData,
-    //                     processData: false,
-    //                     contentType: false,
-    //                     success: function(response) {
-    //                         Swal.fire({
-    //                             title: "Success!",
-    //                             text: "Form updated successfully.",
-    //                             icon: "success",
-    //                             confirmButtonText: "OK"
-    //                         }).then((result) => {
-    //                             if (result.isConfirmed) {
-    //                                 window.location.href = `${getContextPath()}/historyForm`;
-    //                             }
-    //                         });
-    //                     },
-    //                     error: function(xhr, status, error) {
-    //                         Swal.fire({
-    //                             title: "Error!",
-    //                             text: "There was an error submitting the form.",
-    //                             icon: "error",
-    //                             confirmButtonText: "OK"
-    //                         });
-    //                     }
-    //                 });
-    //             });
-    //         }
-    //     })
-    // });
 
     let approverId;
     let hasApprover = false;
@@ -370,6 +180,14 @@ $(document).ready(function () {
         const formattedSignedDate = formatDateInput(signedDateDisplayByFormIdValue);
         formData.append('signedDate', formattedSignedDate);
 
+        const selectedRadio = document.querySelector('#radio-button-container input[name="radio-group"]:checked');
+        if (selectedRadio) {
+            const value = selectedRadio.value;
+            console.log('Selected value:', value);
+        } else {
+            console.log('No radio button is selected');
+        }
+
         const data = {
             id: formId,
             workingPlace: workingPlaceDisplayByFormIdValue,
@@ -377,7 +195,8 @@ $(document).ready(function () {
             fromDate: formattedFromDate,
             toDate: formattedToDate,
             signedDate: formattedSignedDate,
-            approverId: approverId
+            approverId: approverId,
+            requestPercent: selectedRadio.value
         };
         formData.append("data", new Blob([JSON.stringify(data)], { type: "application/json" }));
 

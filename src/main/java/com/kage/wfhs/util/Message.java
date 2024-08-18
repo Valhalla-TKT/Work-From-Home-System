@@ -54,16 +54,4 @@ public class Message {
         return String.format(emailSubjectForOtpByServiceDesk, month, year);
     }
 
-//    public String getEmailSubjectForOtpByServiceDesk() {
-//        LocalDate now = LocalDate.now();
-//        DateTimeFormatter monthFormatter = DateTimeFormatter.ofPattern("MMMM");
-//        DateTimeFormatter yearFormatter = DateTimeFormatter.ofPattern("yyyy");
-//
-//        String nextMonth = now.plusMonths(1).format(monthFormatter);
-//        String currentYear = now.format(yearFormatter);
-//
-//        return emailSubjectForOtpByServiceDesk
-//                .replace("${nextMonth}", nextMonth)
-//                .replace("${currentYear}", currentYear);
-//    }
 }

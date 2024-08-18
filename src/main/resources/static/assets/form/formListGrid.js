@@ -33,7 +33,7 @@ $(document).ready(function() {
 	}
 	// role
 	if(userRole === 'PROJECT_MANAGER') {
-		formListTitle.text(`${currentUser.managedTeamName} Form List`);
+		formListTitle.text(`${currentUser.managedTeamName.replace(/\|/g, ',')} Form List`);
 		getTeamMembersPendingForm();
 	}
 	// if(userRole === 'DEPARTMENT_HEAD' || userRole === 'DIVISION_HEAD') {
@@ -867,7 +867,7 @@ $(document).ready(function() {
 	                timerProgressBar: true,
 	                showConfirmButton: false
 	            }).then(() => {
-	                window.location.href = `${getContextPath()}/dashboard`;
+	                window.location.href = `${getContextPath()}/home`;
 	            });
 	            console.log('File uploaded successfully:', response);
 	        },

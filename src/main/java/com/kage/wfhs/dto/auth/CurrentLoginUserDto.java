@@ -16,7 +16,7 @@ import java.util.Set;
 public class CurrentLoginUserDto {
     private Long id;
     private String staffId, name, email, gender, positionName, teamName, approveRoleName, departmentName, divisionName, profile, managedTeamName, managedDepartmentName, managedDivisionName;
-    private boolean firstTimeLogin;
+    private boolean firstTimeLogin, registeredForThisMonth;
     private Set<ApproveRole> approveRoles;
     private Team team;
     private Department department;

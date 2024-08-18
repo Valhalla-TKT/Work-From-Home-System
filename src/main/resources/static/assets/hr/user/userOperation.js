@@ -2,7 +2,16 @@ $(document).ready( function(){
     let approveRoles = [];
     let filteredUserData = [];
     var currentPage = 1;
-    var usersPerPage = 10;
+
+    const userPerPageSelectBox = $('#users-per-page-select')
+    var usersPerPage = parseInt(userPerPageSelectBox.val());
+
+    userPerPageSelectBox.on('change', function() {
+        usersPerPage = parseInt($(this).val());
+        currentPage = 1;
+        renderUsers();
+    });
+
     var totalUsers = 0;
     var userData = [];
     let teams = [];
@@ -764,6 +773,7 @@ $(document).ready( function(){
         currentPage++;
         await getAllUser(currentPage, true);
     });
+
     function getAllApproveRole() {
         $.ajax({
             url: `${getContextPath()}/api/approveRole/approveRoleList`,
