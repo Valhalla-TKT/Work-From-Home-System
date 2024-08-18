@@ -11,6 +11,7 @@ import com.kage.wfhs.dto.ApproveRoleDto;
 import com.kage.wfhs.model.ApproveRole;
 import com.kage.wfhs.repository.ApproveRoleRepository;
 import com.kage.wfhs.service.ApproveRoleService;
+import com.kage.wfhs.util.DtoUtil;
 import com.kage.wfhs.util.EntityUtil;
 import com.kage.wfhs.util.Helper;
 
@@ -70,6 +71,7 @@ public class ApproveRoleServiceImplement implements ApproveRoleService {
     @Override
     public Long getIdByWorkFlowOrderId(Long workFlowOrderId) {
         return approveRoleRepo.findByWorkFlowOrderId(workFlowOrderId);
+
     }
 
     @Override
@@ -157,5 +159,11 @@ public class ApproveRoleServiceImplement implements ApproveRoleService {
                 throw new Exception("Unexpected error for role: " + roleName, e);
             }
         }
+    }
+
+    @Override
+    public List<ApproveRoleDto> getApproveRoleListWithoutApplicant() {
+        List<ApproveRole> approveRoleList = approveRoleRepo.findApproveRolesWithoutApplicant();
+        return DtoUtil.mapList(approveRoleList, ApproveRoleDto.class, modelMapper);
     }
 }

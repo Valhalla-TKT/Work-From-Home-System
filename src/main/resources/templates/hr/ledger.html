@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org" id="fullscreen-body">
-<head th:replace="~{fragments/header :: header}">
+<head th:replace="~{fragments/shared/header :: header}">
     <title>WorkHub</title>
     <script src="https://code.jquery.com/jquery-3.7.1.js"></script>
     <script src="https://cdn.datatables.net/2.0.1/js/dataTables.js"></script>
@@ -8,14 +8,14 @@
 </head>
 <body id="page" class="logged-out not-pro not-player not-self not-team not-on-team no-hiring  nav-v2-theme-cream">
 <!-- header -->
-<div th:replace="~{fragments/navigation :: navigation}"></div>
+<div th:replace="~{fragments/shared/navigation :: navigation}"></div>
 <!-- header -->
 
 <!-- main -->
 <main th:replace="~{fragments/hr/ledger :: content}"></main>
 <!-- main -->
 
-<div th:replace="fragments/footer :: footer"></div>
+<div th:replace="~{fragments/shared/footer :: footer}"></div>
 <div id="signup-overlay" class="overlay ">
     <div class="lightbox">
         <a href="#" class="close" aria-label="close">
@@ -43,18 +43,6 @@
 <div id="shot-modals-app"></div>
 <div id="good-modals-app"></div>
 <div id="work-availability-modal-app"></div>
-<script src="https://code.jquery.com/jquery-3.7.1.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
-    <script src="https://cdn.datatables.net/2.0.1/js/dataTables.js"></script>
-    <script src="https://cdn.datatables.net/2.0.1/js/dataTables.bootstrap5.js"></script>
-    <script src="https://cdn.datatables.net/2.0.3/js/dataTables.js"></script>
-<script src="https://cdn.datatables.net/buttons/3.0.1/js/dataTables.buttons.js"></script>
-<script src="https://cdn.datatables.net/buttons/3.0.1/js/buttons.dataTables.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/pdfmake.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/vfs_fonts.js"></script>
-<script src="https://cdn.datatables.net/buttons/3.0.1/js/buttons.html5.min.js"></script>
-<script src="https://cdn.datatables.net/buttons/3.0.1/js/buttons.print.min.js"></script>
 
 <script>
   Dribbble = window.Dribbble || {};
@@ -93,7 +81,7 @@
 
 <div id="site-notifications"></div>
 
-<div th:replace="fragments/chat :: chat"></div>
+<!--<div th:replace="~{fragments/shared/chat :: chat}"></div>-->
 
 <script th:src="@{/assets/welcome/fullscreen.js}"></script>
 

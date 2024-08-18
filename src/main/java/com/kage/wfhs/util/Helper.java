@@ -17,6 +17,9 @@ import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 import java.text.SimpleDateFormat;
 import java.util.*;
+import java.util.function.Consumer;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -32,8 +35,6 @@ import lombok.AllArgsConstructor;
 @AllArgsConstructor
 @Service
 public class Helper {
-
-    private static final String uploadDir = "src/main/resources/static/formImages/";
 
     @Autowired
     private final WorkFlowOrderRepository workFlowOrderRepo;
@@ -54,59 +55,6 @@ public class Helper {
     }
 
     private static final SecureRandom random = new SecureRandom();
-
-    public static String saveImage(MultipartFile file) {
-        String storageFileName = null;
-        if (file != null) {
-
-            Date createdAt = new Date();
-            storageFileName = createdAt.getTime() + "_" + file.getOriginalFilename();
-
-            try {
-                Path uploadPath = Paths.get(uploadDir);
-                if (!Files.exists(uploadPath)) {
-                    Files.createDirectories(uploadPath);
-                }
-                try (InputStream inputStream = file.getInputStream()) {
-                    Files.copy(inputStream, Paths.get(uploadDir + storageFileName),
-                            StandardCopyOption.REPLACE_EXISTING);
-                }
-            } catch (Exception ex) {
-
-                System.out.println("Exception : " + ex.getMessage());
-            }
-        }
-        return "/assets/formImages" + storageFileName;
-    }
-
-
-    public static String updateImage(MultipartFile newFile, String oldImage) {
-        String storageFileName = null;
-        if (newFile != null) {
-            try {
-                if (!newFile.isEmpty()) {
-                    Date createdAt = new Date();
-                    storageFileName = createdAt.getTime() + "_" + newFile.getOriginalFilename();
-                    try (InputStream inputStream = newFile.getInputStream()) {
-                        Files.copy(inputStream, Paths.get(uploadDir + storageFileName),
-                                StandardCopyOption.REPLACE_EXISTING);
-                    }
-                    if (oldImage != null) {
-                        if (oldImage.equals("default-female.jfif") || oldImage.equals("default-male.png")) {
-                        } else {
-                            Path oldImagePath = Paths.get(uploadDir + oldImage);
-                            Files.delete(oldImagePath);
-                        }
-                    }
-                }
-            } catch (Exception ex) {
-                System.out.println("IOException occurred: " + ex.getMessage());
-                return ex.getMessage();
-            }
-
-        }
-        return storageFileName;
-    }
 
     public static String generateOTP(String email, String staffID) {
         try {
@@ -141,5 +89,73 @@ public class Helper {
         Date date = new Date(milliseconds);
         SimpleDateFormat dateFormat = new SimpleDateFormat("MMMM dd, yyyy");
         return dateFormat.format(date);
+    }
+
+    /**
+     * Populates a list of managed entities from a list of user approval role entities.
+     * This method maps the user approval role entities to their respective managed entities
+     * and applies the list to the provided setter function.
+     *
+     * Example Usage:
+     * <pre>
+     * {@code
+     * List<UserApproveRoleTeam> userApproveRoleTeams = userApproveRoleTeamRepo.findByUserId(userDto.getId());
+     * Helper.populateManagedEntity(userApproveRoleTeams, UserApproveRoleTeam::getTeam, userDto::setManagedTeams);
+     * }
+     * </pre>
+     *
+     * @param userApproveRoleEntities the list of user approval role entities
+     * @param mapper                  the function to map the user approval role entity to the managed entity
+     * @param setter                  the function to set the managed entities list in the DTO
+     * @param <E>                     the type of the user approval role entity
+     * @param <T>                     the type of the managed entity
+     */
+    public static <E, T> void populateManagedEntity(List<E> userApproveRoleEntities, Function<E, T> mapper, Consumer<List<T>> setter) {
+        if (userApproveRoleEntities != null && !userApproveRoleEntities.isEmpty()) {
+            List<T> managedEntityList = userApproveRoleEntities.stream()
+                    .map(mapper)
+                    .filter(Objects::nonNull)
+                    .toList();
+            setter.accept(managedEntityList);
+        }
+    }
+
+    /**
+     * Extracts names from a list of user approval role entities and returns them as a comma-separated string.
+     * This method maps the user approval role entities to their respective names using the provided mapper
+     * and name extractor functions.
+     *
+     * Example Usage:
+     * <pre>
+     * {@code
+     * String managedTeamName = Helper.getNames(userApproveRoleTeams, UserApproveRoleTeam::getTeam, Team::getName);
+     * }
+     * </pre>
+     *
+     * @param userApproveRoleEntities the list of user approval role entities
+     * @param mapper                  the function to map the user approval role entity to the managed entity
+     * @param nameExtractor           the function to extract the name from the managed entity
+     * @param <E>                     the type of the user approval role entity
+     * @param <T>                     the type of the managed entity
+     * @return                        a comma-separated string of names
+     */
+    public static <E, T> String getNames(List<E> userApproveRoleEntities, Function<E, T> mapper, Function<T, String> nameExtractor) {
+        return userApproveRoleEntities.stream()
+                .map(mapper)
+                .filter(Objects::nonNull)
+                .map(nameExtractor)
+                .collect(Collectors.joining("| "));
+    }
+
+    public static Date[] getStartAndEndOfCurrentMonth() {
+        Calendar cal = Calendar.getInstance();
+        cal.set(Calendar.DAY_OF_MONTH, 1);
+        Date startOfMonth = cal.getTime();
+
+        cal.add(Calendar.MONTH, 1);
+        cal.set(Calendar.DAY_OF_MONTH, 0);
+        Date endOfMonth = cal.getTime();
+
+        return new Date[] { startOfMonth, endOfMonth };
     }
 }

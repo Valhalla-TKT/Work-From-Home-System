@@ -12,42 +12,26 @@ import java.util.stream.Collectors;
 
 import com.kage.wfhs.dto.auth.CurrentLoginUserDto;
 import com.kage.wfhs.exception.EntityNotFoundException;
-import com.kage.wfhs.util.DtoUtil;
-import com.kage.wfhs.util.LogService;
+import com.kage.wfhs.model.*;
+import com.kage.wfhs.repository.*;
+import com.kage.wfhs.util.*;
 import org.modelmapper.ModelMapper;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.kage.wfhs.dto.UserDto;
-import com.kage.wfhs.exception.EntityCreationException;
-import com.kage.wfhs.model.ActiveStatus;
-import com.kage.wfhs.model.ApproveRole;
-import com.kage.wfhs.model.Department;
-import com.kage.wfhs.model.Division;
-import com.kage.wfhs.model.Team;
-import com.kage.wfhs.model.User;
-import com.kage.wfhs.model.WorkFlowOrder;
-import com.kage.wfhs.repository.ApproveRoleRepository;
-import com.kage.wfhs.repository.DepartmentRepository;
-import com.kage.wfhs.repository.DivisionRepository;
-import com.kage.wfhs.repository.TeamRepository;
-import com.kage.wfhs.repository.UserRepository;
 import com.kage.wfhs.service.UserService;
-import com.kage.wfhs.util.EntityUtil;
-import com.kage.wfhs.util.Helper;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.transaction.annotation.Transactional;
+import org.thymeleaf.context.Context;
+import org.thymeleaf.spring6.SpringTemplateEngine;
 
 @Service
 @RequiredArgsConstructor
 public class UserServiceImplement implements UserService {
 
-	private static final Logger log = LoggerFactory.getLogger(UserServiceImplement.class);
 	private final LogService logService;
 
 	private final UserRepository userRepo;
@@ -64,49 +48,20 @@ public class UserServiceImplement implements UserService {
 
 	private final PasswordEncoder passwordEncoder;
 
+	private final EmailSenderService emailSenderService;
+
+	private final SpringTemplateEngine templateEngine;
+	
+	private final UserApproveRoleTeamRepository userApproveRoleTeamRepo;
+	
+	private final UserApproveRoleDepartmentRepository userApproveRoleDepartmentRepo;
+	
+	private final UserApproveRoleDivisionRepository userApproveRoleDivisionRepo;
+	private final RegisterFormRepository registerFormRepository;
+
 	@Override
     public UserDto createUser(UserDto userDto) {
-		try {
-			validateUserDto(userDto);
-
-			User user = modelMapper.map(userDto, User.class);
-
-			String encodePassword = passwordEncoder.encode("123@dirace");
-			user.setEnabled(true);
-
-			String profile = determineProfile(userDto.getGender());
-        	user.setProfile(profile);
-			user.setPassword(encodePassword);
-
-			if (userDto.getTeamId() > 0) {
-				Team team = EntityUtil.getEntityById(teamRepo, userDto.getTeamId());
-				user.setTeam(team);
-				user.setDepartment(team.getDepartment());
-				user.setDivision(team.getDepartment().getDivision());
-			}
-			if (userDto.getDepartmentId() > 0) {
-				Department department = EntityUtil.getEntityById(departmentRepo, userDto.getDepartmentId());
-				user.setDepartment(department);
-				user.setDivision(department.getDivision());
-			}
-			if (userDto.getDivisionId() > 0) {
-				Division division = EntityUtil.getEntityById(divisionRepo, userDto.getDivisionId());
-				user.setDivision(division);
-			}
-			// ApproveRole approveRole = approveRoleRepo.findById(userDto.getApproveRoleId());
-			// Set<ApproveRole> approveRoles = new HashSet<ApproveRole>();
-			// approveRoles.add(approveRole);
-			// if (approveRole != null) {
-			// 	user.setApproveRoles(approveRoles);
-			// }
-			setApprovalRoles(user, userDto.getApproveRoleId());
-			
-			User savedUser = EntityUtil.saveEntity(userRepo, user, "user");
-			return modelMapper.map(savedUser, UserDto.class);
-		} catch (Exception e) {
-			System.err.println("Error creating user: " + e.getMessage());
-        	throw new EntityCreationException("Error creating user " + e);
-		}        
+		return null;
     }
 
 	private void validateUserDto(UserDto userDto) {
@@ -127,12 +82,10 @@ public class UserServiceImplement implements UserService {
 	private void setApprovalRoles(User user, Long approveRoleId) {
 		if (approveRoleId > 0) {
 			ApproveRole approveRole = EntityUtil.getEntityById(approveRoleRepo, approveRoleId);
-			if (approveRole != null) {
-				Set<ApproveRole> approveRoles = new HashSet<>();
-				approveRoles.add(approveRole);
-				user.setApproveRoles(approveRoles);
-			}
-		}
+            Set<ApproveRole> approveRoles = new HashSet<>();
+            approveRoles.add(approveRole);
+            user.setApproveRoles(approveRoles);
+        }
 	}
 
 	@Override
@@ -160,6 +113,7 @@ public class UserServiceImplement implements UserService {
 	public CurrentLoginUserDto getLoginUserBystaffId(String staffId) {
 		User user = userRepo.findByStaffId(staffId);
 		CurrentLoginUserDto userDto = modelMapper.map(user, CurrentLoginUserDto.class);
+		Long userId = userDto.getId();
 		if(userDto.getApproveRoles().stream().anyMatch(role -> role.getName().equals("DEPARTMENT_HEAD"))) {
 			userDto.setTeams(teamRepo.findAllByDepartmentId(user.getDepartment().getId()));
 		}
@@ -169,7 +123,33 @@ public class UserServiceImplement implements UserService {
 		if(userDto.getDepartment() != null) {
 			userDto.getDepartment().setTeams(teamRepo.findAllByDepartmentId(user.getDepartment().getId()));
 		}
+		List<UserApproveRoleTeam> userApproveRoleTeams = userApproveRoleTeamRepo.findByUserId(userId);
+		List<UserApproveRoleDepartment> userApproveRoleDepartments = userApproveRoleDepartmentRepo.findByUserId(userId);
+		List<UserApproveRoleDivision> userApproveRoleDivisions = userApproveRoleDivisionRepo.findByUserId(userId);
+
+		String managedTeamName = Helper.getNames(userApproveRoleTeams, UserApproveRoleTeam::getTeam, Team::getName);
+		String managedDepartmentName = Helper.getNames(userApproveRoleDepartments, UserApproveRoleDepartment::getDepartment, Department::getName);
+		String managedDivisionName = Helper.getNames(userApproveRoleDivisions, UserApproveRoleDivision::getDivision, Division::getName);
+
+		userDto.setManagedTeamName(managedTeamName);
+		userDto.setManagedDepartmentName(managedDepartmentName);
+		userDto.setManagedDivisionName(managedDivisionName);
+
+		userDto.setRegisteredForThisMonth(checkRegistrationForCurrentMonth(userId));
         return userDto;
+	}
+
+	public boolean checkRegistrationForCurrentMonth(Long userId) {
+		List<RegisterForm> registerForms = registerFormRepository.findByApplicantId(userId);
+
+		Date[] monthRange = Helper.getStartAndEndOfCurrentMonth();
+		Date startOfMonth = monthRange[0];
+		Date endOfMonth = monthRange[1];
+
+        return registerForms.stream()
+				.anyMatch(form -> form.getSignedDate() != null &&
+						form.getSignedDate().compareTo(startOfMonth) >= 0 &&
+						form.getSignedDate().compareTo(endOfMonth) <= 0);
 	}
 
 	@Override
@@ -205,18 +185,35 @@ public class UserServiceImplement implements UserService {
 		return userRepo.findLastStaffIdByGender(lowerCaseGender);
 	}
 
+	public List<User> removeDefaultAdmin(List<User> users) {
+		if(users == null)
+			return null;
+		User defaultAdmin = userRepo.findByStaffId("00-00001");
+        users.remove(defaultAdmin);
+        return users;
+	}
+
+	private void populateManagedEntities(UserDto userDto) {
+		List<UserApproveRoleTeam> userApproveRoleTeams = userApproveRoleTeamRepo.findByUserId(userDto.getId());
+		Helper.populateManagedEntity(userApproveRoleTeams, UserApproveRoleTeam::getTeam, userDto::setManagedTeams);
+
+		List<UserApproveRoleDepartment> userApproveRoleDepartments = userApproveRoleDepartmentRepo.findByUserId(userDto.getId());
+		Helper.populateManagedEntity(userApproveRoleDepartments, UserApproveRoleDepartment::getDepartment, userDto::setManagedDepartments);
+
+		List<UserApproveRoleDivision> userApproveRoleDivisions = userApproveRoleDivisionRepo.findByUserId(userDto.getId());
+		Helper.populateManagedEntity(userApproveRoleDivisions, UserApproveRoleDivision::getDivision, userDto::setManagedDivisions);
+	}
+
 	@Override
 	public List<UserDto> getAllUser() {
-		Sort sort = Sort.by(Sort.Direction.ASC, "staffId");
+		Sort sort = Sort.by(Sort.Direction.ASC, "createdAt");
 		List<User> users = EntityUtil.getAllEntities(userRepo, sort, "user");
-		if(users != null) {
-			users.remove(users.getFirst());
+        List<User> retUserList = removeDefaultAdmin(users);
+        List<UserDto> userDtos = DtoUtil.mapList(retUserList, UserDto.class, modelMapper);
+		for(UserDto userDto : userDtos) {
+			populateManagedEntities(userDto);
 		}
-		if(users == null)
-			return null;		
-		return users.stream()
-					.map(user -> modelMapper.map(user, UserDto.class))
-					.collect(Collectors.toList());
+		return userDtos;
 	}
 
 	@Override
@@ -228,34 +225,34 @@ public class UserServiceImplement implements UserService {
 	@Override
 	public List<UserDto> getAllTeamMember(Long id) {
 		List<User> users = userRepo.findByTeamId(id);
-		List<UserDto> userList = new ArrayList<>();
-		for (User user : users) {
-			UserDto userDto = modelMapper.map(user, UserDto.class);
-			userList.add(userDto);
+		List<User> retUserList = removeDefaultAdmin(users);
+        List<UserDto> userDtos = DtoUtil.mapList(retUserList, UserDto.class, modelMapper);
+		for(UserDto userDto : userDtos) {
+			populateManagedEntities(userDto);
 		}
-		return userList;
+		return userDtos;		
 	}
 
 	@Override
 	public List<UserDto> getAllDepartmentMember(Long id) {
 		List<User> users = userRepo.findByTeamDepartmentId(id);
-		List<UserDto> userList = new ArrayList<>();
-		for (User user : users) {
-			UserDto userDto = modelMapper.map(user, UserDto.class);
-			userList.add(userDto);
+		List<User> retUserList = removeDefaultAdmin(users);
+		List<UserDto> userDtos = DtoUtil.mapList(retUserList, UserDto.class, modelMapper);
+		for(UserDto userDto : userDtos) {
+			populateManagedEntities(userDto);
 		}
-		return userList;
+		return userDtos;
 	}
 
 	@Override
 	public List<UserDto> getAllDivisionMember(Long id) {
 		List<User> users = userRepo.findByTeamDepartmentDivisionId(id);
-		List<UserDto> userList = new ArrayList<>();
-		for (User user : users) {
-			UserDto userDto = modelMapper.map(user, UserDto.class);
-			userList.add(userDto);
+		List<User> retUserList = removeDefaultAdmin(users);
+		List<UserDto> userDtos = DtoUtil.mapList(retUserList, UserDto.class, modelMapper);
+		for(UserDto userDto : userDtos) {
+			populateManagedEntities(userDto);
 		}
-		return userList;
+		return userDtos;
 	}
 
 	@Override
@@ -270,29 +267,29 @@ public class UserServiceImplement implements UserService {
 	}
 
 	// codes for live chat between Service Desk and User
-	@Override
-	public void setUserOnline(User user) {
-		user.setActiveStatus(ActiveStatus.ONLINE);
-		userRepo.save(user);
-	}
-
-	@Override
-	public void disconnect(User user) {
-		var storedUser = EntityUtil.getEntityById(userRepo, user.getId());
-        storedUser.setActiveStatus(ActiveStatus.OFFLINE);
-        userRepo.save(user);
-    }
-
-	@Override
-	public List<UserDto> findConnectedUsers() {
-		List<User> users = userRepo.findAllByActiveStatus(ActiveStatus.ONLINE);
-		List<UserDto> userList = new ArrayList<>();
-		for (User user : users) {
-			UserDto userDto = modelMapper.map(user, UserDto.class);
-			userList.add(userDto);
-		}
-		return userList;
-	}
+//	@Override
+//	public void setUserOnline(User user) {
+//		user.setActiveStatus(ActiveStatus.ONLINE);
+//		userRepo.save(user);
+//	}
+//
+//	@Override
+//	public void disconnect(User user) {
+//		var storedUser = EntityUtil.getEntityById(userRepo, user.getId());
+//        storedUser.setActiveStatus(ActiveStatus.OFFLINE);
+//        userRepo.save(user);
+//    }
+//
+//	@Override
+//	public List<UserDto> findConnectedUsers() {
+//		List<User> users = userRepo.findAllByActiveStatus(ActiveStatus.ONLINE);
+//		List<UserDto> userList = new ArrayList<>();
+//		for (User user : users) {
+//			UserDto userDto = modelMapper.map(user, UserDto.class);
+//			userList.add(userDto);
+//		}
+//		return userList;
+//	}
 
 	@Override
 	public UserDto getUserById(Long id) {
@@ -336,7 +333,14 @@ public class UserServiceImplement implements UserService {
 		// Create list of user DTOs
         return users.stream()
 				.filter(user -> shouldAddUser(user, currentUser, currentUserRole))
-				.map(user -> modelMapper.map(user, UserDto.class))
+				.map(user -> {
+					UserDto userDto = modelMapper.map(user, UserDto.class);
+					ApproveRole userRole = user.getApproveRoles().stream().findFirst().orElse(null);
+					if (userRole != null) {
+						userDto.setApproveRoleName(userRole.getName());
+					}
+					return userDto;
+				})
 				.collect(Collectors.toList());
 	}
 
@@ -373,20 +377,58 @@ public class UserServiceImplement implements UserService {
 
 	//TEAM
 
+	// to delete
 	@Override
     public List<Object[]> getUserRequestByTeamId(Long teamId) {
         return userRepo.getUserRequestByTeamId(teamId);
     }
+	// to delete
 
+	@Override
+	public List<Object[]> getUserRequestByTeamIds(List<Long> teamIds) {
+		return null;
+	}
+
+	@Override
+	public List<Object[]> getUserRequestByManagedTeam(String managedTeamName) {
+		String[] teamNames = managedTeamName.split("\\|\\s*");
+		List<Long> teamIds = teamRepo.findIdsByNames(List.of(teamNames));
+
+		Date[] monthRange = Helper.getStartAndEndOfCurrentMonth();
+		Date startOfMonth = monthRange[0];
+		Date endOfMonth = monthRange[1];
+
+		return userRepo.getUserRequestByTeamIds(teamIds, startOfMonth, endOfMonth);
+	}
+
+	// to delete
 	@Override
     public List<Object[]> getTotalStaffRequestByTeamId(String teamId) {
         return userRepo.getTotalStaffRequestByTeamId(teamId);
     }
+	// to delete
+	@Override
+	public List<Object[]> getTotalStaffRequestByByManagedTeam(String managedTeamName) {
+		String[] teamNames = managedTeamName.split("\\|\\s*");
+		List<Long> teamIds = teamRepo.findIdsByNames(List.of(teamNames));
+    System.out.println(teamIds.toString());
+		return userRepo.getTotalStaffRequestByTeamIds(teamIds);
+	}
 
+	// to delete
 	@Override
     public Object[] getTeamRegistrationInfo(Long teamId) {
         return userRepo.getTeamRegistrationInfo(teamId);
     }
+	// to delete
+
+	@Override
+	public Object[] getTeamRegistrationInfoByManagedTeam(String managedTeamName) {
+		String[] teamNames = managedTeamName.split("\\|\\s*");
+		List<Long> teamIds = teamRepo.findIdsByNames(List.of(teamNames));
+    System.out.println(teamIds.toString());
+		return userRepo.getAggregatedTeamRegistrationInfo(teamIds);
+	}
 
 	//DEPARTMENT HEAD
 
@@ -440,9 +482,8 @@ public class UserServiceImplement implements UserService {
 		if(user == null) {
 			UserDto userDto = new UserDto();
 			userDto.setStaffId("00-00001");
-			userDto.setName("HR");
-			userDto.setEmail("hr@diracetechnology.com");
-			userDto.setPhoneNumber("000 000 000");
+			userDto.setName("Admin");
+			userDto.setEmail("defaultAdmin@diracetechnology.com");
 			userDto.setPassword(passwordEncoder.encode("123@dirace"));
 			userDto.setEnabled(true);
 			userDto.setGender("female");
@@ -455,7 +496,7 @@ public class UserServiceImplement implements UserService {
 			Set<ApproveRole> approveRoles = new HashSet<>();
 			approveRoles.add(approveRole);
 			HR.setApproveRoles(approveRoles);
-			User savedUser = EntityUtil.saveEntity(userRepo, HR, "user");
+			EntityUtil.saveEntity(userRepo, HR, "user");
 		}
     }
 
@@ -470,41 +511,174 @@ public class UserServiceImplement implements UserService {
 	@Override
 	public List<UserDto> getAllUserByGender(String gender) {
 		List<User> users = userRepo.findAllByGender(gender);
-		return DtoUtil.mapList(users, UserDto.class, modelMapper);
+		List<User> retUserList = removeDefaultAdmin(users);
+		List<UserDto> userDtos = DtoUtil.mapList(retUserList, UserDto.class, modelMapper);
+		for(UserDto userDto : userDtos) {
+			populateManagedEntities(userDto);
+		}
+		return userDtos;
 	}
 
 	@Override
 	public List<UserDto> getAllUserByTeamIdAndGender(Long teamId, String gender) {
 		List<User> users = userRepo.findAllByTeamIdAndGender(teamId, gender);
-		return DtoUtil.mapList(users, UserDto.class, modelMapper);
+		List<User> retUserList = removeDefaultAdmin(users);
+		List<UserDto> userDtos = DtoUtil.mapList(retUserList, UserDto.class, modelMapper);
+		for(UserDto userDto : userDtos) {
+			populateManagedEntities(userDto);
+		}
+		return userDtos;
 	}
 
 	@Override
 	public List<UserDto> getAllUserByDepartmentIdAndGender(Long departmentId, String gender) {
 		List<User> users = userRepo.findAllByDepartmentIdAndGender(departmentId, gender);
-		return DtoUtil.mapList(users, UserDto.class, modelMapper);
+		List<User> retUserList = removeDefaultAdmin(users);
+		List<UserDto> userDtos = DtoUtil.mapList(retUserList, UserDto.class, modelMapper);
+		for(UserDto userDto : userDtos) {
+			populateManagedEntities(userDto);
+		}
+		return userDtos;
 	}
 
 	@Override
 	public List<UserDto> getAllUserByDivisionIdAndGender(Long divisionId, String gender) {
 		List<User> users = userRepo.findAllByDivisionIdAndGender(divisionId, gender);
-		return DtoUtil.mapList(users, UserDto.class, modelMapper);
+		List<User> retUserList = removeDefaultAdmin(users);
+		List<UserDto> userDtos = DtoUtil.mapList(retUserList, UserDto.class, modelMapper);
+		for(UserDto userDto : userDtos) {
+			populateManagedEntities(userDto);
+		}
+		return userDtos;
 	}
 
 	@Override
 	@Transactional
-	public boolean updateApproveRole(long userId, List<Long> approveRoleIdList) {
+	public boolean updateApproveRole(long userId, List<Long> approveRoleIdList, List<Long> teamIds, List<Long> departmentIds, List<Long> divisionIds) {
 		try {
 			User user = EntityUtil.getEntityById(userRepo, userId);
+			Long userIdToSearch = user.getId();
 			String fromRole = rolesToString(user.getApproveRoles());
 			Set<ApproveRole> approveRoles = new HashSet<>(approveRoleRepo.findAllById(approveRoleIdList));
 			user.setApproveRoles(approveRoles);
+			ApproveRole firstApproveRole = null;
+			Long approveRoleId = null;
+			if (!approveRoles.isEmpty()) {
+			    firstApproveRole = approveRoles.iterator().next();
+			    approveRoleId = firstApproveRole.getId();
+			    if("APPLICANT".equals(firstApproveRole.getName())) {
+			    	deleteApproveRoleEntities("Team", userIdToSearch);
+			        deleteApproveRoleEntities("Department", userIdToSearch);
+					deleteApproveRoleEntities("Division", userIdToSearch);
+			    } else if("PROJECT_MANAGER".equals(firstApproveRole.getName())) {
+			    	deleteApproveRoleEntities("Team", userIdToSearch);
+					saveApproveRoleEntities("Team", teamIds, user, approveRoleId);
+					deleteApproveRoleEntities("Department", userIdToSearch);
+					deleteApproveRoleEntities("Division", userIdToSearch);
+			    } else if ("DEPARTMENT_HEAD".equals(firstApproveRole.getName())) {
+			        deleteApproveRoleEntities("Department", userIdToSearch);
+			    	saveApproveRoleEntities("Department", departmentIds, user, approveRoleId);
+			    	deleteApproveRoleEntities("Team", userIdToSearch);		       
+			        deleteApproveRoleEntities("Division", userIdToSearch);
+			    } else if ("DIVISION_HEAD".equals(firstApproveRole.getName())) {
+			    	deleteApproveRoleEntities("Division", userIdToSearch);
+			    	saveApproveRoleEntities("Division", divisionIds, user, approveRoleId);
+			    	deleteApproveRoleEntities("Team", userIdToSearch);
+			        deleteApproveRoleEntities("Department", userIdToSearch);
+			    }
+			}
 			EntityUtil.saveEntity(userRepo, user, "user");
 			String toRole = rolesToString(user.getApproveRoles());
 			logService.logUserRoleSwitch(user.getStaffId(), user.getName(), fromRole, toRole, "default-admin");
 			return true;
         } catch (Exception e) {
 			return false;
+		}
+	}
+	
+	/**
+	 * Deletes the approve role entities (UserApproveRoleTeam, UserApproveRoleDepartment, UserApproveRoleDivision)
+	 * associated with the given user ID based on the specified entity name.
+	 *
+	 * @param entityName the name of the entity type to delete ("Team", "Department", or "Division").
+	 * @param userIdToSearch the ID of the user whose approve role entities are to be deleted.
+	 * @throws IllegalArgumentException if the provided entity name does not match any of the expected values.
+	 */
+	private void deleteApproveRoleEntities(String entityName, Long userIdToSearch) {
+		switch(entityName) {
+			case "Team" : {
+				List<UserApproveRoleTeam> existingUserApproveRoleTeam = userApproveRoleTeamRepo.findByUserId(userIdToSearch);
+		    	
+		    	if (existingUserApproveRoleTeam != null && !existingUserApproveRoleTeam.isEmpty()) {
+		            userApproveRoleTeamRepo.deleteAll(existingUserApproveRoleTeam);
+		        }
+				break;
+			}
+			case "Department" : {
+				List<UserApproveRoleDepartment> existingUserApproveRoleDepartment = userApproveRoleDepartmentRepo.findByUserId(userIdToSearch);
+		        
+		        if (existingUserApproveRoleDepartment != null && !existingUserApproveRoleDepartment.isEmpty()) {
+		        	userApproveRoleDepartmentRepo.deleteAll(existingUserApproveRoleDepartment);
+		        }
+				break;
+			}
+			case "Division" : {
+				List<UserApproveRoleDivision> existingUserApproveRoleDivision = userApproveRoleDivisionRepo.findByUserId(userIdToSearch);
+		        
+		        if (existingUserApproveRoleDivision != null && !existingUserApproveRoleDivision.isEmpty()) {
+		        	userApproveRoleDivisionRepo.deleteAll(existingUserApproveRoleDivision);
+		        }
+				break;
+			}
+			default:
+	            throw new IllegalArgumentException("Invalid entity name: " + entityName);
+		}
+	}
+	
+	/**
+	 * Saves the approve role entities (UserApproveRoleTeam, UserApproveRoleDepartment, UserApproveRoleDivision)
+	 * for the specified user based on the given entity name and entity ID list.
+	 *
+	 * @param entityName the name of the entity type to save ("Team", "Department", or "Division").
+	 * @param entityIdList a list of entity IDs that correspond to the teams, departments, or divisions to be saved.
+	 * @param user the user for whom the approve role entities are to be saved.
+	 * @param approveRoleId the ID of the approve role associated with the entities.
+	 * @throws IllegalArgumentException if the provided entity name does not match any of the expected values.
+	 */
+	private void saveApproveRoleEntities(String entityName, List<Long> entityIdList, User user, Long approveRoleId) {
+		switch(entityName) {
+			case "Team" : {
+				for(Long teamId : entityIdList) {
+					UserApproveRoleTeam userApproveRoleTeam = new UserApproveRoleTeam();
+					userApproveRoleTeam.setTeam(EntityUtil.getEntityById(teamRepo, teamId));
+					userApproveRoleTeam.setUser(user);
+					userApproveRoleTeam.setApproveRole(EntityUtil.getEntityById(approveRoleRepo, approveRoleId));
+					EntityUtil.saveEntity(userApproveRoleTeamRepo, userApproveRoleTeam, "UserApproveRoleTeam");
+				}
+				break;
+			}
+			case "Department" : {
+				for(Long departmentId : entityIdList) {
+					UserApproveRoleDepartment userApproveRoleDepartment = new UserApproveRoleDepartment();
+					userApproveRoleDepartment.setDepartment(EntityUtil.getEntityById(departmentRepo, departmentId));
+					userApproveRoleDepartment.setUser(user);
+					userApproveRoleDepartment.setApproveRole(EntityUtil.getEntityById(approveRoleRepo, approveRoleId));
+					EntityUtil.saveEntity(userApproveRoleDepartmentRepo, userApproveRoleDepartment, "UserApproveRoleDepartment");
+				}
+				break;
+			}
+			case "Division" : {
+				for(Long divisionId : entityIdList) {
+					UserApproveRoleDivision userApproveRoleDivision = new UserApproveRoleDivision();
+					userApproveRoleDivision.setDivision(EntityUtil.getEntityById(divisionRepo, divisionId));
+					userApproveRoleDivision.setUser(user);
+					userApproveRoleDivision.setApproveRole(EntityUtil.getEntityById(approveRoleRepo, approveRoleId));
+					EntityUtil.saveEntity(userApproveRoleDivisionRepo, userApproveRoleDivision, "UserApproveRoleDivision");
+				}
+				break;
+			}
+			default:
+	            throw new IllegalArgumentException("Invalid entity name: " + entityName);
 		}
 	}
 
@@ -529,4 +703,36 @@ public class UserServiceImplement implements UserService {
 		User savedUser = EntityUtil.saveEntity(userRepo, user, "user");
 		return DtoUtil.map(savedUser, UserDto.class, modelMapper);
 	}
+
+	public boolean sendMailToAll(String subject, String body) {
+		Sort sort = Sort.by(Sort.Direction.ASC, "staffId");
+		List<User> users = EntityUtil.getAllEntities(userRepo, sort, "user");
+		if (users == null)
+			return false;
+		User defaultUser = userRepo.findByStaffId("00-00001");
+		users.remove(defaultUser);
+
+		Context context = new Context();
+		context.setVariable("body", body);
+
+		String processedBody = templateEngine.process("email-template", context);
+
+		for (User user : users) {
+			emailSenderService.sendEmail(user.getEmail(), subject, processedBody);
+		}
+		return true;
+	}
+
+	@Override
+	public List<UserDto> getApproversByApproveRoleId(Long approveRoleId) {
+		List<User> users = userRepo.findUsersByRoleId(approveRoleId);
+		return DtoUtil.mapList(users, UserDto.class, modelMapper);
+	}
+
+	@Override
+	public boolean deleteUserById(Long userId) {
+		return false;
+	}
+
+
 }

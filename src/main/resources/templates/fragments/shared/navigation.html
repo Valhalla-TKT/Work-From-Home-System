@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+
+<html xmlns:th="http://www.thymeleaf.org"
+	  xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+
+<head>
+<title>WorkHub</title>
+</head>
+
+<body>
+
+	<!-- ============================================================== -->
+	<!-- Topbar header -->
+	<!-- ============================================================== -->
+	<div th:fragment="navigation" class="nav-v2" data-site-nav-v2>
+		<div class="nav-v2__dark-overlay"></div>
+
+		<div class="nav-v2__wrapper">
+			<!-- ============================================================== -->
+			<!-- Topbar header (Mobile) -->
+			<!-- ============================================================== -->			
+			<button class="nav-v2-burger" data-nav-v2-burger
+				aria-label="Toggle mobile menu">
+				<span></span>
+				<span></span>
+				<span></span>
+			</button>
+
+			<nav class="nav-v2-main" role="navigation" data-nav-v2-mobile>
+				<div class="nav-v2-main__wrapper">
+					<ul ul class="nav-v2-main__list">
+						<li class="nav-v2-main__item">
+							<a data-nav-event-clicked="Dashboard" th:href="@{/home}">Home</a>
+						</li>
+						
+						<li class="nav-v2-main__item nav-v2-main__item--sub-nav"><a href="#">Forms</a>
+
+							<ul class="nav-v2-sub">
+								<li class="nav-v2-sub__item" sec:authorize="!hasAnyAuthority('APPLICANT', 'HR')">
+									<a class="nav-v2-sub__link" data-nav-event-clicked="Designer Search" th:href="@{/admin/viewFormList}"> View request list
+										<span class="nav-v2-sub__subtitle">Quickly view work from home form</span>
+									</a>
+								</li>
+								<li class="nav-v2-sub__item" sec:authorize="hasAuthority('HR')">
+									<a class="nav-v2-sub__link" data-nav-event-clicked="Designer Search" th:href="@{/admin/ledger}"> Ledger
+										<span class="nav-v2-sub__subtitle">Fully view the WFH ledger</span>
+									</a>
+								</li>
+								<li class="nav-v2-sub__item ">
+									<a class="nav-v2-sub__link" data-nav-event-clicked="Post a Job" th:href="@{/applyForm}"> Apply form now
+										<span class="nav-v2-sub__subtitle">Swiftly apply for remote work</span>
+									</a>
+								</li>
+								<li class="nav-v2-sub__item">
+									<a class="nav-v2-sub__link" data-nav-event-clicked="Post a Job" th:href="@{/historyForm}"> View request history
+										<span class="nav-v2-sub__subtitle">Effortlessly check work history</span>
+									</a>
+								</li>
+							</ul>
+						</li>
+
+						<li class="nav-v2-main__item nav-v2-main__item--sub-nav" sec:authorize="!hasAuthority('APPLICANT')"><a data-nav-event-clicked="Hire Designers" href="#" >Manage</a>
+
+							<ul class="nav-v2-sub">
+							    <li class="nav-v2-sub__item">
+							        <a class="nav-v2-sub__link" data-nav-event-clicked="Add Division" th:href="@{/admin/division}"> Division
+							            <span class="nav-v2-sub__subtitle">Manage divisions</span>
+							        </a>
+							    </li>
+							    <li class="nav-v2-sub__item">
+							        <a class="nav-v2-sub__link" data-nav-event-clicked="Add Department" th:href="@{/admin/department}">Department
+							            <span class="nav-v2-sub__subtitle">Supervise departments</span>
+							        </a>
+							    </li>
+							    <li class="nav-v2-sub__item">
+							        <a class="nav-v2-sub__link" data-nav-event-clicked="Add Team" th:href="@{/admin/team}">Team
+							            <span class="nav-v2-sub__subtitle">Oversee teams</span>
+							        </a>
+							    </li>
+							    <li class="nav-v2-sub__item">
+							        <a class="nav-v2-sub__link" data-nav-event-clicked="Add User" th:href="@{/admin/user}">User
+							            <span class="nav-v2-sub__subtitle">Control users</span>
+							        </a>
+							    </li>				
+								<li class="nav-v2-sub__item" sec:authorize="hasAuthority('HR')">
+							        <a class="nav-v2-sub__link" data-nav-event-clicked="Add User" th:href="@{/admin/importExcel}">Import
+							            <span class="nav-v2-sub__subtitle">Import Excel Here</span>
+							        </a>
+							    </li>
+<!--							    <li class="nav-v2-sub__item" sec:authorize="hasAuthority('HR')">-->
+<!--							        <a class="nav-v2-sub__link" data-nav-event-clicked="Add User" th:href="@{/admin/approveRoleSwitch}">Switch-->
+<!--							            <span class="nav-v2-sub__subtitle">Switch Approve Role Here</span>-->
+<!--							        </a>-->
+<!--							    </li>		-->
+							    
+							</ul>
+						</li>
+						
+						<li class="nav-v2-main__item nav-v2-main__item--sub-nav"><a data-nav-event-clicked="Hire Designers" href="#">Help</a>
+
+							<ul class="nav-v2-sub">
+							    <li class="nav-v2-sub__item">
+							        <a class="nav-v2-sub__link" data-nav-event-clicked="Add Division" th:href="@{/help}"> FAQs
+							            <span class="nav-v2-sub__subtitle">View frequently asked question here</span>
+							        </a>
+							    </li>
+							    <li class="nav-v2-sub__item">
+							        <a class="nav-v2-sub__link" data-nav-event-clicked="Add Division" th:href="@{/contactSupport}"> Contact Support
+							            <span class="nav-v2-sub__subtitle">Direct message with Service Desk</span>
+							        </a>
+							    </li>
+							</ul>
+							
+						</li>
+
+						<li class="nav-v2-main__item" sec:authorize="hasRole('SERVICE_DESK')">
+							<a data-nav-event-clicked="Mail" th:href="@{/serviceDesk/mail}">Mail</a>
+						</li>
+
+						<li class="nav-v2-main__item nav-v2-main__item--divided nav-v2-hide-medium-up">
+							<a data-nav-event-clicked="Sign in" th:href="@{/signOut}">Log out</a>
+						</li>
+					</ul>
+				</div>
+			</nav>
+
+			<a th:href="@{/home}" data-nav-event-clicked="Logo" aria-label="Back to home page">
+				<img th:src="@{/assets/wfhs_logo.png}" style="width: 250px; height: 140px; margin-top: 20px; margin-left: -80px;" alt="wfhs-logo">
+			</a>
+
+
+
+			<div class="nav-v2-dynamic" data-nav-v2-dynamic>
+
+				<div class="nav-v2-dynamic__logged-out">
+					<!-- ============================================================== -->
+					<!-- Full Screen -->
+					<!-- ============================================================== -->
+					<a class="nav-v2-dynamic__login fullscreen-mode-icon" href="#"> 
+						<i style="font-size: 24px;" class="fa-solid fa-expand fullscreen-toggle"></i>
+					</a>
+					<!-- ============================================================== -->
+					<!-- User profile -->
+					<!-- ============================================================== -->
+					<div class="nav-v2-avatar">
+						<a data-nav-v2-avatar="true" title="Open profile" href="#">
+							<img class="nav-v2-avatar__image" width="50px" height="50px" id="nav-profile-img">
+						</a>
+						<div class="nav-v2-profile" data-nav-v2-profile="" data-nav-event-category="Profile">
+ 							<div class="nav-v2-profile__wrapper" data-nav-v2-profile-wrapper="">
+ 								<div style="display: flex; align-items: center; flex-direction: row;">
+									<a class="nav-v2-user" title="Open profile" data-nav-event-clicked="Profile" th:href="@{/profile}">
+										<div style="display: flex; flex-direction: row; align-items: center; column-gap: 10px;">
+											<img class="nav-v2-user__image" id="nav-modal-profile-img">
+											<div style="display: flex; flex-direction: column; row-gap: 5px;">
+												<div class="nav-v2-user__name">
+												</div>
+												<div class="nav-v2-position"></div>
+											</div>
+										</div>
+									</a>
+								</div>
+								<div class="nav-v2-sessions"></div>
+
+								<ul class="nav-v2-profile__menu">									
+
+<!--									<li class="nav-v2-profile__item">-->
+<!--										<a data-nav-event-clicked="Work preferences" id="google_translate_element" href="#"></a>-->
+<!--									</li>-->
+<!--									<script type="text/javascript">-->
+<!--										function googleTranslateElementInit() {-->
+<!--										  new google.translate.TranslateElement({pageLanguage: 'en'}, 'google_translate_element');-->
+<!--										}-->
+<!--									</script>-->
+
+<!--									<script type="text/javascript" src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>-->
+									<li class="nav-v2-profile__item">
+										<a th:href="@{/profile}">Profile</a>
+									</li>
+									<li class="nav-v2-profile__item nav-v2-profile__item--divided">
+										<form id="signOutForm" method="POST" th:action="@{/signOut}">
+											<button type="submit">Log out</button>
+										</form>
+									</li>
+								</ul>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+
+		</div>
+	</div>
+</body>
+
+</html>

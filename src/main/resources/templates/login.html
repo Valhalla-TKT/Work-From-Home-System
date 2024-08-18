@@ -6,10 +6,32 @@
 	<title>WFHS Login Page</title>
 	<link rel="icon" th:href="@{/assets/icons/wfhs-small-logo.ico}" type="image/x-icon">
 	<link rel="stylesheet" media="screen" th:href="@{/assets/auth/auth.css}" />
+	<script th:src="@{/assets/vendors/fontAwsome/fontawsome.js}"></script>
 	<script th:src="@{/assets/auth/platform.min.js}"></script>
 	<script>
 		function getDeviceDetails() {
 			document.getElementById('deviceInfo').value = platform.description;
+		}
+		function checkCapsLock(event) {
+			const capsLockMessage = document.getElementById('capsLockMessage');
+			if (event.getModifierState && event.getModifierState('CapsLock')) {
+				capsLockMessage.style.display = 'block';
+			} else {
+				capsLockMessage.style.display = 'none';
+			}
+		}
+		function togglePasswordVisibility() {
+			const passwordField = document.getElementById('password');
+			const eyeIcon = document.getElementById('togglePassword');
+			if (passwordField.type === 'password') {
+				passwordField.type = 'text';
+				eyeIcon.classList.remove('fa-eye');
+				eyeIcon.classList.add('fa-eye-slash');
+			} else {
+				passwordField.type = 'password';
+				eyeIcon.classList.remove('fa-eye-slash');
+				eyeIcon.classList.add('fa-eye');
+			}
 		}
 	</script>
 </head>
@@ -21,9 +43,13 @@
 			<p style="color: #000; font-size: 1.75rem; white-space: nowrap;">Work From Home System</p>
 		</div>
 		<form th:action="@{/signIn}" accept-charset="UTF-8" method="post">
-			<input type="text" name="username" placeholder="Staff ID" required>
-			<input type="password" name="password" placeholder="Password" required>
+			<input type="text" name="username" placeholder="Staff ID" required onkeyup="checkCapsLock(event)">
+			<div class="password-container">
+				<input type="password" id="password" name="password" placeholder="Password" required onkeyup="checkCapsLock(event)">
+				<span id="togglePassword" onclick="togglePasswordVisibility()" class="fas fa-eye"></span>
+			</div>
 			<input type="hidden" id="deviceInfo" name="deviceInfo" value="">
+			<p id="capsLockMessage" style="display: none; color: red; font-size: 0.875rem;">Caps Lock is on!</p>
 			<div th:if="${session.errorMessage != null}">
 				<p style="color: red; font-size: 0.875rem; margin-bottom: 10px;" th:text="${session.errorMessage}"></p>
 			</div>

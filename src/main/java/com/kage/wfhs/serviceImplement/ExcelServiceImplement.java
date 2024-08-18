@@ -2,8 +2,8 @@ package com.kage.wfhs.serviceImplement;
 
 import java.io.InputStream;
 import java.sql.*;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
+import java.sql.Date;
+import java.time.LocalDate;
 import java.util.*;
 
 import com.kage.wfhs.util.EmailSenderService;
@@ -11,6 +11,8 @@ import com.kage.wfhs.util.Message;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.apache.poi.ss.usermodel.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -24,7 +26,8 @@ import com.kage.wfhs.model.*;
 @RequiredArgsConstructor
 public class ExcelServiceImplement implements ExcelService {
 
-	@Value("${spring.datasource.url}")
+    private static final Logger log = LoggerFactory.getLogger(ExcelServiceImplement.class);
+    @Value("${spring.datasource.url}")
     private String dbUrl;
 
     @Value("${spring.datasource.username}")
@@ -37,20 +40,32 @@ public class ExcelServiceImplement implements ExcelService {
     private final DepartmentRepository departmentRepository;
     private final TeamRepository teamRepository;
     private final ApproveRoleRepository approveRoleRepository;
+    private final WorkFlowStatusRepository workFlowStatusRepository;
+    private final RegisterFormRepository registerFormRepository;
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final EmailSenderService emailService;
     private final Message message;
     
     @Override
-    public boolean readExcelAndInsertIntoDatabase(InputStream inputStream, String sheetName, Workbook workbook) throws SQLException, ParseException {
+    public boolean readExcelAndInsertIntoDatabase(InputStream inputStream, String sheetName, Workbook workbook) throws SQLException {
         Sheet sheet = workbook.getSheet(sheetName);
         if (sheet != null) {
             createTableFromSheet(sheet);
             insertDataIntoTable(sheet);
         }
         
-        return insertDataIntoUser(sheetName, workbook);
+        return insertDataIntoUser(sheetName);
+    }
+
+    private void dropCloneTable() throws SQLException {
+        String tableName = "clone";
+        try (Connection connection = DriverManager.getConnection(dbUrl, dbUsername, dbPassword);
+             Statement statement = connection.createStatement()) {
+            String dropTableQuery = "DROP TABLE IF EXISTS " + tableName;
+            statement.executeUpdate(dropTableQuery);
+            System.out.println("Table 'clone' dropped successfully.");
+        }
     }
 
     private void createTableFromSheet(Sheet sheet) throws SQLException {
@@ -131,7 +146,7 @@ public class ExcelServiceImplement implements ExcelService {
                                 break;
                             case NUMERIC:
                                 if (DateUtil.isCellDateFormatted(cell)) {
-                                    preparedStatement.setDate(i + 1, new java.sql.Date(cell.getDateCellValue().getTime()));
+                                    preparedStatement.setDate(i + 1, new Date(cell.getDateCellValue().getTime()));
                                 } else {
                                     preparedStatement.setDouble(i + 1, cell.getNumericCellValue());
                                 }
@@ -232,7 +247,7 @@ public class ExcelServiceImplement implements ExcelService {
         return columnIndices;
     }
 
-    private boolean insertDataIntoUser(String sheetName, Workbook workbook) throws SQLException, ParseException {
+    private boolean insertDataIntoUser(String sheetName) {
     	try {
     		Map<String, Integer> columnIndices = getColumnIndices(sheetName);
             List<List<String>> rows = getTableRows(sheetName);        
@@ -246,8 +261,34 @@ public class ExcelServiceImplement implements ExcelService {
 
             for (List<String> row : rows) {
                 if (!row.isEmpty()) {
+                    String staffId = null;
+                    User user;
 
-                    User user = new User();
+                    for (Integer staffIDIndex : staffIDIndices) {
+                        staffId = row.get(staffIDIndex);
+                    }
+
+                    user = userRepository.findByStaffId(staffId);
+
+                    if(user == null) {
+                        user = new User();
+                        user.setFirstTimeLogin(true);
+                        ApproveRole approveRole = approveRoleRepository.findByName("APPLICANT");
+                        Set<ApproveRole> approveRoles = new HashSet<ApproveRole>();
+                        approveRoles.add(approveRole);
+                        if (approveRole != null) {
+                            user.setApproveRoles(approveRoles);
+                        }
+                    }
+
+                    if(staffId != null) {
+                        user.setStaffId(staffId);
+                        if (staffId.startsWith("25")) {
+                            user.setGender("male");
+                        } else if (staffId.startsWith("26")) {
+                            user.setGender("female");
+                        } else { user.setGender("male"); };
+                    }
 
                     for (Integer divisionIndex : divisionIndices) {
                         String divisionName = row.get(divisionIndex);
@@ -297,17 +338,6 @@ public class ExcelServiceImplement implements ExcelService {
                         user.setTeam(team);
                     }
 
-                    for (Integer staffIDIndex : staffIDIndices) {
-                        String staffId = row.get(staffIDIndex);
-                        user.setStaffId(staffId);
-
-                        if (staffId.startsWith("25")) {
-                            user.setGender("male");
-                        } else if (staffId.startsWith("26")) {
-                            user.setGender("female");
-                        } else { user.setGender("male"); };
-                    }
-
                     for (Integer nameIndex : nameIndices) {
                         user.setName(row.get(nameIndex));
                     }
@@ -324,18 +354,16 @@ public class ExcelServiceImplement implements ExcelService {
     				}
     				user.setProfile(profile);
 
-                    user.setPassword(passwordEncoder.encode("123@dirace"));
-                    user.setActiveStatus(ActiveStatus.OFFLINE);
+                    if(user.isFirstTimeLogin()) {
+                        user.setPassword(passwordEncoder.encode("123@dirace"));
+                    }
+//                    user.setActiveStatus(ActiveStatus.OFFLINE);
                     user.setEnabled(true);
-                    ApproveRole approveRole = approveRoleRepository.findByName("APPLICANT");
-    				Set<ApproveRole> approveRoles = new HashSet<ApproveRole>();
-    				approveRoles.add(approveRole);
-    				if (approveRole != null) {
-    					user.setApproveRoles(approveRoles);
-    		        }
+
     				EntityUtil.saveEntity(userRepository, user, "user");                                        
                 }
             }
+            dropCloneTable();
             return true;
     	} catch (Exception e) {
             return false;
@@ -343,38 +371,55 @@ public class ExcelServiceImplement implements ExcelService {
     }
 
     public void readAndSendEmail(InputStream inputStream, String sheetName, Workbook workbook) {
-		Sheet sheet = workbook.getSheet(sheetName);
-		Set<String> uniqueEmailAndOTPInfo = new HashSet<>();
+        Sheet sheet = workbook.getSheet(sheetName);
+        Set<String> uniqueEmailAndOTPInfo = new HashSet<>();
 
-		for (int i = 1; i <= sheet.getLastRowNum(); i++) {
-			Row row = sheet.getRow(i);
-			if (row != null) {
-				Cell emailCell = row.getCell(3);
-				Cell otpCell = row.getCell(4);
+        for (int i = 1; i <= sheet.getLastRowNum(); i++) {
+            Row row = sheet.getRow(i);
+            if (row != null) {
+                Cell emailCell = row.getCell(3);
+                Cell otpCell = row.getCell(4);
 
-				if (emailCell != null && otpCell != null) {
-					String email = emailCell.toString().trim();
-					String otp = otpCell.toString().trim();
+                if (emailCell != null && otpCell != null) {
+                    String email = emailCell.toString().trim();
+                    Long userId = userRepository.findByEmail(email).getId();
+                    int currentMonth = LocalDate.now().getMonthValue();
+                    Optional<RegisterForm> registerFormOptional = registerFormRepository.findByUserIdAndSignedMonthNative(userId, currentMonth);
+                    if (registerFormOptional.isPresent()) {
+                        RegisterForm registerForm = registerFormOptional.get();
+                        List<WorkFlowStatus> workFlowStatusList = workFlowStatusRepository.findByRegisterFormId(registerForm.getId());
+                        List<WorkFlowStatus> workFlowStatusListToSave = new ArrayList<>();
+                        for(WorkFlowStatus workFlowStatus : workFlowStatusList) {
+                        	workFlowStatus.setStatus(Status.APPROVE);
+                        	workFlowStatusListToSave.add(workFlowStatus);
+                        }
+                        workFlowStatusRepository.saveAll(workFlowStatusListToSave);
+                    }
+                    
+                    String otp = otpCell.toString().trim();
 
-					String emailOTPInfo = email + "_" + otp;
+                    String emailOTPInfo = email + "_" + otp;
 
-					uniqueEmailAndOTPInfo.add(emailOTPInfo);
-				}
-			}
-		}
-		for (String teamInfo : uniqueEmailAndOTPInfo) {
-			String[] parts = teamInfo.split("_");
-			if (parts.length == 2) {
-				String email = parts[0];
-				String otp = parts[1];
-				String emailBodyForOTPByServiceDeskPart1 = message.getEmailBodyForOTPByServiceDeskPart1();
-				String emailBodyForOTPByServiceDeskPart2 = message.getEmailBodyForOTPByServiceDeskPart2();
-				String emailSubjectForOtpByServiceDesk = message.getEmailSubjectForOtpByServiceDesk();
+                    uniqueEmailAndOTPInfo.add(emailOTPInfo);
+                }
+            }
+        }
+        for (String teamInfo : uniqueEmailAndOTPInfo) {
+            String[] parts = teamInfo.split("_");
+            if (parts.length == 2) {
+                String email = parts[0];
+                String otp = parts[1];
+                String emailBodyForOTPByServiceDeskPart1 = message.getEmailBodyForOTPByServiceDeskPart1();
+                String emailBodyForOTPByServiceDeskPart2 = message.getEmailBodyForOTPByServiceDeskPart2();
+                String emailSubjectForOtpByServiceDesk = message.getFormattedEmailSubjectForOtpByServiceDesk();
 
-				emailService.sendMail(email, emailSubjectForOtpByServiceDesk, emailBodyForOTPByServiceDeskPart1 + otp + "\n" + emailBodyForOTPByServiceDeskPart2);
-			}
-		}
+                String finalEmailBody = emailBodyForOTPByServiceDeskPart1 + otp + "<br/>" + emailBodyForOTPByServiceDeskPart2;
+                emailService.sendMail(email, emailSubjectForOtpByServiceDesk, finalEmailBody);
+            }
+        }
 
-	}
+    }
+
+
 
 }

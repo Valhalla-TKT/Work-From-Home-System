@@ -12,7 +12,6 @@ import com.kage.wfhs.model.RegisterForm;
 import java.util.List;
 import java.util.Optional;
 
-import com.kage.wfhs.model.Status;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -150,4 +149,7 @@ public interface RegisterFormRepository extends JpaRepository<RegisterForm,Long>
     RegisterForm findByWorkFlowStatusId(Long statusId);
 
     List<RegisterForm> findByApplicantId(long userId);
+
+    @Query(value = "SELECT * FROM register_form rf WHERE rf.applicant_id = :userId AND MONTH(rf.signed_date) = :signedMonth", nativeQuery = true)
+    Optional<RegisterForm> findByUserIdAndSignedMonthNative(@Param("userId") Long userId, @Param("signedMonth") int signedMonth);
 }

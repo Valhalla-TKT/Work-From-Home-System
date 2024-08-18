@@ -26,7 +26,6 @@ public class TokenService {
         return formToken;
     }
 
-
     public void storeTokenMapping(String formToken, long formId) {
         tokenStore.put(formToken, formId);
     }

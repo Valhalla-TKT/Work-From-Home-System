@@ -14,11 +14,9 @@ import com.kage.wfhs.dto.WorkFlowStatusDto;
 import com.kage.wfhs.dto.form.FormHistoryDto;
 import com.kage.wfhs.dto.form.FormListDto;
 import com.kage.wfhs.exception.EntityNotFoundException;
-import com.kage.wfhs.model.ApproveRole;
 import com.kage.wfhs.model.WorkFlowStatus;
 import com.kage.wfhs.repository.WorkFlowStatusRepository;
 import com.kage.wfhs.service.*;
-import com.kage.wfhs.util.Helper;
 
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.AllArgsConstructor;
@@ -34,10 +32,13 @@ import java.util.Map;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.ss.usermodel.WorkbookFactory;
 import org.modelmapper.ModelMapper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -58,64 +59,13 @@ public class RegisterFormController {
     private final UserService userService;
     
     @Autowired
-    private final WorkFlowOrderService workFlowOrderService;
-    
-    @Autowired
-    private final ApproveRoleService approveRoleService;
-    
-    @Autowired
-    private final Helper helper;
-    
-    @Autowired
     private final ModelMapper modelMapper;
     
     private final WorkFlowStatusRepository workFlowStatusRepo;
     
     private final ExcelService excelService;
 
-//    @PostMapping("/create")
-//    public ResponseEntity<String> createForm(
-//    		@RequestParam(value = "applicantId") Long applicantId,
-//            @RequestParam(value = "requesterId") Long requesterId,
-//            @RequestParam(value = "positionName") String positionName,
-//            @RequestParam(value = "working_place") String workingPlace,
-//            @RequestParam(value = "request_reason") String requestReason,
-//            @RequestParam(value = "request_percent") double requestPercent,
-//            @RequestParam(value = "from_date") @DateTimeFormat(pattern = "yyyy-MM-dd") Date fromDate,
-//            @RequestParam(value = "to_date") @DateTimeFormat(pattern = "yyyy-MM-dd") Date toDate,
-//            @RequestParam(value = "os_type") String osType,
-//            @RequestParam(value = "applied_date") Date appliedDate,
-//            @RequestParam(value = "operationSystem", required = false) MultipartFile operationSystem,
-//            @RequestParam(value = "securityPatch", required = false) MultipartFile securityPatch,
-//            @RequestParam(value = "antivirusSoftware", required = false) MultipartFile antivirusSoftware,
-//            @RequestParam(value = "antivirusPattern", required = false) MultipartFile antivirusPattern,
-//            @RequestParam(value = "antivirusFullScan", required = false) MultipartFile antivirusFullScan,
-//            @RequestParam(value = "signature", required = false) MultipartFile signature,
-//            @RequestParam(value = "approverId") Long approverId
-//    	) throws Exception {
-//        RegisterFormDto registerFormDto = new RegisterFormDto();
-//        registerFormDto.setApplicantId(applicantId);
-//        registerFormDto.setRequesterId(requesterId);
-//        registerFormDto.setPositionName(positionName);
-//        registerFormDto.setWorking_place(workingPlace);
-//        registerFormDto.setRequest_reason(requestReason);
-//        registerFormDto.setRequest_percent(requestPercent);
-//        registerFormDto.setFrom_date(fromDate);
-//        registerFormDto.setTo_date(toDate);
-//        registerFormDto.setOs_type(osType);
-//        registerFormDto.setSignedDate(appliedDate);
-//        registerFormDto.setOperationSystemInput(operationSystem);
-//        registerFormDto.setSecurityPatchInput(securityPatch);
-//
-//        registerFormDto.setAntivirusSoftwareInput(antivirusSoftware);
-//        registerFormDto.setAntivirusPatternInput(antivirusPattern);
-//        registerFormDto.setAntivirusFullScanInput(antivirusFullScan);
-//        registerFormDto.setSignatureInput(signature);
-//        registerFormDto.setApproverId(approverId);
-//        registerFormService.createRegisterForm(registerFormDto);
-//        workFlowStatusService.createWorkFlowStatus(registerFormDto.getApplicantId(), registerFormService.getFormLastId(), approverId);
-//        return ResponseEntity.ok("Request Form Successful....");
-//    }
+    private static final Logger logger = LoggerFactory.getLogger(RegisterFormController.class);
 
     @PostMapping("/create")
     public ResponseEntity<String> createForm(
@@ -141,7 +91,7 @@ public class RegisterFormController {
     }
 
     @PostMapping("/getFormById")
-    public ResponseEntity<Map<String, Object>> getForm(@RequestParam(value = "formId") long formId, @RequestParam(value = "userId") long userId) {
+    public ResponseEntity<Map<String, Object>> getForm(@RequestParam(value = "formId") long formId, @RequestParam(value = "userId") long userId, Model model) {
         RegisterFormDto registerForm = registerFormService.getRegisterForm(formId);
         CaptureDto captureDto = captureService.getCaptureByRegisterForm(formId);
         WorkFlowStatusDto workFlowStatusDto = workFlowStatusService.getByUserIdAndFormId(userId, formId);
@@ -155,6 +105,7 @@ public class RegisterFormController {
         responseData.put("capture", captureDto);
         responseData.put("applicant", applicant);
         responseData.put("requester", requester);
+        
         return new ResponseEntity<>(responseData,HttpStatus.OK);
     }
     
@@ -222,12 +173,11 @@ public class RegisterFormController {
     public ResponseEntity<Map<String, Object>> getAllForms(
             @RequestParam(value = "status") String status,
             @RequestParam(value = "userId") long userId){
-        System.out.println("status = " + status + "userId = " + userId);
         Map<String, Object> responseData = registerFormService.getFormWithStatus(status, 1L, userId, "user");
         return getMapResponseEntity(responseData);
     }
-    
-    
+
+
     @PostMapping("/update")
     public ResponseEntity<String> updateStatus(
     		@RequestParam(value = "workFlowStatusId") long workFlowStatusId,
@@ -235,16 +185,16 @@ public class RegisterFormController {
     		@RequestParam(value = "registerFormId") long registerFormId,
     		@RequestParam(value = "state") boolean state,
     		@RequestParam(value = "reason") String reason,
-    		@RequestParam(value = "approveDate") @DateTimeFormat(pattern = "yyyy-MM-dd") Date approveDate,
+    		@RequestParam(value = "approveDate", required = false) @DateTimeFormat(pattern = "yyyy-MM-dd") Date approveDate,
             @RequestParam(value = "newApproverId") long newApproverId
             ) throws Exception{
     	WorkFlowStatusDto workFlowStatusDto = new WorkFlowStatusDto();
     	workFlowStatusDto.setId(workFlowStatusId);
-    	workFlowStatusDto.setApproverId(approverId);    	
+    	workFlowStatusDto.setApproverId(approverId);
     	workFlowStatusDto.setRegisterFormId(registerFormId);
     	workFlowStatusDto.setState(state);
     	workFlowStatusDto.setReason(reason);
-    	workFlowStatusDto.setApproveDate(approveDate);
+        workFlowStatusDto.setApproveDate(approveDate != null ? approveDate : new Date());
         workFlowStatusDto.setNewApproverId(newApproverId);
         workFlowStatusService.updateStatus(workFlowStatusDto.getId(),workFlowStatusDto);
         return ResponseEntity.ok("Work Flow Status is Update Success....");
@@ -268,25 +218,23 @@ public class RegisterFormController {
             excelService.readAndSendEmail(inputStream, sheetName, workbook);
             return ResponseEntity.ok("pass");
         } catch (IOException e) {
-            e.printStackTrace();
-            return ResponseEntity.ok("Fail");
+            logger.error("Error occurred while uploading Excel file", e);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Fail");
         }
     	    			
 	}
     
     @PostMapping("/bulkApprove")
-    public ResponseEntity<String> bulkApprove(@RequestParam("formIds[]") List<Long> formIds, @RequestParam("userId") Long userId) throws Exception {
-        for (long id : formIds) {
-            System.out.println(id);
-        }
+    public ResponseEntity<String> bulkApprove(@RequestParam("formIds") List<Long> formIds, @RequestParam("userId") Long userId, @RequestParam(value = "approverId", required = false) Long approverId, @RequestParam("reason") String reason) throws Exception {
     	for (long id : formIds) {
-            WorkFlowStatus workFlowStatus = workFlowStatusRepo.findByUserIdAndRegisterFormId(userId, id) ;
+            WorkFlowStatus workFlowStatus = workFlowStatusRepo.findByUserIdAndRegisterFormId(userId, id);
             WorkFlowStatusDto workFlowStatusDto = new WorkFlowStatusDto();
             workFlowStatusDto.setState(true);
             workFlowStatusDto.setRegisterFormId((id));
             workFlowStatusDto.setApproverId(userId);
             workFlowStatusDto.setApproveDate(new Date());
-            workFlowStatusDto.setReason("Approve with Bulk Approve Process.");
+            workFlowStatusDto.setReason(reason);
+            workFlowStatusDto.setNewApproverId(approverId);
             workFlowStatusService.updateStatus(workFlowStatus.getId(),workFlowStatusDto);
         }
         return ResponseEntity.ok("Bulk Approve Success");
@@ -323,5 +271,48 @@ public class RegisterFormController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("An unexpected error occurred");
         }
     }
+
+    @PostMapping("/updateForm")
+    public ResponseEntity<String> updateForm(
+            @RequestPart("data") RegisterFormDto registerFormDto,
+            @RequestPart(value = "operatingSystem", required = false) MultipartFile operationSystem,
+            @RequestPart(value = "securityPath", required = false) MultipartFile securityPath,
+            @RequestPart(value = "antivirusSoftware", required = false) MultipartFile antivirusSoftware,
+            @RequestPart(value = "antivirusPattern", required = false) MultipartFile antivirusPattern,
+            @RequestPart(value = "antivirusFullScan", required = false) MultipartFile antivirusFullScan,
+            @RequestParam(value = "hasApprover") boolean hasApprover
+            ) throws Exception {
+        registerFormDto.setOperationSystemInput(operationSystem);
+        registerFormDto.setSecurityPatchInput(securityPath);
+        registerFormDto.setAntivirusSoftwareInput(antivirusSoftware);
+        registerFormDto.setAntivirusPatternInput(antivirusPattern);
+        registerFormDto.setAntivirusFullScanInput(antivirusFullScan);
+        registerFormService.updateForm(registerFormDto, hasApprover);
+        return null;
+    }
+    
+    @PostMapping("/getFormsByUserId")
+    public ResponseEntity<Map<String, Object>> getFormsByUserId(
+            @RequestParam(value = "status") String status,
+            @RequestParam(value = "userId") long userId){
+        Map<String, Object> responseData = new HashMap<>();
+        List<UserDto> applicantList = new ArrayList<>();
+        List<UserDto> requesterList = new ArrayList<>();
+        List<FormListDto> formList = registerFormService.getFormsByUserIdAndStatus(userId, status);
+        if(formList == null || formList.isEmpty()) {
+        	return new ResponseEntity<>(responseData, HttpStatus.OK);
+        } else {
+        	responseData.put("forms", formList);       
+            for(FormListDto registerFormdto : formList) {
+                applicantList.add(modelMapper.map(userService.getUserById(registerFormdto.getApplicant().getId()), UserDto.class));
+                requesterList.add(modelMapper.map(userService.getUserById(registerFormdto.getRequester().getId()), UserDto.class));
+            }
+            responseData.put("applicants", applicantList);
+            responseData.put("requesters", requesterList);
+            return new ResponseEntity<>(responseData, HttpStatus.OK);
+        }        
+       // return getMapResponseEntity(responseData);
+    }
+    
 
 }

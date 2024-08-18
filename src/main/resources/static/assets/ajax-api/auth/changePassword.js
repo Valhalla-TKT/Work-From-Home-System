@@ -1,5 +1,28 @@
 document.addEventListener('DOMContentLoaded', async function () {
-    const currentUser = await getSessionUser()
+    const togglePasswordVisibility = (inputId, iconId) => {
+        const passwordInput = document.getElementById(inputId);
+        const toggleIcon = document.getElementById(iconId);
+
+        toggleIcon.addEventListener('click', () => {
+            if (passwordInput.type === 'password') {
+                passwordInput.type = 'text';
+                toggleIcon.classList.replace('fa-eye', 'fa-eye-slash');
+            } else {
+                passwordInput.type = 'password';
+                toggleIcon.classList.replace('fa-eye-slash', 'fa-eye');
+            }
+        });
+    };
+
+    togglePasswordVisibility('currentPassword', 'toggleCurrentPassword');
+    togglePasswordVisibility('newPassword', 'toggleNewPassword');
+    togglePasswordVisibility('confirmPassword', 'toggleConfirmPassword');
+
+    let currentUser = JSON.parse(localStorage.getItem('currentUser'));
+    if(!currentUser) {
+        currentUser = await getSessionUser()
+    }
+
     const userId = currentUser.id
     if (!currentUser) {
         Swal.fire('Error', 'User not logged in.', 'error');
@@ -68,7 +91,7 @@ document.addEventListener('DOMContentLoaded', async function () {
     function updatePositionInLocalStorage(position) {
         const currentUser = JSON.parse(localStorage.getItem('currentUser'));
         if (currentUser) {
-            currentUser.position = position;
+            currentUser.positionName = position;
             localStorage.setItem('currentUser', JSON.stringify(currentUser));
         }
     }
@@ -118,35 +141,77 @@ document.addEventListener('DOMContentLoaded', async function () {
         }
     }
 
+    document.getElementById('currentPassword').addEventListener('input', () => {
+        hideError('currentPasswordError');
+    });
+
+    document.getElementById('newPassword').addEventListener('input', () => {
+        const newPassword = document.getElementById('newPassword').value;
+        if (newPassword.length >= 8 &&
+            /[A-Z]/.test(newPassword) &&
+            /[a-z]/.test(newPassword) &&
+            /[0-9]/.test(newPassword)) {
+            hideError('newPasswordError');
+        }
+    });
+
+    document.getElementById('confirmPassword').addEventListener('input', () => {
+        const newPassword = document.getElementById('newPassword').value;
+        const confirmPassword = document.getElementById('confirmPassword').value;
+        if (newPassword === confirmPassword) {
+            hideError('confirmPasswordError');
+        }
+    });
+
     async function handlePasswordChange(event) {
         event.preventDefault();
 
         const currentPassword = document.getElementById('currentPassword').value;
         const newPassword = document.getElementById('newPassword').value;
         const confirmPassword = document.getElementById('confirmPassword').value;
+        const currentPasswordError = document.getElementById('currentPasswordError')
+        const newPasswordError = document.getElementById('newPasswordError')
+        const confirmPasswordError = document.getElementById('confirmPasswordError')
+
+        if (currentPassword.length === 0) {
+            currentPasswordError.innerText = 'Current password is required.'
+            newPasswordError.innerText = ''
+            confirmPasswordError.innerText = ''
+            return;
+        }
 
         if (newPassword.length < 8) {
-            Swal.fire('Error', 'New password must be at least 8 characters long.', 'error');
+            currentPasswordError.innerText = ''
+            newPasswordError.innerText = 'New password must be at least 8 characters long.'
+            confirmPasswordError.innerText = ''
             return;
         }
 
         if (!/[A-Z]/.test(newPassword)) {
-            Swal.fire('Error', 'New password must contain at least one uppercase letter.', 'error');
+            currentPasswordError.innerText = ''
+            newPasswordError.innerText = 'New password must contain at least one uppercase letter.'
+            confirmPasswordError.innerText = ''
             return;
         }
 
         if (!/[a-z]/.test(newPassword)) {
-            Swal.fire('Error', 'New password must contain at least one lowercase letter.', 'error');
+            currentPasswordError.innerText = ''
+            newPasswordError.innerText = 'New password must contain at least one lowercase letter.'
+            confirmPasswordError.innerText = ''
             return;
         }
 
         if (!/[0-9]/.test(newPassword)) {
-            Swal.fire('Error', 'New password must contain at least one digit.', 'error');
+            currentPasswordError.innerText = ''
+            newPasswordError.innerText = 'New password must contain at least one digit.'
+            confirmPasswordError.innerText = ''
             return;
         }
 
         if (newPassword !== confirmPassword) {
-            Swal.fire('Error', 'New password and confirm password do not match.', 'error');
+            currentPasswordError.innerText = ''
+            newPasswordError.innerText = ''
+            confirmPasswordError.innerText = 'New password and confirm password do not match.'
             return;
         }
 
@@ -159,13 +224,23 @@ document.addEventListener('DOMContentLoaded', async function () {
                 .then((result) => {
                     if (result.isConfirmed) {
                         Swal.fire('Please log in again', '', 'info').then(() => {
+                            localStorage.removeItem('currentUser');
                             window.location.href = `${getContextPath()}/signOut`;
                         });
                     }
                 });
         } catch (error) {
             console.error('Password change process failed:', error.message);
-            Swal.fire('Error', 'Current password is incorrect. Please enter the correct password.' , 'error');
+            currentPasswordError.innerText = 'Current password is incorrect. Please enter the correct password.'
+            newPasswordError.innerText = ''
+            confirmPasswordError.innerText = ''
+
         }
     }
+
+    function hideError(elementId) {
+        const errorElement = document.getElementById(elementId);
+        errorElement.innerText = '';
+    }
+
 });

@@ -11,6 +11,7 @@ package com.kage.wfhs.controller.api;
 import com.kage.wfhs.dto.auth.CurrentLoginUserDto;
 import com.kage.wfhs.service.ExcelService;
 import com.kage.wfhs.service.UserService;
+import com.kage.wfhs.util.ExcelControllerResponseUtils;
 import com.kage.wfhs.util.LogService;
 import lombok.AllArgsConstructor;
 import org.apache.poi.EmptyFileException;
@@ -41,59 +42,43 @@ public class ImportExcelController {
 
     @PostMapping
     public ResponseEntity<Map<String, Object>> uploadFile(@RequestParam("file") MultipartFile file, @RequestParam("sheetName") String sheetName) throws ParseException {
-        Map<String, Object> response = new HashMap<>();
+        return processFile(file, sheetName);
+    }
+
+    private ResponseEntity<Map<String, Object>> processFile(MultipartFile file, String sheetName) throws ParseException {
         try {
             InputStream inputStream = file.getInputStream();
 
-            if (file.isEmpty()) {
-                response.put("success", false);
-                response.put("message", "Uploaded file is empty.");
-                return ResponseEntity.badRequest().body(response);
-            }
-
-            if (sheetName == null || sheetName.trim().isEmpty()) {
-                response.put("success", false);
-                response.put("message", "Sheet name cannot be null or empty.");
-                return ResponseEntity.badRequest().body(response);
-            }
+            ResponseEntity<Map<String, Object>> validationResponse = ExcelControllerResponseUtils.validateFileAndSheet(file, sheetName);
+            if (validationResponse != null) return validationResponse;
 
             Workbook workbook = WorkbookFactory.create(inputStream);
             Sheet sheet = workbook.getSheet(sheetName);
 
-            if (sheet == null) {
-                response.put("success", false);
-                response.put("message", "No sheet found with the name: " + sheetName);
-                return ResponseEntity.badRequest().body(response);
-            }
-
-            if (excelService.readExcelAndInsertIntoDatabase(inputStream, sheetName, workbook)) {
-                CurrentLoginUserDto admin = userService.changeFirstHRFirstLoginStatus();
-                if (admin != null) {
-                    logService.logUserExcelImport(admin);
-                    response.put("success", true);
-                    response.put("message", "File uploaded successfully. Redirecting to sign out...");
-                    return ResponseEntity.ok(response);
-                } else {
-                    response.put("success", false);
-                    response.put("message", "Failed to change the first HR login status.");
-                    return ResponseEntity.status(500).body(response);
-                }
-            } else {
-                response.put("success", false);
-                response.put("message", "Failed to read Excel and insert into database.");
-                return ResponseEntity.status(500).body(response);
-            }
+            ResponseEntity<Map<String, Object>> sheetResponse = ExcelControllerResponseUtils.validateSheet(sheet, sheetName);
+            if (sheetResponse != null) return sheetResponse;
+            return handleUpload(inputStream, sheetName, workbook);
 
         } catch (IOException | SQLException | EmptyFileException e) {
-            if (e instanceof EmptyFileException) {
-                response.put("success", false);
-                response.put("message", "Uploaded file is empty.");
+            return ExcelControllerResponseUtils.handleException(e);
+        }
+    }
+
+    private ResponseEntity<Map<String, Object>> handleUpload(InputStream inputStream, String sheetName, Workbook workbook) throws SQLException, ParseException {
+        if (excelService.readExcelAndInsertIntoDatabase(inputStream, sheetName, workbook)) {
+            CurrentLoginUserDto admin = userService.changeFirstHRFirstLoginStatus();
+            if (admin != null) {
+                logService.logUserExcelImport(admin);
+                System.out.println("Employee data excel imported successfully.");
+                Map<String, Object> response = new HashMap<>();
+                response.put("success", true);
+                response.put("message", "File uploaded successfully. Redirecting to sign out...");
+                return ResponseEntity.ok(response);
             } else {
-                e.printStackTrace();
-                response.put("success", false);
-                response.put("message", "Error uploading file: " + e.getMessage());
+                return ExcelControllerResponseUtils.createErrorResponse("Failed to change the first HR login status.");
             }
-            return ResponseEntity.status(500).body(response);
+        } else {
+            return ExcelControllerResponseUtils.createErrorResponse("Failed to read Excel and insert into database.");
         }
     }
 }

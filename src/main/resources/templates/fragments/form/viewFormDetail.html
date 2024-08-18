@@ -15,7 +15,7 @@
                 <div class="job-board-gradient"></div>
                 <div class="header">
                     <div class="inner-header">
-                        <div class="go-back display-none" id="go-back" onclick="goBack()">
+                        <div class="go-back display-none" id="go-back">
                             <button>
                                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
                                      fill="currentColor" class="bi bi-arrow-left"
@@ -25,7 +25,7 @@
                                 </svg>
                             </button>
                         </div>
-                        <div class="go-back display-none" id="go-back-1" onclick="goBack1()">
+                        <div class="go-back display-none" id="go-back-1">
                             <button>
                                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
                                      fill="currentColor" class="bi bi-arrow-left"
@@ -74,6 +74,9 @@
                                                                                   name="radio"
                                                                                   id="other-request-radio-output" th:checked="${applicant.id != requester.id}"> <span
                                                 class="name">Other Request</span>
+                                            <th:block th:if="${applicant.id != requester.id}">
+                                                <span style="position: absolute; bottom: -25px; left: 50%; color: #ff5555;" th:text="'(by ' + ${requester.name} + ')'"></span>
+                                            </th:block>
                                         </label>
                                         </div>
                                         <br>
@@ -89,6 +92,12 @@
                                                     type="hidden"
                                                     th:value="${registerForm.id}"
                                                     />
+                                            <input
+                                                    data-v-42dea6db="" id="os-type-display-by-form-data"
+                                                    type="hidden"
+                                                    th:value="${capture.os_type}"
+                                                    />
+                                                    
 
 
                                             <div id="name-input-container" data-v-741dde45=""
@@ -119,9 +128,7 @@
                                                     <input type="text" class="input" disabled
                                                            style="background: #fff; border: 1px solid black;" th:value="${applicant.staffId.length() > 0 ? applicant.staffId[0] : ''}">
                                                     <input type="text" class="input" disabled
-                                                           style="background: #fff; border: 1px solid black;" th:value="${applicant.staffId.length() > 1 ? applicant.staffId[1] : ''}">
-                                                    <input type="text" class="input" value="-" disabled
-                                                           style="background: #fff; border: 1px solid black;">
+                                                           style="background: #fff; border: 1px solid black;" th:value="${applicant.staffId.length() > 1 ? applicant.staffId[1] : ''}">                                                  
                                                     <input type="text" class="input" disabled
                                                            style="background: #fff; border: 1px solid black;" th:value="${applicant.staffId.length() > 2 ? applicant.staffId[2] : ''}">
                                                     <input type="text" class="input" disabled
@@ -132,13 +139,15 @@
                                                            style="background: #fff; border: 1px solid black;" th:value="${applicant.staffId.length() > 5 ? applicant.staffId[5] : ''}">
                                                     <input type="text" class="input" disabled
                                                            style="background: #fff; border: 1px solid black;" th:value="${applicant.staffId.length() > 6 ? applicant.staffId[6] : ''}">
+                                                    <input type="text" class="input" disabled
+                                                           style="background: #fff; border: 1px solid black;" th:value="${applicant.staffId.length() > 7 ? applicant.staffId[7] : ''}">
                                                 </div>
                                             </div>
 
                                             <div data-v-741dde45="" class="form-field-container">
 													<span data-v-741dde45="" class="error-marker">
 														<div data-v-42dea6db="" data-v-741dde45="" class="">
-															<label data-v-42dea6db="" for="jobTitle" class="label">
+															<label data-v-42dea6db="" for="position-display-by-form-id" class="label">
 																Position <span data-v-42dea6db="" class="color-lobster">*</span>
 															</label>
 															<div data-v-42dea6db="" class="">
@@ -160,7 +169,7 @@
                                             <div data-v-741dde45="" class="form-field-container">
 													<span data-v-741dde45="" class="error-marker">
 														<div data-v-42dea6db="" data-v-741dde45="" class="">
-															<label data-v-42dea6db="" for="jobTitle" class="label">
+															<label data-v-42dea6db="" for="team-display-by-form-i" class="label">
 																Assigned Project/Team <span data-v-42dea6db=""
                                                                                             class="color-lobster">*</span>
 															</label>
@@ -216,14 +225,15 @@
                                                  style="padding-top: 0px;">
 													<span data-v-741dde45="" class="error-marker">
 														<div data-v-42dea6db="" data-v-741dde45="" class="">
-															<label data-v-42dea6db="" for="jobTitle" class="label">
+															<label data-v-42dea6db="" class="label">
 																Working Place <span data-v-42dea6db=""
                                                                                     class="color-lobster">*</span>
 															</label>
-															<div data-v-42dea6db="" class="">
+															<div data-v-42dea6db="" class="text-field-edit" style="position: relative;">
 																<!---->
-																<span data-v-42dea6db="" class="error-marker">
+																<span data-v-42dea6db="" class="error-marker ">
 																<input
+                                                                        class="editable-input"
                                                                         id="working-place-display-by-form-id"
                                                                         type="text"
                                                                         th:value="${registerForm.workingPlace}"
@@ -231,8 +241,7 @@
                                                                         disabled
                                                                         placeholder="e.g. MICT Park"/>
 																</span>
-                                                                <!---->
-                                                                <!---->
+                                                                <i class="edit-icon-view-detail fas fa-edit" title="Edit this field" style="display: inline; position: absolute; right: 10px; top: 50%; transform: translateY(-50%); cursor: pointer;"></i>
 															</div>
                                                             <!---->
 														</div> <!---->
@@ -241,14 +250,14 @@
                                             <div data-v-741dde45="" class="form-field-container">
 													<span data-v-741dde45="" class="error-marker">
 														<div data-v-42dea6db="" data-v-741dde45="" class="">
-															<label data-v-42dea6db="" for="jobTitle" class="label">
+															<label data-v-42dea6db="" for="radio-button-container" class="label">
 																Work From Home Request Percent <span data-v-42dea6db=""
                                                                                                      class="color-lobster">*</span>
 															</label>
-															<div data-v-42dea6db="" class="radio-button-container">
+															<div data-v-42dea6db="" id="radio-button-container" class="radio-button-container">
 																<div class="radio-button">
 																	<input id="radio1" type="radio"
-                                                                           class="radio-button__input" disabled
+                                                                           class="radio-button__input"
                                                                            name="radio-group" value="25" th:checked="${registerForm.requestPercent == 25}"> <label
                                                                         class="radio-button__label" for="radio1"> <span
                                                                         class="radio-button__custom"></span> 25%
@@ -256,7 +265,6 @@
 																</div>
 																<div class="radio-button">
 																	<input type="radio" class="radio-button__input"
-                                                                           disabled
                                                                            id="radio2" name="radio-group"
                                                                            value="50" th:checked="${registerForm.requestPercent == 50}"> <label
                                                                         class="radio-button__label" for="radio2"> <span
@@ -265,7 +273,6 @@
 																</div>
 																<div class="radio-button">
 																	<input type="radio" class="radio-button__input"
-                                                                           disabled
                                                                            id="radio3" name="radio-group"
                                                                            value="75" th:checked="${registerForm.requestPercent == 75}"> <label
                                                                         class="radio-button__label" for="radio3"> <span
@@ -274,7 +281,6 @@
 																</div>
 																<div class="radio-button">
 																	<input type="radio" class="radio-button__input"
-                                                                           disabled
                                                                            id="radio4" name="radio-group"
                                                                            value="100" th:checked="${registerForm.requestPercent == 100}"> <label
                                                                         class="radio-button__label" for="radio4"> <span
@@ -290,19 +296,20 @@
                                             <div data-v-741dde45="" class="form-field-container">
 													<span class="error-marker">
 														<div>
-															<label data-v-42dea6db="" for="jobTitle" class="label">
+															<label data-v-42dea6db="" for="from-date-display-by-form-id" class="label">
 																Request Period (From Date) <span
                                                                     class="color-lobster">*</span>
 															</label>
-															<div class="">
+															<div class="text-field-edit" style="position: relative;">
 																<!---->
 																<span class="error-marker"> <input
                                                                         id="from-date-display-by-form-id"
-                                                                        type="text" placeholder="e.g. 1/1/2000"
+                                                                        type="text" placeholder="e.g. 01-01-2024"
                                                                         style="color: #0d0c22; background: #fff; border: 1px solid black;"
                                                                         th:value="${#dates.format(registerForm.fromDate, 'dd-MM-yyyy')}"
                                                                         disabled
-                                                                        required="required" step="any" class="input"/>
+                                                                        required="required" step="any" class="input editable-input"/>
+                                                                    <i class="edit-icon-view-detail fas fa-edit" title="Edit this field" style="display: inline; position: absolute; right: 10px; top: 50%; transform: translateY(-50%); cursor: pointer;"></i>
 																</span>
                                                                 <!---->
 															</div>
@@ -314,19 +321,20 @@
                                             <div data-v-741dde45="" class="form-field-container">
 													<span class="error-marker">
 														<div>
-															<label data-v-42dea6db="" for="jobTitle" class="label">
+															<label data-v-42dea6db="" for="to-date-display-by-form-id" class="label">
 																Request Period (To Date) <span
                                                                     class="color-lobster">*</span>
 															</label>
-															<div class="">
+															<div class="text-field-edit" style="position: relative;">
 																<!---->
 																<span class="error-marker"> <input
                                                                         id="to-date-display-by-form-id"
-                                                                        type="text" placeholder="e.g. 1/1/2000"
+                                                                        type="text" placeholder="e.g. 01-01-2024"
                                                                         style="color: #0d0c22; background: #fff; border: 1px solid black;"
                                                                         disabled
                                                                         th:value="${#dates.format(registerForm.toDate, 'dd-MM-yyyy')}"
-                                                                        required="required" step="any" class="input"/>
+                                                                        required="required" step="any" class="input editable-input"/>
+                                                                <i class="edit-icon-view-detail fas fa-edit" title="Edit this field" style="display: inline; position: absolute; right: 10px; top: 50%; transform: translateY(-50%); cursor: pointer;"></i>
 																</span>
                                                                 <!---->
 															</div>
@@ -335,34 +343,16 @@
 													</span>
                                             </div>
 
-                                            <div data-v-741dde45="" class="form-field-container">
+                                            <div data-v-741dde45="" class="form-field-container text-field-edit" style="position: relative;">
 													<span data-v-741dde45="" class="error-marker">
 														<div data-v-3ab916fa="" data-v-741dde45=""
                                                              class="wysiwyg-texteditor">
-															<label class="label"> Request Reason <span
+															<label class="label" for="form-request-reason-display-detail"> Request Reason <span
                                                                     data-v-3ab916fa="" data-test="required"
                                                                     class="required">*</span>
 															</label>
-															<div data-v-3ab916fa="" class="container"
-                                                                 style="border: 1px solid black;">
-
-																<div data-v-3e4e869a="" data-v-3ab916fa=""
-                                                                     class="editable-textarea text-field inline"
-                                                                     data-test="editor" value="">
-																	<!---->
-																	<div data-v-3e4e869a="" class="outlined">
-																		<div data-v-3e4e869a="" class="editor">
-																			<div contenteditable="true" translate="no"
-                                                                                 class="ProseMirror request-reason-display-by-form-id" th:text="${registerForm.requestReason}"
-                                                                                 tabindex="0">
-																				<p class="is-empty is-editor-empty">
-																					<br class="ProseMirror-trailingBreak"/>
-																				</p>
-																			</div>
-																		</div>
-																	</div>
-																</div>
-															</div>
+                                                            <textarea style="height: 200px; border: 1px solid black; color: #0d0c22; background: #fff;" placeholder="e.g. For Emergency Only"  id="form-request-reason-display-detail" disabled class="editable-input">[[${registerForm.requestReason}]]</textarea>
+                                                            <i class="edit-icon-view-detail fas fa-edit" title="Edit this field" style="display: inline; position: absolute; right: 10px; top: 30%; transform: translateY(-50%); cursor: pointer;"></i>
 														</div> <!---->
 													</span>
                                             </div>
@@ -378,7 +368,6 @@
 
                                 <div id="capture-section" class="display-none">
                                     <div class="radio-os">
-                                        <!-- First set of radio buttons -->
                                         <label class="radio"> <input type="radio" disabled
                                                                      name="radio1" value="Window" th:checked="${capture.os_type == 'Window'}">
                                             <span
@@ -397,42 +386,44 @@
                                     </span>
                                     </label>
                                     </div>
-
-                                    <div id="window">
-                                        <section data-v-741dde45="" data-v-115a39aa=""
-                                                 class="user-form-container-2 user-form">
-                                            <div data-v-741dde45="" class="form">
+                                    
+                                    <div id="window" th:if="${capture.os_type == 'Window'}">
+                                        <section data-v-741dde45="" data-v-115a39aa="" class="user-form-container-2 user-form">
+                                            <div data-v-741dde45="" class="form" style="position:relative;">
                                                 <div class="file-upload-form">
                                                     <label class="file-upload-label">
                                                         <p style="color: red;">➀ Press win key in keyboard.</p>
-                                                        <p style="color: red;">➁ Type [winver] in windows
-                                                            search box and [Enter].</p>
+                                                        <p style="color: red;">➁ Type [winver] in windows search box and [Enter].
+                                                            <i class="edit-image-icon-view-detail fas fa-edit" title="Edit this field" style="margin-left: 20px;display: inline; cursor: pointer; color: black"></i>
+                                                        </p>
                                                         <div class="file-upload-design">
-                                                            <img id="window-operating-system-display-by-form-id" th:src="'data:image/png;base64,' + ${capture.operationSystem}"
-                                                                 alt="Preview Image">
+                                                            <img class="file-upload-preview-view-detail" id="window-operating-system-display-by-form-id" th:src="'data:image/png;base64,' + ${capture.operationSystem}" alt="Preview Image">
                                                         </div>
                                                     </label>
                                                 </div>
                                             </div>
+                                            <input type="file" class="file-upload-input-view-detail" id="window-operating-system-input-by-form-id-view-detail" style="display: none;" accept="image/*">
                                         </section>
+
                                         <section data-v-741dde45="" data-v-115a39aa=""
                                                  class="user-form-container-2 user-form">
-                                            <div data-v-741dde45="" class="form">
+                                            <div data-v-741dde45="" class="form" style="position:relative;">
 
-                                                <div class="file-upload-form">
+                                                <div class="file-upload-form" >
                                                     <label class="file-upload-label">
                                                         <p style="color: red;">➀ Press win key in keyboard.</p>
                                                         <p style="color: red;">➁ Type [windows security] in
                                                             windows search box and [Enter].</p>
                                                         <p style="color: red;">➂ Select [Device Performance &
-                                                            Health].</p>
+                                                            Health].<i class="edit-image-icon-view-detail fas fa-edit" title="Edit this field" style="margin-left: 20px;display: inline; cursor: pointer; color: black"></i></p>
                                                         <div class="file-upload-design">
-                                                            <img id="window-securityPatch-display-by-form-id" th:src="'data:image/png;base64,' + ${capture.securityPatch}"
+                                                            <img class="file-upload-preview-view-detail" id="window-securityPatch-display-by-form-id" th:src="'data:image/png;base64,' + ${capture.securityPatch}"
                                                                  alt="Preview Image">
                                                         </div>
                                                     </label>
                                                 </div>
                                             </div>
+                                            <input type="file" class="file-upload-input-view-detail" id="window-security-path-input-by-form-id-view-detail" style="display: none;" accept="image/*">
                                         </section>
                                         <section data-v-741dde45="" data-v-115a39aa=""
                                                  class="user-form-container-2 user-form">
@@ -443,14 +434,15 @@
                                                         <p style="color: red;">➀ Press win key in keyboard.</p>
                                                         <p style="color: red;">➁ Type [appwiz.cpl] in windows
                                                             search box and [Enter].</p>
-                                                        <p style="color: red;">➂ Select [Antivirus Name].</p>
+                                                        <p style="color: red;">➂ Select [Antivirus Name].<i class="edit-image-icon-view-detail fas fa-edit" title="Edit this field" style="margin-left: 20px;display: inline; cursor: pointer; color: black"></i></p>
                                                         <div class="file-upload-design">
-                                                            <img id="window-antivirusSoftware-display-by-form-id" th:src="'data:image/png;base64,' + ${capture.antivirusSoftware}"
+                                                            <img class="file-upload-preview-view-detail" id="window-antivirusSoftware-display-by-form-id" th:src="'data:image/png;base64,' + ${capture.antivirusSoftware}"
                                                                  alt="Preview Image">
                                                         </div>
                                                     </label>
                                                 </div>
                                             </div>
+                                            <input type="file" class="file-upload-input-view-detail" id="window-antivirusSoftware-input-by-form-id-view-detail" style="display: none;" accept="image/*">
                                         </section>
                                         <section data-v-741dde45="" data-v-115a39aa=""
                                                  class="user-form-container-2 user-form">
@@ -460,14 +452,15 @@
                                                     <label for="window-antivirusPattern-display-by-form-id" class="file-upload-label">
                                                         <p style="color: red;">➀ Open Kaspersky application.</p>
                                                         <p style="color: red;">➁ Select [Task].</p>
-                                                        <p style="color: red;">➂ Update database need to be up to date.</p>
+                                                        <p style="color: red;">➂ Update database need to be up to date.<i class="edit-image-icon-view-detail fas fa-edit" title="Edit this field" style="margin-left: 20px;display: inline; cursor: pointer; color: black"></i></p>
                                                         <div class="file-upload-design">
-                                                            <img id="window-antivirusPattern-display-by-form-id" th:src="'data:image/png;base64,' + ${capture.antivirusPattern}"
+                                                            <img class="file-upload-preview-view-detail" id="window-antivirusPattern-display-by-form-id" th:src="'data:image/png;base64,' + ${capture.antivirusPattern}"
                                                                  alt="Preview Image">
                                                         </div>
                                                     </label>
                                                 </div>
                                             </div>
+                                            <input type="file" class="file-upload-input-view-detail" id="window-antivirusPattern-input-by-form-id-view-detail" style="display: none;" accept="image/*">
                                         </section>
                                         <section data-v-741dde45="" data-v-115a39aa=""
                                                  class="user-form-container-2 user-form">
@@ -476,31 +469,33 @@
                                                 <div class="file-upload-form">
                                                     <label for="window-antivirusFullScan-display-by-form-id" class="file-upload-label">
                                                         <p style="color: red;">➀ Open Kaspersky application.</p>
-                                                        <p style="color: red;">➁ Select [Task].</p>
+                                                        <p style="color: red;">➁ Select [Task].<i class="edit-image-icon-view-detail fas fa-edit" title="Edit this field" style="margin-left: 20px;display: inline; cursor: pointer; color: black"></i></p>
                                                         <div class="file-upload-design">
-                                                            <img id="window-antivirusFullScan-display-by-form-id" th:src="'data:image/png;base64,' + ${capture.antivirusFullScan}"
+                                                            <img class="file-upload-preview-view-detail" id="window-antivirusFullScan-display-by-form-id" th:src="'data:image/png;base64,' + ${capture.antivirusFullScan}"
                                                                  alt="Preview Image">
                                                         </div>
                                                     </label>
                                                 </div>
                                             </div>
+                                            <input type="file" class="file-upload-input-view-detail" id="window-antivirusFullScan-input-by-form-id-view-detail" style="display: none;" accept="image/*">
                                         </section>
                                     </div>
 
-                                    <div id="mac" class="display-none">
+                                    <div id="mac" th:if="${capture.os_type == 'Mac'}">
                                         <section data-v-741dde45="" data-v-115a39aa=""
                                                  class="user-form-container-2 user-form">
                                             <div data-v-741dde45="" class="form">
                                                 <div class="file-upload-form">
                                                     <label for="mac-operating-system-display-by-form-id" class="file-upload-label">
-                                                        <p style="color: red;">➀ Type of Operating System</p>
+                                                        <p style="color: red;">➀ Type of Operating System<i class="edit-image-icon-view-detail fas fa-edit" title="Edit this field" style="margin-left: 20px;display: inline; cursor: pointer; color: black"></i></p>
                                                         <div class="file-upload-design">
-                                                            <img id="mac-operating-system-display-by-form-id" th:src="'data:image/png;base64,' + ${capture.operationSystem}"
+                                                            <img class="file-upload-preview-view-detail" id="mac-operating-system-display-by-form-id" th:src="'data:image/png;base64,' + ${capture.operationSystem}"
                                                                  alt="Preview Image">
                                                         </div>
                                                     </label>
                                                 </div>
                                             </div>
+                                            <input type="file" class="file-upload-input-view-detail" id="mac-operating-system-input-by-form-id-view-detail" style="display: none;" accept="image/*">
                                         </section>
                                         <section data-v-741dde45="" data-v-115a39aa=""
                                                  class="user-form-container-2 user-form">
@@ -509,14 +504,15 @@
                                                 <div class="file-upload-form">
                                                     <label for="mac-securityPatch-display-by-form-id" class="file-upload-label">
                                                         <p style="color: red;">➀ Apple Menu >> System
-                                                            Preferences>>Software Update</p>
+                                                            Preferences>>Software Update<i class="edit-image-icon-view-detail fas fa-edit" title="Edit this field" style="margin-left: 20px;display: inline; cursor: pointer; color: black"></i></p>
                                                         <div class="file-upload-design">
-                                                            <img id="mac-securityPatch-display-by-form-id" th:src="'data:image/png;base64,' + ${capture.securityPatch}"
+                                                            <img class="file-upload-preview-view-detail" id="mac-securityPatch-display-by-form-id" th:src="'data:image/png;base64,' + ${capture.securityPatch}"
                                                                  alt="Preview Image">
                                                         </div>
                                                     </label>
                                                 </div>
                                             </div>
+                                            <input type="file" class="file-upload-input-view-detail" id="mac-securityPatch-input-by-form-id-view-detail" style="display: none;" accept="image/*">
                                         </section>
                                         <section data-v-741dde45="" data-v-115a39aa=""
                                                  class="user-form-container-2 user-form">
@@ -528,27 +524,28 @@
                                                             Mac</p>
                                                         <p style="color: red;">➁ Tap on System Report > Software >
                                                             Installation.</p>
-                                                        <p style="color: red;">➂ Look for XProtectPlistConfigData.</p>
+                                                        <p style="color: red;">➂ Look for XProtectPlistConfigData.<i class="edit-image-icon-view-detail fas fa-edit" title="Edit this field" style="margin-left: 20px;display: inline; cursor: pointer; color: black"></i></p></p>
                                                         <div class="file-upload-design">
-                                                            <img id="mac-antivirusSoftware-display-by-form-id" th:src="'data:image/png;base64,' + ${capture.antivirusSoftware}"
+                                                            <img class="file-upload-preview-view-detail" id="mac-antivirusSoftware-display-by-form-id" th:src="'data:image/png;base64,' + ${capture.antivirusSoftware}"
                                                                  alt="Preview Image">
                                                         </div>
                                                     </label>
                                                 </div>
                                             </div>
+                                            <input type="file" class="file-upload-input-view-detail" id="mac-antivirusSoftware-input-by-form-id-view-detail" style="display: none;" accept="image/*">
                                         </section>
                                     </div>
 
-                                    <div id="linux" class="display-none">
+                                    <div id="linux" th:if="${capture.os_type == 'Linux'}">
                                         <section data-v-741dde45="" data-v-115a39aa=""
                                                  class="user-form-container-2 user-form">
                                             <div data-v-741dde45="" class="form">
                                                 <div class="file-upload-form">
                                                     <label for="linux-operating-system-display-by-form-id" class="file-upload-label">
-                                                        <p style="color: red;">➀ Procedure 1</p>
-                                                        search box and [Enter].</p>
+                                                        <p style="color: red;">➀ Type of Operating Syste</p>
+                                                        search box and [Enter].<i class="edit-image-icon-view-detail fas fa-edit" title="Edit this field" style="margin-left: 20px;display: inline; cursor: pointer; color: black"></i>
                                                         <div class="file-upload-design">
-                                                            <img id="linux-operating-system-display-by-form-id" th:src="'data:image/png;base64,' + ${capture.operationSystem}"
+                                                            <img class="file-upload-preview-view-detail" id="linux-operating-system-display-by-form-id" th:src="'data:image/png;base64,' + ${capture.operationSystem}"
                                                                  alt="Preview Image">
                                                         </div>
                                                     </label>
@@ -561,7 +558,7 @@
 
                                                 <div class="file-upload-form">
                                                     <label for="linux-securityPatch-display-by-form-id" class="file-upload-label">
-                                                        <p style="color: red;">➀ Procedure 2</p>
+                                                        <p style="color: red;">➀ Security Patch is updated to latest version.<i class="edit-image-icon-view-detail fas fa-edit" title="Edit this field" style="margin-left: 20px;display: inline; cursor: pointer; color: black"></i></p>
                                                         <div class="file-upload-design">
                                                             <img id="linux-securityPatch-display-by-form-id" th:src="'data:image/png;base64,' + ${capture.securityPatch}"
                                                                  alt="Preview Image">
@@ -576,12 +573,13 @@
 
                                                 <div class="file-upload-form">
                                                     <label for="linux-antivirusSoftware-display-by-form-id" class="file-upload-label">
-                                                        <p style="color: red;">➀ Procedure 3</p>
+                                                        <p style="color: red;">➀ Antivirus software(built-in, open source antivirus or third party software).<i class="edit-image-icon-view-detail fas fa-edit" title="Edit this field" style="margin-left: 20px;display: inline; cursor: pointer; color: black"></i></p>
                                                         <div class="file-upload-design">
                                                             <img id="linux-antivirusSoftware-display-by-form-id" th:src="'data:image/png;base64,' + ${capture.antivirusSoftware}"
                                                                  alt="Preview Image">
                                                         </div>
                                                     </label>
+                                                    <input type="file" id="image-upload-input" style="display: block;" accept="image/*">
                                                 </div>
                                             </div>
                                         </section>
@@ -609,17 +607,17 @@
 														<label data-v-42dea6db="" for="signed-date-display-by-form-id" class="label">
 															Signed Date <span class="color-lobster">*</span>
 														</label>
-														<div class="">
-															<!---->
+														<div class="text-field-edit">
 															<span class="error-marker"> <input
                                                                     id="signed-date-display-by-form-id"
                                                                     type="text"
                                                                     th:value="${#dates.format(registerForm.signedDate, 'dd-MM-yyyy')}"
-                                                                    required="required" step="any" class="input"
+                                                                    required="required" step="any" class="input editable-input"
                                                                     style="color: #0d0c22; background: #fff; border: 1px solid black;"
-                                                                    disabled
+                                                                    placeholder="01-01-2024"
+                                                                    disabled>
+                                                                <i class="edit-icon-view-detail fas fa-edit" title="Edit this field" style="display: inline; position: absolute; right: 10px; top: 50%; transform: translateY(-50%); cursor: pointer;"></i>
 															</span>
-                                                            <!---->
 														</div>
                                                         <!---->
 													</div>
@@ -630,7 +628,7 @@
                                                 <label for="signature-display-by-form-id" class="file-upload-label"
                                                        id="file-label-12" ondrop="drop(event, 12)"
                                                        ondragover="allowDrop(event, 12)">
-                                                    <p style="color: red;">➀ Please import your signature here.</p>
+                                                    <p style="color: red;">➀ Please import your signature here.<i class="edit-image-icon-view-detail fas fa-edit" title="Edit this field" style="margin-left: 20px;display: inline; cursor: pointer; color: black"></i></p>
                                                     <div class="file-upload-design">
                                                         <img id="signature-display-by-form-id" alt="Preview Image" th:src="'data:image/png;base64,' + ${registerForm.signature}">
                                                     </div>
@@ -639,250 +637,10 @@
                                         </div>
                                     </section>
                                     <div id="approval-sections-container"></div>
-                                    <!-- Project Manager Approval Output Section -->
-<!--                                    <section data-v-741dde45="" data-v-115a39aa=""-->
-<!--                                             id="project-manager-approval-output-section"-->
-<!--                                             class="user-form-container-2 user-form display-flex">-->
-<!--                                        <div class="pledge-container">-->
-<!--                                            <div class="pledge-heading">-->
-<!--                                                <h2>Project Manager Approval</h2>-->
-<!--                                            </div>-->
-<!--                                        </div>-->
-<!--                                        <div class="final-form">-->
-<!--                                            <div class="display-flex approval-final">-->
-<!--                                                <span>Approve Status :</span>-->
-<!--                                                <div class="final-display-input" id="pm-approval-status">-->
-<!--                                                    <div class="display-flex w-50">-->
-<!--                                                        <div class="display-data"><input class="radio-button__input"-->
-<!--                                                                                         type="radio" value="yes"-->
-<!--                                                                                         disabled></div>-->
-<!--                                                        <div class="display-data" style="margin-right: 10px;">Approve-->
-<!--                                                        </div>-->
-<!--                                                    </div>-->
-<!--                                                    <div class="display-flex w-50">-->
-<!--                                                        <div class="display-data"><input class="radio-button__input"-->
-<!--                                                                                         type="radio" value="no"-->
-<!--                                                                                         disabled></div>-->
-<!--                                                        <div class="display-data" style="margin-right: 10px;">Reject-->
-<!--                                                        </div>-->
-<!--                                                    </div>-->
-
-<!--                                                </div>-->
-<!--                                            </div>-->
-<!--                                            <div class="display-flex approval-final">-->
-<!--                                                <span>Approved Date :</span>-->
-<!--                                                <div class="display-flex final-display-input">-->
-<!--                                                    <input type="text" value="" readonly="readonly"-->
-<!--                                                           style="color: #0d0c22; background: #fff;  border: 1px solid black;"-->
-<!--                                                           id="project-manager-approval-approve-date-output">-->
-<!--                                                </div>-->
-<!--                                            </div>-->
-<!--                                            <div class="display-flex approval-final">-->
-<!--                                                <span>Reason of Approval :</span>-->
-<!--                                                <div class="display-flex final-display-input">-->
-<!--                                                    <textarea type="text" value="yes" disabled-->
-<!--                                                              style="color: #0d0c22; background: #fff;  border: 1px solid black;"-->
-<!--                                                              id="project-manager-approval-approve-reason-output"></textarea>-->
-<!--                                                </div>-->
-<!--                                            </div>-->
-<!--                                        </div>-->
-
-
-<!--                                    </section>-->
-<!--                                    &lt;!&ndash;  &ndash;&gt;-->
-<!--                                    &lt;!&ndash; Department Head Approval Output Section &ndash;&gt;-->
-<!--                                    <section data-v-741dde45="" data-v-115a39aa=""-->
-<!--                                             id="department-head-approval-output-section"-->
-<!--                                             class="user-form-container-2 user-form display-flex">-->
-<!--                                        <div class="pledge-container">-->
-<!--                                            <div class="pledge-heading">-->
-<!--                                                <h2>Department Head Approval</h2>-->
-<!--                                            </div>-->
-<!--                                        </div>-->
-<!--                                        <div class="final-form">-->
-<!--                                            <div class="display-flex approval-final">-->
-<!--                                                <span>Approve Status :</span>-->
-<!--                                                <div class="final-display-input" id="dept-head-approval-status">-->
-<!--                                                    <div class="display-flex w-50">-->
-<!--                                                        <div class="display-data"><input type="checkbox" value="yes"-->
-<!--                                                                                         disabled></div>-->
-<!--                                                        <div class="display-data" style="margin-right: 10px;">Approve-->
-<!--                                                        </div>-->
-<!--                                                    </div>-->
-<!--                                                    <div class="display-flex w-50">-->
-<!--                                                        <div class="display-data"><input type="checkbox" value="no"-->
-<!--                                                                                         disabled></div>-->
-<!--                                                        <div class="display-data" style="margin-right: 10px;">Reject-->
-<!--                                                        </div>-->
-<!--                                                    </div>-->
-
-<!--                                                </div>-->
-<!--                                            </div>-->
-<!--                                            <div class="display-flex approval-final">-->
-<!--                                                <span>Approved Date :</span>-->
-<!--                                                <div class="display-flex final-display-input">-->
-<!--                                                    <input type="text" value=""-->
-<!--                                                           style="color: #0d0c22; background: #fff;  border: 1px solid black;"-->
-<!--                                                           disabled id="department-head-approval-approve-date-output">-->
-<!--                                                </div>-->
-<!--                                            </div>-->
-<!--                                            <div class="display-flex approval-final">-->
-<!--                                                <span>Reason of Approval :</span>-->
-<!--                                                <div class="display-flex final-display-input">-->
-<!--                                                    <textarea type="text"-->
-<!--                                                              style="color: #0d0c22; background: #fff;  border: 1px solid black;"-->
-<!--                                                              disabled-->
-<!--                                                              id="department-head-approval-approve-reason-output"></textarea>-->
-<!--                                                </div>-->
-<!--                                            </div>-->
-<!--                                        </div>-->
-
-<!--                                    </section>-->
-<!--                                    &lt;!&ndash;  &ndash;&gt;-->
-<!--                                    &lt;!&ndash; Division Head Approval Output Section &ndash;&gt;-->
-<!--                                    <section data-v-741dde45="" data-v-115a39aa=""-->
-<!--                                             id="division-head-approval-output-section"-->
-<!--                                             class="user-form-container-2 user-form display-flex">-->
-<!--                                        <div class="pledge-container">-->
-<!--                                            <div class="pledge-heading">-->
-<!--                                                <h2>Division Head Approval</h2>-->
-<!--                                            </div>-->
-<!--                                        </div>-->
-<!--                                        <div class="final-form">-->
-<!--                                            <div class="display-flex approval-final">-->
-<!--                                                <span>Approve Status :</span>-->
-<!--                                                <div class="final-display-input" id="division-head-approval-status">-->
-<!--                                                    <div class="display-flex w-50">-->
-<!--                                                        <div class="display-data"><input type="checkbox" value="yes"-->
-<!--                                                                                         disabled></div>-->
-<!--                                                        <div class="display-data" style="margin-right: 10px;">Approve-->
-<!--                                                        </div>-->
-<!--                                                    </div>-->
-<!--                                                    <div class="display-flex w-50">-->
-<!--                                                        <div class="display-data"><input type="checkbox" value="no"-->
-<!--                                                                                         disabled></div>-->
-<!--                                                        <div class="display-data" style="margin-right: 10px;">Reject-->
-<!--                                                        </div>-->
-<!--                                                    </div>-->
-
-<!--                                                </div>-->
-<!--                                            </div>-->
-<!--                                            <div class="display-flex approval-final">-->
-<!--                                                <span>Approved Date :</span>-->
-<!--                                                <div class="display-flex final-display-input">-->
-<!--                                                    <input type="text" value=""-->
-<!--                                                           style="color: #0d0c22; background: #fff;  border: 1px solid black;"-->
-<!--                                                           disabled id="division-head-approval-approve-date-output">-->
-<!--                                                </div>-->
-<!--                                            </div>-->
-<!--                                            <div class="display-flex approval-final">-->
-<!--                                                <span>Reason of Approval :</span>-->
-<!--                                                <div class="display-flex final-display-input">-->
-<!--                                                    <textarea type="text" disabled-->
-<!--                                                              style="color: #0d0c22; background: #fff;  border: 1px solid black;"-->
-<!--                                                              id="division-head-approval-approve-reason-output"></textarea>-->
-<!--                                                </div>-->
-<!--                                            </div>-->
-<!--                                        </div>-->
-
-<!--                                    </section>-->
-<!--                                    &lt;!&ndash;  &ndash;&gt;-->
-<!--                                    &lt;!&ndash; CISO Approval Output Section &ndash;&gt;-->
-<!--                                    <section data-v-741dde45="" data-v-115a39aa="" id="ciso-approval-output-section"-->
-<!--                                             class="user-form-container-2 user-form display-flex">-->
-<!--                                        <div class="pledge-container">-->
-<!--                                            <div class="pledge-heading">-->
-<!--                                                <h2>CISO Approval on Information Security</h2>-->
-<!--                                            </div>-->
-<!--                                        </div>-->
-<!--                                        <div class="final-form">-->
-<!--                                            <div class="display-flex approval-final">-->
-<!--                                                <span>Approve Status :</span>-->
-<!--                                                <div class="final-display-input" id="ciso-approval-status">-->
-<!--                                                    <div class="display-flex w-50">-->
-<!--                                                        <div class="display-data"><input type="checkbox" value="yes"-->
-<!--                                                                                         disabled></div>-->
-<!--                                                        <div class="display-data" style="margin-right: 10px;">Approve-->
-<!--                                                        </div>-->
-<!--                                                    </div>-->
-<!--                                                    <div class="display-flex w-50">-->
-<!--                                                        <div class="display-data"><input type="checkbox" value="no"-->
-<!--                                                                                         disabled></div>-->
-<!--                                                        <div class="display-data" style="margin-right: 10px;">Reject-->
-<!--                                                        </div>-->
-<!--                                                    </div>-->
-
-<!--                                                </div>-->
-<!--                                            </div>-->
-<!--                                            <div class="display-flex approval-final">-->
-<!--                                                <span>Approved Date :</span>-->
-<!--                                                <div class="display-flex final-display-input">-->
-<!--                                                    <input type="text" value=""-->
-<!--                                                           style="color: #0d0c22; background: #fff;  border: 1px solid black;"-->
-<!--                                                           disabled id="ciso-approval-approve-date-output">-->
-<!--                                                </div>-->
-<!--                                            </div>-->
-<!--                                            <div class="display-flex approval-final">-->
-<!--                                                <span>Reason of Approval :</span>-->
-<!--                                                <div class="display-flex final-display-input">-->
-<!--                                                    <textarea type="text"-->
-<!--                                                              style="color: #0d0c22; background: #fff;  border: 1px solid black;"-->
-<!--                                                              disabled-->
-<!--                                                              id="ciso-approval-approve-reason-output"></textarea>-->
-<!--                                                </div>-->
-<!--                                            </div>-->
-<!--                                        </div>-->
-
-<!--                                    </section>-->
-<!--                                    &lt;!&ndash;  &ndash;&gt;-->
-<!--                                    &lt;!&ndash; CISO Approval Output Section &ndash;&gt;-->
-<!--                                    <section data-v-741dde45="" data-v-115a39aa="" id="final-approval-output-section"-->
-<!--                                             class="user-form-container-2 user-form display-flex">-->
-<!--                                        <div class="pledge-container">-->
-<!--                                            <div class="pledge-heading">-->
-<!--                                                <h2>Final Approval By CEO</h2>-->
-<!--                                            </div>-->
-<!--                                        </div>-->
-<!--                                        <div class="final-form">-->
-<!--                                            <div class="display-flex approval-final">-->
-<!--                                                <span>Approve Status :</span>-->
-<!--                                                <div class="final-display-input" id="ceo-approval-status">-->
-<!--                                                    <div class="display-flex w-50">-->
-<!--                                                        <div class="display-data"><input type="checkbox" value="yes"-->
-<!--                                                                                         disabled></div>-->
-<!--                                                        <div class="display-data" style="margin-right: 10px;">Approve-->
-<!--                                                        </div>-->
-<!--                                                    </div>-->
-<!--                                                    <div class="display-flex w-50">-->
-<!--                                                        <div class="display-data"><input type="checkbox" value="no"-->
-<!--                                                                                         disabled></div>-->
-<!--                                                        <div class="display-data" style="margin-right: 10px;">Reject-->
-<!--                                                        </div>-->
-<!--                                                    </div>-->
-
-<!--                                                </div>-->
-<!--                                            </div>-->
-<!--                                            <div class="display-flex approval-final">-->
-<!--                                                <span>Approved Date :</span>-->
-<!--                                                <div class="display-flex final-display-input">-->
-<!--                                                    <input type="text"-->
-<!--                                                           style="color: #0d0c22; background: #fff;  border: 1px solid black;"-->
-<!--                                                           value="" disabled id="ceo-approval-approve-date-output">-->
-<!--                                                </div>-->
-<!--                                            </div>-->
-<!--                                            <div class="display-flex approval-final">-->
-<!--                                                <span>Reason of Approval :</span>-->
-<!--                                                <div class="display-flex final-display-input">-->
-<!--                                                    <textarea type="text"-->
-<!--                                                              style="color: #0d0c22; background: #fff;  border: 1px solid black;"-->
-<!--                                                              disabled-->
-<!--                                                              id="ciso-approval-approve-reason-output"></textarea>-->
-<!--                                                </div>-->
-<!--                                            </div>-->
-<!--                                        </div>-->
-
-<!--                                    </section>-->
-                                    <!--  -->
+                                    <footer class="button-container display-flex justify-flex-end" id="approve-reject-button-container">
+                                        <div id="go-home-btn" class="margin-l-8 form-sub" style="background: transparent; color: black; border: 2px solid black;" onclick="history.back();">Go Back</div>
+                                        <div class="margin-l-8 form-sub" id="view-detail-update-btn">Update</div>
+                                    </footer>
                                 </div>
                             </section>
                         </div>

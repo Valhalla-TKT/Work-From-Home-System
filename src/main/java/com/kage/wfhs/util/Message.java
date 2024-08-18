@@ -11,9 +11,12 @@ package com.kage.wfhs.util;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
+
+import java.time.LocalDate;
+import java.time.format.TextStyle;
+import java.util.Locale;
 
 @Service
 @Getter
@@ -43,4 +46,12 @@ public class Message {
 
     @Value("${error.unexpected}")
     private String unexpectedError;
+    
+    public String getFormattedEmailSubjectForOtpByServiceDesk() {
+        LocalDate now = LocalDate.now();
+        String month = now.getMonth().getDisplayName(TextStyle.FULL, Locale.ENGLISH);
+        int year = now.getYear();
+        return String.format(emailSubjectForOtpByServiceDesk, month, year);
+    }
+
 }

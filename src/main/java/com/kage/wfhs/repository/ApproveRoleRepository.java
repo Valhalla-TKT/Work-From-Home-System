@@ -24,6 +24,8 @@ public interface ApproveRoleRepository extends JpaRepository<ApproveRole,Long> {
     @Query(value = "SELECT wfo.approve_role_id FROM work_flow_order wfo WHERE wfo.id > :workFlowOrderId AND wfo.approve_role_id NOT IN (SELECT wfoInner.approve_role_id FROM work_flow_order wfoInner WHERE wfoInner.id = :workFlowOrderId) LIMIT 1", nativeQuery = true)
     Long findByWorkFlowOrderId(Long workFlowOrderId);
 
-
     ApproveRole findByUsers(List<User> users);
+
+    @Query("SELECT ar FROM ApproveRole ar WHERE ar.name <> 'APPLICANT'")
+    List<ApproveRole> findApproveRolesWithoutApplicant();
 }

@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 
 <head>
 <title>WorkHub</title>
@@ -22,11 +23,11 @@
                                             <div class="search-summary-details">
                                                 <h1 class="search-summary-title" id="form-list-title">Work from Home Request Form Lists</h1>
                                             </div>
-                                            <button id="bulk-approve-btn" class="btn2 hide-service-desk-only" style="background: white; color: #0d0c22; margin-right: 10px;">Bulk Approve</button>
-                                            <button id="select-all-btn" class="btn2" type="button">Select All</button>
-                                            <button id="go-upload-page" class="btn2 visible-service-desk-only hide-when-click-upload" style="background: white; color: #0d0c22; margin-right: 10px;">Upload Excel for OTP</button>             
-                                            <button id="service-desk-download-btn" class="btn2 visible-service-desk-only hide-when-click-upload">Download List</button>   
-                                            <button id="go-download-page" class="btn2 visible-service-desk-only show-when-click-upload hide-when-load-download-page">View List Page</button>                                     
+                                            <button id="bulk-approve-btn" class="btn2" sec:authorize="!hasAuthority('SERVICE_DESK')" style="background: white; color: #0d0c22; margin-right: 10px;">Bulk Approve</button>
+                                            <button id="select-all-btn" class="btn2" type="button" style="margin-right: 10px;">Select All</button>
+                                            <button id="go-upload-page" class="btn2 hide-when-click-upload" sec:authorize="hasAuthority('SERVICE_DESK')" style="background: white; color: #0d0c22; margin-right: 10px;">Upload Excel for OTP</button>
+                                            <button id="service-desk-download-btn" class="btn2 hide-when-click-upload" sec:authorize="hasAuthority('SERVICE_DESK')">Download List</button>
+                                            <button id="go-download-page" class="btn2 show-when-click-upload hide-when-load-download-page" sec:authorize="hasAuthority('SERVICE_DESK')">View List Page</button>
                                             <div class="designer-search-mobile-actions">
                                                 <a href="#" class="drawer-trigger" onclick="openFilter()">
                                                     <svg viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"
@@ -39,29 +40,169 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <h4 id="formListSelectedCount">Selected (0)</h4>
+                                    <style>
+                                        .toggle-switch {
+                                            display: inline-block;
+                                            background-color: transparent;
+                                            border-radius: 30px;                                            
+                                            position: relative;
+                                            border: 1px solid #333;
+                                            overflow: hidden;
+                                        }
+
+                                        .toggle-option {
+                                            width: 60px;
+                                            height: 40px;
+                                            display: inline-flex;
+                                            align-items: center;
+                                            justify-content: center;
+                                            cursor: pointer;
+                                            border-radius: 30px;
+                                            color: #333;
+                                            text-decoration: none;
+                                            transition: background-color 0.3s, color 0.3s;
+                                            border-radius: 0;
+                                        }
+
+                                        .toggle-option.list-view {
+                                            background-color: transparent;
+                                            color: #333;
+                                            border-top-left-radius: 20px;
+                                            border-bottom-left-radius: 20px;
+                                        }
+
+                                        .toggle-option.grid-view {
+                                            background-color: transparent;
+                                            color: #333;
+                                            border-top-right-radius: 20px;
+                                            border-bottom-right-radius: 20px;
+                                        }
+
+                                        .toggle-option.active {
+                                            background-color: #cce7ff;
+                                            color: #000;
+                                        }
+
+                                        .toggle-switch .grid-view.active {
+                                            background-color: #cce7ff;
+                                        }
+
+                                        .toggle-switch i {
+                                            font-size: 18px;
+                                        }
+
+                                    </style>
+                                    <div class="display-flex" style="column-gap: 10px; align-items: center;">
+                                        <h4 id="formListSelectedCount">Selected (0)</h4>
+                                        <div class="toggle-switch">
+                                            <a href="#" class="toggle-option active list-view" title="List layout">
+                                                <i class="fa fa-check"></i>&nbsp;&nbsp;
+                                                <i class="fa fa-bars"></i>
+                                            </a>
+                                            <a th:href="@{/admin/viewFormListGrid}" class="toggle-option grid-view"  title="Grid layout">
+                                                <i class="fa fa-th"></i>
+                                            </a>
+                                        </div>  
+                                    </div>
+                                    
+                                    
+                                                                      
+                                </div>
+                            </div>                                                    
+
+                            <!-- Form List Container -->
+                            <div id="form-list-view" class="designer-search-results-stream hide-when-click-upload">
+                                <!-- <div class="form-card-container"></div> -->
+                                <style>                                    
+    
+                                    .table-container {
+                                        margin: 0px 30px;
+                                        overflow-x: auto;
+                                    }
+                                    .table {
+                                        width: 100%;
+                                        border-collapse: collapse;
+                                        margin-top: 50px;
+                                        font-family: Arial, sans-serif;
+                                    }
+    
+                                    .table th, .table td {
+                                        border: none;
+                                        padding: 10px 15px;
+                                        text-align: left;
+                                        width: 20%;
+                                        box-sizing: border-box;
+                                    }
+    
+                                    .table thead th {
+                                        color: #333;
+                                        font-weight: bold;
+                                    }
+    
+                                    .table tbody tr:nth-child(even) {
+                                        background-color: #fff;
+                                    }
+    
+                                    .table tbody tr:nth-child(even) {
+                                        background-color: #fff;
+                                    }
+    
+                                    .table tbody tr:hover {
+                                        background-color: #f2f2f2;
+                                    }
+    
+                                    .table tbody tr th, .table tbody tr  td {
+                                        border-top: 1px solid rgb(201, 201, 201);
+                                        border-bottom: 1px solid rgb(201, 201, 201);
+                                    }
+    
+                                    .pagination {
+                                        display: flex;
+                                        justify-content: end;
+                                        margin-top: 20px;
+                                    }
+    
+                                    .page-numbers {
+                                        display: flex;
+                                        margin: 0 5px;
+                                        padding: 10px 15px;
+                                        color: #333;
+                                    }
+    
+                                    .page-link {
+                                        padding: 5px 10px;
+                                    }
+                                </style>
+                                <div class="table-container">
+                                    <table id="staff-table" class="table">
+                                        <thead>
+                                            <tr>
+                                                <th style="width: 5%;">
+                                                    <select title="You can adjust the number of results per page." id="forms-per-page-select">
+                                                        <option value="5">5</option>
+                                                        <option value="10" selected>10</option>
+                                                        <option value="20">20</option>
+                                                        <option value="50">50</option>
+                                                    </select>
+                                                </th>
+                                                <th>Name</th>
+                                                <th>Staff ID</th>
+                                                <th>Status</th>                                               
+                                                <th>Apply Date</th>
+                                                <th style="width: 5%;">Action</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="form-list">                                            
+                                            <!-- form data will be automatically injected -->
+                                        </tbody>
+                                    </table>
+                                </div>
+                                <div class="pagination">
+                                    <span class="page-numbers"></span>
                                 </div>
                             </div>
 
-                            <!-- Go Back Button -->
-                            <button id="go-back-btn" class="btn2" style="display: none; margin: 10px;">Back to Teams</button>
-
-<!--                            <div id="designer-search-results-stream" class="designer-search-results-stream hide-when-click-upload">-->
-<!--                                <div class="form-card-container">-->
-<!--                                                                       -->
-<!--                                </div>-->
-<!--                            </div>-->
-
-                            <div id="team-folder-view" class="designer-search-results-stream hide-when-click-upload">
-                                <div class="form-card-container"></div>
-                            </div>
-
-                            <!-- Form List Container -->
-                            <div id="form-list-view" class="designer-search-results-stream hide-when-click-upload" style="display: none;">
-                                <div class="form-card-container"></div>
-                            </div>
-
-                            <div class="hide-when-load-download-page">
+                            <div class="hide-when-load-download-page" sec:authorize="hasAuthority('SERVICE_DESK')">
 								<input type="file" id="upload-otp-excel">                 
                             </div>
                             
@@ -83,7 +224,7 @@
                                                     </div>
                                                     <select name="status" id="form-status-select" style="width: 100%;">
                                                         <option value="ALL">All</option>
-                                                        <option value="PENDING" class="hide-service-desk-only">Pending</option>
+                                                        <option value="PENDING" sec:authorize="!hasAuthority('SERVICE_DESK')">Pending</option>
                                                         <option value="APPROVE">Approved</option>
                                                         <option value="REJECT">Rejected</option>
                                                     </select>
@@ -124,7 +265,7 @@
                                                     <div class="label-flag">
                                                         <label>Form Status</label> <!---->
                                                     </div>
-                                                    <select name="status" id="" style="width: 100%;">
+                                                    <select name="status" style="width: 100%;">
                                                         <option value="all">All</option>
                                                         <option value="pending">Pending</option>
                                                         <option value="approved">Approved</option>
@@ -132,25 +273,7 @@
                                                     </select>
 
                                                 </div>
-                                                <div class="form-field-wrapper">
-                                                    <div class="label-flag heading-label">
-                                                        <label>Specific</label>
-                                                    </div>
-                                                    <select name="specific" id="" style="width: 100%;">
-                                                        <option value="all">All</option>
-                                                        <option value="name">Name</option>
-                                                        <option value="position">Position</option>
-                                                        <option value="role">Role</option>
-                                                    </select>
-                                                </div>
-                                                <div class="form-field-wrapper">
-                                                    <div class="label-flag heading-label">
-                                                        <label>Location</label>
-                                                    </div>
-                                                    <select name="" id="" style="width: 100%;">
-                                                        <option value="all">All</option>
-                                                    </select>
-                                                </div>
+
                                             </fieldset>
                                         </form>
                                     </div>

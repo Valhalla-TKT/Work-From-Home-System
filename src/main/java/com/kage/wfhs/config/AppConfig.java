@@ -11,6 +11,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
+import org.thymeleaf.extras.springsecurity6.dialect.SpringSecurityDialect;
 
 import java.util.List;
 
@@ -58,5 +59,10 @@ public class AppConfig {
                         .description("This API exposes endpoints to manage Work From Home system.")
                         .contact(myContact);
         return new OpenAPI().info(information).servers(List.of(server));
+    }
+
+    @Bean
+    public SpringSecurityDialect springSecurityDialect() {
+        return new SpringSecurityDialect();
     }
 }

@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+
+<head>
+    <title>WorkHub - Send Email</title>
+</head>
+
+<body>
+<main th:fragment="content" class="home-page container">
+    <script src="https://cdn.ckeditor.com/ckeditor5/35.0.1/classic/ckeditor.js"></script>
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <h1>Send Email</h1>
+            <form id="mailForm">
+                <div class="form-group">
+                    <label for="mail-subject">Subject:</label>
+                    <input type="text" class="form-control" id="mail-subject" name="subject" required>
+                </div>
+                <div class="form-group">
+                    <label for="mail-body">Body:</label>
+                    <textarea class="form-control" id="mail-body" name="body" required></textarea>
+                    <script>
+                        ClassicEditor
+                            .create(document.querySelector('#mail-body'))
+                            .catch(error => {
+                                console.error(error);
+                            });
+                    </script>
+                </div>
+                <button type="submit" class="btn btn-primary">Send</button>
+            </form>
+        </div>
+    </div>
+    <script>
+        $(document).ready(function() {
+            $('#mailForm').on('submit', function(event) {
+                event.preventDefault();
+                var subject = $('#subject').val();
+                var body = $('#body').val();
+
+                $.ajax({
+                    url: `${getContextPath()}/api/sendMail`,
+                    type: 'POST',
+                    contentType: 'application/json',
+                    data: JSON.stringify({ subject: subject, body: body }),
+                    success: function(response) {
+                        $('#resultMessage').html('<div class="alert alert-success">' + response + '</div>');
+                    },
+                    error: function(xhr) {
+                        $('#resultMessage').html('<div class="alert alert-danger">' + xhr.responseText + '</div>');
+                    }
+                });
+            });
+        });
+    </script>
+</main>
+</body>
+
+</html>

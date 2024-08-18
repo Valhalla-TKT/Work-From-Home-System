@@ -11,7 +11,6 @@ import com.kage.wfhs.dto.UserDto;
 import com.kage.wfhs.dto.auth.CurrentLoginUserDto;
 import com.kage.wfhs.model.ApproveRole;
 import com.kage.wfhs.model.Team;
-import com.kage.wfhs.model.User;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -37,13 +36,15 @@ public interface UserService {
     UserDto getUserById(Long id);
     
     // codes for live chat between Service Desk and User
-	void setUserOnline(User user);
-	void disconnect(User user);
-	List<UserDto> findConnectedUsers();
+
 	List<UserDto> getUpperRole(Long workFlowOrderId, Long userId);
 	List<Object[]> getUserRequestByTeamId(Long teamId);
-	List<Object[]> getTotalStaffRequestByTeamId(String teamId);
-	Object[] getTeamRegistrationInfo(Long teamId);
+	List<Object[]> getUserRequestByTeamIds(List<Long> teamIds);
+	List<Object[]> getUserRequestByManagedTeam(String managedTeamName);
+	List<Object[]> getTotalStaffRequestByTeamId(String teamId);// to delete
+	List<Object[]> getTotalStaffRequestByByManagedTeam(String managedTeamName);
+	Object[] getTeamRegistrationInfo(Long teamId);// to delete
+	Object[] getTeamRegistrationInfoByManagedTeam(String managedTeamName);
 	List<Object[]> getAllTeamRequestByDepartmentId(Long departmentId);
 	List<Object[]> getTotalTeamRequestByDepartmentId(String departmentId);
 	Object[] getDepartmentRegistrationInfo(Long departmentId);
@@ -63,8 +64,14 @@ public interface UserService {
 	List<UserDto> getAllUserByDepartmentIdAndGender(Long departmentId, String gender);
 	List<UserDto> getAllUserByDivisionIdAndGender(Long divisionId, String gender);
 
-    boolean updateApproveRole(long userId, List<Long> approveRoleIdList);
+    boolean updateApproveRole(long userId, List<Long> approveRoleIdList, List<Long> teamIds, List<Long> departmentIds, List<Long> divisionIds);
 	List<UserDto> getAllApprover();
 
     UserDto changePosition(Long userId, String position);
+
+	boolean sendMailToAll(String subject, String body);
+
+	List<UserDto> getApproversByApproveRoleId(Long approveRoleId);
+
+	boolean deleteUserById(Long userId);
 }

@@ -7,10 +7,8 @@
  */
 package com.kage.wfhs.controller.api;
 
-import com.kage.wfhs.dto.ApproveRoleDto;
 import com.kage.wfhs.dto.UserDto;
 import com.kage.wfhs.dto.WorkFlowOrderDto;
-import com.kage.wfhs.model.User;
 import com.kage.wfhs.service.UserService;
 import com.kage.wfhs.service.WorkFlowOrderService;
 
@@ -18,9 +16,7 @@ import lombok.AllArgsConstructor;
 
 import java.util.*;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -29,8 +25,6 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/api/user")
 public class UserController {
 
-    private static final Logger log = LoggerFactory.getLogger(UserController.class);
-    @Autowired
     private final UserService userService;
     private final WorkFlowOrderService workFlowOrderService;
     @PostMapping("/generateStaffId")
@@ -51,12 +45,12 @@ public class UserController {
     @PostMapping("/updateApproveRole")
     public ResponseEntity<String> updateApproveRole(
     		@RequestParam(value = "userId") long userId,
-    		@RequestParam(value = "approveRoleId") List<Long> approveRoleIdList
+    		@RequestParam(value = "approveRoleId") List<Long> approveRoleIdList,
+            @RequestParam(value = "teamIds", required = false) List<Long> teamIds,
+            @RequestParam(value = "departmentIds", required = false) List<Long> departmentIds,
+            @RequestParam(value = "divisionIds", required = false) List<Long> divisionIds
     		) {
-        for (Long approveRoleDto : approveRoleIdList) {
-            System.out.println(approveRoleDto + " ");
-        }
-        boolean approveRoleSaved = userService.updateApproveRole(userId, approveRoleIdList);
+        boolean approveRoleSaved = userService.updateApproveRole(userId, approveRoleIdList, teamIds, departmentIds, divisionIds);
         if (approveRoleSaved) {
             return ResponseEntity.ok("Update Approve Role Success...");
         } else {
@@ -70,6 +64,7 @@ public class UserController {
         WorkFlowOrderDto upperRole = workFlowOrderService.getWorkFlowOrderByUserId(userId);
         List<UserDto> memberList = userService.getAllTeamMember(teamId);
         List<UserDto> upperUserList = userService.getUpperRole(upperRole.getId() -1, userId);
+        upperUserList.forEach(userDto -> userDto.setName(userDto.getName() + " (" + userDto.getApproveRoleName() + ")"));
         Set<UserDto> userSet = new HashSet<>();
         userSet.addAll(upperUserList);
         userSet.addAll(memberList);
@@ -137,21 +132,20 @@ public class UserController {
             return ResponseEntity.ok(userList);
     }
     
-  //TEAM
-
+    // TEAM
     @GetMapping("/userRequest")
-    public List<Object[]> getUserRequestByTeamId(@RequestParam Long teamId) {
-        return userService.getUserRequestByTeamId(teamId);
+    public List<Object[]> getUserRequestByTeamId(@RequestParam String managedTeamName) {
+        return userService.getUserRequestByManagedTeam(managedTeamName);
     }
 
     @GetMapping("/requestStaff")
-    public List<Object[]> getTotalStaffRequestByTeamId(@RequestParam("teamId") String teamId) {
-        return userService.getTotalStaffRequestByTeamId(teamId);
+    public List<Object[]> getTotalStaffRequestByTeamId(@RequestParam("managedTeamName") String managedTeamName) {
+        return userService.getTotalStaffRequestByByManagedTeam(managedTeamName);
     }
-    
+
     @GetMapping("/teamRegistrationInfo")
-    public Object[] getTeamRegistrationInfo(@RequestParam Long teamId) {
-        return userService.getTeamRegistrationInfo(teamId);
+    public Object[] getTeamRegistrationInfo(@RequestParam String managedTeamName) {
+        return userService.getTeamRegistrationInfoByManagedTeam(managedTeamName);
     }
 
     //DEPARTMENT HEAD
@@ -203,13 +197,50 @@ public class UserController {
         return ResponseEntity.ok(userService.getAllApprover());
     }
 
+    @PostMapping("/getApproversByApproveRoleId")
+    public ResponseEntity<?> getApproversByApproveRoleId(
+            @RequestParam("approveRoleId") Long approveRoleId
+    ){
+        return ResponseEntity.ok(userService.getApproversByApproveRoleId(approveRoleId));
+    }
+
     @PutMapping("/changePosition/{userId}")
     public ResponseEntity<Map<String, Object>> changePosition(@PathVariable Long userId, @RequestParam String position) {
         UserDto userDto = userService.changePosition(userId, position);
+        System.out.println("HElloooooo");
         Map<String, Object> response = new HashMap<>();
         response.put("status", "success");
         response.put("message", "Position changed successfully");
         response.put("data", userDto);
         return ResponseEntity.ok(response);
     }
+
+    @PostMapping("/sendMail")
+    public ResponseEntity<String> sendMail(@RequestBody Map<String, String> request) {
+        String subject = request.get("subject");
+        String body = request.get("body");
+        boolean result = userService.sendMailToAll(subject, body);
+        if (result) {
+            return ResponseEntity.ok("Emails sent successfully.");
+        } else {
+            return ResponseEntity.status(500).body("Failed to send emails.");
+        }
+    }
+
+    @DeleteMapping("")
+    public ResponseEntity<String> deleteUser(@RequestParam("userId") Long userId) {
+        try {
+            boolean deleted = userService.deleteUserById(userId);
+            if (deleted) {
+                return ResponseEntity.ok("User with ID " + userId + " was successfully deleted.");
+            } else {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                        .body("User with ID " + userId + " not found.");
+            }
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("An error occurred while deleting the user with ID " + userId + ": " + e.getMessage());
+        }
+    }
+
 }

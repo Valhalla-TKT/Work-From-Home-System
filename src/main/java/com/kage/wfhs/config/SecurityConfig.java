@@ -75,15 +75,16 @@ public class SecurityConfig {
                 .formLogin(form -> form
                         .loginPage("/login")
                         .loginProcessingUrl("/signIn")
-                        .defaultSuccessUrl("/dashboard")
+                        .defaultSuccessUrl("/home")
                         .successHandler(
                                 (request, response, authentication) -> {
+                                    System.out.println("Authentication success handler called");
                                     String contextPath = request.getContextPath();
                                     String token = jwtUtil.generateToken(authentication.getName());
                                     Cookie cookie = new Cookie("JWT", token);
                                     cookie.setHttpOnly(false);
                                     cookie.setPath(contextPath + "/");
-                                    cookie.setMaxAge(86400); // 1 day
+                                    cookie.setMaxAge(86400);
                                     response.addCookie(cookie);
                                     response.setHeader("X-JWT-Token", token);
 
@@ -91,7 +92,7 @@ public class SecurityConfig {
                                     request.getSession().setAttribute("login-user", userDto);
                                     String deviceInfo = request.getParameter("deviceInfo");
                                     logService.logUserLogin(userDto, deviceInfo);
-                                    response.sendRedirect(contextPath + "/dashboard");
+                                    response.sendRedirect(contextPath + "/home");
                                 })
                         .failureHandler(authenticationFailureHandler())
                         .permitAll()

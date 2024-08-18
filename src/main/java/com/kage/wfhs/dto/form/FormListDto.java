@@ -1,5 +1,7 @@
 package com.kage.wfhs.dto.form;
 
+import java.util.Date;
+
 import com.kage.wfhs.model.User;
 import lombok.*;
 
@@ -11,5 +13,6 @@ import lombok.*;
 public class FormListDto {
     private Long id, applicantId;
     private String currentStatus, status;
+    private Date signedDate;
     private User applicant, requester;
 }

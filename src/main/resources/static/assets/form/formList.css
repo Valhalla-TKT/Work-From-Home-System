@@ -7086,7 +7086,7 @@ drb-dropdown[active='true'] .dropdown2 {
     position: absolute;
     width: var(--check-icon-size, 12px);
     height: var(--check-icon-size, 12px);
-    background-image: url(/assets/icons/check-white-4280ab4c53ca62fad039199f10c3964076dae155a1335788ec62f4b9dd5a5f4f.svg);
+    background-image: url(/wfhs/assets/icons/check-white-4280ab4c53ca62fad039199f10c3964076dae155a1335788ec62f4b9dd5a5f4f.svg);
     background-repeat: no-repeat
 }
 
@@ -22780,6 +22780,7 @@ div.rsvp-mod {
     gap: 20px;
     justify-items: center;
     justify-content: start;
+    grid-template-columns: repeat(2, 1fr);
 }
 
 .team-folder-view .form-card-container {
@@ -22789,6 +22790,23 @@ div.rsvp-mod {
 
 .resume-card-view .form-card-container {
     grid-template-columns: repeat(2, 1fr);
+}
+
+.folder-container {
+    display: inline-block;
+    margin: 10px;
+    padding: 10px 15px 5px 15px;
+    transition: background-color 0.3s;
+    border-radius: 5px;
+}
+
+.folder-container:hover {
+    background-color: #e0e0e0;
+}
+
+.folder-container.selected {
+    background-color: #0078d4;
+    color: #ffffff;
 }
 
 .folder {
@@ -22815,6 +22833,11 @@ div.rsvp-mod {
 .folder-title {
     text-align: center;
     margin-top: 5px;
+    transition: color 0.3s;
+}
+
+.folder-container.selected .folder-title {
+    color: #ffffff;
 }
 
 .resume-card {

@@ -1,11 +1,11 @@
 <!DOCTYPE html>
 
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org"
+	  xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 
 <head>
 <title>WorkHub</title>
 </head>
-
 <body>
 	<!-- ============================================================== -->
 	<!-- Form -->
@@ -84,7 +84,7 @@
 												<span data-v-741dde45="" class="title">Applicant
 													Information</span>
 											</header>
-											<div id="division-input-container" data-v-741dde45="" class="form-field-container hide-dept-head-only">
+											<div sec:authorize="hasAnyAuthority('CISO', 'CEO', 'HR')" id="division-input-container" data-v-741dde45="" class="form-field-container">
 					                          <span data-v-741dde45="" class="error-marker">
 					                            <div data-v-42dea6db="" data-v-741dde45="" class="">
 					                              <label data-v-42dea6db="" for="division-name" class="label">
@@ -99,7 +99,7 @@
 					                            </div>
 					                          </span>
 					                        </div> 
-											<div id="department-input-container" data-v-741dde45="" class="form-field-container hide-project-manager-only hide-applicant-only">
+											<div sec:authorize="hasAnyAuthority('DIVISION_HEAD','CISO', 'CEO', 'HR')" id="department-input-container" data-v-741dde45="" class="form-field-container">
 					                          <span data-v-741dde45="" class="error-marker">
 					                            <div data-v-42dea6db="" data-v-741dde45="" class="">
 					                              <label data-v-42dea6db="" for="department-name" class="label">
@@ -114,10 +114,10 @@
 					                            </div>
 					                          </span>
 					                        </div>
-											<div id="team-input-container" data-v-741dde45="" class="form-field-container hide-project-manager-only hide-applicant-only">
+											<div sec:authorize="hasAnyAuthority('DEPARTMENT_HEAD', 'DIVISION_HEAD','CISO', 'CEO', 'HR')" id="team-input-container" data-v-741dde45="" class="form-field-container">
 					                          <span data-v-741dde45="" class="error-marker">
 					                            <div data-v-42dea6db="" data-v-741dde45="" class="">
-					                              <label data-v-42dea6db="" for="department-name" class="label">
+					                              <label data-v-42dea6db="" for="team-name" class="label">
 					                                Choose Team
 					                                <span data-v-42dea6db="" class="color-lobster">*</span>
 					                              </label>
@@ -197,7 +197,7 @@
 													<span data-v-741dde45="" class="error-marker">
 														<div data-v-42dea6db="" data-v-741dde45="" class="">
 															<label data-v-42dea6db="" for="position-input-box" class="label">
-																Position <span data-v-42dea6db="" class="color-lobster" style="font-style: italic">* (You can update your position name on the <a style="color:#ff5555; text-decoration: underline" th:href="@{/profile}">Profile</a> page.)</span>
+																Position <span data-v-42dea6db="" id="apply-form-page-update-profile" class="color-lobster" style="font-style: italic">* (You can update your position name on the <a style="color:#ff5555; text-decoration: underline" th:href="@{/profile}">Profile</a> page.)</span>
 															</label>
 															<div data-v-42dea6db="" class="">
 																<!---->
@@ -385,26 +385,7 @@
 															<label class="label"> Request Reason <span
 																data-v-3ab916fa="" data-test="required" class="required">*</span>
 															</label>
-															<!-- <div data-v-3ab916fa="" class="container">
-
-																<div data-v-3e4e869a="" data-v-3ab916fa=""
-																	class="editable-textarea text-field inline"
-																	data-test="editor" value="">
-																	
-																	<div data-v-3e4e869a="" class="outlined">
-																		<div data-v-3e4e869a="" class="editor">
-																			<div contenteditable="true" translate="no"
-																				class="ProseMirror" tabindex="0">
-																				<p data-placeholder="e.g. I want to take "
-																					class="is-empty is-editor-empty">
-																					<br class="ProseMirror-trailingBreak" />
-																				</p>
-																			</div>
-																		</div>
-																	</div>
-																</div>
-															</div> -->
-															<textarea style="height: 200px; border: 1px solid black;" placeholder="e.g. I would like to go somewhere"  id="form-request-reason"></textarea>
+															<textarea style="height: 200px; border: 1px solid black;" placeholder="e.g. For Emergency Only"  id="form-request-reason"></textarea>
 														</div> <!---->
 													</span>
 												</div>

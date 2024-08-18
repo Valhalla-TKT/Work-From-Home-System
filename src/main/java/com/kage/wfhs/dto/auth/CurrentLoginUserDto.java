@@ -12,10 +12,11 @@ import java.util.Set;
 @NoArgsConstructor
 @AllArgsConstructor
 @ToString
+@Builder
 public class CurrentLoginUserDto {
     private Long id;
-    private String staffId, name, email, gender, positionName, teamName, approveRoleName, departmentName, divisionName, profile;
-    private boolean firstTimeLogin;
+    private String staffId, name, email, gender, positionName, teamName, approveRoleName, departmentName, divisionName, profile, managedTeamName, managedDepartmentName, managedDivisionName;
+    private boolean firstTimeLogin, registeredForThisMonth;
     private Set<ApproveRole> approveRoles;
     private Team team;
     private Department department;

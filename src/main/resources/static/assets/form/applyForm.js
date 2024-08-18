@@ -33,6 +33,7 @@ $(document).ready(function() {
     const signedDateInputBox = $('#signed-date');
     
     const checkBoxModalDialog = $("#checkbox-dialog");
+	const applyFormPageUpdateProfile = $("#apply-form-page-update-profile")
     
     // Generate from date to date
 	var currentDate = new Date();
@@ -48,6 +49,8 @@ $(document).ready(function() {
 	$('#work-in-others-button').hide();
     $('#region-state-select').hide();
     $('#city-township-select').hide();
+
+	applyFormPageUpdateProfile.show()
 
     function toggleButtonAndSelect() {
         $('#working-input-box').val('');        
@@ -68,33 +71,53 @@ $(document).ready(function() {
         toggleButtonAndSelect();
     });
 
-    
 
-    var regionSelect = $('#region-state-select');
-    regionSelect.append('<option value="" disabled selected>Region/State</option>');
-    $.each(regions, function(index, region){
-        regionSelect.append('<option value="' + region.regionState + '">' + region.regionState + '</option>');
-    });
 
-    $('#region-state-select').change(function(){
-        var selectedRegion = $(this).val();
-        var cities = [];
+	var regionSelect = $('#region-state-select');
+	regionSelect.append('<option value="" disabled selected>Region/State</option>');
 
-        $.each(regions, function(index, region){
-            if(region.regionState === selectedRegion) {
-                cities = region.cities;
-                return false;
-            }
-        });
-        
-        $('#city-township-select').empty();
+	regions.sort(function(a, b) {
+		return a.regionState.localeCompare(b.regionState);
+	});
+
+	var uniqueRegions = new Set();
+
+	$.each(regions, function(index, region) {
+		if (!uniqueRegions.has(region.regionState)) {
+			uniqueRegions.add(region.regionState);
+			regionSelect.append('<option value="' + region.regionState + '">' + region.regionState + '</option>');
+		}
+	});
+
+	$('#region-state-select').change(function() {
+		var selectedRegion = $(this).val();
+		var cities = [];
+
+		$.each(regions, function(index, region) {
+			if (region.regionState === selectedRegion) {
+				cities = region.cities;
+				return false;
+			}
+		});
+
+		cities.sort(function(a, b) {
+			return a.city.localeCompare(b.city);
+		});
+
+		$('#city-township-select').empty();
 		$('#city-township-select').append('<option value="" disabled selected>City/Township</option>');
-        $.each(cities, function(index, city){
-			
-            $('#city-township-select').append('<option value="' + city.city + '">' + city.city + '</option>');
-        });
-    });
-    var selectedRegion, selectedCity, workInMyanmar, workInMyanmarBoolean = false;
+
+		var uniqueCities = new Set();
+
+		$.each(cities, function(index, city) {
+			if (!uniqueCities.has(city.city)) {
+				uniqueCities.add(city.city);
+				$('#city-township-select').append('<option value="' + city.city + '">' + city.city + '</option>');
+			}
+		});
+	});
+
+	var selectedRegion, selectedCity, workInMyanmar, workInMyanmarBoolean = false;
     $('#city-township-select').change(function(){
         selectedRegion = $('#region-state-select').val().trim();
         selectedCity = $(this).val();
@@ -220,7 +243,6 @@ $(document).ready(function() {
 		divisionInputContainer.hide();
 		$('#department-input-container').hide();
 		$('#team-input-container').hide();
-		getTeamMemberById(currentUser.team.id, currentUser.id).then(r => "");
 	} else {
 		divisionInputContainer.hide();
 		$('#department-input-container').hide();
@@ -230,6 +252,7 @@ $(document).ready(function() {
     selfRequestRadio.on('change', function() {
 		selfRequestRadioChecked = true;
 		otherRequestRadioChecked = false;
+		applyFormPageUpdateProfile.show()
 	    if ($(this).prop('checked')) {
 	    	$('#name-select-box-container').hide();
 	        $('#name-input-container').show();
@@ -256,6 +279,7 @@ $(document).ready(function() {
 	otherRequestRadio.on('change', function() {
 		selfRequestRadioChecked = false;
 		otherRequestRadioChecked = true;
+		applyFormPageUpdateProfile.hide()
 		if ($(this).prop('checked')) {
 	    	$('#name-select-box-container').show();
 	        $('#name-input-container').hide();
@@ -441,7 +465,6 @@ $(document).ready(function() {
       $('#ceo-apply-form-btn').click(async function(event) {
 			event.preventDefault();
 			var formData = new FormData();
-			//formData.append('applicantId', currentUser.id);
 	        formData.append('userId', currentUser.id);
 	        formData.append('from_date', formatDate(fromDate));
 	        formData.append('to_date', formatDate(toDate));
@@ -463,7 +486,7 @@ $(document).ready(function() {
 	                timerProgressBar: true,
 	                showConfirmButton: false
 	            }).then(() => {
-	                window.location.href = `${getContextPath()}/dashboard`;
+	                window.location.href = `${getContextPath()}/home`;
 	            });
 		    },
 		    error: function(error) {
@@ -475,48 +498,6 @@ $(document).ready(function() {
 	$('#apply-form-btn').click( function(event) {
 		event.preventDefault();
 		submitForm();
-		// await Swal.fire({
-		// 	title: 'Choose Approver Name',
-		// 	html: `<select id="approver-name" class="select" style="width: 100%; color: #0d0c22; border: 1px solid black;">
-        //            <option selected disabled>Choose Approver Name</option>
-        //        </select>`,
-		// 	didOpen: async () => {
-		// 		await getAllApprover();
-		// 	},
-		// 	preConfirm: () => {
-		// 		const approverName = Swal.getPopup().querySelector('#approver-name').value;
-		// 		if (!approverName) {
-		// 			Swal.showValidationMessage(`Please choose an approver`);
-		// 		}
-		// 		return approverName;
-		// 	},
-		// 	showCancelButton: true,
-		// 	confirmButtonText: 'Select',
-		// 	cancelButtonText: 'Cancel'
-		// }).then((result) => {
-		// 	if (result.isConfirmed) {
-		// 		const selectedApproverName = result.value;
-		//
-		// 		// Show confirmation dialog
-		// 		Swal.fire({
-		// 			title: 'Are you sure?',
-		// 			text: `You selected ${selectedApproverName}. Do you want to proceed?`,
-		// 			icon: 'warning',
-		// 			showCancelButton: true,
-		// 			confirmButtonText: 'Yes, proceed',
-		// 			cancelButtonText: 'No, change selection'
-		// 		}).then((confirmResult) => {
-		// 			if (confirmResult.isConfirmed) {
-		// 				// Proceed to API call
-		// 				approverId = selectedApproverName; // Update your approverId with the selected name
-		// 				submitForm();
-		// 			} else {
-		// 				// Show the select box again
-		// 				$('#apply-form-btn').click();
-		// 			}
-		// 		});
-		// 	}
-		// });
 	});
 	function parseAndFormatDate(inputBox, fromDate) {
 		var dateValue = inputBox.val();
@@ -550,10 +531,18 @@ $(document).ready(function() {
 			return;
 		}
 		if(selfRequestRadioChecked) {
-			// applicantId = currentUser.id;
 			applicantId = parseInt(currentUser.id, 10);
 			requesterId = currentUser.id;
 			requesterId = parseInt(currentUser.id, 10);
+			if(currentUser.registeredForThisMonth) {
+				Swal.fire({
+					title: "Registration Warning",
+					text: "You've already submitted the WFHS form for this month. To make changes, go to the history page and click 'View Details' on the form.",
+					icon: "warning",
+					confirmButtonText: "Got it",
+				});
+				return;
+			}
 		} else if(otherRequestRadioChecked) {
 			if (!selectedTeamMemberId) {
 				Swal.fire({
@@ -564,9 +553,7 @@ $(document).ready(function() {
 				});
 				return;
 			}
-			//applicantId = selectedTeamMemberId;
 			applicantId = parseInt(selectedTeamMemberId, 10);
-			//requesterId = currentUser.id;
 			requesterId = parseInt(currentUser.id, 10);
 		}
 		if (!positionInputBox.val()) {
@@ -624,10 +611,7 @@ $(document).ready(function() {
 			});
 			return;
 		}
-		// var formattedFromDate = new Date(fromDateInputBox.val()).toISOString().split('T')[0];
 		from_date = formatToISODate(fromDateInputBox.val());
-
-		// from_date = parseAndFormatDate(fromDateInputBox, true);
 
 		if (!toDateInputBox.val()) {
 			Swal.fire({
@@ -802,93 +786,43 @@ $(document).ready(function() {
 		signature = signatureInputBox.prop('files')[0];
 
 		event.preventDefault();
-		// var requestData = {
-		// 	applicantId: applicantId,
-		// 	requesterId: requesterId,
-		// 	positionName: positionName,
-		// 	working_place: working_place,
-		// 	request_reason: request_reason,
-		// 	from_date: from_date,
-		// 	to_date: to_date,
-		// 	signature: signature,
-		// 	os_type: os_type,
-		// 	request_percent: request_percent,
-		// 	applied_date: applied_date,
-		// 	approverId: approverId
-		// };
-		// //createForm(requestData)
-		//
-		// var formData = new FormData();
-		// formData.append('applicantId', applicantId);
-		// formData.append('requesterId', requesterId);
-		// formData.append('positionName', positionName);
-		// formData.append('working_place', working_place);
-		// formData.append('request_reason', request_reason);
-		// formData.append('request_percent', request_percent);
-		// formData.append('from_date', from_date);
-		// formData.append('to_date', to_date);
-		// formData.append('signed_date', signed_date);
-		// formData.append('os_type', os_type);
-		// formData.append('applied_date', applied_date);
-		// formData.append('approverId', approverId);
-		//
-		// // Append file inputs to FormData
-		// if(os_type === 'Window') {
-		// 	formData.append('operationSystem', $('#file1')[0].files[0]);
-		// 	formData.append('securityPatch', $('#file2')[0].files[0]);
-		// 	formData.append('antivirusSoftware', $('#file3')[0].files[0]);
-		// 	formData.append('antivirusPattern', $('#file4')[0].files[0]);
-		// 	formData.append('antivirusFullScan', $('#file5')[0].files[0]);
-		// }
-		// if(os_type === 'Mac') {
-		// 	formData.append('operationSystem', $('#file6')[0].files[0]);
-		// 	formData.append('securityPatch', $('#file7')[0].files[0]);
-		// 	formData.append('antivirusSoftware', $('#file8')[0].files[0]);
-		// }
-		// if(os_type === 'Linux') {
-		// 	formData.append('operationSystem', $('#file9')[0].files[0]);
-		// 	formData.append('securityPatch', $('#file10')[0].files[0]);
-		// 	formData.append('antivirusSoftware', $('#file11')[0].files[0]);
-		// }
-		// formData.append('signature', $('#file12')[0].files[0]);
-		// formData.append('registerFormDto', JSON.stringify(requestData));
 
-		// $.ajax({
-		// 	url: `${getContextPath()}/api/registerform/create`,
-		// 	type: 'POST',
-		// 	data: formData,
-		// 	processData: false,
-		// 	contentType: false,
-		// 	success: function(response) {
-		// 		console.log("Successful : ", response);
-		// 		$('#message').text(response);
-		// 		Swal.fire({
-		// 			title: "Success!",
-		// 			text: "WFH Form Application Complete!",
-		// 			icon: "success",
-		// 			timer: 3000,
-		// 			timerProgressBar: true,
-		// 			showConfirmButton: false
-		// 		}).then(() => {
-		// 			window.location.href = `${getContextPath()}/dashboard`;
-		// 		});
-		// 	},
-		// 	error: function(error) {
-		// 		console.error('Error:', error);
-		// 	}
-		// });
 		await Swal.fire({
-			title: 'Choose Approver Name',
-			html: `<select id="approver-name" class="select" style="width: 100%; color: #0d0c22; border: 1px solid black;">
-                   <option selected disabled>Choose Approver Name</option>
+			title: 'Choose Approve Role and Name',
+			html: `
+				<select id="approve-role" class="select" style="width: 100%; color: #0d0c22; border: 1px solid black; text-transform: capitalize;">
+					<option selected value="" disabled>Choose Approver Role</option>
+				</select>
+				<br/><br/>
+				<select id="approver-name" class="select" style="width: 100%; color: #0d0c22; border: 1px solid black;">
+                   <option selected value="" disabled>Choose Approver Name</option>
                </select>`,
 			didOpen: async () => {
-				await getAllApprover();
+				const approveRoleResponse = await fetchApproveRoleWithoutApplicant();
+				const approveRoleSelect = Swal.getPopup().querySelector('#approve-role');
+				const formatRoleName = (roleName) => {
+					return roleName
+						.replace(/_/g, ' ')
+						.toLowerCase()
+						.replace(/\b\w/g, char => char.toUpperCase());
+				};
+				approveRoleResponse.forEach(role => {
+					const option = document.createElement('option');
+					option.value = role.id;
+					option.text = formatRoleName(role.name);
+					approveRoleSelect.add(option);
+				});
+
+				approveRoleSelect.addEventListener('change', async () => {
+					const selectedRoleId = approveRoleSelect.value;
+					await getAllApprover(selectedRoleId, currentUser.name);
+				});
 			},
 			preConfirm: () => {
+				const approverRole = Swal.getPopup().querySelector('#approve-role').value;
 				const approverName = Swal.getPopup().querySelector('#approver-name').value;
-				if (!approverName) {
-					Swal.showValidationMessage(`Please choose an approver`);
+				if (!approverRole || !approverName) {
+					Swal.showValidationMessage(`Please choose both an approver role and an approver name.`);
 				}
 				return approverName;
 			},
@@ -897,9 +831,7 @@ $(document).ready(function() {
 			cancelButtonText: 'Cancel'
 		}).then((result) => {
 			if (result.isConfirmed) {
-				const approverName = result.value;
-				//const approverId = $('#approver-name').find(':selected').data('id');
-
+				const approverName = $('#approver-name').find('option:selected').text();
 				Swal.fire({
 					title: 'Are you sure?',
 					text: `You selected ${approverName}. Do you want to proceed?`,
@@ -947,7 +879,7 @@ $(document).ready(function() {
 									confirmButtonText: "OK"
 								}).then((result) => {
 									if (result.isConfirmed) {
-										window.location.href = `${getContextPath()}/dashboard`;
+										window.location.href = `${getContextPath()}/home`;
 									}
 								});
 							},
@@ -969,8 +901,27 @@ $(document).ready(function() {
 				console.log('Approver selection was canceled');
 			}
 		});
+	}
 
-		// $(this).submit();
+	async function getAllApprover(approveRoleId, name) {
+		const response = await fetchApproversByApproveRoleId(approveRoleId);
+		console.log(response)
+		var selectBox = $('#approver-name');
+		selectBox.empty();
+		selectBox.append('<option value="" selected>Choose Approver Name</option>');
+		for (var i = 0; i < response.length; i++) {
+			if (response[i].name !== name) {
+				var option = $('<option>', {
+					value: response[i].id,
+					text: response[i].name,
+					'data-staff-id': response[i].staffId,
+				});
+				selectBox.append(option);
+			}
+		}
+		selectBox.on('change', function() {
+			approverId = $(this).val()
+		});
 	}
 
 	async function getTeamMemberById(teamId, userId) {
@@ -1006,34 +957,6 @@ $(document).ready(function() {
 		}
 	}
 
-	async function getAllApprover() {
-		const response = await fetchApprovers();
-		var selectBox = $('#approver-name');
-		selectBox.empty();
-		selectBox.append('<option value="" selected>Choose Approver Name</option>');
-		for (var i = 0; i < response.length; i++) {
-			if (response[i].name !== currentUser.name) {
-				var option = $('<option>', {
-					value: response[i].id,
-					text: response[i].name,
-					'data-staff-id': response[i].staffId,
-				});
-				selectBox.append(option);
-			}
-		}
-		selectBox.on('change', function() {
-			var selectedValue = $(this).val();
-			console.log('Selected value:', selectedValue);
-			approverId = selectedValue
-
-			var selectedText = $(this).find('option:selected').text();
-			console.log('Selected text:', selectedText);
-
-			var selectedStaffId = $(this).find('option:selected').data('staff-id');
-			console.log('Selected staff ID:', selectedStaffId);
-		});
-	}
-
 	async function getAllDivision() {
 		await fetchDivisions()
 			.then(response => {
@@ -1056,6 +979,7 @@ $(document).ready(function() {
 	$('#division-name').on('change', async function() {
 		await updateDepartmentsByDivision();
 		await updateTeamsByDivision();
+		await getAllTeamMember();
 	});
 
 	async function getAllDepartment() {
@@ -1079,14 +1003,21 @@ $(document).ready(function() {
 
 	$('#department-name').on('change', async function() {
 		await updateTeamsByDepartment();
+		await getAllTeamMember();
 	});
 
 	async function getAllTeam() {
+		// if not division_head, I want with await fetchTeamsByDivisionId(currentUser.division.id)
+		// otherwise, I want with await fetchTeams()
+
+		// if department_head
+		// let response;
+
 		await fetchTeams()
 			.then(response => {
 				var selectBox = $('#team-name');
 				selectBox.empty();
-				selectBox.append('<option value="all" selected>Choose Name</option>');
+				selectBox.append('<option value="all" selected>Choose Team Name</option>');
 				for (var i = 0; i < response.length; i++) {
 					var option = $('<option>', {
 						value: response[i].id,
@@ -1100,6 +1031,39 @@ $(document).ready(function() {
 				console.error('Error:', error);
 			})
 	}
+
+
+	// async function getAllTeam() {
+	// 	let response;
+	//
+	// 	try {
+	// 		if (isDivisionHead) {
+	// 			// Fetch teams based on the division ID if the user is a division head
+	// 			response = await fetchTeamsByDivisionId(currentUser.division.id);
+	// 		} else if (isDepartmentHead) {
+	// 			// Fetch teams based on the department ID if the user is a department head
+	// 			response = await fetchTeamsByDepartmentId(currentUser.department.id);
+	// 		} else {
+	// 			response = await fetchTeams();
+	// 		}
+	//
+	// 		// Populate the select box with the retrieved data
+	// 		var selectBox = $('#team-name');
+	// 		selectBox.empty();
+	// 		selectBox.append('<option value="all" selected>Choose Name</option>');
+	// 		response.forEach(team => {
+	// 			var option = $('<option>', {
+	// 				value: team.id,
+	// 				text: team.name,
+	// 			});
+	// 			selectBox.append(option);
+	// 		});
+	//
+	// 	} catch (error) {
+	// 		console.error('Error:', error);
+	// 	}
+	// }
+
 
 	$('#team-name').on('change', async function() {
 		await getAllTeamMember();
@@ -1117,6 +1081,7 @@ $(document).ready(function() {
 		} else if (selectedDivisionId && selectedDivisionId !== "all") {
 			response = await getUsersByDivisionId(selectedDivisionId);
 		} else {
+			console.log('hi')
 			response = await fetchUsers();
 		}
 		if (response) {
@@ -1158,7 +1123,7 @@ $(document).ready(function() {
 
 			var selectBox = $('#department-name');
 			selectBox.empty();
-			selectBox.append('<option value="all" selected>Choose Division</option>');
+			selectBox.append('<option value="all" selected>Choose Department Name</option>');
 
 			departments.forEach(department => {
 				var option = $('<option>', {
@@ -1185,7 +1150,7 @@ $(document).ready(function() {
 
 			var selectBox = $('#team-name');
 			selectBox.empty();
-			selectBox.append('<option value="all" selected>Choose Team</option>');
+			selectBox.append('<option value="all" selected>Choose Team Name</option>');
 
 			teams.forEach(team => {
 				var option = $('<option>', {
@@ -1216,7 +1181,7 @@ $(document).ready(function() {
 
 			var selectBox = $('#team-name');
 			selectBox.empty();
-			selectBox.append('<option value="all" selected>Choose Team</option>');
+			selectBox.append('<option value="all" selected>Choose Team Name</option>');
 
 			teams.forEach(team => {
 				var option = $('<option>', {
@@ -1230,7 +1195,8 @@ $(document).ready(function() {
 		}
 	}
 
-	getAllApprover(), getAllDivision(), getAllDepartment(), getAllTeam();
+	// getAllApprover(),
+	getAllDivision(), getAllDepartment(), getAllTeam();
 	async function getDepartmentsByDivisionId(divisionId) {
 		return await fetchDepartmentsByDivisionId(divisionId)
 	}

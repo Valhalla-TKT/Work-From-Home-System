@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 
-<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<html xmlns:th="http://www.thymeleaf.org"
+	  xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 
 <head>
 <title>WorkHub</title>
@@ -75,7 +76,8 @@
 													class="name" value="self-request">Self Request</span>
 												</label> <label class="radio"> <input type="radio" disabled
 													name="radio" id="other-request-radio-output"> <span
-													class="name" value="other-request">Other Request</span>
+													class="name">Other Request</span>													
+		                                            <span style="position: absolute; bottom: -25px; left: 50%;" id="requester-name-display"></span>
 												</label>
 											</div>
 											<br>
@@ -883,7 +885,7 @@
 											</div>																							
 										</section>
 										<section data-v-741dde45="" data-v-115a39aa=""
-												class="user-form-container-2 user-form display-flex visible-service-desk-only" id="service-desk-input-section">
+												class="user-form-container-2 user-form display-flex" sec:authorize="hasAuthority('SERVICE_DESK')" id="service-desk-input-section">
 											<div class="pledge-container">
 												<div class="pledge-heading">
 													<h2>Suggestion Here</h2>
@@ -900,7 +902,7 @@
 										</section>
 										<footer class="button-container display-flex justify-flex-end" id="approve-reject-button-container">
 											<div id="reject-form-btn" class="margin-l-8 form-sub" style="background: transparent; color: red; border: 2px solid red;">Reject</div>
-											<div class="margin-l-8 form-sub" id="approve-form-btn">Approve</div> 
+											<div class="margin-l-8 form-sub" id="approve-form-btn">Approve</div>
 										</footer>
 										
 									</div>
