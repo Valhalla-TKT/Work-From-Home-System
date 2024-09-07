@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <title>WorkHub</title>
+</head>
+
+<body>
+
+<div class="container" id="wrap" th:fragment="content">
+    <div class="display-flex flex-1 justify-space-between align-center mt-4">
+        <h2>Add New Employee</h2>
+        <a th:href="@{/admin/user}" class="btn2">Go Back</a>
+    </div>
+    <p>Fill out the form to add a new employee to the system.</p>
+
+    <style>
+
+        input:invalid.submitted, select:invalid.submitted {
+            border: 2px solid #f8d7da !important;
+            background-color: #f8d7da !important;
+        }
+
+        input:valid.submitted, select:valid.submitted {
+            border: 2px solid #c3e6cb !important;
+        }
+
+        .btn-add-user {
+            margin-top: 30px;
+            transition-property: color,
+            background-color, border, border-radius;
+            border: var(--btn-border-width, 1.5px) solid var(--btn-border-color, var(--btn-bg-color));
+            border-radius: var(--btn-border-radius, 9999999px);
+            background-color: var(--btn-bg-color);
+            color: var(--btn-text-color);
+            font-family: inherit;
+            font-size: var(--btn-font-size);
+            font-weight: var(--btn-font-weight, 600);
+        }
+        .btn-add-user:hover:not([disabled]),
+        .btn-add-user:focus-visible:not([disabled]) {
+            border-color: var(--btn-border-color-hover, var(--btn-bg-color-hover));
+            background-color: var(--btn-bg-color-hover, var(--btn-bg-color));
+            color: var(--btn-text-color-hover, var(--btn-text-color))
+        }
+
+        .btn-add-user:disabled {
+            border-color: var(--btn-border-color-hover, var(--btn-bg-color-hover));
+            background-color: var(--btn-bg-color-hover, var(--btn-bg-color));
+            color: var(--btn-text-color-hover, var(--btn-text-color))
+        }
+
+        .form-group {
+            display: flex; justify-content: space-between; gap: 30px;
+        }
+
+        #staffIdErrorMessage {
+            display: none;
+        }
+        .errorMessageNameAndStaffId {
+            margin-left: 30px;
+            font-size: 14px;
+            color: red;
+        }
+    </style>
+    <!-- User Form -->
+    <form id="employeeForm" th:action="@{/admin/user/new}" method="post">
+        <div class="form-group">
+            <!-- Full Name -->
+            <div class="flex-1 mt-4 relative">
+                <label for="fullName">Full Name:<span id="nameErrorMessage" class="errorMessageNameAndStaffId"></span></label>
+                <input type="text" id="fullName" name="name" placeholder="Enter full name" required title="Please enter your full name"
+                       th:value="${user.name}">
+            </div>
+
+            <!-- Staff ID -->
+            <div class="flex-1 mt-4">
+                <label for="staffId">Staff ID:<span id="staffIdErrorMessage" class="errorMessageNameAndStaffId"></span></label>
+                <input type="text" id="staffId" name="staffId" placeholder="Enter Employee ID" required th:value="${user.staffId}" oninput="checkStaffIdExistence()">
+            </div>
+        </div>
+
+        <div class="form-group">
+            <!-- Email -->
+            <div class="flex-1 mt-3">
+                <label for="email">Email:<span id="emailErrorMessage" class="errorMessageNameAndStaffId"></span></label>
+                <input type="email" id="email" name="email" placeholder="Enter email address" required th:value="${user.email}">
+            </div>
+
+            <!-- Position -->
+            <div class="flex-1 mt-3">
+                <label for="position">Position:</label>
+                <input type="text" id="position" name="positionName" placeholder="Enter position" required th:value="${user.positionName}">
+            </div>
+        </div>
+
+        <div class="form-group">
+            <!-- Role Select Box -->
+            <div class="flex-1 mt-3">
+                <label for="role">Select Role:</label>
+                <select id="role" name="role" required style="width: 100%;">
+                    <option value="" disabled selected>Select your role</option>
+                    <option th:each="role : ${roles}" th:value="${role.id}" th:text="${role.name}"></option>
+                </select>
+            </div>
+
+            <!-- Division Select Box -->
+            <div class="flex-1 mt-3">
+                <label for="division">Select Division:</label>
+                <select id="division" name="division" required style="width: 100%;">
+                    <option value="" disabled selected>Select your division</option>
+                    <option th:each="division : ${divisions}" th:value="${division.id}" th:text="${division.name}"></option>
+                </select>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <!-- Department Select Box -->
+            <div class="flex-1 mt-3">
+                <label for="department">Select Department:</label>
+                <select id="department" name="department" required style="width: 100%;">
+                    <option value="" disabled selected>Select your department</option>
+                    <option th:each="department : ${departments}" th:value="${department.id}" th:text="${department.name}"></option>
+                </select>
+            </div>
+
+            <!-- Team Select Box -->
+            <div class="flex-1 mt-3">
+                <label for="team">Select Team:</label>
+                <select id="team" name="team" required style="width: 100%;">
+                    <option value="" disabled selected>Select your team</option>
+                    <option th:each="team : ${teams}" th:value="${team.id}" th:text="${team.name}"></option>
+                </select>
+            </div>
+        </div>
+
+        <!-- Submit Button -->
+        <div class="flex-1">
+            <button type="submit" class="btn-add-user">Add User</button>
+        </div>
+    </form>
+</div>
+</body>
+</html>

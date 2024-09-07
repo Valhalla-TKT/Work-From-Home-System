@@ -12,6 +12,7 @@ import com.kage.wfhs.dto.WorkFlowOrderDto;
 import com.kage.wfhs.service.UserService;
 import com.kage.wfhs.service.WorkFlowOrderService;
 
+import io.swagger.v3.oas.annotations.Operation;
 import lombok.AllArgsConstructor;
 
 import java.util.*;
@@ -32,15 +33,48 @@ public class UserController {
         return ResponseEntity.ok(userService.createstaffId(userDto.getGender()));
     }
 
-    @PostMapping("/")
-    public ResponseEntity<String > createUser(@RequestBody UserDto userDto){
-        if(!userService.isDuplicated(userDto)){
-            return ResponseEntity.ok("Duplicate User!!!");
-        } else {            
-            userService.createUser(userDto);
-            return ResponseEntity.ok("Add New User Success...");
+    @Operation(summary = "Check if a staff ID exists", description = "Checks whether a given staff ID exists in the system.")
+    @GetMapping("/check-staff-id")
+    public ResponseEntity<Boolean> doesStaffIdExist(@RequestParam String staffId) {
+        if (staffId == null || staffId.trim().isEmpty()) {
+            return ResponseEntity.badRequest().body(false);
         }
+
+        boolean exists = userService.isStaffIdExist(staffId);
+        return ResponseEntity.ok(exists);
     }
+
+    @Operation(summary = "Check if a user's name exists", description = "Checks whether a given name exists in the system.")
+    @GetMapping("/check-name")
+    public ResponseEntity<Boolean> doesNameExist(@RequestParam String name) {
+        if (name == null || name.trim().isEmpty()) {
+            return ResponseEntity.badRequest().body(false);
+        }
+
+        boolean exists = userService.isNameExist(name);
+        return ResponseEntity.ok(exists);
+    }
+
+    @Operation(summary = "Check if a user's email exists", description = "Checks whether a given email exists in the system.")
+    @GetMapping("/check-email")
+    public ResponseEntity<Boolean> doesEmailExist(@RequestParam String email) {
+        if (email == null || email.trim().isEmpty()) {
+            return ResponseEntity.badRequest().body(false);
+        }
+
+        boolean exists = userService.isEmailExist(email);
+        return ResponseEntity.ok(exists);
+    }
+
+//    @PostMapping("/")
+//    public ResponseEntity<String > createUser(@RequestBody UserDto userDto){
+//        if(!userService.isDuplicated(userDto)){
+//            return ResponseEntity.ok("Duplicate User!!!");
+//        } else {
+//            userService.createUser(userDto);
+//            return ResponseEntity.ok("Add New User Success...");
+//        }
+//    }
     
     @PostMapping("/updateApproveRole")
     public ResponseEntity<String> updateApproveRole(
@@ -241,6 +275,12 @@ public class UserController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body("An error occurred while deleting the user with ID " + userId + ": " + e.getMessage());
         }
+    }
+
+    @PostMapping("/resetPassword/{userId}")
+    public ResponseEntity<String> resetPassword(@PathVariable String userId) {
+        userService.resetPassword(userId);
+        return ResponseEntity.ok("Password reset successfully.");
     }
 
 }

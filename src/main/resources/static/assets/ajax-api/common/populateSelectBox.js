@@ -28,36 +28,28 @@ document.addEventListener('DOMContentLoaded', function () {
             addDataOverlay.style.display = 'block';
             addDataModal.style.display = 'block';
         });
-    }// else {
-    //     console.error("Element with class 'add-data' not found.");
-    // }
+    }
 
     if (addDataOverlayClose) {
         addDataOverlayClose.addEventListener('click', function () {
             addDataOverlay.style.display = 'none';
             addDataModal.style.display = 'none';
         });
-    }// else {
-    //     console.error("Element with selector '#add-data-overlay .close' not found.");
-    // }
+    }
 
     if (editDataButton) {
         editDataButton.addEventListener('click', function () {
             editDataOverlay.style.display = 'block';
             editDataModal.style.display = 'block';
         });
-    }// else {
-    //     console.error("Element with class 'edit-data' not found.");
-    // }
+    }
 
     if (editDataOverlayClose) {
         editDataOverlayClose.addEventListener('click', function () {
             editDataOverlay.style.display = 'none';
             editDataModal.style.display = 'none';
         });
-    }// else {
-    //     console.error("Element with selector '#edit-data-overlay .close' not found.");
-    // }
+    }
 
     if (manageDataButtons.length > 0) {
         manageDataButtons.forEach(item => {
@@ -71,7 +63,5 @@ document.addEventListener('DOMContentLoaded', function () {
                 }
             });
         });
-    }// else {
-    //     console.error("Elements with class 'manage-data' not found.");
-    // }
+    }
 });

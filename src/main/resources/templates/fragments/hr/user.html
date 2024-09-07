@@ -47,10 +47,16 @@
 										</select>
 										<span style="margin-left: 10px;">(Note: You can adjust the number of results per page.)</span>
 									</div>
-									<a class="job-banner-cta js-job-cta btn2 add-data" sec:authorize="hasAuthority('HR')" href="#">
-										<i class="fa-solid fa-file-import"></i>
-										Import
-									</a>
+									<div class="display-flex">
+										<a class="job-banner-cta js-job-cta btn2" sec:authorize="hasAuthority('HR')" th:href="@{/admin/user/new}">
+											<i class="fa-solid fa-user-plus"></i>
+											Add
+										</a>
+										<a class="job-banner-cta js-job-cta btn2 add-data" sec:authorize="hasAuthority('HR')" href="#" style="margin-left: 20px;">
+											<i class="fa-solid fa-file-import"></i>
+											Import
+										</a>
+									</div>
 								</div>
 
 								<a class="form-btn outlined filters-button filters-toggle-btn" href="#">

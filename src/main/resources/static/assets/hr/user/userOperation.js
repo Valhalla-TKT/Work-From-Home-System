@@ -27,7 +27,7 @@ $(document).ready( function(){
     const pagination = document.querySelector('.pagination');
     const pageNumbers = pagination.querySelector('.page-numbers');
      getAllUser(1, true);
-    toggleSections();   
+    toggleSections();
     getAllTeam(), getAllDepartment(), getAllDivision(), getAllApproveRole()
     $('#team-filter').on('change', async function() {
         await getAllUser(1);
@@ -84,28 +84,28 @@ $(document).ready( function(){
     });
 
     function toggleSections(approverOption) {
-    	 if (approverOption === 'PROJECT_MANAGER') {
-           	$('#team-detail-checkbox-container').show()  
-           	$('#department-detail-checkbox-container').hide()  
-           	$('#division-detail-checkbox-container').hide()    
+         if (approverOption === 'PROJECT_MANAGER') {
+            $('#team-detail-checkbox-container').show()
+            $('#department-detail-checkbox-container').hide()
+            $('#division-detail-checkbox-container').hide()
         } else if (approverOption === 'DEPARTMENT_HEAD') {
-            $('#team-detail-checkbox-container').hide() 
+            $('#team-detail-checkbox-container').hide()
             $('#department-detail-checkbox-container').show()
             $('#division-detail-checkbox-container').hide()
         } else if (approverOption === 'DIVISION_HEAD') {
-            $('#team-detail-checkbox-container').hide() 
+            $('#team-detail-checkbox-container').hide()
             $('#department-detail-checkbox-container').hide()
             $('#division-detail-checkbox-container').show()
         } else {
-            $('#team-detail-checkbox-container').hide() 
-            $('#department-detail-checkbox-container').hide()  
-           	$('#division-detail-checkbox-container').hide()   
+            $('#team-detail-checkbox-container').hide()
+            $('#department-detail-checkbox-container').hide()
+            $('#division-detail-checkbox-container').hide()
         }
     }
 
-    function renderCheckboxes(userTeams, userDepartments, userDivisions) {        
+    function renderCheckboxes(userTeams, userDepartments, userDivisions) {
         if(userTeams !== null) {
-			$('#team-checkbox-container').empty();
+            $('#team-checkbox-container').empty();
             teams.forEach(team => {
                 const isChecked = userTeams.some(userTeam => userTeam.id === team.id) ? 'checked' : '';
                 $('#team-checkbox-container').append(`
@@ -115,9 +115,9 @@ $(document).ready( function(){
                     </div>
                 `);
             });
-        }        
+        }
         if(userDepartments !== null) {
-			$('#department-checkbox-container').empty();
+            $('#department-checkbox-container').empty();
             departments.forEach(department => {
                 const isChecked = userDepartments.some(userDepartment => userDepartment.id === department.id) ? 'checked' : '';
                 $('#department-checkbox-container').append(`
@@ -127,9 +127,9 @@ $(document).ready( function(){
                     </div>
                 `);
             });
-        }        
+        }
         if (userDivisions !== null) {
-			$('#division-checkbox-container').empty();
+            $('#division-checkbox-container').empty();
             divisions.forEach(division => {
                 const isChecked = userDivisions.some(userDivision => userDivision.id === division.id) ? 'checked' : '';
                 $('#division-checkbox-container').append(`
@@ -177,25 +177,25 @@ $(document).ready( function(){
                 }
 
                 var checkboxContainer = $('#team-checkbox-container');
-				checkboxContainer.empty();
-				for (var i = 0; i < response.length; i++) {
-				    var checkbox = $('<div>', {
-				        class: 'form-check'
-				    }).append(
-				        $('<input>', {
-				            class: 'form-check-input',
-				            type: 'checkbox',
-				            id: 'team-checkbox-' + response[i].id,
-				            value: response[i].id
-				        }),
-				        $('<label>', {
-				            class: 'form-check-label',
-				            for: 'team-checkbox-' + response[i].id,
-				            text: response[i].name
-				        })
-				    );
-				    checkboxContainer.append(checkbox);
-				}
+                checkboxContainer.empty();
+                for (var i = 0; i < response.length; i++) {
+                    var checkbox = $('<div>', {
+                        class: 'form-check'
+                    }).append(
+                        $('<input>', {
+                            class: 'form-check-input',
+                            type: 'checkbox',
+                            id: 'team-checkbox-' + response[i].id,
+                            value: response[i].id
+                        }),
+                        $('<label>', {
+                            class: 'form-check-label',
+                            for: 'team-checkbox-' + response[i].id,
+                            text: response[i].name
+                        })
+                    );
+                    checkboxContainer.append(checkbox);
+                }
 
 
             })
@@ -262,27 +262,27 @@ $(document).ready( function(){
                     });
                     selectBox.append(option);
                 }
-      
+
                 var checkboxContainer = $('#department-checkbox-container');
-				checkboxContainer.empty();
-				for (var i = 0; i < response.length; i++) {
-				    var checkbox = $('<div>', {
-				        class: 'form-check'
-				    }).append(
-				        $('<input>', {
-				            class: 'form-check-input',
-				            type: 'checkbox',
-				            id: 'department-checkbox-' + response[i].id,
-				            value: response[i].id
-				        }),
-				        $('<label>', {
-				            class: 'form-check-label',
-				            for: 'department-checkbox-' + response[i].id,
-				            text: response[i].name
-				        })
-				    );
-				    checkboxContainer.append(checkbox);
-				}
+                checkboxContainer.empty();
+                for (var i = 0; i < response.length; i++) {
+                    var checkbox = $('<div>', {
+                        class: 'form-check'
+                    }).append(
+                        $('<input>', {
+                            class: 'form-check-input',
+                            type: 'checkbox',
+                            id: 'department-checkbox-' + response[i].id,
+                            value: response[i].id
+                        }),
+                        $('<label>', {
+                            class: 'form-check-label',
+                            for: 'department-checkbox-' + response[i].id,
+                            text: response[i].name
+                        })
+                    );
+                    checkboxContainer.append(checkbox);
+                }
 
             })
             .catch(error => {
@@ -397,66 +397,75 @@ $(document).ready( function(){
             })
     }
 
-    /*function renderUsers() {
+    function renderUsers() {
         const start = (currentPage - 1) * usersPerPage;
         const end = start + usersPerPage;
         const pageData = filteredUserData.slice(start, end);
 
         $('#staff-list').empty();
         pageData.forEach(user => {
+            console.log(user)
+            const resetStyle = user.resetFlag ? 'pointer-events: none; color: gray;' : '';
+            const isDisabled = user.resetFlag ? 'disabled' : '';
             $('#staff-list').append(`
-            <a href="detail" class="js-resume-card resume-card designer-search-card resume-card-sections-hidden js-user-row-6234" data-user='${JSON.stringify(user)}'>
-                <div class="resume-card-header resume-section-padding">
-                    <div class="resume-card-header-designer">
-                        <img class="resume-card-avatar" alt="${user.name}" width="70" height="70"
-                            src="${getContextPath()}/assets/profile/${user.profile}" />                               
-                        <div class="resume-card-header-details">
-                            <div class="resume-card-title">
-                                <h3 class="resume-card-designer-name user-select-none">
-                                    ${user.name}
-                                </h3>
-                                <span class="badge badge-pro">${user.staffId}</span>
-                            </div>
-                            <span class="resume-card-header-text">
-                                <p>
-                                    <span class="resume-card-location">${user.teamName}</span>
-                                    <span class="resume-card-middot">.</span>
-                                    <span class="resume-card-location">${user.divisionName}</span>
-                                </p>
-                            </span>
-                        </div>
-                    </div>
-                </div>
-            </a>
-        `);
+                <tr>
+                    <td>${user.name}</td>
+                    <td>${user.staffId}</td>
+                    <td>${user.divisionName}</td>
+                    <td>${user.departmentName}</td>
+                    <td>${user.teamName}</td>
+                    <td class="hr-action">
+                    <i class="fa-solid fa-pen-to-square edit-user cursor-pointer text-blue" title="View details and update role" data-user='${JSON.stringify(user)}'></i>
+                    <span style="margin-left: 15px;"></span> | 
+                    <span style="margin-right: 15px;"></span>
+                    <i class="fa-solid fa-trash cursor-pointer text-red" title="Delete employee"></i>
+                    <span style="margin-left: 15px;"></span> | 
+                    <span style="margin-right: 15px;"></span>
+                    <i class="fa-solid fa-arrows-rotate cursor-pointer text-green reset-password"
+                        title="Reset password" 
+                        data-user-id="${user.staffId}"
+                        style="${resetStyle}"
+                        ${isDisabled}
+                    ></i></td>
+                </tr>
+            `);
         });
-        addCardEventListeners();
-        updatePagination();
-    }*/
-    function renderUsers() {
-	    const start = (currentPage - 1) * usersPerPage;
-	    const end = start + usersPerPage;
-	    const pageData = filteredUserData.slice(start, end);
-	
-	    $('#staff-list').empty();
-	    pageData.forEach(user => {
-	        $('#staff-list').append(`
-	            <tr>
-	                <td>${user.name}</td>
-	                <td>${user.staffId}</td>
-	                <td>${user.divisionName}</td>
-	                <td>${user.departmentName}</td>
-	                <td>${user.teamName}</td>
-	                <td class="hr-action"><i class="fa-solid fa-pen-to-square edit-user cursor-pointer text-blue" data-user='${JSON.stringify(user)}'></i><span style="margin-left: 15px;"></span> | <span style="margin-right: 15px;"></span><i class="fa-solid fa-trash cursor-pointer text-red"></i></td>                
-	            </tr>
-	        `);
-	    });
         if(currentUser.approveRoles.length > 0 && currentUserRole !== "HR") {
             $('.hr-action').css('display', 'none');
         }
-	    updatePagination();
-	    addCardEventListeners();
-	}
+        updatePagination();
+        addCardEventListeners();
+        addResetPasswordEventListeners();
+    }
+
+    function addResetPasswordEventListeners() {
+        console.log("hi")
+        $('.reset-password').off('click').on('click', function () {
+            const userId = $(this).data('user-id');
+
+            if (confirm('Are you sure you want to reset the password for this user?')) {
+                $.ajax({
+                    url: `${getContextPath()}/api/user/resetPassword/${userId}`,
+                    type: 'POST',
+                    success: function (response) {
+                        userData.forEach(user => {
+                            if (user.staffId === userId) {
+                                user.resetFlag = true;
+                            }
+                        });
+
+                        renderUsers();
+                        alert('Password reset successfully.');
+                    },
+                    error: function (xhr, status, error) {
+                        console.error('Error resetting password:', error);
+                        alert('Failed to reset the password. Please try again.');
+                    }
+                });
+            }
+        });
+    }
+
 
 
     function updatePagination() {
@@ -671,9 +680,9 @@ $(document).ready( function(){
                     if (result.isConfirmed) {
                         $('#message').text(response);
 
-	                    $('#team-checkbox-container input[type="checkbox"]').prop('checked', false);
-	                    $('#department-checkbox-container input[type="checkbox"]').prop('checked', false);
-	                    $('#division-checkbox-container input[type="checkbox"]').prop('checked', false);
+                        $('#team-checkbox-container input[type="checkbox"]').prop('checked', false);
+                        $('#department-checkbox-container input[type="checkbox"]').prop('checked', false);
+                        $('#division-checkbox-container input[type="checkbox"]').prop('checked', false);
                         const updatedRoles = $('#approveRoleSelectBoxDetail option:selected').map(function() {
                             return {
                                 id: $(this).val(),
@@ -753,8 +762,8 @@ $(document).ready( function(){
         });
     });
 
-	document.getElementById('change-role').addEventListener('click', () => {
-		document.getElementById('detail-data-overlay').style.display = 'none';
+    document.getElementById('change-role').addEventListener('click', () => {
+        document.getElementById('detail-data-overlay').style.display = 'none';
         document.getElementById('role-change-overlay').style.display = 'block';
     });
 

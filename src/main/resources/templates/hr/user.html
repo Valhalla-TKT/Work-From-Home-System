@@ -18,7 +18,7 @@
 		data-client_id="32073492121-s6ur8ti01mh34gq2bpbufb8ujdfrpn4v.apps.googleusercontent.com"
 		data-login_uri="index.html" data-ux_mode="redirect"></div>
 
-	<div th:if="${formType == 'apply'}"
+	<div
 		th:replace="~{fragments/hr/user :: content}"></div>
 	<!-- main -->
 
@@ -98,20 +98,12 @@
 
 	<script th:src="@{/assets/packs/js/application.ae6c19f201cd97e78298.js}"></script>
 
-	<!--<div th:replace="~{fragments/shared/chat :: chat}"></div>-->
-
 	<script th:src="@{/assets/welcome/fullscreen.js}"></script>
 
-
-
-<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
 	<script th:src="@{/assets/hr/user/userOperation.js}"></script>
 	<script th:src="@{/assets/ajax-api/common/populateSelectBox.js}"></script>
 	<script th:src="@{/assets/hr/importExcelValidate.js}"></script>
 
-<!-- 	 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>   -->  
-<!--      <script src="https://cdnjs.cloudflare.com/ajax/libs/datedropper/2.0/datedropper.js"></script> -->
-<!--   <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script> -->
 </body>
 
 </html>

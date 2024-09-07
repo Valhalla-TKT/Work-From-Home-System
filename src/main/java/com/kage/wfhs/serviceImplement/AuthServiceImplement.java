@@ -84,6 +84,7 @@ public class AuthServiceImplement implements AuthService {
         if (user.isFirstTimeLogin()) {
             user.setFirstTimeLogin(false);
         }
+        user.setResetFlag(false);
         userRepository.save(user);
         logger.info("Password changed successfully for staff ID: {}", staffId);
     }
