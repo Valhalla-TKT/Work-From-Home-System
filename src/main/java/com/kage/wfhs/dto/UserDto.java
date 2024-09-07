@@ -32,7 +32,7 @@ import lombok.ToString;
 public class UserDto {
 	private Long id, teamId, approveRoleId, divisionId, departmentId;
     private String staffId, name, email, password, gender, teamName, positionName, approveRoleName, departmentName, divisionName, profile, highestApproveRole;
-    private boolean isEnabled, isFirstTimeLogin;
+    private boolean isEnabled, isFirstTimeLogin, resetFlag;
     private Team team;
     private Department department;
     private Division division;

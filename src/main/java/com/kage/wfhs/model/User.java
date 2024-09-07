@@ -119,6 +119,8 @@ public class User implements Serializable {
     private boolean isFirstTimeLogin;
     
     private int loginCount;
+
+    private boolean resetFlag = false;
     
     @PrePersist
     protected void onCreate() {

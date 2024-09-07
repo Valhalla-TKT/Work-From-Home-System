@@ -245,4 +245,10 @@ public interface UserRepository extends JpaRepository<User,Long> {
 
     @Query("SELECT u FROM User u JOIN u.approveRoles ar WHERE ar.id = :roleId AND u.staffId != '00-00001'")
     List<User> findUsersByRoleId(@Param("roleId") Long roleId);
+
+    boolean existsByStaffId(String staffId);
+
+    boolean existsByName(String name);
+
+    boolean existsByEmail(String email);
 }

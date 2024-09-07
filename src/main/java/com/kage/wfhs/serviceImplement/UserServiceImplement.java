@@ -10,6 +10,7 @@ package com.kage.wfhs.serviceImplement;
 import java.util.*;
 import java.util.stream.Collectors;
 
+import com.kage.wfhs.dto.UserCreationDto;
 import com.kage.wfhs.dto.auth.CurrentLoginUserDto;
 import com.kage.wfhs.exception.EntityNotFoundException;
 import com.kage.wfhs.model.*;
@@ -60,8 +61,29 @@ public class UserServiceImplement implements UserService {
 	private final RegisterFormRepository registerFormRepository;
 
 	@Override
-    public UserDto createUser(UserDto userDto) {
-		return null;
+    public void createUser(UserCreationDto userDto) {
+		User user = new User();
+		String staffId = userDto.getStaffId();
+		user.setStaffId(staffId);
+		user.setName(userDto.getName());
+		user.setEmail(userDto.getEmail());
+		user.setPositionName(userDto.getPositionName());
+		user.setPassword(passwordEncoder.encode("123@dirace"));
+		String gender = staffId.startsWith("25") ? "male" : "female";
+		user.setGender(gender);
+		user.setProfile(determineProfile(gender));
+		user.setEnabled(true);
+		Team team = EntityUtil.getEntityById(teamRepo, userDto.getTeam());
+		user.setTeam(team);
+		Department department = EntityUtil.getEntityById(departmentRepo, userDto.getDepartment());
+		user.setDepartment(department);
+		Division division = EntityUtil.getEntityById(divisionRepo, userDto.getDivision());
+		user.setDivision(division);
+		Set<ApproveRole> approveRoles = new HashSet<>();
+		ApproveRole approveRole = EntityUtil.getEntityById(approveRoleRepo, userDto.getRole());
+		approveRoles.add(approveRole);
+		user.setApproveRoles(approveRoles);
+		EntityUtil.saveEntity(userRepo, user, "user");
     }
 
 	private void validateUserDto(UserDto userDto) {
@@ -74,7 +96,7 @@ public class UserServiceImplement implements UserService {
 		if ("male".equalsIgnoreCase(gender)) {
 			return "default-male.png";
 		} else if ("female".equalsIgnoreCase(gender)) {
-			return "default-female.jfif";
+			return "default-female.jpg";
 		}
 		return null;
 	}
@@ -734,5 +756,42 @@ public class UserServiceImplement implements UserService {
 		return false;
 	}
 
+	@Override
+	public void resetPassword(String userId) {
+		User user = userRepo.findByStaffId(userId);
+		if(user == null) {
+			throw new EntityNotFoundException("User with staff ID " + userId + " not found");
+		}
+		user.setResetFlag(true);
+		user.setPassword(passwordEncoder.encode("123@dirace")); // Alternatively, we can change this default password to a random password using an email service.
+		// If you want to make changes, uncomment the following line.
+		/*
+		String secureRandomPassword = Helper.generateSecureRandomPassword(8);
+		user.setPassword(passwordEncoder.encode(secureRandomPassword));
+		String emailBody = "<p style='color:black; font-size: 16px;'>Dear " + user.getName() + ",<br/></p>" +
+				"<p style='color:black; font-size: 16px;'><span style='color:black; font-size: 16px;'>Please try using the following password to log in to the Work From Home System.</span>" + "<br/>" + "<strong>" + secureRandomPassword + "</strong>" + "</p>" +
+				"<p style='color:black; font-size: 16px;'>Best Regards,<br>DAT WFHS Team</p>";
+		emailSenderService.sendEmail(
+				user.getEmail(),
+				"Your Password Has Been Reset: Action Required",
+				emailBody
+		);
+		*/
+		EntityUtil.saveEntity(userRepo, user, "user");
+	}
 
+	@Override
+	public boolean isStaffIdExist(String staffId) {
+		return userRepo.existsByStaffId(staffId);
+	}
+
+	@Override
+	public boolean isNameExist(String name) {
+		return userRepo.existsByName(name);
+	}
+
+	@Override
+	public boolean isEmailExist(String email) {
+		return userRepo.existsByEmail(email);
+	}
 }

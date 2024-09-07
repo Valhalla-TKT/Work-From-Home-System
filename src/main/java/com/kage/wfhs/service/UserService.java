@@ -7,6 +7,7 @@
  */
 package com.kage.wfhs.service;
 
+import com.kage.wfhs.dto.UserCreationDto;
 import com.kage.wfhs.dto.UserDto;
 import com.kage.wfhs.dto.auth.CurrentLoginUserDto;
 import com.kage.wfhs.model.ApproveRole;
@@ -18,7 +19,7 @@ import java.util.Set;
 
 @Service
 public interface UserService {
-	UserDto createUser(UserDto userDto);
+	void createUser(UserCreationDto userDto);
     void updateUser(Long id, UserDto userDto);
     UserDto getUserBystaffId(String staffId);
 
@@ -74,4 +75,12 @@ public interface UserService {
 	List<UserDto> getApproversByApproveRoleId(Long approveRoleId);
 
 	boolean deleteUserById(Long userId);
+
+    void resetPassword(String userId);
+
+	boolean isStaffIdExist(String staffId);
+
+	boolean isNameExist(String name);
+
+	boolean isEmailExist(String email);
 }

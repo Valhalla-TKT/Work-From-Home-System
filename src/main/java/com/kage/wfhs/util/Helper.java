@@ -7,11 +7,6 @@
  */
 package com.kage.wfhs.util;
 
-import java.io.InputStream;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.nio.file.StandardCopyOption;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
@@ -21,9 +16,7 @@ import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
 
 import com.kage.wfhs.model.ApproveRole;
 import com.kage.wfhs.model.WorkFlowOrder;
@@ -36,10 +29,8 @@ import lombok.AllArgsConstructor;
 @Service
 public class Helper {
 
-    @Autowired
     private final WorkFlowOrderRepository workFlowOrderRepo;
 
-    @Autowired
     private final ApproveRoleRepository approveRoleRepo;
 
     public static String changeToSmallLetter(String text) {
@@ -56,6 +47,24 @@ public class Helper {
 
     private static final SecureRandom random = new SecureRandom();
 
+    /**
+     * Generates a secure One-Time Password (OTP) based on the user's email, staff ID, and a unique identifier.
+     * This method uses a combination of the user's email, staff ID, and a randomly generated UUID to create a unique string,
+     * which is then hashed using the SHA-256 algorithm. The hash is used to seed a secure random number generator,
+     * ensuring that the OTP is both random and unique for each request.
+     * The OTP is formatted as a 6-digit uppercase string.
+     *
+     * Example Usage:
+     * <pre>
+     * {@code
+     * String otp = Helper.generateOTP("user@example.com", "12345");
+     * }
+     * </pre>
+     *
+     * @param email   the email of the user for whom the OTP is being generated
+     * @param staffID the staff ID of the user for whom the OTP is being generated
+     * @return        a 6-digit secure OTP as an uppercase string
+     */
     public static String generateOTP(String email, String staffID) {
         try {
             String combined = email + staffID + UUID.randomUUID().toString();
@@ -147,6 +156,24 @@ public class Helper {
                 .collect(Collectors.joining("| "));
     }
 
+    /**
+     * Retrieves the start and end dates of the current month.
+     * This method uses the `Calendar` class to calculate the first and last dates of the current month.
+     * The start date is set to the first day of the month, while the end date is set to the last day of the month.
+     * Both dates are returned as an array of `Date` objects.
+     *
+     * Example Usage:
+     * <pre>
+     * {@code
+     * Date[] currentMonthDates = Helper.getStartAndEndOfCurrentMonth();
+     * Date startOfMonth = currentMonthDates[0];
+     * Date endOfMonth = currentMonthDates[1];
+     * }
+     * </pre>
+     *
+     * @return an array of `Date` objects where the first element is the start date
+     *         and the second element is the end date of the current month
+     */
     public static Date[] getStartAndEndOfCurrentMonth() {
         Calendar cal = Calendar.getInstance();
         cal.set(Calendar.DAY_OF_MONTH, 1);
@@ -157,5 +184,35 @@ public class Helper {
         Date endOfMonth = cal.getTime();
 
         return new Date[] { startOfMonth, endOfMonth };
+    }
+
+    /**
+     * Generates a secure random password of the specified length.
+     * This method creates a random password consisting of uppercase letters,
+     * lowercase letters, digits, and special characters to ensure a high level of security.
+     * The generated password can be used for user authentication,
+     * temporary passwords, or other security-related purposes.
+     *
+     * Example Usage:
+     * <pre>
+     * {@code
+     * String securePassword = Helper.generateSecureRandomPassword(12);
+     * }
+     * </pre>
+     *
+     * @param length the desired length of the generated password
+     * @return       a secure random password of the specified length
+     */
+    public static String generateSecureRandomPassword(int length) {
+        String charSet = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*()-_+={}[]|:;<>,.?";
+        SecureRandom random = new SecureRandom();
+        StringBuilder password = new StringBuilder();
+
+        for (int i = 0; i < length; i++) {
+            int randomIndex = random.nextInt(charSet.length());
+            password.append(charSet.charAt(randomIndex));
+        }
+
+        return password.toString();
     }
 }
