@@ -114,4 +114,9 @@ public class TeamServiceImplement implements TeamService {
         List<Team> teams = teamRepo.findAllByDivisionId(divisionId);
         return DtoUtil.mapList(teams, TeamDto.class, modelMapper);
     }
+
+    @Override
+    public boolean isNameExist(String name) {
+        return teamRepo.existsByName(name);
+    }
 }

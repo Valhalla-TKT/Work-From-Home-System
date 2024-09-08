@@ -65,16 +65,6 @@ public class UserController {
         boolean exists = userService.isEmailExist(email);
         return ResponseEntity.ok(exists);
     }
-
-//    @PostMapping("/")
-//    public ResponseEntity<String > createUser(@RequestBody UserDto userDto){
-//        if(!userService.isDuplicated(userDto)){
-//            return ResponseEntity.ok("Duplicate User!!!");
-//        } else {
-//            userService.createUser(userDto);
-//            return ResponseEntity.ok("Add New User Success...");
-//        }
-//    }
     
     @PostMapping("/updateApproveRole")
     public ResponseEntity<String> updateApproveRole(
@@ -247,6 +237,16 @@ public class UserController {
         response.put("message", "Position changed successfully");
         response.put("data", userDto);
         return ResponseEntity.ok(response);
+    }
+
+    @PutMapping("/{staffId}")
+    public ResponseEntity<String> updateUser(@PathVariable String staffId, @RequestBody UserDto userDto) {
+        boolean updated = userService.updateUser(staffId, userDto);
+        if (updated) {
+            return ResponseEntity.ok("User updated successfully.");
+        } else {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found.");
+        }
     }
 
     @PostMapping("/sendMail")

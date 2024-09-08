@@ -28,4 +28,6 @@ public interface DepartmentService {
 	DepartmentDto getDepartmentByName(String name);
 
     List<DepartmentDto> getDepartmentByDivisionId(Long divisionId);
+
+    boolean isNameExist(String name);
 }

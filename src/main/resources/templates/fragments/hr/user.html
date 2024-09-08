@@ -333,6 +333,13 @@
 			</div>
 		</div>
 
+		<style>
+			.errorMessageForUserEditForm {
+				margin-left: 30px;
+				font-size: 14px;
+				color: red;
+			}
+		</style>
 		<!-- Detail Modal -->
 		<div id="detail-data-overlay" style="display: none;">
 			<div id="detail-data-modal" class="add-data-modal" style="width: 40%; height: 60%; overflow:auto;">
@@ -343,27 +350,151 @@
 					</div> <br>
 					<form id="detail">
 						<label for="staff-id-detail">Staff ID</label>
-						<input type="tel" id="staff-id-detail" style="color: #0d0c22; background: #fff;" placeholder="xx-xxxxx"
-							   required="required" step="any" disabled>
+						<div class="input-container">
+							<input type="tel" id="staff-id-detail" placeholder="xx-xxxxx"
+								   required="required" step="any" disabled class="dark-and-white">
+							<span class="edit-icon"><i class="fa-solid fa-pencil"></i></span>
+						</div>
 						<label for="name-detail">Staff Name</label>
-						<input type="text" id="name-detail" placeholder="" style="color: #0d0c22; background: #fff;" disabled>
+						<div class="input-container">
+							<input type="text" id="name-detail" placeholder="" disabled class="dark-and-white">
+							<span class="edit-icon"><i class="fa-solid fa-pencil"></i></span>
+						</div>
 						<label for="email-detail">Email</label>
-						<input type="email" id="email-detail" placeholder="" style="color: #0d0c22; background: #fff;" disabled>
+						<div class="input-container">
+							<input type="email" id="email-detail" placeholder="" disabled class="dark-and-white">
+							<span class="edit-icon"><i class="fa-solid fa-pencil"></i></span>
+						</div>
 						<label for="gender-detail">Gender</label>
-						<input type="text" id="gender-detail"style="color: #0d0c22; background: #fff; text-transform: capitalize;" disabled>
+						<div class="input-container">
+							<input type="text" id="gender-detail" style="text-transform: capitalize;" disabled class="dark-and-white">
+							<span class="edit-icon"><i class="fa-solid fa-pencil"></i></span>
+						</div>
 						<label for="position-name-detail">Position</label>
-						<input type="text" id="position-name-detail" placeholder=""style="color: #0d0c22; background: #fff;" disabled>
-						<label for="team-name-detail">Team</label>
-						<input type="text" id="team-name-detail" placeholder="" style="color: #0d0c22; background: #fff;" disabled>
-						<label for="department-name-detail">Department</label>
-						<input type="text" id="department-name-detail" placeholder="" style="color: #0d0c22; background: #fff;" disabled>
-						<label for="division-name-detail">Division</label>
-						<input type="text" id="division-name-detail" placeholder="" style="color: #0d0c22; background: #fff;" disabled>
+						<div class="input-container">
+							<input type="text" id="position-name-detail" placeholder="" disabled class="dark-and-white">
+							<span class="edit-icon"><i class="fa-solid fa-pencil"></i></span>
+						</div>
+						<label for="team-name-detail">Team<span id="teamNameErrorMessage" class="errorMessageForUserEditForm"></span></label>
+						<div class="input-container">
+							<select id="team-name-detail" class="dark-and-white w-100" disabled>
+							</select>
+							<span class="edit-icon"><i class="fa-solid fa-pencil"></i></span>
+						</div>
+						<label for="department-name-detail">Department<span id="departmentNameErrorMessage" class="errorMessageForUserEditForm"></span></label>
+						<div class="input-container">
+							<select id="department-name-detail" class="dark-and-white w-100" disabled>
+								<option value="" disabled selected>Select Department</option>
+							</select>
+							<span class="edit-icon"><i class="fa-solid fa-pencil"></i></span>
+						</div>
+						<label for="division-name-detail">Division<span id="divisionNameErrorMessage" class="errorMessageForUserEditForm"></span></label>
+						<div class="input-container">
+							<select id="division-name-detail" class="dark-and-white w-100" disabled>
+								<option value="" disabled selected>Select Division</option>
+							</select>
+							<span class="edit-icon"><i class="fa-solid fa-pencil"></i></span>
+						</div>
+
 						<input type="hidden" id="user-id-detail">
 						<div style="display: flex; justify-content: end; flex-direction: row; column-gap: 20px;">
-						<button class="btn2 add-data-btn" style="width:30%;" type="button" id="change-role">Change Role</button>						
+							<button class="btn2" style="width:30%; margin-top: 20px;" type="button" id="update-user">Update</button>
+							<button class="btn2 add-data-btn" style="width:30%;" type="button" id="change-role">Change Role</button>
 						</div>
 					</form>
+
+					<style>
+						.dark-and-white {
+							color: #0d0c22 !important;
+							background: #fff !important;
+						}
+
+						.input-container {
+							position: relative;
+							display: flex;
+							align-items: center;
+						}
+
+						.input-container input {
+							width: 100%;
+							padding-right: 25px;
+							color: #0d0c22;
+							background: #fff;
+						}
+
+						.edit-icon {
+							position: absolute;
+							right: 15px;
+							cursor: pointer;
+							display: none;
+							font-size: 14px;
+						}
+
+						.input-container:hover .edit-icon {
+							display: inline;
+						}
+
+						#staff-id-detail + .edit-icon, #gender-detail  + .edit-icon{
+							display: none !important;
+						}
+					</style>
+
+					<script>
+						document.querySelectorAll('.input-container').forEach(container => {
+							const input = container.querySelector('input');
+							const select = container.querySelector('select');
+							const icon = container.querySelector('.edit-icon');
+
+							if (input && (input.id !== 'staff-id-detail' && input.id !== 'gender-detail')) {
+								// Event listeners for input fields
+								icon.addEventListener('click', () => {
+									input.disabled = false;
+									input.focus();
+								});
+
+								input.addEventListener('blur', () => {
+									input.disabled = true;
+									icon.style.display = 'none';
+								});
+
+								container.addEventListener('mouseover', () => {
+									if (input.disabled) {
+										icon.style.display = 'inline';
+									}
+								});
+
+								container.addEventListener('mouseout', () => {
+									if (input.disabled) {
+										icon.style.display = 'none';
+									}
+								});
+							} else if (select && (select.id === 'team-name-detail' || select.id === 'department-name-detail' || select.id === 'division-name-detail')) {
+								// Event listeners for select fields
+								icon.addEventListener('click', () => {
+									select.disabled = false;
+									select.focus();
+								});
+
+								select.addEventListener('focusout', () => {
+									select.disabled = true;
+									icon.style.display = 'none';
+								});
+
+								container.addEventListener('mouseover', () => {
+									if (select.disabled) {
+										icon.style.display = 'inline';
+									}
+								});
+
+								container.addEventListener('mouseout', () => {
+									if (select.disabled) {
+										icon.style.display = 'none';
+									}
+								});
+							}
+						});
+
+					</script>
 				</div>
 			</div>
 		</div>

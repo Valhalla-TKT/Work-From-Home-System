@@ -110,9 +110,54 @@ public class UserServiceImplement implements UserService {
         }
 	}
 
+	@Transactional
 	@Override
-	public void updateUser(Long id, UserDto userDto) {
-		// need to implement
+	public boolean updateUser(String staffId, UserDto userDto) {
+		User user = userRepo.findByStaffId(staffId);
+		if (user == null) {
+			throw new EntityNotFoundException("User not found with staff ID: " + staffId);
+		}
+
+		updateUserDetails(user, userDto);
+
+		return true;
+	}
+
+	private void updateUserDetails(User user, UserDto userDto) {
+		user.setName(userDto.getName());
+		user.setEmail(userDto.getEmail());
+		user.setPositionName(userDto.getPositionName());
+		updateUserTeam(user, userDto);
+		updateUserDepartment(user, userDto);
+		updateUserDivision(user, userDto);
+
+		EntityUtil.saveEntityWithoutReturn(userRepo, user, "user");
+	}
+
+	private void updateUserTeam(User user, UserDto userDto) {
+		Team teamEntity = teamRepo.findByName(userDto.getTeamName())
+				.orElseThrow(() -> new EntityNotFoundException("Team not found: " + userDto.getTeamName()));
+
+		if (!teamEntity.equals(user.getTeam())) {
+			user.setTeam(teamEntity);
+		}
+	}
+
+
+	private void updateUserDepartment(User user, UserDto userDto) {
+		Department departmentEntity = departmentRepo.findByName(userDto.getDepartmentName())
+				.orElseThrow(() -> new EntityNotFoundException("Department not found: " + userDto.getDepartmentName()));
+		if (!departmentEntity.equals(user.getDepartment())) {
+			user.setDepartment(departmentEntity);
+		}
+	}
+
+	private void updateUserDivision(User user, UserDto userDto) {
+		Division divisionEntity = divisionRepo.findByName(userDto.getDivisionName())
+				.orElseThrow(() -> new EntityNotFoundException("Division not found: " + userDto.getDivisionName()));
+		if (!divisionEntity.equals(user.getDivision())) {
+			user.setDivision(divisionEntity);
+		}
 	}
 
 	@Override
