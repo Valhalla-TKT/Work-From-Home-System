@@ -102,4 +102,9 @@ public class DepartmentServiceImplement implements DepartmentService {
         List<Department> departments = departmentRepo.findAllByDivisionId(divisionId);
         return DtoUtil.mapList(departments, DepartmentDto.class, modelMapper);
     }
+
+    @Override
+    public boolean isNameExist(String name) {
+        return departmentRepo.existsByName(name);
+    }
 }

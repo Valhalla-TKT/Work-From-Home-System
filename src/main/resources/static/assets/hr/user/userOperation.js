@@ -3,6 +3,11 @@ $(document).ready( function(){
     let filteredUserData = [];
     var currentPage = 1;
 
+    const updateUserBtn = document.getElementById('update-user')
+    const teamNameErrorMessage = document.getElementById('teamNameErrorMessage')
+    const departmentNameErrorMessage = document.getElementById('departmentNameErrorMessage')
+    const divisionNameErrorMessage = document.getElementById('divisionNameErrorMessage')
+
     const userPerPageSelectBox = $('#users-per-page-select')
     var usersPerPage = parseInt(userPerPageSelectBox.val());
 
@@ -55,13 +60,22 @@ $(document).ready( function(){
             filteredUserData = userData;
         } else {
             const lowerTerm = term.toLowerCase();
+            function convertRoleName(roleName) {
+                return roleName
+                    .toLowerCase()
+                    .replace(/_/g, ' ')
+                    .replace(/\b\w/g, char => char.toUpperCase());
+            }
             filteredUserData = userData.filter(user => {
                 const name = user.name.toLowerCase();
                 const email = user.email.toLowerCase();
                 const staffId = user.staffId.toLowerCase();
 
-                // Check if any of the user's roles match the search term
-                const roleMatch = user.approveRoles.some(role => role.name.toLowerCase().includes(lowerTerm));
+                const roleMatch = user.approveRoles.some(role => {
+                    const roleName = role.name.toLowerCase();
+                    const userFriendlyName = convertRoleName(role.name).toLowerCase();
+                    return roleName.includes(lowerTerm) || userFriendlyName.includes(lowerTerm);
+                });
 
                 return name.includes(lowerTerm) || email.includes(lowerTerm) || staffId.includes(lowerTerm) || roleMatch;
             });
@@ -196,7 +210,6 @@ $(document).ready( function(){
                     );
                     checkboxContainer.append(checkbox);
                 }
-
 
             })
             .catch(error => {
@@ -404,7 +417,6 @@ $(document).ready( function(){
 
         $('#staff-list').empty();
         pageData.forEach(user => {
-            console.log(user)
             const resetStyle = user.resetFlag ? 'pointer-events: none; color: gray;' : '';
             const isDisabled = user.resetFlag ? 'disabled' : '';
             $('#staff-list').append(`
@@ -415,7 +427,7 @@ $(document).ready( function(){
                     <td>${user.departmentName}</td>
                     <td>${user.teamName}</td>
                     <td class="hr-action">
-                    <i class="fa-solid fa-pen-to-square edit-user cursor-pointer text-blue" title="View details and update role" data-user='${JSON.stringify(user)}'></i>
+                    <i class="fa-solid fa-pen-to-square edit-user cursor-pointer text-blue" title="Edit employee" data-user='${JSON.stringify(user)}'></i>
                     <span style="margin-left: 15px;"></span> | 
                     <span style="margin-right: 15px;"></span>
                     <i class="fa-solid fa-trash cursor-pointer text-red" title="Delete employee"></i>
@@ -439,7 +451,6 @@ $(document).ready( function(){
     }
 
     function addResetPasswordEventListeners() {
-        console.log("hi")
         $('.reset-password').off('click').on('click', function () {
             const userId = $(this).data('user-id');
 
@@ -586,18 +597,62 @@ $(document).ready( function(){
         }
     }
 
-
     function showDetailModal(user) {
-        console.log(user)
         document.getElementById('staff-id-detail').value = user.staffId;
         document.getElementById('name-detail').value = user.name;
         document.getElementById('email-detail').value = user.email;
         document.getElementById('gender-detail').value = user.gender;
         document.getElementById('position-name-detail').value = user.positionName;
         document.getElementById('user-id-detail').value = user.id;
-        document.getElementById('team-name-detail').value = user.teamName;
-        document.getElementById('department-name-detail').value = user.departmentName;
-        document.getElementById('division-name-detail').value = user.divisionName;
+
+        const teamSelect = document.getElementById('team-name-detail');
+        teamSelect.innerHTML = '<option value="" disabled selected>Select Team</option>';
+        teams.forEach(team => {
+            const option = document.createElement('option');
+            option.value = team.name;
+            option.textContent = team.name;
+            if (user.team.id === team.id) {
+                option.selected = true;
+            }
+
+            teamSelect.appendChild(option);
+        });
+        teamSelect.disabled = true;
+
+        const departmentSelect = document.getElementById('department-name-detail');
+        departmentSelect.innerHTML = '<option value="" disabled selected>Select Department</option>';
+        departments.forEach(department => {
+            const option = document.createElement('option');
+            option.value = department.name;
+            option.textContent = department.name;
+            if (user.department.id === department.id) {
+                option.selected = true;
+            }
+
+            departmentSelect.appendChild(option);
+        });
+        departmentSelect.disabled = true;
+
+        const divisionSelect = document.getElementById('division-name-detail');
+        divisionSelect.innerHTML = '<option value="" disabled selected>Select Division</option>';
+        divisions.forEach(division => {
+            const option = document.createElement('option');
+            option.value = division.name;
+            option.textContent = division.name;
+            if (user.division.id === division.id) {
+                option.selected = true;
+            }
+
+            divisionSelect.appendChild(option);
+        });
+        divisionSelect.disabled = true;
+
+        const teamNameInput = document.getElementById('team-name-detail')
+        teamNameInput.value = user.teamName;
+        const departmentNameInput = document.getElementById('department-name-detail')
+        departmentNameInput.value = user.departmentName;
+        const divisionNameInput = document.getElementById('division-name-detail')
+        divisionNameInput.value = user.divisionName;
         let userRole = ''
             user.approveRoles.forEach(role => {
                 userRole = role.name;
@@ -637,6 +692,94 @@ $(document).ready( function(){
             $('#division-detail-checkbox-container').hide()
         }
     }
+
+    function setupModalEvents() {
+        document.addEventListener('keydown', function (event) {
+            if (event.key === 'Escape') {
+                closeDetailModal();
+            }
+        });
+    }
+
+    function closeDetailModal() {
+        document.getElementById('detail-data-overlay').style.display = 'none';
+    }
+
+    setupModalEvents();
+
+    updateUserBtn.addEventListener('click', async function () {
+        await updateUser();
+    });
+
+    async function updateUser() {
+        const staffId = document.getElementById('staff-id-detail').value;
+        const userDto = {
+            name: document.getElementById('name-detail').value,
+            email: document.getElementById('email-detail').value,
+            gender: document.getElementById('gender-detail').value,
+            positionName: document.getElementById('position-name-detail').value,
+            teamName: document.getElementById('team-name-detail').value,
+            departmentName: document.getElementById('department-name-detail').value,
+            divisionName: document.getElementById('division-name-detail').value
+        };
+        console.log(userDto)
+        try {
+            const result = await Swal.fire({
+                title: 'Are you sure?',
+                text: "Do you want to update this user?",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonText: 'Yes, update it!',
+                cancelButtonText: 'No, cancel'
+            });
+
+            if (result.isConfirmed) {
+                const response = await fetch(`${getContextPath()}/api/user/${staffId}`, {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(userDto)
+                });
+
+                if (response.ok) {
+                    userData.forEach(user => {
+                        if (user.staffId === staffId) {
+                            user.name = userDto.name;
+                            user.email = userDto.email;
+                            user.positionName = userDto.positionName;
+                            user.teamName = userDto.teamName;
+                            user.departmentName = userDto.departmentName
+                            user.divisionName = userDto.divisionName
+                        }
+                    });
+
+                    renderUsers();
+                    await Swal.fire(
+                        'Updated!',
+                        'User updated successfully!',
+                        'success'
+                    );
+                    $('#detail-data-overlay').hide();
+                } else {
+                    const errorText = await response.text();
+                    await Swal.fire(
+                        'Failed!',
+                        'Failed to update user: ' + errorText,
+                        'error'
+                    );
+                }
+            }
+        } catch (error) {
+            console.error('Error in updateUser:', error);
+            await Swal.fire(
+                'Error!',
+                'Failed to update user. Please try again later.',
+                'error'
+            );
+        }
+    }
+
 
     $('#approveRoleSelectBoxDetail').change(function() {
         var selectedOption = $(this).find('option:selected').text();

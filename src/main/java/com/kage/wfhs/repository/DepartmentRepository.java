@@ -26,4 +26,6 @@ public interface DepartmentRepository extends JpaRepository<Department,Long> {
     Department findByTeamId(@Param("teamId") Long teamId);
 
     List<Department> findAllByDivisionId(Long divisionId);
+
+    boolean existsByName(String name);
 }

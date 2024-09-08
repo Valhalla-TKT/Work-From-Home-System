@@ -10,6 +10,7 @@ package com.kage.wfhs.controller.api;
 import java.util.List;
 import java.util.Map;
 
+import io.swagger.v3.oas.annotations.Operation;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -36,6 +37,17 @@ public class DivisionController {
 	public ResponseEntity<String> createdivision(@RequestBody DivisionDto divisionDto) {
 		divisionService.createDivision(divisionDto);
 		return ResponseEntity.ok("Division Add Success!!!");
+	}
+
+	@Operation(summary = "Check if a division name exists", description = "Checks whether a given division name exists in the system.")
+	@GetMapping("/check-name")
+	public ResponseEntity<Boolean> doesNameExist(@RequestParam String name) {
+		if (name == null || name.trim().isEmpty()) {
+			return ResponseEntity.badRequest().body(false);
+		}
+
+		boolean exists = divisionService.isNameExist(name);
+		return ResponseEntity.ok(exists);
 	}
 
 	@PostMapping("/divisionList")

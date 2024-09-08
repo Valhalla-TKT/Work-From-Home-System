@@ -11,6 +11,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
+import io.swagger.v3.oas.annotations.Operation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -31,6 +32,17 @@ public class DepartmentController {
     public ResponseEntity<DepartmentDto> createDepartment(@RequestBody DepartmentDto departmentDto){
         return ResponseEntity.ok(departmentService.createDepartment(departmentDto));
     }
+
+	@Operation(summary = "Check if a department name exists", description = "Checks whether a given department name exists in the system.")
+	@GetMapping("/check-name")
+	public ResponseEntity<Boolean> doesNameExist(@RequestParam String name) {
+		if (name == null || name.trim().isEmpty()) {
+			return ResponseEntity.badRequest().body(false);
+		}
+
+		boolean exists = departmentService.isNameExist(name);
+		return ResponseEntity.ok(exists);
+	}
 
 	@PostMapping("/departmentList")
 	public ResponseEntity<?> getAllDepartment() {

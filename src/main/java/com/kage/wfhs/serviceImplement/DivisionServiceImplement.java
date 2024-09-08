@@ -55,7 +55,12 @@ public class DivisionServiceImplement implements DivisionService {
         return divisionList;
     }
 
-	@Override
+    @Override
+    public boolean isNameExist(String name) {
+        return divisionRepo.existsByName(name);
+    }
+
+    @Override
     public DivisionDto getDivisionById(Long id) {
         Division division = EntityUtil.getEntityById(divisionRepo, id);
         return modelMapper.map(division, DivisionDto.class);

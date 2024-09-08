@@ -11,6 +11,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
+import io.swagger.v3.oas.annotations.Operation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -24,12 +25,22 @@ import lombok.AllArgsConstructor;
 @AllArgsConstructor
 @RequestMapping("/api/team")
 public class TeamController {
-    @Autowired
     private final TeamService teamService;
 
     @PostMapping("/")
     public ResponseEntity<TeamDto> createTeam(@RequestBody TeamDto teamDto){        
         return ResponseEntity.ok(teamService.createTeam(teamDto));
+    }
+
+    @Operation(summary = "Check if a team name exists", description = "Checks whether a given team name exists in the system.")
+    @GetMapping("/check-name")
+    public ResponseEntity<Boolean> doesNameExist(@RequestParam String name) {
+        if (name == null || name.trim().isEmpty()) {
+            return ResponseEntity.badRequest().body(false);
+        }
+
+        boolean exists = teamService.isNameExist(name);
+        return ResponseEntity.ok(exists);
     }
 
     @PostMapping("/teamList")

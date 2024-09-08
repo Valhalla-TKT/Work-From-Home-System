@@ -33,4 +33,6 @@ public interface TeamService {
 	List<TeamDto> getTeamByDepartmentId(Long departmentId);
 
     List<TeamDto> getTeamByDivisionId(Long divisionId);
+
+    boolean isNameExist(String name);
 }

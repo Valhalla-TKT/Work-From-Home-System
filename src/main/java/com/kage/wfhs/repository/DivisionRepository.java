@@ -25,4 +25,6 @@ public interface DivisionRepository extends JpaRepository<Division,Long> {
 
     @Query("SELECT d FROM Division d JOIN d.departments dept WHERE dept.id = :departmentId")
     Division findByDepartmentId(@Param("departmentId") Long departmentId);
+
+    boolean existsByName(String name);
 }

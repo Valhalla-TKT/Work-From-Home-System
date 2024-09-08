@@ -20,7 +20,9 @@ import java.util.Set;
 @Service
 public interface UserService {
 	void createUser(UserCreationDto userDto);
-    void updateUser(Long id, UserDto userDto);
+
+	boolean updateUser(String staffId, UserDto userDto);
+
     UserDto getUserBystaffId(String staffId);
 
 	CurrentLoginUserDto getLoginUserBystaffId(String staffId);
