@@ -4,6 +4,7 @@ async function checkEmailAndSendOTP(email) {
         return await sendRequestWithOneParam('/auth/api/checkEmail', 'POST', "email", email);
     } catch (error) {
         console.error('Error:', error);
+        return error.message;
     }
 }
 

@@ -9,8 +9,10 @@ package com.kage.wfhs.repository;
 
 import com.kage.wfhs.model.ApproveRole;
 
+import java.util.List;
 import java.util.Optional;
 
+import com.kage.wfhs.model.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
@@ -22,6 +24,8 @@ public interface ApproveRoleRepository extends JpaRepository<ApproveRole,Long> {
     @Query(value = "SELECT wfo.approve_role_id FROM work_flow_order wfo WHERE wfo.id > :workFlowOrderId AND wfo.approve_role_id NOT IN (SELECT wfoInner.approve_role_id FROM work_flow_order wfoInner WHERE wfoInner.id = :workFlowOrderId) LIMIT 1", nativeQuery = true)
     Long findByWorkFlowOrderId(Long workFlowOrderId);
 
+    ApproveRole findByUsers(List<User> users);
 
-
+    @Query("SELECT ar FROM ApproveRole ar WHERE ar.name <> 'APPLICANT'")
+    List<ApproveRole> findApproveRolesWithoutApplicant();
 }

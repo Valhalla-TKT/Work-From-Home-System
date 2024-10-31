@@ -36,69 +36,169 @@
       </div>
       <style>
         .custum-file-upload {
-  height: 200px;
-  width: 300px;
-  display: flex;
-  flex-direction: column;
-  align-items: space-between;
-  gap: 20px;
-  cursor: pointer;
-  align-items: center;
-  justify-content: center;
-  border: 2px dashed #cacaca;
-  background-color: rgba(255, 255, 255, 1);
-  padding: 1.5rem;
-  border-radius: 10px;
-  box-shadow: 0px 48px 35px -48px rgba(0,0,0,0.1);
-}
+          height: 200px;
+          width: 300px;
+          display: flex;
+          flex-direction: column;
+          align-items: space-between;
+          gap: 20px;
+          cursor: pointer;
+          align-items: center;
+          justify-content: center;
+          border: 2px dashed #cacaca;
+          background-color: rgba(255, 255, 255, 1);
+          padding: 1.5rem;
+          border-radius: 10px;
+          box-shadow: 0px 48px 35px -48px rgba(0,0,0,0.1);
+        }
 
-.custum-file-upload .icon {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
+        .custum-file-upload .icon {
+          display: flex;
+          align-items: center;
+          justify-content: center;
+        }
 
-.custum-file-upload .icon svg {
-  height: 80px;
-  fill: rgba(75, 85, 99, 1);
-}
+        .custum-file-upload .icon svg {
+          height: 80px;
+          fill: rgba(75, 85, 99, 1);
+        }
 
-.custum-file-upload .text {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
+        .custum-file-upload .text {
+          display: flex;
+          align-items: center;
+          justify-content: center;
+        }
 
-.custum-file-upload .text span {
-  font-weight: 400;
-  color: rgba(75, 85, 99, 1);
-}
+        .custum-file-upload .text span {
+          font-weight: 400;
+          color: rgba(75, 85, 99, 1);
+        }
 
-.custum-file-upload input {
-  display: none;
-}
+        .custum-file-upload input {
+          display: none;
+        }
+
+
+        #loading-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 9999;
+        }
+
+        #loading-spinner .container {
+            width: fit-content;
+            gap: 10px;
+        }
+
+        .folder {
+            width: min-content;
+            margin: auto;
+            animation: float 2s infinite linear;
+        }
+
+        .folder .top {
+            background-color: #FF8F56;
+            width: 60px;
+            height: 12px;
+            border-top-right-radius: 10px;
+        }
+
+        .folder .bottom {
+            background-color: #FFCE63;
+            width: 100px;
+            height: 70px;
+            box-shadow: 5px 5px 0 0 #283149;
+            border-top-right-radius: 8px;
+        }
+
+        .container .title {
+            font-size: 2em;
+            color: #000;
+            text-align: center;
+            margin-top: 15px;
+            z-index: 9999;
+        }
+
+        @keyframes float {
+            0% {
+                transform: translatey(0px);
+            }
+            50% {
+                transform: translatey(-25px);
+            }
+            100% {
+                transform: translatey(0px);
+            }
+        }
+
+        .selected-sheet-icon {
+            display: flex;
+            align-items: center;
+            margin-top: 10px;
+            color: #28a745;
+        }
+
+        .selected-sheet-icon svg {
+            margin-right: 10px;
+        }
+
+        .selected-sheet-name {
+            font-weight: 500;
+            font-size: 16px;
+            color: #333;
+        }
+
+
       </style>
-      <div id="add-data-overlay">
-          <div id="add-data-modal" class="add-data-modal">
-              <div class="add-data-modal-content">
-                  <span class="title">Import Excel</span>
-                  <span class="close">&times;</span>
-                  <form id="uploadForm" th:action="@{/admin/importExcel}" method="post" enctype="multipart/form-data">
-                    <label for="file">Ledger</label>
-                    <label class="custum-file-upload" for="file">
-                        <div class="icon">
-                        <svg xmlns="http://www.w3.org/2000/svg" fill="" viewBox="0 0 24 24"><g stroke-width="0" id="SVGRepo_bgCarrier"></g><g stroke-linejoin="round" stroke-linecap="round" id="SVGRepo_tracerCarrier"></g><g id="SVGRepo_iconCarrier"> <path fill="" d="M10 1C9.73478 1 9.48043 1.10536 9.29289 1.29289L3.29289 7.29289C3.10536 7.48043 3 7.73478 3 8V20C3 21.6569 4.34315 23 6 23H7C7.55228 23 8 22.5523 8 22C8 21.4477 7.55228 21 7 21H6C5.44772 21 5 20.5523 5 20V9H10C10.5523 9 11 8.55228 11 8V3H18C18.5523 3 19 3.44772 19 4V9C19 9.55228 19.4477 10 20 10C20.5523 10 21 9.55228 21 9V4C21 2.34315 19.6569 1 18 1H10ZM9 7H6.41421L9 4.41421V7ZM14 15.5C14 14.1193 15.1193 13 16.5 13C17.8807 13 19 14.1193 19 15.5V16V17H20C21.1046 17 22 17.8954 22 19C22 20.1046 21.1046 21 20 21H13C11.8954 21 11 20.1046 11 19C11 17.8954 11.8954 17 13 17H14V16V15.5ZM16.5 11C14.142 11 12.2076 12.8136 12.0156 15.122C10.2825 15.5606 9 17.1305 9 19C9 21.2091 10.7909 23 13 23H20C22.2091 23 24 21.2091 24 19C24 17.1305 22.7175 15.5606 20.9844 15.122C20.7924 12.8136 18.858 11 16.5 11Z" clip-rule="evenodd" fill-rule="evenodd"></path> </g></svg>
-                        </div>
-                        <div class="text"> <span>Click to upload File</span>
-                           </div>
+
+        <div id="loading-overlay" style="display: none;">
+            <div id="loading-spinner">
+                <div class="container">
+                    <div class="folder">
+                        <div class="top"></div>
+                        <div class="bottom"></div>
+                    </div>
+                    <div class="title">importing excel please wait...</div>
+                </div>
+            </div>
+        </div>
+
+
+        <!-- The modal form -->
+        <div id="add-data-overlay">
+            <div id="add-data-modal" class="add-data-modal">
+                <div class="add-data-modal-content">
+                    <span class="title">Import Excel</span>
+                    <span class="close">&times;</span>
+                    <form id="uploadForm" th:action="@{/api/importExcel}" method="post" enctype="multipart/form-data" onsubmit="return false;">
+                        <label for="file">Ledger</label>
+                        <label class="custum-file-upload" for="file">
+                            <div class="icon">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="" viewBox="0 0 24 24"><g stroke-width="0" id="SVGRepo_bgCarrier"></g><g stroke-linejoin="round" stroke-linecap="round" id="SVGRepo_tracerCarrier"></g><g id="SVGRepo_iconCarrier"> <path fill="" d="M10 1C9.73478 1 9.48043 1.10536 9.29289 1.29289L3.29289 7.29289C3.10536 7.48043 3 7.73478 3 8V20C3 21.6569 4.34315 23 6 23H7C7.55228 23 8 22.5523 8 22C8 21.4477 7.55228 21 7 21H6C5.44772 21 5 20.5523 5 20V9H10C10.5523 9 11 8.55228 11 8V3H18C18.5523 3 19 3.44772 19 4V9C19 9.55228 19.4477 10 20 10C20.5523 10 21 9.55228 21 9V4C21 2.34315 19.6569 1 18 1H10ZM9 7H6.41421L9 4.41421V7ZM14 15.5C14 14.1193 15.1193 13 16.5 13C17.8807 13 19 14.1193 19 15.5V16V17H20C21.1046 17 22 17.8954 22 19C22 20.1046 21.1046 21 20 21H13C11.8954 21 11 20.1046 11 19C11 17.8954 11.8954 17 13 17H14V16V15.5ZM16.5 11C14.142 11 12.2076 12.8136 12.0156 15.122C10.2825 15.5606 9 17.1305 9 19C9 21.2091 10.7909 23 13 23H20C22.2091 23 24 21.2091 24 19C24 17.1305 22.7175 15.5606 20.9844 15.122C20.7924 12.8136 18.858 11 16.5 11Z" clip-rule="evenodd" fill-rule="evenodd"></path> </g></svg>
+                            </div>
+                            <div class="text"> <span>Click to upload File</span>
+                            </div>
                             <input type="file" name="file" id="file" accept=".xls, .xlsx, application/vnd.ms-excel, .csv, text/csv" />
-                    </label>
-                      <input type="hidden" id="sheetNameInput" name="sheetName" />
-                      <button class="btn2 add-data-btn" type="submit" id="import" disabled>Import Now</button>
-                  </form>
-              </div>
-          </div>
-      </div>
-  </div>   
+                        </label>
+
+                        <div id="selected-sheet-icon" class="selected-sheet-icon" style="display: none;">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="#28a745" viewBox="0 0 24 24" height="24px"><path d="M5 2h9l6 6v14H5V2zm8 1.5V9h5.5L13 3.5zM5 20v-1.5h14V20H5zm5-7h4v4h1.5v-4H19v-1.5h-3.5v-4H14v4h-4v1.5zm0 2.5h3v3H12v-3H9v-1.5h3V14H9v-1.5zm0 1.5H8v2h2v-2z"/></svg>
+                            <span id="selected-sheet-name" class="selected-sheet-name"></span>
+                        </div>
+                        <input type="hidden" id="sheetNameInput" name="sheetName" />
+                        <button class="btn2 add-data-btn" type="button" id="import" disabled>Import Now</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+    </div>
 </body>
 </html>

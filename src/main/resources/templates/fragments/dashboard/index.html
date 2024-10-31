@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org"
+	  xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 
 <head>
 	<title>WorkHub</title>
@@ -17,9 +18,8 @@
 				<div class="home-type-body-large font-weight-500">Get inspired
 					by the productivity and success of millions of remote workers and
 					companies around the world.</div>
-				<br> <a class="margin-t-32 btn2 btn2--large hide-ceo-only" data-track-cta="Get started" th:href="@{/applyForm}">Apply Form Now</a>
-				<a class="margin-t-32 btn2 btn2--large visible-ceo-only" id="ceo-apply-form-btn" data-track-cta="Get started">Apply Form
-					Now</a>
+				<br> <a class="margin-t-32 btn2 btn2--large"  sec:authorize="!hasAuthority('CEO')" data-track-cta="Get started" th:href="@{/applyForm}">Apply Form Now</a>
+				<a class="margin-t-32 btn2 btn2--large"  sec:authorize="hasAuthority('CEO')" id="ceo-apply-form-btn" data-track-cta="Get started">Apply Form Now</a>
 			</div>
 		</section>
 		<div class="home-feed"
@@ -57,14 +57,14 @@
 									</figure>
 									<div class="shot-thumbnail-extras"></div>
 									<a class="shot-thumbnail-link dribbble-link js-shot-link" data-turbo="true"
-										href="shots/23716274-Glyph-Beer-31.html">
+										href="#">
 										<span class="accessibility-text">Divisions</span>
 									</a>
 								</div>
 
 								<div class="shot-details-container js-shot-details-container">
 									<div class="user-information">
-										<a class="hoverable url" rel="contact" href="ethnfndr.html">
+										<a class="hoverable url" rel="contact" href="#">
 											<span class="display-name" style="font-size: 18px;">Division</span>
 										</a>
 									</div>
@@ -90,14 +90,14 @@
 									</figure>
 									<div class="shot-thumbnail-extras"></div>
 									<a class="shot-thumbnail-link dribbble-link js-shot-link" data-turbo="true"
-										href="shots/23716274-Glyph-Beer-31.html">
+										href="#">
 										<span class="accessibility-text">Departments</span>
 									</a>
 								</div>
 
 								<div class="shot-details-container js-shot-details-container">
 									<div class="user-information">
-										<a class="hoverable url" rel="contact" href="ethnfndr.html">
+										<a class="hoverable url" rel="contact" href="#">
 											<span class="display-name" style="font-size: 18px;">Departments</span>
 										</a>
 									</div>
@@ -123,14 +123,14 @@
 									</figure>
 									<div class="shot-thumbnail-extras"></div>
 									<a class="shot-thumbnail-link dribbble-link js-shot-link" data-turbo="true"
-										href="shots/23716274-Glyph-Beer-31.html">
+										href="#">
 										<span class="accessibility-text">Teams</span>
 									</a>
 								</div>
 
 								<div class="shot-details-container js-shot-details-container">
 									<div class="user-information">
-										<a class="hoverable url" rel="contact" href="ethnfndr.html">
+										<a class="hoverable url" rel="contact" href="#">
 											<span class="display-name" style="font-size: 18px;">Team</span>
 										</a>
 									</div>
@@ -156,14 +156,14 @@
 									</figure>
 									<div class="shot-thumbnail-extras"></div>
 									<a class="shot-thumbnail-link dribbble-link js-shot-link" data-turbo="true"
-										href="shots/applyForm">
+										href="#">
 										<span class="accessibility-text">Employees</span>
 									</a>
 								</div>
 
 								<div class="shot-details-container js-shot-details-container">
 									<div class="user-information">
-										<a class="hoverable url" rel="contact" href="ethnfndr.html">
+										<a class="hoverable url" rel="contact" href="#">
 											<span class="display-name" style="font-size: 18px;">Employee</span>
 										</a>
 									</div>
@@ -199,8 +199,6 @@
 								<div class="calendar-month-year"></div>
 								<div class="calendar-arrow-container">
 									<button class="calendar-today-button"></button>
-									<button class="calendar-left-arrow">←</button>
-									<button class="calendar-right-arrow">→</button>
 								</div>
 							</div>
 							<ul class="calendar-week">
@@ -210,7 +208,7 @@
 						</div>
 					</div>
 				</div> <br>
-				<div class="p-manager row g-3 col-lg-12 col-md-12 visible-pm-only" >
+				<div class="p-manager row g-3 col-lg-12 col-md-12 "  sec:authorize="hasAuthority('PROJECT_MANAGER')" >
 					<div class="col-lg-7 col-md-12">
 						<div class="card-widget">
 							<div class="card-header">
@@ -241,8 +239,9 @@
 							<div class="gender-chart-bg">
 								<div class="d-md-flex align-items-center mb-3">
 									<div class="d-flex align-items-center">
-										<div class="display-7 me-3">
-											<i class="bi bi-bag-check me-2 text-success" id="teamName"></i>Team Pioneers
+										<div class="display-7 me-3 display-flex">
+											<i class="bi bi-people-fill me-2 text-success"></i>
+											<div id="teamName"></div>
 										</div>
 									</div>
 								</div>
@@ -254,7 +253,7 @@
 					</div> <br>
 				</div>
 
-				<div class="dept-head row g-3 col-lg-12 col-md-12 visible-dept-head-only" >
+				<div class="dept-head row g-3 col-lg-12 col-md-12"  sec:authorize="hasAuthority('DEPARTMENT_HEAD')">
 					<div class="col-lg-7 col-md-12">
 						<div class="card-widget">
 							<div class="card-header">
@@ -266,9 +265,7 @@
 										<div class="display-7 me-3">
 											<i class="bi bi-bag-check me-2 text-success"></i> All Teams
 										</div>
-										<span class="text-success">
-											<i class="bi bi-arrow-up me-1 small"></i>8.30%
-										</span>
+
 									</div>
 								</div>
 								<div id="chart" style=" display: flex; justify-content: center;">
@@ -286,7 +283,7 @@
 								<div class="d-md-flex align-items-center mb-3">
 									<div class="d-flex align-items-center">
 										<div class="display-7 me-3">
-											<i class="bi bi-bag-check me-2 text-success"></i> Team Ambassadors
+											<i class="bi bi-building me-2 text-success"></i> <span id="department_name_pie_chart"></span>
 										</div>
 									</div>
 								</div>
@@ -298,7 +295,7 @@
 					</div> <br>
 				</div>
 
-				<div class="div-head row g-3 col-lg-12 col-md-12 visible-division-head-only" >
+				<div class="div-head row g-3 col-lg-12 col-md-12"  sec:authorize="hasAuthority('DIVISION_HEAD')">
 					<div class="col-lg-7 col-md-12">
 						<div class="card-widget">
 							<div class="card-header">
@@ -342,7 +339,7 @@
 					</div> <br>
 				</div>
 
-				<div class="cch row g-3 col-lg-12 col-md-12 visible-cis-ceo-hr" >
+				<div class="cch row g-3 col-lg-12 col-md-12" sec:authorize="hasAnyAuthority('CISO', 'CEO', 'HR')">
 					<div class="col-lg-7 col-md-12">
 						<div class="card-widget">
 							<div class="card-header">

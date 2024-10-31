@@ -22,4 +22,6 @@ public interface DivisionService {
     void deleteDivisionById(Long id);
 
     List<DivisionDto> getAllDivision();
+
+    boolean isNameExist(String name);
 }

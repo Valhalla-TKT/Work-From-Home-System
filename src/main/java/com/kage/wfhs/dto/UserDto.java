@@ -7,7 +7,6 @@
  */
 package com.kage.wfhs.dto;
 
-import java.util.Date;
 import java.util.List;
 import java.util.Set;
 
@@ -32,12 +31,15 @@ import lombok.ToString;
 @ToString
 public class UserDto {
 	private Long id, teamId, approveRoleId, divisionId, departmentId;
-    private String staffId, name, email, password, gender, phoneNumber, teamName, positionName, approveRoleName, departmentName, divisionName, profile, highestApproveRole;
-    private boolean isEnabled, isFirstTimeLogin;
+    private String staffId, name, email, password, gender, teamName, positionName, approveRoleName, departmentName, divisionName, profile, highestApproveRole;
+    private boolean isEnabled, isFirstTimeLogin, resetFlag;
     private Team team;
     private Department department;
     private Division division;
     private Set<ApproveRole> approveRoles;
     private List<WorkFlowOrder> workFlowOrders;
-    private MultipartFile profileInput;     
+    private MultipartFile profileInput;
+    private List<Team> managedTeams;
+    private List<Department> managedDepartments;
+    private List<Division> managedDivisions;
 }

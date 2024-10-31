@@ -1,217 +1,64 @@
-<!-- <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
-
-<head>
-	<meta charset="UTF-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<title>Sign in | WFHS</title>
-	<link rel="stylesheet" media="screen" th:href="@{/assets/auth/auth.css}" />
-	<link rel="icon" th:href="@{/assets/icons/wfhs-small-logo.ico}" type="image/x-icon">
-
-</head>
-<body>
-<div class="video-container">
-	<video autoplay muted loop id="video-background">
-		<source th:src="@{/assets/auth/auth-background.mp4}" type="video/mp4">
-	</video>
-	<div class="login-form">
-		<section class="content" data-content-container>
-			<main>
-
-				<div class="auth-content">
-					<h2>Welcome Back!
-						<p class="signin-subtitle">Sign in to your account to continue.</p>
-					</h2>
-					<div class="auth-form sign-in-form">
-						<form th:action="@{/signIn}" accept-charset="UTF-8" method="post">
-							<div th:if="${session.errorMessage != null}">
-								<p style="color: red" th:text="${session.errorMessage}"></p>
-							</div>
-							<div class="form-fields">
-								<fieldset>
-									<label for="login">Staff ID</label>
-									<input type="text" name="username" id="login" tabindex="1" class="text-input" autocorrect="off" autocapitalize="off">
-								</fieldset>
-								<fieldset>
-									<label for="password" class="password">Password <a href="auth/forgetPassword">Forgot Password?</a></label>
-									<input type="password" name="password" id="password" value="" tabindex="2" class="text-input" data-cypress="password">
-								</fieldset>
-							</div>
-							<input class="btn2 btn2--large btn2--full-width margin-t-20" type="submit" value="Sign In" tabindex="3" data-cypress="submit-sign-in-btn">
-						</form>
-					</div>
-				</div>
-			</main>
-		</section>
-	</div>
-</div>
-</body>
-</html> -->
-
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>WFHS Login Page</title>
-    <link rel="icon" th:href="@{/assets/icons/wfhs-small-logo.ico}" type="image/x-icon">
-    <style>
-    @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap');
-
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-      font-family: 'Roboto', sans-serif;
-    }
-
-    .flex {
-      display: flex;
-      align-items: center;
-    }
-
-    .container {
-      padding: 0 15px;
-      min-height: 100vh;
-      justify-content: center;
-      background: #f0f2f5;
-    }
-
-    .wfhs-page {
-      justify-content: space-between;
-      max-width: 1200px;
-      width: 100%;
-    }
-
-    .wfhs-page .text {
-      margin-bottom: 90px;
-    }
-
-    .wfhs-page h1 {
-      color: #000;
-      font-size: 4rem;
-      margin-bottom: 10px;
-    }
-
-    .wfhs-page p {
-      font-size: 1.75rem;
-      white-space: nowrap;
-    }
-
-    form {
-      display: flex;
-      flex-direction: column;
-      background: #fff;
-      border-radius: 8px;
-      padding: 50px 30px 20px 30px;
-      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1),
-        0 8px 16px rgba(0, 0, 0, 0.1);
-      max-width: 400px;
-      width: 100%;
-    }
-
-    form input {
-      height: 55px;
-      width: 100%;
-      border: 1px solid #ccc;
-      border-radius: 6px;
-      margin-bottom: 15px;
-      font-size: 1rem;
-      padding: 0 14px;
-    }
-
-    form input:focus {
-      outline: none;
-      border-color: #000;
-    }
-
-    ::placeholder {
-      color: #777;
-      font-size: 1.063rem;
-    }
-
-    .link {
-      display: flex;
-      flex-direction: column;
-      text-align: center;
-      gap: 15px;
-    }
-
-    .link .login {
-      border: none;
-      outline: none;
-      cursor: pointer;
-      background: #000;
-      padding: 15px 0;
-      border-radius: 6px;
-      color: #fff;
-      font-size: 1.25rem;
-      font-weight: 600;
-      transition: 0.2s ease;
-    }
-
-    .link .login:hover {
-      background: #333;
-    }
-
-    form a {
-      text-decoration: none;
-    }
-
-    .link .forgot {
-      color: #000;
-      font-size: 0.875rem;
-    }
-
-    .link .forgot:hover {
-      text-decoration: underline;
-    }
-
-    @media (max-width: 900px) {
-      .wfhs-page {
-        flex-direction: column;
-        text-align: center;
-      }
-
-      .wfhs-page .text {
-        margin-bottom: 30px;
-      }
-    }
-
-    @media (max-width: 460px) {
-      .wfhs-page h1 {
-        font-size: 3.5rem;
-      }
-
-      .wfhs-page p {
-        font-size: 1.3rem;
-      }
-
-      form {
-        padding: 15px;
-      }
-    }
-    </style>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>WFHS Login Page</title>
+	<link rel="icon" th:href="@{/assets/icons/wfhs-small-logo.ico}" type="image/x-icon">
+	<link rel="stylesheet" media="screen" th:href="@{/assets/auth/auth.css}" />
+	<script th:src="@{/assets/vendors/fontAwsome/fontawsome.js}"></script>
+	<script th:src="@{/assets/auth/platform.min.js}"></script>
+	<script>
+		function getDeviceDetails() {
+			document.getElementById('deviceInfo').value = platform.description;
+		}
+		function checkCapsLock(event) {
+			const capsLockMessage = document.getElementById('capsLockMessage');
+			if (event.getModifierState && event.getModifierState('CapsLock')) {
+				capsLockMessage.style.display = 'block';
+			} else {
+				capsLockMessage.style.display = 'none';
+			}
+		}
+		function togglePasswordVisibility() {
+			const passwordField = document.getElementById('password');
+			const eyeIcon = document.getElementById('togglePassword');
+			if (passwordField.type === 'password') {
+				passwordField.type = 'text';
+				eyeIcon.classList.remove('fa-eye');
+				eyeIcon.classList.add('fa-eye-slash');
+			} else {
+				passwordField.type = 'password';
+				eyeIcon.classList.remove('fa-eye-slash');
+				eyeIcon.classList.add('fa-eye');
+			}
+		}
+	</script>
 </head>
-<body>
-    <div class="container flex">
-        <div class="wfhs-page flex">
-            <div class="text">           
-                <h1>DIR-ACE Technology</h1>
-                <p style="color: #000; font-size: 1.75rem; white-space: nowrap;">Work From Home System</p>                
-            </div>
-            <form th:action="@{/signIn}" accept-charset="UTF-8" method="post">            	
-                <input type="text" name="username" placeholder="Staff ID" required>
-                <input type="password" name="password" placeholder="Password" required>
-                <div th:if="${session.errorMessage != null}">
-					<p style="color: red; font-size: 0.875rem; margin-bottom: 10px;" th:text="${session.errorMessage}"></p>
-				</div>
-                <div class="link">
-                    <button type="submit" class="login">Login</button>
-                    <a th:href="@{auth/forgetPassword}" class="forgot">Forgot password?</a>
-                </div>              
-            </form>
-        </div>
-    </div>
+<body onload="getDeviceDetails()">
+<div class="container flex">
+	<div class="wfhs-page flex">
+		<div class="text">
+			<h1>DIR-ACE Technology</h1>
+			<p style="color: #000; font-size: 1.75rem; white-space: nowrap;">Work From Home System</p>
+		</div>
+		<form th:action="@{/signIn}" accept-charset="UTF-8" method="post">
+			<input type="text" name="username" placeholder="Staff ID" required onkeyup="checkCapsLock(event)">
+			<div class="password-container">
+				<input type="password" id="password" name="password" placeholder="Password" required onkeyup="checkCapsLock(event)">
+				<span id="togglePassword" onclick="togglePasswordVisibility()" class="fas fa-eye"></span>
+			</div>
+			<input type="hidden" id="deviceInfo" name="deviceInfo" value="">
+			<p id="capsLockMessage" style="display: none; color: red; font-size: 0.875rem;">Caps Lock is on!</p>
+			<div th:if="${session.errorMessage != null}">
+				<p style="color: red; font-size: 0.875rem; margin-bottom: 10px;" th:text="${session.errorMessage}"></p>
+			</div>
+			<div class="link">
+				<button type="submit" class="login">Login</button>
+				<a th:href="@{/auth/forgetPassword}" class="forgot">Forgot password?</a>
+			</div>
+		</form>
+	</div>
+</div>
 </body>
 </html>

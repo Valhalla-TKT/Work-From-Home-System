@@ -50,7 +50,8 @@ public class FirstTimeLoginFilter extends OncePerRequestFilter {
                 relativeURI.startsWith("/ws/") ||
                 relativeURI.equals("/login") ||
                 relativeURI.equals("/profile") ||
-                relativeURI.equals("/admin/importExcel")) {
+                relativeURI.equals("/admin/importExcel") ||
+                relativeURI.equals("/api/importExcel")) {
             filterChain.doFilter(request, response);
             return;
         }
@@ -65,8 +66,7 @@ public class FirstTimeLoginFilter extends OncePerRequestFilter {
             }
 
             if (userDto != null && userDto.isFirstTimeLogin()) {
-                Set<String> roles = userDto.getApproveRoles().stream().map(ApproveRole::getName).collect(Collectors.toSet());
-                if (roles.contains("HR")) {
+                if ("00-00001".equals(userDto.getStaffId())) {
                     logger.debug("Redirecting to /admin/importExcel");
                     response.sendRedirect(contextPath + "/admin/importExcel");
                     return;

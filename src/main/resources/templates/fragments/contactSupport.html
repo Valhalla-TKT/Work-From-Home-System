@@ -1,0 +1,142 @@
+
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+	<title>WorkHub</title>
+</head>
+
+<body>
+	<main th:fragment="content" class="home-page">        
+        <style>
+        .contact-support-section {
+		    max-width: 1000px;
+		    margin: 2rem auto;
+		    padding: 2.5rem;
+		    background-color: #fff;
+		    border-radius: 5px;
+		    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+		}
+		
+		.contact-support-section h1 {
+		    font-size: 2.5rem;
+		    color: #333;
+		    margin-bottom: 1rem;
+		}
+		
+		.contact-support-section p {
+		    font-size: 1rem;
+		    color: #666;
+		    margin-bottom: 2rem;
+		}
+		
+		.chat-container {
+		    border: 1px solid #ccc;
+		    border-radius: 5px;
+		    overflow: hidden;
+		}
+		
+		.chat-header {
+		    background-color: #333;
+		    color: #fff;
+		    padding: 1rem;
+		    text-align: center;
+		}
+		
+		.chat-box {
+		    height: 300px;
+		    overflow-y: scroll;
+		    padding: 1rem;
+		    background-color: #f9f9f9;
+		}
+		
+		.chat-message {
+		    margin-bottom: 1rem;
+		    padding: 0.5rem 1rem;
+		    border-radius: 5px;
+		    max-width: 70%;
+		    word-wrap: break-word;
+		}
+		
+		.user-message {
+		    background-color: #e1ffc7;
+		    align-self: flex-end;
+		}
+		
+		.service-message {
+		    background-color: #d1e7ff;
+		    align-self: flex-start;
+		}
+		
+		.chat-input {
+		    display: flex;
+		    padding: 1rem;
+		    background-color: #fff;
+		    border-top: 1px solid #ccc;
+		}
+		
+		.chat-input input.chat-input-box {
+		    flex: 4;
+		    padding: 0.5rem;
+		    border: 1px solid #ccc;
+		    border-radius: 5px;
+		    margin-right: 1rem;
+		}
+		
+		.chat-input button {
+		    flex: 1;
+		    padding: 0.5rem 0.5rem;
+		    border: none;
+		    background-color: #333;
+		    color: #fff;
+		    border-radius: 5px;
+		    cursor: pointer;
+		}
+        </style>
+        <section class="contact-support-section">
+            <h1>Contact Support</h1>
+            <p>If you need assistance, please use the chat below to get in touch with our Service Desk.</p>
+            <div class="chat-container">
+                <div class="chat-header">
+                    <h2>Service Desk Chat</h2>
+                </div>
+                <div class="chat-box" id="chat-box">
+                    <!-- Chat messages will appear here -->
+                </div>
+                <div class="chat-input">
+                    <input type="text" id="chat-input" class="chat-input-box" placeholder="Type your message here...">
+                    <button onclick="sendMessage()">Send</button>
+                </div>
+            </div>
+        </section>
+         <script>
+        function sendMessage() {
+            const chatBox = document.getElementById('chat-box');
+            const chatInput = document.getElementById('chat-input');
+            const message = chatInput.value.trim();
+            
+            if (message) {
+                const messageElement = document.createElement('div');
+                messageElement.className = 'chat-message user-message';
+                messageElement.textContent = message;
+                chatBox.appendChild(messageElement);
+                chatInput.value = '';
+                chatBox.scrollTop = chatBox.scrollHeight;
+
+                // Simulate response from Service Desk
+                setTimeout(() => {
+                    const responseElement = document.createElement('div');
+                    responseElement.className = 'chat-message service-message';
+                    responseElement.textContent = 'Thank you for your message. How can we assist you?';
+                    chatBox.appendChild(responseElement);
+                    chatBox.scrollTop = chatBox.scrollHeight;
+                }, 1000);
+            }
+        }
+    </script>
+        <script src="assets/help/jquery-3.3.1.min.js"></script>
+	</main>
+
+</body>
+
+</html>

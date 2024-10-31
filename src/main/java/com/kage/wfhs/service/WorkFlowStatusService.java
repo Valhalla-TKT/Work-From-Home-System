@@ -7,6 +7,7 @@
  */
 package com.kage.wfhs.service;
 
+import java.util.Date;
 import java.util.List;
 
 import org.springframework.stereotype.Service;
@@ -19,6 +20,7 @@ public interface WorkFlowStatusService {
     WorkFlowStatusDto getWorkFlowStatus(Long id);
     List<WorkFlowStatusDto> getWorkFlowStatusWithForm(Long id);
     void updateStatus(Long id, WorkFlowStatusDto workFlowStatusDto) throws Exception;
-    WorkFlowStatusDto getWorkFlowStatusWithApprover(Long id);
+//    WorkFlowStatusDto getWorkFlowStatusWithApprover(Long id);
     WorkFlowStatusDto getByUserIdAndFormId(Long userId, Long formId);
+	void updateApproverStatus(Long id, boolean state, Date approveDate, String reason);
 }

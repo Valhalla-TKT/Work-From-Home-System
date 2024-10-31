@@ -7,10 +7,11 @@
  */
 package com.kage.wfhs.config;
 
-import com.kage.wfhs.dto.UserDto;
 import com.kage.wfhs.dto.auth.CurrentLoginUserDto;
+import com.kage.wfhs.security.CustomAuthenticationEntryPoint;
 import com.kage.wfhs.security.FirstTimeLoginFilter;
 import com.kage.wfhs.service.UserService;
+import com.kage.wfhs.util.LogService;
 import lombok.RequiredArgsConstructor;
 
 import org.springframework.context.annotation.Bean;
@@ -32,10 +33,9 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 
 import com.kage.wfhs.security.JwtAuthenticationFilter;
 import com.kage.wfhs.security.OurUserDetailService;
-import com.kage.wfhs.util.JwtUtil;
+import com.kage.wfhs.jwt.JwtUtil;
 
 import jakarta.servlet.http.Cookie;
-import jakarta.servlet.http.HttpServletRequest;
 
 @Configuration
 @EnableWebSecurity
@@ -45,6 +45,7 @@ public class SecurityConfig {
     private final JwtUtil jwtUtil;
     private final FirstTimeLoginFilter firstTimeLoginFilter;
     private final UserService userService;
+    private final LogService logService;
 
     @Bean
     public static PasswordEncoder passwordEncoder() {
@@ -57,7 +58,7 @@ public class SecurityConfig {
                 .cors(Customizer.withDefaults())
                 .httpBasic(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/static/**", "/assets/**", "/swagger-ui/**", "/icons/**", "/formImages/**", "/images/**", "/ws/**", "/auth/**").permitAll()
+                        .requestMatchers("/static/**", "/assets/**", "/icons/**", "/formImages/**", "/images/**", "/ws/**", "/auth/**").permitAll()
                         .requestMatchers("/admin/**").access((authentication, context) -> {
                             Authentication authen = authentication.get();
                             boolean isApplicant = authen.getAuthorities().stream()
@@ -67,25 +68,31 @@ public class SecurityConfig {
                         })
                         .anyRequest().authenticated()
                 )
-                .exceptionHandling(exceptionHandling -> exceptionHandling.accessDeniedPage("/accessDenied"))
+                .exceptionHandling(exceptionHandling -> exceptionHandling
+                        .authenticationEntryPoint(customAuthenticationEntryPoint()))
                 .addFilterBefore(jwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class)
                 .addFilterAfter(firstTimeLoginFilter, JwtAuthenticationFilter.class)
                 .formLogin(form -> form
                         .loginPage("/login")
                         .loginProcessingUrl("/signIn")
-                        .defaultSuccessUrl("/dashboard")
+                        .defaultSuccessUrl("/home")
                         .successHandler(
                                 (request, response, authentication) -> {
+                                    System.out.println("Authentication success handler called");
                                     String contextPath = request.getContextPath();
                                     String token = jwtUtil.generateToken(authentication.getName());
                                     Cookie cookie = new Cookie("JWT", token);
-                                    cookie.setHttpOnly(true);
+                                    cookie.setHttpOnly(false);
                                     cookie.setPath(contextPath + "/");
-                                    cookie.setMaxAge(86400); // 1 day
+                                    cookie.setMaxAge(86400);
                                     response.addCookie(cookie);
+                                    response.setHeader("X-JWT-Token", token);
+
                                     CurrentLoginUserDto userDto = userService.getLoginUserBystaffId(authentication.getName());
                                     request.getSession().setAttribute("login-user", userDto);
-                                    response.sendRedirect(contextPath + "/dashboard");
+                                    String deviceInfo = request.getParameter("deviceInfo");
+                                    logService.logUserLogin(userDto, deviceInfo);
+                                    response.sendRedirect(contextPath + "/home");
                                 })
                         .failureHandler(authenticationFailureHandler())
                         .permitAll()
@@ -97,7 +104,7 @@ public class SecurityConfig {
                                 (request, response, authentication) -> {
                                     String contextPath = request.getContextPath();
                                     Cookie cookie = new Cookie("JWT", null);
-                                    cookie.setHttpOnly(true);
+                                    cookie.setHttpOnly(false);
                                     cookie.setPath(contextPath + "/");
                                     cookie.setMaxAge(0);
                                     response.addCookie(cookie);
@@ -112,6 +119,11 @@ public class SecurityConfig {
     @Bean
     public JwtAuthenticationFilter jwtAuthenticationFilter() {
         return new JwtAuthenticationFilter();
+    }
+
+    @Bean
+    public CustomAuthenticationEntryPoint customAuthenticationEntryPoint() {
+        return new CustomAuthenticationEntryPoint();
     }
 
     @Bean

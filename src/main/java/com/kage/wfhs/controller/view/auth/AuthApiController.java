@@ -22,7 +22,7 @@ public class AuthApiController {
         try {
             authService.emailExists(email, true);
             return ResponseEntity.status(HttpStatus.OK).body("Mail Sent Successfully.");
-        } catch (EntityNotFoundException incorrectPasswordException) {
+        } catch (EntityNotFoundException incorrectEmailException) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Please provide a valid email.");
         } catch (Exception exception) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(exception.getMessage());

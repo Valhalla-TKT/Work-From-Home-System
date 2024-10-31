@@ -1,17 +1,29 @@
 /**
  * 
  */
-
 document.addEventListener('DOMContentLoaded', function () {
-    document.querySelector('.import-excel').addEventListener('click', function () {
-        document.getElementById('add-data-overlay').style.display = 'block';
-        document.getElementById('add-data-modal').style.display = 'block';
-    });
-    document.querySelector('#add-data-overlay .close').addEventListener('click', function () {
-        document.getElementById('add-data-overlay').style.display = 'none';
-        document.getElementById('add-data-modal').style.display = 'none';
-    });
+    const loadingOverlay = document.getElementById('loading-overlay')
+    const wrapInner = document.getElementById('wrap-inner')
+    const excelImportBtn = document.querySelector('.import-excel');
+    if(excelImportBtn) {
+        excelImportBtn.addEventListener('click', function () {
+            document.getElementById('add-data-overlay').style.display = 'block';
+            document.getElementById('add-data-modal').style.display = 'block';
+        });
+    }
+    const closeBtn = document.querySelector('#add-data-overlay .close')
+    if(closeBtn) {
+        closeBtn.addEventListener('click', function () {
+            document.getElementById('add-data-overlay').style.display = 'none';
+            document.getElementById('add-data-modal').style.display = 'none';
+        })
+    }
+    // document.querySelector('#add-data-overlay .close').addEventListener('click', function () {
+    //
+    // });
+
     document.getElementById('file').addEventListener('change', handleFile, false);
+    document.getElementById('import').addEventListener('click', submitForm, false);
 
     function handleFile(e) {
         const file = e.target.files[0];
@@ -42,14 +54,69 @@ document.addEventListener('DOMContentLoaded', function () {
             }).then((result) => {
                 if (result.isConfirmed) {
                     document.getElementById('sheetNameInput').value = result.value;
-                    console.log(result.value);
                     document.getElementById('import').disabled = false;
+                    const selectedSheetIcon = document.getElementById('selected-sheet-icon');
+                    const selectedSheetName = document.getElementById('selected-sheet-name');
+                    selectedSheetName.textContent = `Selected Sheet: ${result.value}`;
+                    selectedSheetIcon.style.display = 'flex';
                 } else {
                     document.getElementById('sheetNameInput').value = '';
                     document.getElementById('import').disabled = true;
+                    document.getElementById('selected-sheet-icon').style.display = 'none';
                 }
             });
         };
         reader.readAsArrayBuffer(file);
+    }
+
+    function submitForm() {
+        const formData = new FormData(document.getElementById('uploadForm'));
+        loadingOverlay.style.display = 'flex';
+        document.getElementById('wrap-inner').style.display = 'none';
+        document.getElementById('add-data-overlay').style.display = 'none';
+        document.getElementById('add-data-modal').style.display = 'none';
+        fetch(`${getContextPath()}/api/importExcel`, {
+            method: 'POST',
+            body: formData
+        }).then(response => response.json())
+            .then(data => {
+                document.getElementById('loading-overlay').style.display = 'none';
+                document.getElementById('wrap-inner').style.display = 'block';
+                if (data.success) {
+                    const currentLocation = window.location.pathname;
+                    const adminUserLocation = `${getContextPath()}/admin/user`;
+                    Swal.fire({
+                        title: 'File Uploaded Successfully',
+                        text: currentLocation === adminUserLocation ? 'The page will be refreshed.' : 'You will be signed out.',
+                        icon: 'success',
+                        confirmButtonText: 'OK'
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            if (currentLocation === adminUserLocation) {
+                                window.location.reload();
+                            } else {
+                                localStorage.removeItem('currentUser');
+                                window.location.href = `${getContextPath()}/signOut`;
+                            }
+                        }
+                    });
+                } else {
+                    Swal.fire({
+                        title: 'Error',
+                        text: data.message,
+                        icon: 'error',
+                        confirmButtonText: 'OK'
+                    });
+                }
+            }).catch(error => {
+            document.getElementById('loading-overlay').style.display = 'none';
+            document.getElementById('wrap-inner').style.display = 'block';
+            Swal.fire({
+                title: 'Error',
+                text: 'Error uploading file: ' + error.message,
+                icon: 'error',
+                confirmButtonText: 'OK'
+            });
+        });
     }
 });

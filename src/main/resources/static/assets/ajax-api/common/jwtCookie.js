@@ -1,10 +1,19 @@
-function getCookie(name) {
-    let cookieArr = document.cookie.split(";");
-    for (let i = 0; i < cookieArr.length; i++) {
-        let cookiePair = cookieArr[i].split("=");
-        if (name === cookiePair[0].trim()) {
-            return decodeURIComponent(cookiePair[1]);
+function getJwtToken() {
+    const cookieName = "JWT=";
+    const decodedCookie = decodeURIComponent(document.cookie);
+    const cookieArray = decodedCookie.split(';');
+    for (let i = 0; i < cookieArray.length; i++) {
+        let cookie = cookieArray[i].trim();
+        if (cookie.indexOf(cookieName) === 0) {
+            return cookie.substring(cookieName.length, cookie.length);
         }
     }
     return null;
+}
+
+const jwtToken = getJwtToken();
+console.log("JWT Token from Cookie:", jwtToken);
+
+if (!jwtToken) {
+    console.error("JWT cookie not found. Ensure the cookie is set and accessible.");
 }

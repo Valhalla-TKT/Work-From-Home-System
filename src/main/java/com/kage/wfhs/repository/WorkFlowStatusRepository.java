@@ -7,6 +7,7 @@
  */
 package com.kage.wfhs.repository;
 
+import com.kage.wfhs.model.RegisterForm;
 import com.kage.wfhs.model.Status;
 import com.kage.wfhs.model.WorkFlowStatus;
 
@@ -21,7 +22,7 @@ import org.springframework.stereotype.Repository;
 public interface WorkFlowStatusRepository extends JpaRepository<WorkFlowStatus,Long> {
 	Optional<WorkFlowStatus> findById(Long id);
     List<WorkFlowStatus> findByRegisterFormId(Long id);
-    WorkFlowStatus findByUserId(Long id);
+    List<WorkFlowStatus> findByUserId(Long id);
     List<WorkFlowStatus> findByUserApproveRolesNameAndRegisterFormId(String approveRoleName, Long formId);
     boolean existsByRegisterFormIdAndStatus(Long registerFormId, Status status);
     @Query(value = "SELECT * FROM work_flow_status ws WHERE ws.user_id = :userId AND ws.register_form_id = :formId",nativeQuery = true)
@@ -35,4 +36,15 @@ public interface WorkFlowStatusRepository extends JpaRepository<WorkFlowStatus,L
             JOIN register_form rf ON wfs.register_form_id = rf.id WHERE ar.name = :approveRoleName AND rf.id = :registerFormId
             """, nativeQuery = true)
     WorkFlowStatus findByApproveRoleNameAndFormId(Long registerFormId, String approveRoleName);
+
+    @Query(value = """
+        SELECT wfs.* FROM work_flow_status wfs
+        JOIN approve_role ar ON wfs.approve_role_id = ar.id
+        WHERE wfs.register_form_id = :registerFormId AND ar.name = :approveRoleName
+        """, nativeQuery = true)
+    List<WorkFlowStatus> findByRegisterFormIdAndApproveRoleName(Long registerFormId, String approveRoleName);
+
+    List<WorkFlowStatus> findByRegisterFormIdAndStatus(Long formId, Status status);
+    List<WorkFlowStatus> findByUserIdAndStatus(Long userId, Status status);
+	void deleteByRegisterFormAndStatus(RegisterForm registerForm, Status pending);
 }

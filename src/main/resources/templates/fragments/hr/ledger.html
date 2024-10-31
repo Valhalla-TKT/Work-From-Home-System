@@ -8,125 +8,214 @@
 	
 
     <div id="wrap" th:fragment="content">
-        <table id="ledger-table" class="table table-striped" style="width:100%">
-        <thead>
-            <tr>
-                <th>No</th>
-                <th>Department</th>
-                <th>Project/Team</th>
-                <th>User ID</th>
-                <th>Name</th>
-                <th>E-Mail</th>
-                <th>Applied Date</th>
-                <th>From Period</th>
-                <th>To Period</th>
-                <th>Workcation</th>
-                <th>WFH request Percentage</th>
-                <th>Use own facilities</th>
-                <th>If No, Computer?</th>
-                <th>If No, Monitor?</th>
-                <th>If No, UPS?</th>
-                <th>If No, Phone?</th>
-                <th>If No, Other?</th>
-                <th>Environment Facilities</th>
-                <th>Project Manager</th>
-                <th>Approve Date</th>
-                <th>Dept Head</th>
-                <th>Approve Date</th>
-                <th>Division Head</th>
-                <th>Approve Date</th>
-                <th>CISO</th>
-                <th>Approve Date</th>
-                <th>CEO</th>
-                <th>Final Approve Date</th>
-                <th>Signed pledge letter date</th>
-                <th>Reason for WFH</th>
-            </tr>
-        </thead>
-        <tbody>
-			<tr th:each="ledger : ${ledgerList}">
-	            <td th:text="${ledger.id}"></td>
-            <td th:text="${ledger.department}"></td>
-            <td th:text="${ledger.team}"></td>
-            <td th:text="${ledger.staff_id}"></td>
-            <td th:text="${ledger.name}"></td>
-            <td th:text="${ledger.email}"></td>
-            <td th:text="${ledger.applied_date}"></td>
-            <td th:text="${ledger.from_date}"></td>
-            <td th:text="${ledger.to_date}"></td>            
-            <td th:text="${ledger.workcation}"></td>
-            <td th:text="${ledger.request_percent}"></td>
-            <td th:text="${ledger.use_own_facilities}"></td>
-            <td th:text="${ledger.computer}"></td>
-            <td th:text="${ledger.monitor}"></td>
-            <td th:text="${ledger.ups}"></td>
-            <td th:text="${ledger.phone}"></td>
-            <td th:text="${ledger.other}"></td>
-            <td th:text="${ledger.environment_facilities}"></td>            
-            <td th:text="${ledger.project_manager_approve}"></td>
-            <td th:text="${ledger.project_manager_approveDate}"></td>
-            <td th:text="${ledger.department_head_approve}"></td>
-            <td th:text="${ledger.department_head_approveDate}"></td>
-            <td th:text="${ledger.division_head_approve}"></td>
-            <td th:text="${ledger.division_head_approveDate}"></td>
-            <td th:text="${ledger.ciso_approve}"></td>
-            <td th:text="${ledger.ciso_approveDate}"></td>
-			<td th:text="${ledger.ceo_approve}"></td>
-            <td th:text="${ledger.final_approveDate}"></td>
-            <td th:text="${ledger.signed_pledge_letter_date}"></td>
-            <td th:text="${ledger.reason_for_wfh}"></td>
-	        </tr>
-        </tbody>
-    </table>
-     <script src="https://code.jquery.com/jquery-3.7.1.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
-    <script src="https://cdn.datatables.net/2.0.1/js/dataTables.js"></script>
-    <script src="https://cdn.datatables.net/2.0.1/js/dataTables.bootstrap5.js"></script>
-    <script src="https://cdn.datatables.net/2.0.3/js/dataTables.js"></script>
-<script src="https://cdn.datatables.net/buttons/3.0.1/js/dataTables.buttons.js"></script>
-<script src="https://cdn.datatables.net/buttons/3.0.1/js/buttons.dataTables.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/pdfmake.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/vfs_fonts.js"></script>
-<script src="https://cdn.datatables.net/buttons/3.0.1/js/buttons.html5.min.js"></script>
-<script src="https://cdn.datatables.net/buttons/3.0.1/js/buttons.print.min.js"></script>
-
-  <script>
-    function getCurrentDateTime() {
-        var currentDate = new Date();
-        var day = currentDate.getDate().toString().padStart(2, '0');
-        var month = (currentDate.getMonth() + 1).toString().padStart(2, '0');
-        var year = currentDate.getFullYear();
-        var hours = currentDate.getHours().toString().padStart(2, '0');
-        var minutes = currentDate.getMinutes().toString().padStart(2, '0');
-        var seconds = currentDate.getSeconds().toString().padStart(2, '0');
-        return day + month + year + hours + minutes + seconds;
-    }
-
-    var filename = getCurrentDateTime() + 'WFHS-Ledger';
-
-    new DataTable('#ledger-table', {
-        scrollX: true,
-        layout: {
-            topStart: {
-                buttons: [
-                    {
-                        extend: 'copy',
-                        filename: filename
-                    },
-                    {
-                        extend: 'csv',
-                        filename: filename
-                    },
-                    {
-                        extend: 'excel',
-                        filename: filename
-                    }
-                ]
+        <style>
+            .table-container {
+                height: 470px;
+                overflow-y: auto;
+                overflow-x: auto;
+                border: 1px solid #ddd;
+                white-space: nowrap;
             }
-        }
-    });
-</script>
+
+            .table {
+                width: 100%;
+                border-collapse: collapse;
+                font-family: Arial, sans-serif;
+            }
+
+            .table th, .table td {
+                border: none;
+                padding: 8px 10px;
+                text-align: left;
+                word-wrap: break-word;
+                overflow: hidden;
+                text-overflow: ellipsis;
+                white-space: nowrap;
+            }
+
+            .table th {
+                font-weight: bold;
+                background-color: #f1f1f1;
+            }
+
+            .table tbody tr:nth-child(even) {
+                background-color: #f9f9f9;
+            }
+
+            .table tbody tr:hover {
+                background-color: #f1f1f1;
+            }
+
+            .table td:nth-child(2) {
+                width: 100px;
+            }
+
+            .table td:nth-child(3) {
+                width: 120px;
+            }
+
+            .table td:nth-child(5) {
+                width: 150px;
+            }
+
+            .table td {
+                border-top: 1px solid rgb(201, 201, 201);
+                border-bottom: 1px solid rgb(201, 201, 201);
+            }
+
+            .pagination {
+                display: flex;
+                justify-content: end;
+                margin-top: 20px;
+            }
+
+            .page-numbers {
+                display: flex;
+                margin: 0 5px;
+                padding: 10px 15px;
+                color: #333;
+            }
+
+            .page-link {
+                padding: 5px 10px;
+            }
+
+
+        </style>
+        <div class="display-flex mt-3 mb-4">
+            <button id="export-excel" class="btn2 margin-l-12 me-3">Export to Excel</button>
+            <button id="export-csv" class="btn2">Export to CSV</button>
+        </div>
+        <div class="table-container">
+
+            <table id="ledger-table" class="table">
+                <thead>
+                <tr>
+                    <th>No</th>
+                    <th>Department</th>
+                    <th>Project/Team</th>
+                    <th>User ID</th>
+                    <th>Name</th>
+                    <th>E-Mail</th>
+                    <th>Applied Date</th>
+                    <th>From Period</th>
+                    <th>To Period</th>
+                    <th>Workcation</th>
+                    <th>WFH Request Percentage</th>
+                    <th>Use Own Facilities</th>
+                    <th>If No, Computer?</th>
+                    <th>If No, Monitor?</th>
+                    <th>If No, UPS?</th>
+                    <th>If No, Phone?</th>
+                    <th>If No, Other?</th>
+                    <th>Environment Facilities</th>
+                    <th>Project Manager</th>
+                    <th>Approve Date</th>
+                    <th>Dept Head</th>
+                    <th>Approve Date</th>
+                    <th>Division Head</th>
+                    <th>Approve Date</th>
+                    <th>CISO</th>
+                    <th>Approve Date</th>
+                    <th>CEO</th>
+                    <th>Final Approve Date</th>
+                    <th>Signed Pledge Letter Date</th>
+                    <th>Reason for WFH</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="ledger, stat : ${ledgerList}">
+                    <td th:text="${stat.index + 1}"></td>
+                    <td th:text="${ledger.department}"></td>
+                    <td th:text="${ledger.team}"></td>
+                    <td th:text="${ledger.staffId}"></td>
+                    <td th:text="${ledger.name}"></td>
+                    <td th:text="${ledger.email}"></td>
+                    <td th:text="${#dates.format(ledger.applied_date, 'dd-MM-yyyy')}"></td>
+                    <td th:text="${#dates.format(ledger.from_date, 'dd-MM-yyyy')}"></td>
+                    <td th:text="${#dates.format(ledger.to_date, 'dd-MM-yyyy')}"></td>
+                    <td th:text="${ledger.workcation}"></td>
+                    <td th:text="${ledger.request_percent}"></td>
+                    <td th:text="${ledger.use_own_facilities}"></td>
+                    <td th:text="${ledger.computer}"></td>
+                    <td th:text="${ledger.monitor}"></td>
+                    <td th:text="${ledger.ups}"></td>
+                    <td th:text="${ledger.phone}"></td>
+                    <td th:text="${ledger.other}"></td>
+                    <td th:text="${ledger.environment_facilities}"></td>
+                    <td th:text="${ledger.project_manager_approve}"></td>
+                    <td th:text="${#dates.format(ledger.project_manager_approveDate, 'dd-MM-yyyy')}"></td>
+                    <td th:text="${ledger.department_head_approve}"></td>
+                    <td th:text="${#dates.format(ledger.department_head_approveDate, 'dd-MM-yyyy')}"></td>
+                    <td th:text="${ledger.division_head_approve}"></td>
+                    <td th:text="${#dates.format(ledger.division_head_approveDate, 'dd-MM-yyyy')}"></td>
+                    <td th:text="${ledger.ciso_approve}"></td>
+                    <td th:text="${#dates.format(ledger.ciso_approveDate, 'dd-MM-yyyy')}"></td>
+                    <td th:text="${ledger.ceo_approve}"></td>
+                    <td th:text="${#dates.format(ledger.final_approveDate, 'dd-MM-yyyy')}"></td>
+                    <td th:text="${#dates.format(ledger.signed_pledge_letter_date, 'dd-MM-yyyy')}"></td>
+                    <td th:text="${ledger.reason_for_wfh}"></td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="pagination">
+            <span class="page-numbers"></span>
+        </div>
+        <script>
+            document.getElementById('export-excel').addEventListener('click', function () {
+                var table = document.getElementById('ledger-table');
+                var wb = XLSX.utils.table_to_book(table);
+
+                var ws = wb.Sheets[wb.SheetNames[0]];
+                var colWidths = [];
+                var range = XLSX.utils.decode_range(ws['!ref']);
+                for (var C = range.s.c; C <= range.e.c; ++C) {
+                    var maxWidth = 10;
+                    for (var R = range.s.r; R <= range.e.r; ++R) {
+                        var cellAddress = XLSX.utils.encode_cell({ r: R, c: C });
+                        var cell = ws[cellAddress];
+                        if (cell && cell.v) {
+                            var cellValue = cell.v.toString();
+                            var cellWidth = cellValue.length;
+                            if (cellWidth > maxWidth) {
+                                maxWidth = cellWidth;
+                            }
+                        }
+                    }
+                    colWidths.push({ wch: maxWidth + 2 });
+                }
+                ws['!cols'] = colWidths;
+
+                var filename = getCurrentDateTime() + '-WFHS-Ledger.xlsx';
+                XLSX.writeFile(wb, filename);
+            });
+
+            document.getElementById('export-csv').addEventListener('click', function () {
+                var table = document.getElementById('ledger-table');
+                var csv = XLSX.utils.sheet_to_csv(XLSX.utils.table_to_sheet(table));
+                var filename = getCurrentDateTime() + '-WFHS-Ledger.csv';
+                var blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+                var link = document.createElement('a');
+                link.href = URL.createObjectURL(blob);
+                link.download = filename;
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+            });
+
+
+            function getCurrentDateTime() {
+                var currentDate = new Date();
+                var day = currentDate.getDate().toString().padStart(2, '0');
+                var month = (currentDate.getMonth() + 1).toString().padStart(2, '0');
+                var year = currentDate.getFullYear();
+                var hours = currentDate.getHours().toString().padStart(2, '0');
+                var minutes = currentDate.getMinutes().toString().padStart(2, '0');
+                var seconds = currentDate.getSeconds().toString().padStart(2, '0');
+                return day + month + year + hours + minutes + seconds;
+            }
+        </script>
 
 
 

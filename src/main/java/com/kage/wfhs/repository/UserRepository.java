@@ -13,6 +13,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -59,7 +60,7 @@ public interface UserRepository extends JpaRepository<User,Long> {
     @Query("SELECT u FROM User u JOIN u.approveRoles ar WHERE ar.name = :roleName")
     List<User> findByApproveRoleName(@Param("roleName") String roleName);
 
-	List<User> findAllByActiveStatus(ActiveStatus online);
+//	List<User> findAllByActiveStatus(ActiveStatus online);
 	
 	User findByApproveRoles_Name(String roleName);
 	
@@ -75,12 +76,29 @@ public interface UserRepository extends JpaRepository<User,Long> {
 	    List<User> findUpperRoleUser(Long workFlowOrderId);
 	//TEAM
 
-    @Query("SELECT u.name AS username, COALESCE(r.request_percent, 0.0) AS requestPercent " +
-      "FROM User u " +
-      "LEFT JOIN u.registerForms r " +
-      "ON u.team.id = :teamId " +
-      "WHERE u.team.id = :teamId")
+    // to delete
+    @Query("SELECT u.name AS username, " +
+            "       (SUM(CASE WHEN r.id IS NOT NULL THEN 1 ELSE 0 END) * 100.0 / COUNT(r.id)) AS avgRequestPercent " +
+            "FROM User u " +
+            "LEFT JOIN RegisterForm r ON u.id = r.applicant.id " +
+            "WHERE u.team.id = :teamId " +
+            "GROUP BY u.id, u.name")
     List<Object[]> getUserRequestByTeamId(@Param("teamId") Long teamId);
+    // to delete
+    @Query("SELECT u.name AS username, " +
+            "       u.team.id AS teamId, " +
+            "       COALESCE(AVG(r.requestPercent), 0) AS avgRequestPercent " +
+            "FROM User u " +
+            "LEFT JOIN RegisterForm r ON u.id = r.applicant.id " +
+            "AND r.signedDate >= :startOfMonth " +
+            "AND r.signedDate <= :endOfMonth " +
+            "WHERE u.team.id IN :teamIds " +
+            "GROUP BY u.name, u.team.id")
+    List<Object[]> getUserRequestByTeamIds(
+            @Param("teamIds") List<Long> teamIds,
+            @Param("startOfMonth") Date startOfMonth,
+            @Param("endOfMonth") Date endOfMonth);
+
 
 
     @Query(value = "SELECT SUM(CASE WHEN r.id IS NOT NULL THEN 1 ELSE 0 END) AS usersWithRequest, " +
@@ -90,8 +108,18 @@ public interface UserRepository extends JpaRepository<User,Long> {
       "WHERE u.team_id = :teamId", nativeQuery = true)
     List<Object[]> getTotalStaffRequestByTeamId(@Param("teamId") String teamId);
 
-    
-    @Query("SELECT t.name AS teamName, 100*(SUM(r.request_percent)) / (100 * COUNT(u.id)) AS registrationPercentage " +
+    @Query(value = "SELECT u.team_id AS teamId, " +
+            "SUM(CASE WHEN r.id IS NOT NULL THEN 1 ELSE 0 END) AS usersWithRequest, " +
+            "SUM(CASE WHEN r.id IS NULL THEN 1 ELSE 0 END) AS usersWithoutRequest " +
+            "FROM user u " +
+            "LEFT JOIN register_form r ON u.id = r.applicant_id " +
+            "WHERE u.team_id IN :teamIds " +
+            "GROUP BY u.team_id", nativeQuery = true)
+    List<Object[]> getTotalStaffRequestByTeamIds(@Param("teamIds") List<Long> teamIds);
+
+
+
+    @Query("SELECT t.name AS teamName, 100*(SUM(r.requestPercent)) / (100 * COUNT(u.id)) AS registrationPercentage " +
       "FROM Team t " +
       "LEFT JOIN User u ON t.id = u.team.id " +
       "LEFT JOIN u.registerForms r " +
@@ -99,15 +127,26 @@ public interface UserRepository extends JpaRepository<User,Long> {
       "GROUP BY t.name")
     Object[] getTeamRegistrationInfo(@Param("teamId") Long teamId);
 
+    @Query("SELECT 'All Teams' AS teamName, " +
+            "       100 * (SUM(r.requestPercent)) / (100 * COUNT(u.id)) AS registrationPercentage " +
+            "FROM Team t " +
+            "LEFT JOIN User u ON t.id = u.team.id " +
+            "LEFT JOIN u.registerForms r " +
+            "WHERE t.id IN :teamIds")
+    Object[] getAggregatedTeamRegistrationInfo(@Param("teamIds") List<Long> teamIds);
+
+
+
 
 //DEPARTMENT HEAD
-    
-    @Query("SELECT t.name AS teamName, AVG(COALESCE(r.request_percent, 0)) AS avgRequestPercent " +
-      "FROM Team t " +
-      "JOIN User u ON t.id = u.team.id " +
-      "LEFT JOIN RegisterForm r ON u.id = r.applicant.id " +
-      "WHERE t.department.id = :departmentId " +
-      "GROUP BY t.id, t.name")
+
+    @Query("SELECT t.name AS teamName, " +
+            "       (SUM(CASE WHEN r.id IS NOT NULL THEN 1 ELSE 0 END) * 100.0 / COUNT(u.id)) AS avgRequestPercent " +
+            "FROM Team t " +
+            "JOIN User u ON t.id = u.team.id " +
+            "LEFT JOIN RegisterForm r ON u.id = r.applicant.id " +
+            "WHERE t.department.id = :departmentId " +
+            "GROUP BY t.id, t.name")
     List<Object[]> getAllTeamRequestByDepartmentId(@Param("departmentId") Long departmentId);
 
     @Query("SELECT SUM(usersWithRequest) AS totalUsersWithRequest, " +
@@ -125,7 +164,7 @@ public interface UserRepository extends JpaRepository<User,Long> {
 
     @Query("SELECT " +
       "d.name AS departmentName, " +
-      "100 * SUM(COALESCE(r.request_percent, 0)) / (100 * COUNT(DISTINCT u.id)) AS registrationPercentage " +
+      "100 * SUM(COALESCE(r.requestPercent, 0)) / (100 * COUNT(DISTINCT u.id)) AS registrationPercentage " +
       "FROM " +
       "User u " +
       "LEFT JOIN u.team t " +
@@ -139,7 +178,7 @@ public interface UserRepository extends JpaRepository<User,Long> {
 //DIVISION HEAD
 
     @Query("SELECT d.name AS departmentName, " +
-      "       AVG(COALESCE(r.request_percent, 0)) AS avgRequestPercent " +
+      "       AVG(COALESCE(r.requestPercent, 0)) AS avgRequestPercent " +
       "FROM Department d " +
       "JOIN d.teams t " +
       "JOIN t.users u " +
@@ -164,7 +203,7 @@ public interface UserRepository extends JpaRepository<User,Long> {
 
     @Query("SELECT " +
       "d.name AS divisionName, " +
-      "100 * SUM(COALESCE(r.request_percent, 0)) / (100 * COUNT(DISTINCT u.id)) AS registrationPercentage " +
+      "100 * SUM(COALESCE(r.requestPercent, 0)) / (100 * COUNT(DISTINCT u.id)) AS registrationPercentage " +
       "FROM " +
       "User u " +
       "LEFT JOIN u.team t " +
@@ -179,7 +218,7 @@ public interface UserRepository extends JpaRepository<User,Long> {
 
 //Others
 
-    @Query("SELECT u.name AS username, COALESCE(r.request_percent, 0.0) AS requestPercent " +
+    @Query("SELECT u.name AS username, COALESCE(r.requestPercent, 0.0) AS requestPercent " +
       "FROM User u " +
       "LEFT JOIN u.registerForms r")
     List<Object[]> getAllUserRequests();
@@ -203,4 +242,13 @@ public interface UserRepository extends JpaRepository<User,Long> {
     
     @Query("SELECT u FROM User u JOIN u.approveRoles ar WHERE ar.name != :roleName AND u.staffId != '00-00001'")
     List<User> findUsersByRoleNotEqual(@Param("roleName") String roleName);
+
+    @Query("SELECT u FROM User u JOIN u.approveRoles ar WHERE ar.id = :roleId AND u.staffId != '00-00001'")
+    List<User> findUsersByRoleId(@Param("roleId") Long roleId);
+
+    boolean existsByStaffId(String staffId);
+
+    boolean existsByName(String name);
+
+    boolean existsByEmail(String email);
 }

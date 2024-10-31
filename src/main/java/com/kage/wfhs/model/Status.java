@@ -8,7 +8,9 @@
 package com.kage.wfhs.model;
 
 
+import lombok.Getter;
 
+@Getter
 public enum Status {
     REJECT(0),
     PENDING(0.5),
@@ -16,8 +18,5 @@ public enum Status {
     private final double value;
     Status(double value){
         this.value = value;
-    }
-    public double getValue(){
-        return value;
     }
 }

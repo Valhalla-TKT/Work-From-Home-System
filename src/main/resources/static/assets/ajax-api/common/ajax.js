@@ -507,9 +507,109 @@ async function fetchCookie(url) {
     }
 }
 
+// Apply Form Page
+
+async function fetchTeamMemberByUserId(teamId, userId) {
+    try {
+        const responseData = await sendRequestWithTwoParams(`/api/user/getAllTeamMember`, 'POST', "teamId", teamId, "userId", userId);
+        const contentType = responseData.headers.get('content-type');
+        if (contentType && contentType.includes('application/json')) {
+            return await responseData.json();
+        } else {
+            return await responseData.text();
+        }
+    } catch (error) {
+        console.error('Error:', error);
+    }
+}
+
+async function fetchDepartmentMemberByUserId(departmentId, userId) {
+    try {
+        const responseData = await sendRequestWithTwoParams(`/api/user/getAllDepartmentMember`, 'POST', "departmentId", departmentId, "userId", userId);
+        const contentType = responseData.headers.get('content-type');
+        if (contentType && contentType.includes('application/json')) {
+            return await responseData.json();
+        } else {
+            return await responseData.text();
+        }
+    } catch (error) {
+        console.error('Error:', error);
+    }
+}
+
 async function fetchApprovers() {
     try {
         const responseData = await sendRequest(`/api/user/getAllApprover`, 'POST', {});
+        const contentType = responseData.headers.get('content-type');
+        if (contentType && contentType.includes('application/json')) {
+            return await responseData.json();
+        } else {
+            return await responseData.text();
+        }
+    } catch (error) {
+        console.error('Error:', error);
+    }
+}
+
+async function fetchApproversByApproveRoleId(approveRoleId) {
+    try {
+        const responseData = await sendRequestWithOneParam(`/api/user/getApproversByApproveRoleId`, 'POST', "approveRoleId", approveRoleId);
+        const contentType = responseData.headers.get('content-type');
+        if (contentType && contentType.includes('application/json')) {
+            return await responseData.json();
+        } else {
+            return await responseData.text();
+        }
+    } catch (error) {
+        console.error('Error:', error);
+    }
+}
+
+async function fetchAllApproveRole() {
+    try {
+        const responseData = await sendRequest(`/api/approveRole/approveRoleList`, 'POST', {});
+        const contentType = responseData.headers.get('content-type');
+        if (contentType && contentType.includes('application/json')) {
+            return await responseData.json();
+        } else {
+            return await responseData.text();
+        }
+    } catch (error) {
+        console.error('Error:', error);
+    }
+}
+
+async function fetchApproveRoleWithoutApplicant() {
+    try {
+        const responseData = await sendRequest(`/api/approveRole/approveRoleListWithoutApplicant`, 'POST', {});
+        const contentType = responseData.headers.get('content-type');
+        if (contentType && contentType.includes('application/json')) {
+            return await responseData.json();
+        } else {
+            return await responseData.text();
+        }
+    } catch (error) {
+        console.error('Error:', error);
+    }
+}
+
+async function fetchTeamWithStatus(status, teamId, userId) {
+    try {
+        const responseData = await sendRequestWithThreeParams("/api/registerform/getTeamWithStatus", "POST", "status", status, "teamId", teamId, "userId", userId)
+        const contentType = responseData.headers.get('content-type');
+        if (contentType && contentType.includes('application/json')) {
+            return await responseData.json();
+        } else {
+            return await responseData.text();
+        }
+    } catch (error) {
+        console.error('Error:', error);
+    }
+}
+
+async function updateApproverStatus(id, state, approveDate, reason) {
+    try {
+        const responseData = await sendRequestWithFourParams(`/api/workflowstatus/updateApproverStatus`, 'POST', 'id', id, "state", state, "approveDate", approveDate, "reason", reason);
         const contentType = responseData.headers.get('content-type');
         if (contentType && contentType.includes('application/json')) {
             return await responseData.json();

@@ -22,7 +22,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-
+@ToString
 public class RegisterForm implements Serializable {
 	private static final long serialVersionUID = 1L;
 	
@@ -30,14 +30,14 @@ public class RegisterForm implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     @Column(columnDefinition = "TEXT")
-    private String working_place;
-    private double request_percent;
-    private Date from_date;
-    private Date to_date;
+    private String workingPlace;
+    private double requestPercent;
+    private Date fromDate;
+    private Date toDate;
     @Column(columnDefinition = "TEXT")
-    private String request_reason;
-    
-    @Column(columnDefinition = "TEXT")
+    private String requestReason;
+
+    @Column(columnDefinition = "LONGTEXT")
     private String signature;
     private Date signedDate;
     

@@ -1,7 +1,7 @@
 document.addEventListener('DOMContentLoaded', function () {
     const searchInput = document.querySelector('.search-input');
     const statusFilter = document.querySelector('.status-filter');
-    const formHistoryContainer = document.querySelector('.form-history-listing');
+    const formHistoryTableBody = document.querySelector('#form-history-table tbody');
     const pagination = document.querySelector('.pagination');
     const pageNumbers = pagination.querySelector('.page-numbers');
     const itemsPerPage = 8;
@@ -12,42 +12,64 @@ document.addEventListener('DOMContentLoaded', function () {
     const userName = document.querySelector('.user-name');
     const userEmail = document.querySelector('.user-email');
     const userProfilePicture = document.querySelector('.profile-picture');
+    const noRecordsMessage = document.querySelector('.no-records-message');
 
     function renderFormHistory() {
         try {
-            formHistoryContainer.innerHTML = '';
+            formHistoryTableBody.innerHTML = '';
+            if (filteredData.length === 0) {
+                noRecordsMessage.style.display = 'block';
+                return;
+            }
+
+            noRecordsMessage.style.display = 'none';
 
             const start = (currentPage - 1) * itemsPerPage;
             const end = start + itemsPerPage;
             const pageData = filteredData.slice(start, end);
 
-            pageData.forEach(item => {
-                const card = document.createElement('div');
-                card.classList.add('form-history-card');
-                card.dataset.formId = item.formId;
+            pageData.forEach((item, index) => {
+                const row = document.createElement('tr');
+                row.dataset.formId = item.formId;
                 const signedDate = item.signedDate || 'N/A';
-                card.innerHTML = `
-                    <div class="form-history-info">
-                        <h2 class="form-history-title">For ${signedDate}</h2>
-                        <div class="form-history-details">
-                            <p class="form-history-date">For ${signedDate}</p>
-                            <p class="form-history-status ${item.status.toLowerCase()}-status">${item.status}</p>
-                        </div>
-                    </div>
+                const [month, year] = signedDate.split(', ');
+                let statusIcon = '';
+
+                switch (item.status.toLowerCase()) {
+                    case 'approve':
+                        statusIcon = '<i class="fas fa-check-circle status-icon status-approve"></i> Approved';
+                        break;
+                    case 'pending':
+                        statusIcon = '<i class="fas fa-hourglass-half status-icon"></i> Pending';
+                        break;
+                    case 'reject':
+                        statusIcon = '<i class="fas fa-times-circle status-icon status-reject"></i> Rejected';
+                        break;
+                    default:
+                        statusIcon = item.status;
+                        break;
+                }
+
+                row.innerHTML = `
+                    <td>${start + index + 1}</td>
+                    <td>${month}</td>
+                    <td>${year}</td>
+                    <td>${statusIcon}</td>
+                    <td><span class="view-detail-btn">View Detail</span></td>
                 `;
-                formHistoryContainer.appendChild(card);
+                formHistoryTableBody.appendChild(row);
             });
         } catch (error) {
             console.error('Error in renderFormHistory:', error);
         }
     }
 
-    function setupCardClickHandlers() {
-        document.querySelectorAll('.form-history-card').forEach(card => {
-            card.addEventListener('click', function () {
-                const formId = this.dataset.formId;
+    function setupRowClickHandlers() {
+        document.querySelectorAll('.view-detail-btn').forEach(button => {
+            button.addEventListener('click', function () {
+                const formId = this.closest('tr').dataset.formId;
                 if (formId) {
-                    fetch(`${getContextPath()}/form/viewDetail`, {
+                    fetch(`${getContextPath()}/form/generateToken`, {
                         method: 'POST',
                         headers: {
                             'Content-Type': 'application/json'
@@ -57,13 +79,13 @@ document.addEventListener('DOMContentLoaded', function () {
                         .then(response => response.json())
                         .then(data => {
                             if (data.success) {
-                                window.location.href = `${getContextPath()}/form/viewDetail/${data.formToken}`;
+                                window.location.href = `${getContextPath()}${data.redirectUrl}`;
                             } else {
-                                console.error('Error in viewing form detail:', data.message);
+                                console.error('Error in generating form token:', data.message);
                             }
                         })
                         .catch(error => {
-                            console.error('Error in viewing form detail:', error);
+                            console.error('Error in generating form token:', error);
                         });
                 }
             });
@@ -89,7 +111,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
     function displayCurrentPage() {
         renderFormHistory();
-        setupCardClickHandlers();
+        setupRowClickHandlers();
     }
 
     function filterHistory() {

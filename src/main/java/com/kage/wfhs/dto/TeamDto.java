@@ -17,7 +17,7 @@ import lombok.*;
 @ToString
 public class TeamDto {
     private Long id, departmentId, createdAt;
-    private String code, name, departmentName;
+    private String name, departmentName;
     private Department department;
 
 }

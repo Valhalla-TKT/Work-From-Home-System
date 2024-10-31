@@ -24,6 +24,7 @@ $(document).ready(function() {
     const linuxOperationSystemInputBox = $('#file9');
     const linuxSecurityPatchInputBox = $('#file10');
     const linuxAntivirusSoftwareInputBox = $('#file11');
+	const signatureInputBox = $('#file12');
     const osTypeInputBox = $('#os-type-value');			
 	
     var workFromHomePercent = 0.0;
@@ -32,6 +33,7 @@ $(document).ready(function() {
     const signedDateInputBox = $('#signed-date');
     
     const checkBoxModalDialog = $("#checkbox-dialog");
+	const applyFormPageUpdateProfile = $("#apply-form-page-update-profile")
     
     // Generate from date to date
 	var currentDate = new Date();
@@ -39,7 +41,7 @@ $(document).ready(function() {
 	var toDate = new Date(fromDate.getFullYear(), fromDate.getMonth() + 1, 0);
 	
 	// Data to send Backend
-	var applicantId, requesterId, positionName, working_place, request_reason, from_date, to_date, os_type, securityPatch, antivirusSoftware, antivirusPattern, antivirusFullScan, signed_date, signature, approverId;
+	var applicantId, requesterId, positionName, working_place, request_reason, from_date, to_date, os_type, operatingSystem, securityPatch, antivirusSoftware, antivirusPattern, antivirusFullScan, signed_date, signature, approverId;
 	var request_percent = 0.0;
 	var applied_date = new Date();
 	
@@ -47,6 +49,8 @@ $(document).ready(function() {
 	$('#work-in-others-button').hide();
     $('#region-state-select').hide();
     $('#city-township-select').hide();
+
+	applyFormPageUpdateProfile.show()
 
     function toggleButtonAndSelect() {
         $('#working-input-box').val('');        
@@ -67,33 +71,53 @@ $(document).ready(function() {
         toggleButtonAndSelect();
     });
 
-    
 
-    var regionSelect = $('#region-state-select');
-    regionSelect.append('<option value="" disabled selected>Region/State</option>');
-    $.each(regions, function(index, region){
-        regionSelect.append('<option value="' + region.regionState + '">' + region.regionState + '</option>');
-    });
 
-    $('#region-state-select').change(function(){
-        var selectedRegion = $(this).val();
-        var cities = [];
+	var regionSelect = $('#region-state-select');
+	regionSelect.append('<option value="" disabled selected>Region/State</option>');
 
-        $.each(regions, function(index, region){
-            if(region.regionState === selectedRegion) {
-                cities = region.cities;
-                return false;
-            }
-        });
-        
-        $('#city-township-select').empty();
+	regions.sort(function(a, b) {
+		return a.regionState.localeCompare(b.regionState);
+	});
+
+	var uniqueRegions = new Set();
+
+	$.each(regions, function(index, region) {
+		if (!uniqueRegions.has(region.regionState)) {
+			uniqueRegions.add(region.regionState);
+			regionSelect.append('<option value="' + region.regionState + '">' + region.regionState + '</option>');
+		}
+	});
+
+	$('#region-state-select').change(function() {
+		var selectedRegion = $(this).val();
+		var cities = [];
+
+		$.each(regions, function(index, region) {
+			if (region.regionState === selectedRegion) {
+				cities = region.cities;
+				return false;
+			}
+		});
+
+		cities.sort(function(a, b) {
+			return a.city.localeCompare(b.city);
+		});
+
+		$('#city-township-select').empty();
 		$('#city-township-select').append('<option value="" disabled selected>City/Township</option>');
-        $.each(cities, function(index, city){
-			
-            $('#city-township-select').append('<option value="' + city.city + '">' + city.city + '</option>');
-        });
-    });
-    var selectedRegion, selectedCity, workInMyanmar, workInMyanmarBoolean = false;
+
+		var uniqueCities = new Set();
+
+		$.each(cities, function(index, city) {
+			if (!uniqueCities.has(city.city)) {
+				uniqueCities.add(city.city);
+				$('#city-township-select').append('<option value="' + city.city + '">' + city.city + '</option>');
+			}
+		});
+	});
+
+	var selectedRegion, selectedCity, workInMyanmar, workInMyanmarBoolean = false;
     $('#city-township-select').change(function(){
         selectedRegion = $('#region-state-select').val().trim();
         selectedCity = $(this).val();
@@ -185,34 +209,56 @@ $(document).ready(function() {
 	var approveRoles = currentUser.approveRoles;
 	var isDivisionHead = false;
 	var isDepartmentHead = false;
+	var isProjectManager = false;
+	var isApplicant = false;
 	
 	approveRoles.forEach(function(approveRole) {
 	    if (approveRole.name === 'DIVISION_HEAD') {
 	        isDivisionHead = true;
 	        return;
 	    }
-	    if (approveRole.name === 'DEPARTMENT_HEAD') {
-	        isDepartmentHead = true;
-	        return;
-	    }
+		 if (approveRole.name === 'DEPARTMENT_HEAD') {
+			isDepartmentHead = true;
+			return;
+		 }
+		 if(approveRole.name === "PROJECT_MANAGER") {
+			 isProjectManager = true;
+			 return;
+		 }
+	     else if(approveRole.name === "APPLICANT"){
+			isApplicant = true;
+			return;
+		 }
 	});
-	
+
 	if (isDivisionHead) {
-	    divisionInputContainer.show();
-	    $('#department-input-container').show();	    
+		divisionInputContainer.hide();
+		$('#department-input-container').hide();
+		$('#team-input-container').hide();
 	}else if (isDepartmentHead) {
-	    divisionInputContainer.hide();
-	}	
-	 else {
-	    divisionInputContainer.hide();
-	    $('#department-input-container').hide();	
-	}	
+		divisionInputContainer.hide();
+		$('#department-input-container').hide();
+		$('#team-input-container').hide();
+	} else if(isApplicant || isProjectManager) {
+		divisionInputContainer.hide();
+		$('#department-input-container').hide();
+		$('#team-input-container').hide();
+	} else {
+		divisionInputContainer.hide();
+		$('#department-input-container').hide();
+		$('#team-input-container').hide();
+	}
+
     selfRequestRadio.on('change', function() {
 		selfRequestRadioChecked = true;
 		otherRequestRadioChecked = false;
+		applyFormPageUpdateProfile.show()
 	    if ($(this).prop('checked')) {
 	    	$('#name-select-box-container').hide();
 	        $('#name-input-container').show();
+			divisionInputContainer.hide();
+			$('#department-input-container').hide();
+			$('#team-input-container').hide();
 	        applyForm[0].reset();
 	        nameInputBox.val(currentUser.name);
 			updateStaffIdFields(currentUser.staffId);
@@ -233,12 +279,35 @@ $(document).ready(function() {
 	otherRequestRadio.on('change', function() {
 		selfRequestRadioChecked = false;
 		otherRequestRadioChecked = true;
+		applyFormPageUpdateProfile.hide()
 		if ($(this).prop('checked')) {
 	    	$('#name-select-box-container').show();
 	        $('#name-input-container').hide();
+			if(!isApplicant && !isProjectManager && !isDepartmentHead && !isDivisionHead) {
+				divisionInputContainer.show();
+				$('#department-input-container').show();
+			}
+			if (isDivisionHead) {
+				divisionInputContainer.hide();
+				$('#department-input-container').show();
+				$('#team-input-container').show();
+			}else if (isDepartmentHead) {
+				divisionInputContainer.hide();
+				$('#department-input-container').hide();
+				$('#team-input-container').show();
+			} else if(isApplicant || isProjectManager) {
+				divisionInputContainer.hide();
+				$('#department-input-container').hide();
+				$('#team-input-container').hide();
+				getTeamMemberById(currentUser.team.id, currentUser.id).then(r => "");
+			} else {
+				divisionInputContainer.show();
+				$('#department-input-container').show();
+				$('#team-input-container').show();
+			}
 	        applyForm[0].reset();	        
             updateStaffIdFields(otherRequestData.staffId);
-            positionInputBox.val(otherRequestData.position);
+            positionInputBox.val(otherRequestData.positionName);
             teamInputBox.val(otherRequestData.team);
             departmentInputBox.val(otherRequestData.department);
             fromDateInputBox.val(formatDate(fromDate));
@@ -249,13 +318,18 @@ $(document).ready(function() {
 	
 	var selectedTeamMemberId;
 	teamMemberListSelectBox.on('change', function() {
-    	const selectedUserId = $(this).val();
-    	selectedTeamMemberId = selectedUserId;
+		selectedTeamMemberId = $(this).val();
     	var selectedOption = $(this).find('option:selected');
         var selectedStaffId = selectedOption.attr('data-staff-id');
         updateStaffIdFields(selectedStaffId);
         var selectedPositionName = selectedOption.attr('data-position-name');
-        positionInputBox.val(selectedPositionName);
+		if(selectedPositionName == null) {
+			positionInputBox.prop('disabled', false);
+			positionInputBox.val('');
+		} else {
+			positionInputBox.prop('disabled', true);
+			positionInputBox.val(selectedPositionName);
+		}
         var selectedTeamName = selectedOption.attr('data-team-name');
         teamInputBox.val(selectedTeamName)
         var selectedDepartmentName = selectedOption.attr('data-department-name');
@@ -281,16 +355,11 @@ $(document).ready(function() {
 	}		
 
 	workingPlaceInputBox.on('input', function() {
-        const inputValue = $(this).val();
-        console.log('Input Value:', inputValue);
+
     });
     
     $('input[name="radio-group"]').on('change', function() {
         workFromHomePercent = $('input[name="radio-group"]:checked').val();
-        
-        if ($(this).prop('checked')) {
-            console.log(workFromHomePercent);
-        }
     });
 
     $('#continue-button').click(function(event) {
@@ -311,7 +380,8 @@ $(document).ready(function() {
 	$('#go-back-1').click(function(event) {
         showPreviousDiv1();
     });
-	function showNextDiv() {						
+	function showNextDiv() {
+		window.scrollTo(0, 0);
 		$("#data-section").hide();
 		$("#capture-section").show();
 		$("#signature-section").hide();
@@ -322,12 +392,16 @@ $(document).ready(function() {
 		$("#current-step-2").show();
 		$("#current-step-3").hide();
 		if(checkBoxModalDialog.length) {
-			showCheckBoxDialogModal();	
+			if ($("input[type='checkbox']:not(:checked)").length === 0) {
+				hideCheckBoxDialogModal();
+			} else {
+				showCheckBoxDialogModal();
+			}
 		}
-		
 	}
 	
-	function showNextDiv1() {						
+	function showNextDiv1() {
+		window.scrollTo(0, 0);
 		$("#data-section").hide();
 		$("#capture-section").hide();
 		$("#signature-section").show();
@@ -339,7 +413,8 @@ $(document).ready(function() {
 		$("#current-step-3").show();
 	}
 
-	function showPreviousDiv() {						
+	function showPreviousDiv() {
+		window.scrollTo(0, 0);
 		$("#data-section").show();
 		$("#capture-section").hide();
 		$("#signature-section").hide();
@@ -351,7 +426,8 @@ $(document).ready(function() {
 		$("#current-step-3").hide();
 	}
 
-	function showPreviousDiv1() {						
+	function showPreviousDiv1() {
+		window.scrollTo(0, 0);
 		$("#data-section").hide();
 		$("#capture-section").show();
 		$("#signature-section").hide();
@@ -372,9 +448,16 @@ $(document).ready(function() {
             }
       });
 
-      function showCheckBoxDialogModal() {
-          checkBoxModalDialog.get(0).showModal();
-      }
+	$('#hide-checkbox-dialog-form').click(function (event) {
+		event.preventDefault();
+		showPreviousDiv()
+		$("#checkbox-dialog-form")[0].reset();
+		hideCheckBoxDialogModal();
+	})
+
+	  function showCheckBoxDialogModal() {
+		  checkBoxModalDialog.get(0).showModal();
+	  }
 
       function hideCheckBoxDialogModal() {
           checkBoxModalDialog.get(0).close();
@@ -382,7 +465,6 @@ $(document).ready(function() {
       $('#ceo-apply-form-btn').click(async function(event) {
 			event.preventDefault();
 			var formData = new FormData();
-			//formData.append('applicantId', currentUser.id);
 	        formData.append('userId', currentUser.id);
 	        formData.append('from_date', formatDate(fromDate));
 	        formData.append('to_date', formatDate(toDate));
@@ -404,7 +486,7 @@ $(document).ready(function() {
 	                timerProgressBar: true,
 	                showConfirmButton: false
 	            }).then(() => {
-	                window.location.href = `${getContextPath()}/dashboard`;
+	                window.location.href = `${getContextPath()}/home`;
 	            });
 		    },
 		    error: function(error) {
@@ -413,339 +495,725 @@ $(document).ready(function() {
 		});
 
 	  });
-	$('#apply-form-btn').click(function(event) {
-		
+	$('#apply-form-btn').click( function(event) {
+		event.preventDefault();
+		submitForm();
+	});
+	function parseAndFormatDate(inputBox, fromDate) {
+		var dateValue = inputBox.val();
+		var dateComponents = dateValue.split('-');
+		var dateDay = parseInt(dateComponents[0], 10);
+		var dateMonth = parseInt(dateComponents[1], 10) - 1;
+		var dateYear = parseInt(dateComponents[2], 10);
+
+		var dateObj = new Date(dateYear, dateMonth, dateDay);
+		if (!isNaN(dateObj.getTime())) {
+			return dateObj.toISOString().split('T')[0];
+		} else {
+			console.error('Invalid date string:', dateValue);
+			return null;
+		}
+	}
+
+	function formatToISODate(dateString) {
+		let parts = dateString.split('-');
+		return `${parts[2]}-${parts[1]}-${parts[0]}`;
+	}
+
+	async function submitForm() {
+		if (!selfRequestRadioChecked && !otherRequestRadioChecked) {
+			Swal.fire({
+				title: "Error!",
+				text: "Please select self request or other request.",
+				icon: "error",
+				confirmButtonText: "OK"
+			});
+			return;
+		}
 		if(selfRequestRadioChecked) {
-			applicantId = currentUser.id;
+			applicantId = parseInt(currentUser.id, 10);
 			requesterId = currentUser.id;
+			requesterId = parseInt(currentUser.id, 10);
+			if(currentUser.registeredForThisMonth) {
+				Swal.fire({
+					title: "Registration Warning",
+					text: "You've already submitted the WFHS form for this month. To make changes, go to the history page and click 'View Details' on the form.",
+					icon: "warning",
+					confirmButtonText: "Got it",
+				});
+				return;
+			}
 		} else if(otherRequestRadioChecked) {
-			applicantId = selectedTeamMemberId;
-			requesterId = currentUser.id;
+			if (!selectedTeamMemberId) {
+				Swal.fire({
+					title: "Error!",
+					text: "Please select a team member.",
+					icon: "error",
+					confirmButtonText: "OK"
+				});
+				return;
+			}
+			applicantId = parseInt(selectedTeamMemberId, 10);
+			requesterId = parseInt(currentUser.id, 10);
+		}
+		if (!positionInputBox.val()) {
+			Swal.fire({
+				title: "Error!",
+				text: "Please enter a position name.",
+				icon: "error",
+				confirmButtonText: "OK"
+			});
+			return;
 		}
 		positionName = positionInputBox.val();
-		console.log(positionName)
-		if(!workInMyanmarBoolean) {
-			working_place =  workingPlaceInputBox.val();	
-		} if(workInMyanmarBoolean) {
-			working_place = workInMyanmar
+		console.log(applicantId, requesterId)
+
+		if (!workingPlaceInputBox.val() && !workInMyanmarBoolean) {
+			Swal.fire({
+				title: "Error!",
+				text: "Please enter a working place.",
+				icon: "error",
+				confirmButtonText: "OK"
+			});
+			return;
 		}
-		console.log(workInMyanmar)
-								
-		request_reason = reasonInputBox.val();
-		console.log(request_reason)
+
+		working_place = workInMyanmarBoolean ? workInMyanmar : workingPlaceInputBox.val();
+
+		if (workFromHomePercent <= 0.0 || workFromHomePercent > 100) {
+			Swal.fire({
+				title: "Error!",
+				text: "Please choose a valid work from home percentage: 25%, 50%, 75%, or 100%.",
+				icon: "error",
+				confirmButtonText: "OK"
+			});
+			return;
+		}
 		request_percent = workFromHomePercent;
-		
-		var formattedFromDate = new Date(fromDateInputBox.val()).toISOString().split('T')[0];
-		from_date = formattedFromDate;
-		
-		
-		var toDateValue = toDateInputBox.val();
-		var dateComponents = toDateValue.split('-');
-var day = parseInt(dateComponents[0], 10);
-var month = parseInt(dateComponents[1], 10) - 1;
-var year = parseInt(dateComponents[2], 10);
 
-var toDateObj = new Date(year, month, day);
+		if (!reasonInputBox.val()) {
+			Swal.fire({
+				title: "Error!",
+				text: "Please enter a request reason.",
+				icon: "error",
+				confirmButtonText: "OK"
+			});
+			return;
+		}
+		request_reason = reasonInputBox.val();
 
-if (!isNaN(toDateObj.getTime())) {
-    formattedToDate = toDateObj.toISOString().split('T')[0];
-} else {
-    console.error('Invalid date string:', toDateValue);
-}
+		if (!fromDateInputBox.val()) {
+			Swal.fire({
+				title: "Error!",
+				text: "Please select a from date.",
+				icon: "error",
+				confirmButtonText: "OK"
+			});
+			return;
+		}
+		from_date = formatToISODate(fromDateInputBox.val());
 
-		to_date = formattedToDate;
-		
+		if (!toDateInputBox.val()) {
+			Swal.fire({
+				title: "Error!",
+				text: "Please select a to date.",
+				icon: "error",
+				confirmButtonText: "OK"
+			});
+			return;
+		}
+
+		to_date = formatToISODate(toDateInputBox.val());
+
 		os_type = osTypeInputBox.val();
-		
+
 		// Window
 		if(os_type === 'Window') {
-			if (windowOperationSystemInputBox.length > 0) {
-			    const windowOperationSystemInputBoxFile = windowOperationSystemInputBox.val();
-			
-			    if (windowOperationSystemInputBoxFile) {
-			        operationSystem = windowOperationSystemInputBoxFile;
-			    } else {
-			        console.log("No file selected.");
-			    }
-			} else {
-			    console.log("File input element not found.");
+			if (!windowOperationSystemInputBox[0].files.length) {
+				Swal.fire({
+					title: "Error!",
+					text: "Please upload the photo of Windows Operation System.",
+					icon: "error",
+					confirmButtonText: "OK"
+				});
+				return;
 			}
-			
-			if (windowSecurityPatchInputBox.length > 0) {
-			    const windowSecurityPatchInputBoxFile = windowSecurityPatchInputBox.prop('files')[0];
-			
-			    if (windowSecurityPatchInputBoxFile) {
-					securityPatch = windowSecurityPatchInputBoxFile;
-			    } else {
-			        console.log("No file selected.");
-			    }
-			} else {
-			    console.log("File input element not found.");
+			operatingSystem = windowOperationSystemInputBox.prop('files')[0];
+
+			if (!windowSecurityPatchInputBox[0].files.length) {
+				Swal.fire({
+					title: "Error!",
+					text: "Please upload the photo of Windows Security Patch.",
+					icon: "error",
+					confirmButtonText: "OK"
+				});
+				return;
 			}
-			
-			if (windowAntivirusSoftwareInputBox.length > 0) {
-			    const windowAntivirusSoftwareInputBoxFile = windowAntivirusSoftwareInputBox.prop('files')[0];
-			
-			    if (windowAntivirusSoftwareInputBoxFile) {
-			        antivirusSoftware = windowAntivirusSoftwareInputBoxFile;
-			    } else {
-			        console.log("No file selected.");
-			    }
-			} else {
-			    console.log("File input element not found.");
+			securityPatch = windowSecurityPatchInputBox.prop('files')[0];
+
+			if (!windowAntivirusSoftwareInputBox[0].files.length) {
+				Swal.fire({
+					title: "Error!",
+					text: "Please upload the photo of Antivirus Software.",
+					icon: "error",
+					confirmButtonText: "OK"
+				});
+				return;
 			}
-			
-			if (windowAntivirusPatternInputBox.length > 0) {
-			    const windowAntivirusPatternInputBoxFile = windowAntivirusPatternInputBox.prop('files')[0];
-			
-			    if (windowAntivirusPatternInputBoxFile) {
-			        antivirusPattern = windowAntivirusPatternInputBoxFile;
-			    } else {
-			        console.log("No file selected.");
-			    }
-			} else {
-			    console.log("File input element not found.");
+			antivirusSoftware = windowAntivirusSoftwareInputBox.prop('files')[0];
+
+
+			if (!windowAntivirusPatternInputBox[0].files.length) {
+				Swal.fire({
+					title: "Error!",
+					text: "Please upload the photo of Antivirus Pattern.",
+					icon: "error",
+					confirmButtonText: "OK"
+				});
+				return;
 			}
-			
-			if (windowAntivirusFullScanInputBox.length > 0) {
-			    const windowAntivirusFullScanInputBoxFile = windowAntivirusFullScanInputBox.prop('files')[0];
-			
-			    if (windowAntivirusFullScanInputBoxFile) {
-			        antivirusFullScan = windowAntivirusFullScanInputBoxFile;
-			    } else {
-			        console.log("No file selected.");
-			    }
-			} else {
-			    console.log("File input element not found.");
+			antivirusPattern = windowAntivirusPatternInputBox.prop('files')[0];
+
+			if (!windowAntivirusFullScanInputBox[0].files.length) {
+				Swal.fire({
+					title: "Error!",
+					text: "Please upload the photo of Antivirus Full Scan.",
+					icon: "error",
+					confirmButtonText: "OK"
+				});
+				return;
 			}
+			antivirusFullScan = windowAntivirusFullScanInputBox.prop('files')[0];
 		}
-		
-		
+
+
 		// Mac
 		if(os_type === 'Mac') {
-			if (macOperationSystemInputBox.length > 0) {
-			    const macOperationSystemInputBoxFile = macOperationSystemInputBox.prop('files')[0];
-			
-			    if (macOperationSystemInputBoxFile) {
-			        operationSystem = macOperationSystemInputBoxFile;			        
-			    } else {
-			        console.log("No file selected.");
-			    }
-			} else {
-			    console.log("File input element not found.");
+			if (!macOperationSystemInputBox[0].files.length) {
+				Swal.fire({
+					title: "Error!",
+					text: "Please upload the photo of Operation System.",
+					icon: "error",
+					confirmButtonText: "OK"
+				});
+				return;
 			}
-			
-			if (macSecurityPatchInputBox.length > 0) {
-			    const macSecurityPatchInputBoxFile = macSecurityPatchInputBox.prop('files')[0];
-			
-			    if (macSecurityPatchInputBoxFile) {
-			        securityPatch = macSecurityPatchInputBoxFile;
-			    } else {
-			        console.log("No file selected.");
-			    }
-			} else {
-			    console.log("File input element not found.");
+			operatingSystem = macOperationSystemInputBox.prop('files')[0];
+
+
+			if (!macSecurityPatchInputBox[0].files.length) {
+				Swal.fire({
+					title: "Error!",
+					text: "Please upload the photo of Security Patch.",
+					icon: "error",
+					confirmButtonText: "OK"
+				});
+				return;
 			}
-			
-			if (macAntivirusSoftwareInputBox.length > 0) {
-			    const macAntivirusSoftwareInputBoxFile = macAntivirusSoftwareInputBox.prop('files')[0];
-			
-			    if (macAntivirusSoftwareInputBoxFile) {
-			        antivirusSoftware = macAntivirusSoftwareInputBoxFile;
-			    } else {
-			        console.log("No file selected.");
-			    }
-			} else {
-			    console.log("File input element not found.");
+			securityPatch = macSecurityPatchInputBox.prop('files')[0];
+
+
+			if (!macAntivirusSoftwareInputBox[0].files.length) {
+				Swal.fire({
+					title: "Error!",
+					text: "Please upload the photo of Antivirus Software.",
+					icon: "error",
+					confirmButtonText: "OK"
+				});
+				return;
 			}
+			antivirusSoftware = macAntivirusSoftwareInputBox.prop('files')[0];
 		}
-				
+
 		// Linux
 		if(os_type === 'Linux') {
-			if (linuxOperationSystemInputBox.length > 0) {
-			    const linuxOperationSystemInputBoxFile = linuxOperationSystemInputBox.prop('files')[0];
-			
-			    if (linuxOperationSystemInputBoxFile) {
-			        operationSystem = linuxOperationSystemInputBoxFile;
-			    } else {
-			        console.log("No file selected.");
-			    }
-			} else {
-			    console.log("File input element not found.");
+			if (!linuxOperationSystemInputBox[0].files.length) {
+				Swal.fire({
+					title: "Error!",
+					text: "Please upload the photo of Operating System.",
+					icon: "error",
+					confirmButtonText: "OK"
+				});
+				return;
 			}
-			
-			if (linuxSecurityPatchInputBox.length > 0) {
-			    const linuxSecurityPatchInputBoxFile = linuxSecurityPatchInputBox.prop('files')[0];
-			
-			    if (linuxSecurityPatchInputBoxFile) {
-			        securityPatch = linuxSecurityPatchInputBoxFile;
-			    } else {
-			        console.log("No file selected.");
-			    }
-			} else {
-			    console.log("File input element not found.");
-			}
-			
-			if (linuxAntivirusSoftwareInputBox.length > 0) {
-			    const linuxAntivirusSoftwareInputBoxFile = linuxAntivirusSoftwareInputBox.prop('files')[0];
-			
-			    if (linuxAntivirusSoftwareInputBoxFile) {
-			        antivirusSoftware = linuxAntivirusSoftwareInputBoxFile;
-			    } else {
-			        console.log("No file selected.");
-			    }
-			} else {
-			    console.log("File input element not found.");
-			}
-		}
-	event.preventDefault();
-	    var requestData = {
-		   	applicantId: applicantId,
-		    requesterId: requesterId,
-			positionName: positionName,
-		    working_place: working_place,
-		    request_reason: request_reason,
-		    from_date: from_date,
-		    to_date: to_date,		    
-		    signature: signature,
-		    os_type: os_type,
-		    request_percent: request_percent,
-		    applied_date: applied_date,
-		    approverId: approverId
-		};
-	    //createForm(requestData)
-	    
-	    var formData = new FormData();
-		formData.append('applicantId', applicantId);
-        formData.append('requesterId', requesterId);
-		formData.append('positionName', positionName);
-        formData.append('working_place', working_place);
-        formData.append('request_reason', request_reason);
-        formData.append('request_percent', request_percent);
-        formData.append('from_date', from_date);
-        formData.append('to_date', to_date);
-        formData.append('signed_date', signed_date);
-        formData.append('os_type', os_type);
-        formData.append('applied_date', applied_date);
-        formData.append('approverId', approverId);
+			operatingSystem = linuxOperationSystemInputBox.prop('files')[0];
 
-		// Append file inputs to FormData
-		if(os_type === 'Window') {
-			formData.append('operationSystem', $('#file1')[0].files[0]);
-			formData.append('securityPatch', $('#file2')[0].files[0]);
-			formData.append('antivirusSoftware', $('#file3')[0].files[0]);
-			formData.append('antivirusPattern', $('#file4')[0].files[0]);
-			formData.append('antivirusFullScan', $('#file5')[0].files[0]);
+			if (!linuxSecurityPatchInputBox[0].files.length) {
+				Swal.fire({
+					title: "Error!",
+					text: "Please upload the photo of Security Patch.",
+					icon: "error",
+					confirmButtonText: "OK"
+				});
+				return;
+			}
+			securityPatch = linuxSecurityPatchInputBox.prop('files')[0];
+
+			if (!linuxAntivirusSoftwareInputBox[0].files.length) {
+				Swal.fire({
+					title: "Error!",
+					text: "Please upload the photo of Antivirus Software.",
+					icon: "error",
+					confirmButtonText: "OK"
+				});
+				return;
+			}
+			antivirusSoftware = linuxAntivirusSoftwareInputBox.prop('files')[0];
+
 		}
-		if(os_type === 'Mac') {
-			formData.append('operationSystem', $('#file6')[0].files[0]);
-			formData.append('securityPatch', $('#file7')[0].files[0]);
-			formData.append('antivirusSoftware', $('#file8')[0].files[0]);
+
+		if (!signedDateInputBox.val()) {
+			Swal.fire({
+				title: "Error!",
+				text: "Please select a signed date.",
+				icon: "error",
+				confirmButtonText: "OK"
+			});
+			return;
 		}
-		if(os_type === 'Linux') {
-			formData.append('operationSystem', $('#file9')[0].files[0]);
-			formData.append('securityPatch', $('#file10')[0].files[0]);
-			formData.append('antivirusSoftware', $('#file11')[0].files[0]);
+
+		signed_date = formatToISODate(signedDateInputBox.val());
+
+		if (!signatureInputBox[0].files.length) {
+			Swal.fire({
+				title: "Error!",
+				text: "Please upload the photo of Signature.",
+				icon: "error",
+				confirmButtonText: "OK"
+			});
+			return;
 		}
-		formData.append('signature', $('#file12')[0].files[0]);
-		formData.append('registerFormDto', JSON.stringify(requestData));
-		
-		$.ajax({
-		    url: `${getContextPath()}/api/registerform/create`,
-		    type: 'POST',
-		    data: formData,
-		    processData: false,
-		    contentType: false,
-		    success: function(response) {
-		        console.log("Successful : ", response);
-		        $('#message').text(response);
-		        Swal.fire({
-	                title: "Success!",
-	                text: "WFH Form Application Complete!",
-	                icon: "success",
-	                timer: 3000,
-	                timerProgressBar: true,
-	                showConfirmButton: false
-	            }).then(() => {
-	                window.location.href = `${getContextPath()}/dashboard`;
-	            });
-		    },
-		    error: function(error) {
-		        console.error('Error:', error);
-		    }
+		signature = signatureInputBox.prop('files')[0];
+
+		event.preventDefault();
+
+		await Swal.fire({
+			title: 'Choose Approve Role and Name',
+			html: `
+				<select id="approve-role" class="select" style="width: 100%; color: #0d0c22; border: 1px solid black; text-transform: capitalize;">
+					<option selected value="" disabled>Choose Approver Role</option>
+				</select>
+				<br/><br/>
+				<select id="approver-name" class="select" style="width: 100%; color: #0d0c22; border: 1px solid black;">
+                   <option selected value="" disabled>Choose Approver Name</option>
+               </select>`,
+			didOpen: async () => {
+				const approveRoleResponse = await fetchApproveRoleWithoutApplicant();
+				const approveRoleSelect = Swal.getPopup().querySelector('#approve-role');
+				const formatRoleName = (roleName) => {
+					return roleName
+						.replace(/_/g, ' ')
+						.toLowerCase()
+						.replace(/\b\w/g, char => char.toUpperCase());
+				};
+				approveRoleResponse.forEach(role => {
+					const option = document.createElement('option');
+					option.value = role.id;
+					option.text = formatRoleName(role.name);
+					approveRoleSelect.add(option);
+				});
+
+				approveRoleSelect.addEventListener('change', async () => {
+					const selectedRoleId = approveRoleSelect.value;
+					await getAllApprover(selectedRoleId, currentUser.name);
+				});
+			},
+			preConfirm: () => {
+				const approverRole = Swal.getPopup().querySelector('#approve-role').value;
+				const approverName = Swal.getPopup().querySelector('#approver-name').value;
+				if (!approverRole || !approverName) {
+					Swal.showValidationMessage(`Please choose both an approver role and an approver name.`);
+				}
+				return approverName;
+			},
+			showCancelButton: true,
+			confirmButtonText: 'Select',
+			cancelButtonText: 'Cancel'
+		}).then((result) => {
+			if (result.isConfirmed) {
+				const approverName = $('#approver-name').find('option:selected').text();
+				Swal.fire({
+					title: 'Are you sure?',
+					text: `You selected ${approverName}. Do you want to proceed?`,
+					icon: 'warning',
+					showCancelButton: true,
+					confirmButtonText: 'Yes, proceed',
+					cancelButtonText: 'No, change selection'
+				}).then((confirmResult) => {
+					if (confirmResult.isConfirmed) {
+						const formData = new FormData();
+						const data = {
+							applicantId: applicantId,
+							requesterId: requesterId,
+							positionName: positionName,
+							workingPlace: working_place,
+							requestReason: request_reason,
+							requestPercent: request_percent,
+							fromDate: from_date,
+							toDate: to_date,
+							signedDate: signed_date,
+							osType: os_type,
+							approverId: approverId
+						};
+
+						formData.append("data", new Blob([JSON.stringify(data)], { type: "application/json" }));
+						formData.append("operatingSystem", operatingSystem);
+						formData.append("securityPatch", securityPatch);
+						formData.append("antivirusSoftware", antivirusSoftware);
+						formData.append("antivirusPattern", antivirusPattern);
+						formData.append("antivirusFullScan", antivirusFullScan);
+						formData.append("signature", signature);
+
+
+						$.ajax({
+							url: `${getContextPath()}/api/registerform/create`,
+							type: 'POST',
+							data: formData,
+							processData: false,
+							contentType: false,
+							success: function(response) {
+								Swal.fire({
+									title: "Success!",
+									text: "Form submitted successfully.",
+									icon: "success",
+									confirmButtonText: "OK"
+								}).then((result) => {
+									if (result.isConfirmed) {
+										window.location.href = `${getContextPath()}/home`;
+									}
+								});
+							},
+							error: function(xhr, status, error) {
+								Swal.fire({
+									title: "Error!",
+									text: "There was an error submitting the form.",
+									icon: "error",
+									confirmButtonText: "OK"
+								});
+							}
+						});
+					} else {
+						console.log('Approver selection was canceled');
+						$('#apply-form-btn').click();
+					}
+				});
+			} else {
+				console.log('Approver selection was canceled');
+			}
 		});
+	}
 
-		$(this).submit();
-
-    });
-    
-		if(currentUser.team) {
-        var formData = new FormData();
-        formData.append("teamId", currentUser.team.id)
-        formData.append("userId", currentUser.id)
-        getTeamMemberById(formData);
-    }
-
-    function getTeamMemberById(formData) {
-        $.ajax({
-            url: `${getContextPath()}/api/user/getAllTeamMember`,
-          type: 'POST',
-            data: formData,
-          contentType: false,
-            processData: false,
-          success: function (response) {
-              var selectBox = $('#team-member-list');
-                selectBox.empty();
-                selectBox.append('<option value="" disabled selected>Choose Name</option>');
-                for (var i = 0; i < response.length; i++) {
-                    if (response[i].name !== currentUser.name) {
-                        var option = $('<option>', {
-                            value: response[i].id,
-                            text: response[i].name,
-                            'data-staff-id': response[i].staffId,
-                            //'data-position-name': response[i].position.name,
-                            'data-team-name': response[i].team.name,
-                            'data-department-name': response[i].department.name
-                        });
-                        selectBox.append(option);
-                    }
-                }
-
-          },
-          error: function (error) {
-              console.error('Error:', error);
-          }
-      });
-    }
-    
-    async function getAllApprover() {
-		const response = await fetchApprovers();
+	async function getAllApprover(approveRoleId, name) {
+		const response = await fetchApproversByApproveRoleId(approveRoleId);
 		console.log(response)
 		var selectBox = $('#approver-name');
-        selectBox.empty();
-        selectBox.append('<option value="" selected>Choose Approver Name</option>');
-        for (var i = 0; i < response.length; i++) {
-            if (response[i].name !== currentUser.name) {
-                var option = $('<option>', {
-                    value: response[i].id,
-                    text: response[i].name,
-                    'data-staff-id': response[i].staffId,                  
-                });
-                selectBox.append(option);
-            }
-        }
-        selectBox.on('change', function() {
-	        var selectedValue = $(this).val();
-	        console.log('Selected value:', selectedValue);
-	        approverId = selectedValue
-	
-	        var selectedText = $(this).find('option:selected').text();
-	        console.log('Selected text:', selectedText);
-	
-	        var selectedStaffId = $(this).find('option:selected').data('staff-id');
-	        console.log('Selected staff ID:', selectedStaffId);
-	    });
+		selectBox.empty();
+		selectBox.append('<option value="" selected>Choose Approver Name</option>');
+		for (var i = 0; i < response.length; i++) {
+			if (response[i].name !== name) {
+				var option = $('<option>', {
+					value: response[i].id,
+					text: response[i].name,
+					'data-staff-id': response[i].staffId,
+				});
+				selectBox.append(option);
+			}
+		}
+		selectBox.on('change', function() {
+			approverId = $(this).val()
+		});
 	}
-	getAllApprover();
+
+	async function getTeamMemberById(teamId, userId) {
+		try {
+			const response = await fetchTeamMemberByUserId(teamId, userId);
+
+			if (response) {
+				const selectBox = $('#team-member-list');
+				selectBox.empty();
+					selectBox.append('<option value="" disabled selected>Choose Name</option>');
+
+				const addedMemberIds = new Set();
+
+				response.sort((a, b) => a.name.localeCompare(b.name));
+
+				response.forEach(member => {
+					if (!addedMemberIds.has(member.id) && member.name !== currentUser.name) {
+						const option = $('<option>', {
+							value: member.id,
+							text: member.name,
+							'data-staff-id': member.staffId,
+							'data-position-name': member.positionName,
+							'data-team-name': member.team.name,
+							'data-department-name': member.department.name
+						});
+						selectBox.append(option);
+						addedMemberIds.add(member.id);
+					}
+				});
+			}
+		} catch (error) {
+			console.error('Error:', error);
+		}
+	}
+
+	async function getAllDivision() {
+		await fetchDivisions()
+			.then(response => {
+				var selectBox = $('#division-name');
+				selectBox.empty();
+				selectBox.append('<option value="all" selected>Choose Division Name</option>');
+				for (var i = 0; i < response.length; i++) {
+					var option = $('<option>', {
+						value: response[i].id,
+						text: response[i].name,
+					});
+					selectBox.append(option);
+				}
+			})
+			.catch(error => {
+				console.error('Error:', error);
+			})
+	}
+
+	$('#division-name').on('change', async function() {
+		await updateDepartmentsByDivision();
+		await updateTeamsByDivision();
+		await getAllTeamMember();
+	});
+
+	async function getAllDepartment() {
+		await fetchDepartments()
+			.then(response => {
+				var selectBox = $('#department-name');
+				selectBox.empty();
+				selectBox.append('<option value="all" selected>Choose Department Name</option>');
+				for (var i = 0; i < response.length; i++) {
+					var option = $('<option>', {
+						value: response[i].id,
+						text: response[i].name,
+					});
+					selectBox.append(option);
+				}
+			})
+			.catch(error => {
+				console.error('Error:', error);
+			})
+	}
+
+	$('#department-name').on('change', async function() {
+		await updateTeamsByDepartment();
+		await getAllTeamMember();
+	});
+
+	async function getAllTeam() {
+		// if not division_head, I want with await fetchTeamsByDivisionId(currentUser.division.id)
+		// otherwise, I want with await fetchTeams()
+
+		// if department_head
+		// let response;
+
+		await fetchTeams()
+			.then(response => {
+				var selectBox = $('#team-name');
+				selectBox.empty();
+				selectBox.append('<option value="all" selected>Choose Team Name</option>');
+				for (var i = 0; i < response.length; i++) {
+					var option = $('<option>', {
+						value: response[i].id,
+						text: response[i].name,
+					});
+					selectBox.append(option);
+				}
+
+			})
+			.catch(error => {
+				console.error('Error:', error);
+			})
+	}
+
+
+	// async function getAllTeam() {
+	// 	let response;
+	//
+	// 	try {
+	// 		if (isDivisionHead) {
+	// 			// Fetch teams based on the division ID if the user is a division head
+	// 			response = await fetchTeamsByDivisionId(currentUser.division.id);
+	// 		} else if (isDepartmentHead) {
+	// 			// Fetch teams based on the department ID if the user is a department head
+	// 			response = await fetchTeamsByDepartmentId(currentUser.department.id);
+	// 		} else {
+	// 			response = await fetchTeams();
+	// 		}
+	//
+	// 		// Populate the select box with the retrieved data
+	// 		var selectBox = $('#team-name');
+	// 		selectBox.empty();
+	// 		selectBox.append('<option value="all" selected>Choose Name</option>');
+	// 		response.forEach(team => {
+	// 			var option = $('<option>', {
+	// 				value: team.id,
+	// 				text: team.name,
+	// 			});
+	// 			selectBox.append(option);
+	// 		});
+	//
+	// 	} catch (error) {
+	// 		console.error('Error:', error);
+	// 	}
+	// }
+
+
+	$('#team-name').on('change', async function() {
+		await getAllTeamMember();
+	});
+
+	async function getAllTeamMember() {
+		var selectedTeamId = $('#team-name').val();
+		var selectedDepartmentId = $('#department-name').val();
+		var selectedDivisionId = $('#division-name').val();
+		let response;
+		if (selectedTeamId && selectedTeamId !== "all") {
+			response = await getUsersByTeamId(selectedTeamId);
+		} else if (selectedDepartmentId && selectedDepartmentId !== "all") {
+			response = await getUsersByDepartmentId(selectedDepartmentId);
+		} else if (selectedDivisionId && selectedDivisionId !== "all") {
+			response = await getUsersByDivisionId(selectedDivisionId);
+		} else {
+			console.log('hi')
+			response = await fetchUsers();
+		}
+		if (response) {
+			const selectBox = $('#team-member-list');
+			selectBox.empty();
+			selectBox.append('<option value="" disabled selected>Choose Name</option>');
+
+			const addedMemberIds = new Set();
+
+			response.sort((a, b) => a.name.localeCompare(b.name));
+
+			response.forEach(member => {
+				if (!addedMemberIds.has(member.id) && member.name !== currentUser.name) {
+					const option = $('<option>', {
+						value: member.id,
+						text: member.name,
+						'data-staff-id': member.staffId,
+						'data-position-name': member.positionName,
+						'data-team-name': member.team.name,
+						'data-department-name': member.department.name
+					});
+					selectBox.append(option);
+					addedMemberIds.add(member.id);
+				}
+			});
+		}
+	}
+
+	async function updateDepartmentsByDivision() {
+		try {
+			var divisionId = $('#division-name').val();
+			var departments = [];
+
+			if (divisionId !== 'all') {
+				departments = await getDepartmentsByDivisionId(divisionId);
+			} else {
+				departments = await fetchDepartments();
+			}
+
+			var selectBox = $('#department-name');
+			selectBox.empty();
+			selectBox.append('<option value="all" selected>Choose Department Name</option>');
+
+			departments.forEach(department => {
+				var option = $('<option>', {
+					value: department.id,
+					text: department.name,
+				});
+				selectBox.append(option);
+			});
+		} catch (error) {
+			console.error('Error:', error);
+		}
+	}
+
+	async function updateTeamsByDivision() {
+		try {
+			var divisionId = $('#division-name').val();
+			var teams = [];
+
+			if (divisionId !== 'all') {
+				teams = await getTeamsByDivisionId(divisionId);
+			} else {
+				teams = await fetchTeams();
+			}
+
+			var selectBox = $('#team-name');
+			selectBox.empty();
+			selectBox.append('<option value="all" selected>Choose Team Name</option>');
+
+			teams.forEach(team => {
+				var option = $('<option>', {
+					value: team.id,
+					text: team.name,
+				});
+				selectBox.append(option);
+			});
+		} catch (error) {
+			console.error('Error:', error);
+		}
+	}
+
+	async function updateTeamsByDepartment() {
+		try {
+			var departmentId = $('#department-name').val();
+			var divisionId = $('#division-name').val();
+			var teams = [];
+
+			if (departmentId !== 'all') {
+				teams = await getTeamsByDepartmentId(departmentId);
+			} else if (divisionId !== 'all') {
+				teams = await getTeamsByDivisionId(divisionId);
+			}
+			else {
+				teams = await fetchTeams();
+			}
+
+			var selectBox = $('#team-name');
+			selectBox.empty();
+			selectBox.append('<option value="all" selected>Choose Team Name</option>');
+
+			teams.forEach(team => {
+				var option = $('<option>', {
+					value: team.id,
+					text: team.name,
+				});
+				selectBox.append(option);
+			});
+		} catch (error) {
+			console.error('Error:', error);
+		}
+	}
+
+	// getAllApprover(),
+	getAllDivision(), getAllDepartment(), getAllTeam();
+	async function getDepartmentsByDivisionId(divisionId) {
+		return await fetchDepartmentsByDivisionId(divisionId)
+	}
+	async function getTeamsByDivisionId(divisionId) {
+		return await fetchTeamsByDivisionId(divisionId)
+	}
+	async function getTeamsByDepartmentId(departmentId) {
+		return await fetchTeamsByDepartmentId(departmentId)
+	}
+	async function getUsersByTeamId(teamId) {
+		return await fetchUsersByTeamId(teamId)
+	}
+	async function getUsersByDepartmentId(departmentId) {
+		return await fetchUsersByDepartmentId(departmentId)
+	}
+	async function getUsersByDivisionId(divisionId) {
+		return await fetchUsersByDivisionId(divisionId)
+	}
 });
 

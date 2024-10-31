@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+
+<head>
+<title>WorkHub</title>
+</head>
+
+<body>
+<div id="wrap" th:fragment="content">
+    <script th:src="@{/assets/form/formListGrid.js}"></script>
+	<div id="wrap-inner" class="flushed">
+            <div id="content" role="main">
+                <div class="designer-search-container">
+
+                    <div class="js-results-wrapper  results-wrapper" style="display: flex;">
+                        <div class="form-lists">
+                            <div id="designer-search-summary-app" class="designer-search-summary" style="flex-direction: column;">
+                                <div class="designer-search-results-padding search-summary-header">
+                                    <div class="search-summary-sticky-container">
+                                        <div class="search-summary-sticky-content designer-search-width">
+                                            <div class="search-summary-details">
+                                                <h1 class="search-summary-title" id="form-list-title">Work from Home Request Form Lists</h1>
+                                            </div>
+                                            <button id="bulk-approve-btn" class="btn2" sec:authorize="!hasAuthority('SERVICE_DESK')" style="background: white; color: #0d0c22; margin-right: 10px;">Bulk Approve</button>
+                                            <button id="select-all-btn" class="btn2" type="button">Select All</button>
+                                            <button id="go-upload-page" class="btn2 hide-when-click-upload" sec:authorize="hasAuthority('SERVICE_DESK')" style="background: white; color: #0d0c22; margin-right: 10px;">Upload Excel for OTP</button>
+                                            <button id="service-desk-download-btn" class="btn2 hide-when-click-upload" sec:authorize="hasAuthority('SERVICE_DESK')">Download List</button>
+                                            <button id="go-download-page" class="btn2 show-when-click-upload hide-when-load-download-page" sec:authorize="hasAuthority('SERVICE_DESK')">View List Page</button>
+                                            <div class="designer-search-mobile-actions">
+                                                <a href="#" class="drawer-trigger" onclick="openFilter()">
+                                                    <svg viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"
+                                                        svg-inline="" role="presentation" focusable="false" tabindex="-1">
+                                                        <path fill-rule="evenodd" clip-rule="evenodd"
+                                                            d="M0 4a1 1 0 011-1h14a1 1 0 110 2H1a1 1 0 01-1-1zm2 4a1 1 0 011-1h10a1 1 0 110 2H3a1 1 0 01-1-1zm3 3a1 1 0 100 2h6a1 1 0 100-2H5z"
+                                                            fill="currentColor"></path>
+                                                    </svg>
+                                                </a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <style>
+                                        .toggle-switch {
+                                            display: inline-block;
+                                            background-color: transparent;
+                                            border-radius: 30px;                                            
+                                            position: relative;
+                                            border: 1px solid #333;
+                                            overflow: hidden;
+                                        }
+
+                                        .toggle-option {
+                                            width: 60px;
+                                            height: 40px;
+                                            display: inline-flex;
+                                            align-items: center;
+                                            justify-content: center;
+                                            cursor: pointer;
+                                            border-radius: 30px;
+                                            color: #333;
+                                            text-decoration: none;
+                                            transition: background-color 0.3s, color 0.3s;
+                                            border-radius: 0;
+                                        }
+
+                                        .toggle-option.list-view {
+                                            background-color: transparent;
+                                            color: #333;
+                                            border-top-left-radius: 20px;
+                                            border-bottom-left-radius: 20px;
+                                        }
+
+                                        .toggle-option.grid-view {
+                                            background-color: transparent;
+                                            color: #333;
+                                            border-top-right-radius: 20px;
+                                            border-bottom-right-radius: 20px;
+                                        }
+
+                                        .toggle-option.active {
+                                            background-color: #cce7ff;
+                                            color: #000;
+                                        }
+
+                                        .toggle-switch .grid-view.active {
+                                            background-color: #cce7ff;
+                                        }
+
+                                        .toggle-switch i {
+                                            font-size: 18px;
+                                        }
+
+                                    </style>
+                                    <div class="display-flex" style="column-gap: 10px; align-items: center;">
+                                        <h4 id="formListSelectedCount">Selected (0)</h4>
+                                        <div class="toggle-switch">
+                                            <a th:href="@{/admin/viewFormList}" class="toggle-option list-view" title="List layout">                                                
+                                                <i class="fa fa-bars"></i>
+                                            </a>
+                                            <a href="#" class="toggle-option active grid-view"  title="Grid layout">
+                                                <i class="fa fa-check"></i>&nbsp;&nbsp;
+                                                <i class="fa fa-th"></i>
+                                            </a>
+                                        </div>  
+                                    </div>
+                                    
+                                    
+                                                                      
+                                </div>
+                            </div>
+
+                            <!-- Go Back Button -->
+                            <button id="go-back-btn" class="btn2" style="display: none; margin: 10px;">Back to Teams</button>
+
+<!--                            <div id="designer-search-results-stream" class="designer-search-results-stream hide-when-click-upload">-->
+<!--                                <div class="form-card-container">-->
+<!--                                                                       -->
+<!--                                </div>-->
+<!--                            </div>-->
+
+                            <div id="team-folder-view" class="designer-search-results-stream hide-when-click-upload">
+                                <div class="form-card-container"></div>
+                            </div>
+
+                            <!-- Form List Container -->
+                            <div id="form-list-view" class="designer-search-results-stream hide-when-click-upload" style="display: none;">
+                                <div class="form-card-container"></div>
+                            </div>
+
+                            <div class="hide-when-load-download-page">
+								<input type="file" id="upload-otp-excel">                 
+                            </div>
+                            
+                        </div>
+                        <div id="designer-search-actions-app" class="designer-search-actions" >
+                            <div class="designer-search-actions-wrapper designer-search-sticky-sidebar">
+                                <div class="js-filter-scroll-container designer-search-scrolling-sidebar">
+                                    <div class="designer-search-link-group">
+                                        <a href="#" class="designer-search-tab-link">Advanced Search</a>
+                                    </div>
+                                    <hr>
+                                    <p class="designer-search-label">Filters</p>
+                                    <div class="search-filters">
+                                        <form>
+                                            <fieldset class="search-filters-wrapper"><!---->
+                                                <div class="form-field-wrapper">
+                                                    <div class="label-flag">
+                                                        <label>Form Status</label> <!---->
+                                                    </div>
+                                                    <select name="status" id="form-status-select" style="width: 100%;">
+                                                        <option value="ALL">All</option>
+                                                        <option value="PENDING" sec:authorize="!hasAuthority('SERVICE_DESK')">Pending</option>
+                                                        <option value="APPROVE">Approved</option>
+                                                        <option value="REJECT">Rejected</option>
+                                                    </select>
+
+                                                </div>
+
+                                            </fieldset>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="designer-search-modals-app" class="designer-search-modals" style="display: none;">
+                    <div>
+                        <section id="designer-search-drawer" class="drawer designer-search-drawer">
+                            <div class="js-filter-scroll-container drawer-container" style="max-width: 600px;">
+                                <a href="#" class="close-drawer" onclick="closeModal()">
+                                    <svg viewBox="0 0 26 26" fill="none" xmlns="http://www.w3.org/2000/svg"
+                                        svg-inline="" role="presentation" focusable="false" tabindex="-1">
+                                        <path
+                                            d="M8.286 6.518a1.25 1.25 0 10-1.768 1.768L11.232 13l-4.714 4.714a1.25 1.25 0 001.768 1.768L13 14.768l4.714 4.714a1.25 1.25 0 101.768-1.768L14.768 13l4.714-4.714a1.25 1.25 0 10-1.768-1.768L13 11.232 8.286 6.518z"
+                                            fill="currentColor"></path>
+                                    </svg>
+                                </a>
+                                <div class="designer-search-drawer-content">
+                                    <div class="designer-search-link-group">
+                                        <a href="#" class="designer-search-tab-link">Advanced Search</a>
+                                    </div>
+                                    <hr>
+                                    <p class="designer-search-label">Filters</p>
+                                    <div class="search-filters">
+                                        <form>
+                                            <fieldset class="search-filters-wrapper"><!---->
+                                                <div class="form-field-wrapper">
+                                                    <div class="label-flag">
+                                                        <label>Form Status</label> <!---->
+                                                    </div>
+                                                    <select name="status" style="width: 100%;">
+                                                        <option value="all">All</option>
+                                                        <option value="pending">Pending</option>
+                                                        <option value="approved">Approved</option>
+                                                        <option value="rejected">Rejected</option>
+                                                    </select>
+
+                                                </div>
+                                                <div class="form-field-wrapper">
+                                                    <div class="label-flag heading-label">
+                                                        <label>Specific</label>
+                                                    </div>
+                                                    <select name="specific" id="" style="width: 100%;">
+                                                        <option value="all">All</option>
+                                                        <option value="name">Name</option>
+                                                        <option value="position">Position</option>
+                                                        <option value="role">Role</option>
+                                                    </select>
+                                                </div>
+                                                <div class="form-field-wrapper">
+                                                    <div class="label-flag heading-label">
+                                                        <label>Location</label>
+                                                    </div>
+                                                    <select name="" id="" style="width: 100%;">
+                                                        <option value="all">All</option>
+                                                    </select>
+                                                </div>
+                                            </fieldset>
+                                        </form>
+                                    </div>
+                                </div>
+                                <div class="designer-search-drawer-footer">
+                                    <button class="form-sub"> Show results </button>
+                                </div>
+                            </div>
+                        </section>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <script>
+        function openFilter() {
+            var modal = document.getElementById("designer-search-modals-app");
+            modal.style.display = "block";
+        }
+        function closeModal() {
+            var modal = document.getElementById("designer-search-modals-app");
+            modal.style.display = "none";
+        }
+    </script>
+	</div>
+</body>
+</html>

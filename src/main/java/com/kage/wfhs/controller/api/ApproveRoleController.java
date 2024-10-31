@@ -43,6 +43,11 @@ public class ApproveRoleController {
         return ResponseEntity.ok(approveRoleService.getAllApproveRole());
     }
 
+    @PostMapping("/approveRoleListWithoutApplicant")
+    public ResponseEntity<List<ApproveRoleDto>> getApproveRoleListWithoutApplicant(){
+        return ResponseEntity.ok(approveRoleService.getApproveRoleListWithoutApplicant());
+    }
+
     @GetMapping("/")
     public ResponseEntity<String > get(@RequestBody List<WorkFlowOrder> idList){
         return ResponseEntity.ok("Approve Role Create Successful...");

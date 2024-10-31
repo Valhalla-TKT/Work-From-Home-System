@@ -4768,11 +4768,13 @@ body.nav-v2-lock-scroll {
   font-weight: 600;
   line-height: 20px;
   white-space: normal;
+  text-align: left;
 }
 .nav-v2-position {
 	font-size: 15px;
 	line-height: 20px;
   	white-space: normal;
+    text-align: left;
 }
 .notification-count-container {
 	position: relative;
@@ -19461,7 +19463,7 @@ div.rsvp-mod {
   }
 }
 .home-feed {
-  margin: 43px 0 150px;
+  margin: 43px 0 0;
   text-align: center;
 }
 .home-feed__heading {

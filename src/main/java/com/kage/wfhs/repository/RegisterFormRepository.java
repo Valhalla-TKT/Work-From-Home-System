@@ -14,6 +14,7 @@ import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 
 public interface RegisterFormRepository extends JpaRepository<RegisterForm,Long> {
 	Optional<RegisterForm> findById(Long id);
@@ -72,6 +73,27 @@ public interface RegisterFormRepository extends JpaRepository<RegisterForm,Long>
     """, nativeQuery = true)
     List<RegisterForm> findRegisterFormByTeamAllWithoutApproveRoleId(Long teamId);
 
+    @Query(value = "SELECT rf.* FROM register_form rf " +
+            "JOIN work_flow_status ws ON rf.id = ws.register_form_id " +
+            "JOIN user u ON rf.applicant_id = u.id " +
+            "JOIN team t ON u.team_id = t.id " +
+            "WHERE ws.status = :workflowStatus " +
+            "AND ws.user_id = :userId " +
+            "AND t.id = :teamId", nativeQuery = true)
+    List<RegisterForm> findByWorkflowStatusAndUserIdAndTeamId(
+            @Param("workflowStatus") String workflowStatus,
+            @Param("userId") Long userId,
+            @Param("teamId") Long teamId);
+
+    @Query(value = "SELECT rf.* FROM register_form rf " +
+            "JOIN work_flow_status ws ON rf.id = ws.register_form_id " +
+            "JOIN user u ON rf.applicant_id = u.id " +
+            "JOIN team t ON u.team_id = t.id " +
+            "WHERE ws.user_id = :userId " +
+            "AND t.id = :teamId", nativeQuery = true)
+    List<RegisterForm> findByUserIdAndTeamId(
+            @Param("userId") Long userId,
+            @Param("teamId") Long teamId);
 
     @Query(value = """
             SELECT rf.* FROM register_form rf JOIN work_flow_status wfs ON rf.id = wfs.register_form_id
@@ -127,4 +149,7 @@ public interface RegisterFormRepository extends JpaRepository<RegisterForm,Long>
     RegisterForm findByWorkFlowStatusId(Long statusId);
 
     List<RegisterForm> findByApplicantId(long userId);
+
+    @Query(value = "SELECT * FROM register_form rf WHERE rf.applicant_id = :userId AND MONTH(rf.signed_date) = :signedMonth", nativeQuery = true)
+    Optional<RegisterForm> findByUserIdAndSignedMonthNative(@Param("userId") Long userId, @Param("signedMonth") int signedMonth);
 }

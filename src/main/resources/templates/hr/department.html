@@ -2,7 +2,7 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org" id="fullscreen-body">
 
-<head th:replace="fragments/header :: header">
+<head th:replace="~{fragments/shared/header :: header}">
 <title>WorkHub</title>
 </head>
 
@@ -11,14 +11,14 @@
 
 
 	<!-- header -->
-	<div th:replace="fragments/navigation :: navigation"></div>
+	<div th:replace="~{fragments/shared/navigation :: navigation}"></div>
 	<!-- header -->
 
 	<div th:replace="fragments/hr/department :: content"></div>
 	<!-- main -->
 
 
-	<div th:replace="fragments/footer :: footer"></div>
+	<div th:replace="~{fragments/shared/footer :: footer}"></div>
 	<div id="site-notifications"></div>
 
 	<script>
@@ -52,7 +52,7 @@
 
 	<script th:src="@{/assets/packs/js/application.ae6c19f201cd97e78298.js}"></script>
 
-	<div th:replace="fragments/chat :: chat"></div>
+	<!--<div th:replace="~{fragments/shared/chat :: chat}"></div>-->
 
 	<script th:src="@{/assets/welcome/fullscreen.js}" type="text/javascript"></script>
 

@@ -35,7 +35,9 @@ public class AuthServiceImplement implements AuthService {
         User user = userRepository.findByEmail(email);
         boolean exists = user != null;
         logger.info("Email {} exists: {}", email, exists);
-        if (exists && forgotPassword) {
+
+        // Define a lambda to handle the case when the user is found
+        Runnable userFoundAction = () -> {
             String staffID = user.getStaffId();
             String otp = Helper.generateOTP(email, staffID);
             otpStore.put(email, otp);
@@ -49,7 +51,15 @@ public class AuthServiceImplement implements AuthService {
                     message.getEmailSubjectForOtpInForgetPasswordProcess(),
                     emailBody
             );
+        };
+
+        // Check the existence and forgotPassword condition
+        if (!exists && forgotPassword) {
+            throw new EntityNotFoundException("User with email " + email + " not found.");
+        } else if (exists && forgotPassword) {
+            userFoundAction.run();
         }
+
         return exists;
     }
 
@@ -74,6 +84,7 @@ public class AuthServiceImplement implements AuthService {
         if (user.isFirstTimeLogin()) {
             user.setFirstTimeLogin(false);
         }
+        user.setResetFlag(false);
         userRepository.save(user);
         logger.info("Password changed successfully for staff ID: {}", staffId);
     }

@@ -1,17 +1,17 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org" id="fullscreen-body">
-<head th:replace="fragments/header :: header">
+<head th:replace="~{fragments/shared/header :: header}">
     <title>WorkHub</title>
 </head>
 <body id="page" class="logged-out not-pro not-player not-self not-team not-on-team no-hiring  nav-v2-theme-cream">
 <!-- header -->
-<div th:replace="fragments/navigation :: navigation"></div>
+<div th:replace="~{fragments/shared/navigation :: navigation}"></div>
 <!-- header -->
 
 <!-- main -->
-<main th:replace="fragments/dashboard/index :: content"></main>
+<main th:replace="~{fragments/dashboard/index :: content}"></main>
 <!-- main -->
-<div th:replace="fragments/footer :: footer"></div>
+<div th:replace="~{fragments/shared/footer :: footer}"></div>
 <div id="signup-overlay" class="overlay ">
     <div class="lightbox">
         <a href="#" class="close" aria-label="close">
@@ -26,16 +26,7 @@
         </div>
     </div>
 </div>
-<div class="shot-overlay js-shot-overlay lazyloading-hidden-container" tabindex="-1" data-include="css:https://cdn.dribbble.com/assets/components/media-overlay-modal-1b4926ca8f94639ddb7473aed19f12df06783052c29ee65f83376741014a2977.css">
-    <div class="overlay-content js-overlay-content"></div>
 
-    <a href="#" class="js-close-overlay close-overlay" aria-label="close">
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 26 26" fill="none" role="img" class="icon fill-current">
-            <path d="M8.28596 6.51819C7.7978 6.03003 7.00634 6.03003 6.51819 6.51819C6.03003 7.00634 6.03003 7.7978 6.51819 8.28596L11.2322 13L6.51819 17.714C6.03003 18.2022 6.03003 18.9937 6.51819 19.4818C7.00634 19.97 7.7978 19.97 8.28596 19.4818L13 14.7678L17.714 19.4818C18.2022 19.97 18.9937 19.97 19.4818 19.4818C19.97 18.9937 19.97 18.2022 19.4818 17.714L14.7678 13L19.4818 8.28596C19.97 7.7978 19.97 7.00634 19.4818 6.51819C18.9937 6.03003 18.2022 6.03003 17.714 6.51819L13 11.2322L8.28596 6.51819Z" fill="currentColor"></path>
-        </svg>
-
-    </a>
-</div>
 <div id="shot-modals-app"></div>
 <div id="good-modals-app"></div>
 <div id="work-availability-modal-app"></div>
@@ -73,12 +64,13 @@
 <script th:src="@{/assets/packs/js/application.ae6c19f201cd97e78298.js}"></script>
 
 <script th:src="@{/assets/dashboard/chart.js}"></script>
+<script th:src="@{/assets/vendors/chartJS/chart.js}"></script>
 
 
 </body>
 <div id="site-notifications"></div>
 
-<div th:replace="fragments/chat :: chat"></div>
+<!--<div th:replace="~{fragments/shared/chat :: chat}"></div>-->
 
 <script th:src="@{/assets/welcome/fullscreen.js}"></script>
 </html>

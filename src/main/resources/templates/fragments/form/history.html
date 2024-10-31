@@ -28,15 +28,114 @@
         </select>
     </div>
 
+    <style>
+        .form-history-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        .form-history-table th, .form-history-table td {
+            width: 25%;
+            border: 1px solid #ddd;
+            padding: 5px 15px;
+            text-align: center;
+        }
+
+        .form-history-table th {
+            background-color: #f2f2f2;
+            text-align: center;
+        }
+
+        .form-history-table td {
+            background: #fff;
+            vertical-align: middle;
+        }
+
+        .form-history-table .centered-header {
+            vertical-align: middle;
+        }
+
+        .view-detail-btn {
+            text-decoration: underline;
+            cursor: pointer;
+            color: #0d6efd;
+        }
+
+        .status-icon {
+            font-size: 1.2em;
+            margin-right: 8px;
+        }
+
+        .status-icon.status-approve {
+            color: #4CAF50;
+        }
+
+        .status-icon.status-reject {
+            color: #F44336;
+        }
+
+        .pagination {
+            display: flex;
+            justify-content: center;
+            margin-top: 20px;
+        }
+
+        .pagination .page-numbers {
+            display: flex;
+        }
+
+        .pagination .page-numbers a {
+            margin: 0 5px;
+            padding: 8px 12px;
+            text-decoration: none;
+            color: #333;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+
+        .pagination .page-numbers a.active {
+            background-color: #0d6efd;
+            color: white;
+            border-color: #4CAF50;
+        }
+        .no-records-message {
+            text-align: center;
+            color: #888;
+            font-size: 1.2em;
+            margin-top: 20px;
+        }
+    </style>
+
+
+
+
     <div class="form-history-listing">
-
+        <table id="form-history-table" class="form-history-table">
+            <thead>
+            <tr>
+                <th rowspan="2" class="centered-header">No</th>
+                <th colspan="2">Signed Date</th>
+                <th rowspan="2" class="centered-header">Status</th>
+                <th rowspan="2" class="centered-header">Action</th>
+            </tr>
+            <tr>
+                <th>Month</th>
+                <th>Year</th>
+            </tr>
+            </thead>
+            <tbody>
+            <!-- Rows will be dynamically injected here -->
+            </tbody>
+        </table>
+        <div class="no-records-message" style="display:none;">No records available.</div>
     </div>
-
     <div class="pagination">
-        <a href="#" class="page-link" data-page="prev">Previous</a>
         <span class="page-numbers"></span>
-        <a href="#" class="page-link" data-page="next">Next</a>
     </div>
+
+
+
     <script th:src="@{/assets/form/history.js}"></script>
 </div>
 </body>

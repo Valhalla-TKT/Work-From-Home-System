@@ -1,0 +1,23 @@
+{
+  "name": "datedropper",
+  "version": "2.0.0",
+  "description": "datedropper is a jQuery datepicker plugin",
+  "main": "datedropper.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/OwenMelbz/datedropper.git"
+  },
+  "keywords": [
+    "datedropper",
+    "datepicker"
+  ],
+  "author": "Felice Gattuso",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/OwenMelbz/datedropper/issues"
+  },
+  "homepage": "https://github.com/OwenMelbz/datedropper#readme"
+}

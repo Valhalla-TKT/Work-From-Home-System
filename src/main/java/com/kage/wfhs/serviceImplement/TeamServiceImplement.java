@@ -61,6 +61,17 @@ public class TeamServiceImplement implements TeamService {
     }
 
     @Override
+    public List<TeamDto> getMyTeam() {
+        Sort sort = Sort.by(Sort.Direction.ASC, "name");
+        List<Team> teams =  teamRepo.findAllByDepartmentId(1L);
+        if(teams == null)
+            return null;
+        return teams.stream()
+                .map(team -> modelMapper.map(team, TeamDto.class))
+                .collect(Collectors.toList());
+    }
+
+    @Override
     public TeamDto getTeamById(Long id){
         Team team = teamRepo.findById(id)
         		.orElseThrow(() -> new EntityNotFoundException("Team not found"));
@@ -102,5 +113,10 @@ public class TeamServiceImplement implements TeamService {
     public List<TeamDto> getTeamByDivisionId(Long divisionId) {
         List<Team> teams = teamRepo.findAllByDivisionId(divisionId);
         return DtoUtil.mapList(teams, TeamDto.class, modelMapper);
+    }
+
+    @Override
+    public boolean isNameExist(String name) {
+        return teamRepo.existsByName(name);
     }
 }

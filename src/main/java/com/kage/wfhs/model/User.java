@@ -72,26 +72,26 @@ public class User implements Serializable {
     @JoinColumn(name = "division_id")
     @JsonIgnore
     private Division division;
-    
-    private ActiveStatus activeStatus;
 
-    @OneToMany(mappedBy = "sender", cascade = CascadeType.ALL)
-    @ToString.Exclude
-    private List<Chat> chats;
-
-    @OneToMany(mappedBy = "receiver", cascade = CascadeType.ALL)
-    @ToString.Exclude
-    private List<Chat> chatList;
-
-    @OneToMany(mappedBy = "sender", cascade = CascadeType.ALL)
-    @ToString.Exclude
-    @JsonIgnore
-    private List<Notification> sentNotifications;
-    
-    @OneToMany(mappedBy = "receiver", cascade = CascadeType.ALL)
-    @ToString.Exclude
-    @JsonIgnore
-    private List<Notification> receivedNotifications;
+//    private ActiveStatus activeStatus;
+//
+//    @OneToMany(mappedBy = "sender", cascade = CascadeType.ALL)
+//    @ToString.Exclude
+//    private List<Chat> chats;
+//
+//    @OneToMany(mappedBy = "receiver", cascade = CascadeType.ALL)
+//    @ToString.Exclude
+//    private List<Chat> chatList;
+//
+//    @OneToMany(mappedBy = "sender", cascade = CascadeType.ALL)
+//    @ToString.Exclude
+//    @JsonIgnore
+//    private List<Notification> sentNotifications;
+//
+//    @OneToMany(mappedBy = "receiver", cascade = CascadeType.ALL)
+//    @ToString.Exclude
+//    @JsonIgnore
+//    private List<Notification> receivedNotifications;
 
     @OneToMany(mappedBy = "applicant", cascade = CascadeType.ALL)
     @ToString.Exclude
@@ -119,6 +119,8 @@ public class User implements Serializable {
     private boolean isFirstTimeLogin;
     
     private int loginCount;
+
+    private boolean resetFlag = false;
     
     @PrePersist
     protected void onCreate() {

@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 
 <head>
     <title>WorkHub</title>
@@ -38,7 +39,7 @@
                                     <div class="display-flex align-center">
                                         <div class="new-opportunities-heading">Recent teams</div>
                                     </div>
-                                    <a class="job-banner-cta js-job-cta btn2 add-data visible-hr-only" href="#">
+                                    <a class="job-banner-cta js-job-cta btn2 add-data" sec:authorize="hasAuthority('HR')" href="#">
                                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
                                             viewBox="0 0 24 24" fill="none" role="img" class="icon">
                                             <path d="M12 5V19M5 12H19" stroke="currentColor" stroke-width="2"

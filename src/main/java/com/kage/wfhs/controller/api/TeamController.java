@@ -9,7 +9,9 @@ package com.kage.wfhs.controller.api;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
+import io.swagger.v3.oas.annotations.Operation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -23,7 +25,6 @@ import lombok.AllArgsConstructor;
 @AllArgsConstructor
 @RequestMapping("/api/team")
 public class TeamController {
-    @Autowired
     private final TeamService teamService;
 
     @PostMapping("/")
@@ -31,13 +32,27 @@ public class TeamController {
         return ResponseEntity.ok(teamService.createTeam(teamDto));
     }
 
+    @Operation(summary = "Check if a team name exists", description = "Checks whether a given team name exists in the system.")
+    @GetMapping("/check-name")
+    public ResponseEntity<Boolean> doesNameExist(@RequestParam String name) {
+        if (name == null || name.trim().isEmpty()) {
+            return ResponseEntity.badRequest().body(false);
+        }
+
+        boolean exists = teamService.isNameExist(name);
+        return ResponseEntity.ok(exists);
+    }
+
     @PostMapping("/teamList")
     public ResponseEntity<?> getAllTeam(){
         List<TeamDto> teamList = teamService.getAllTeam();
-        if(teamList == null)
-            return ResponseEntity.ok("No department found."); 
-        else 
-            return ResponseEntity.ok(teamList);
+        return ResponseEntity.ok(Objects.requireNonNullElse(teamList, "No team found."));
+    }
+
+    @PostMapping("/myTeamList")
+    public ResponseEntity<?> getMyTeam(){
+        List<TeamDto> teamList = teamService.getAllTeam();
+        return ResponseEntity.ok(Objects.requireNonNullElse(teamList, "No team found."));
     }
 
     @PostMapping("/department/{departmentId}")

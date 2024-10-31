@@ -55,5 +55,9 @@ public interface RegisterFormService {
 
 	void createCeoForm(Long userId, Date fromDate, Date toDate) throws Exception;
 
+    void updateForm(RegisterFormDto registerFormDto, boolean hasApprover) throws Exception;
+    
+    List<FormListDto> getFormsByUserIdAndStatus(Long userId, String status);
+
 //	Map<String, Object> getDepartmentWithStatus(String status, long departmentId, long userId);
 }

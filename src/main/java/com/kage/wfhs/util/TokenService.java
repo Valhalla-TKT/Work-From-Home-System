@@ -17,19 +17,21 @@ import java.util.concurrent.ConcurrentHashMap;
 @Service
 public class TokenService {
 
-    private final Map<String, Integer> tokenStore = new ConcurrentHashMap<>();
+    private final Map<String, Long> tokenStore = new ConcurrentHashMap<>();
 
-    public String generateSecureToken(int formId) {
+    public String generateSecureToken(long formId) {
         String uuid = UUID.randomUUID().toString();
-        return Base64.encodeBase64URLSafeString(uuid.getBytes());
+        String formToken = Base64.encodeBase64URLSafeString(uuid.getBytes());
+        System.out.println("Generated formToken: " + formToken);
+        return formToken;
     }
 
-    public void storeTokenMapping(String formToken, int formId) {
+    public void storeTokenMapping(String formToken, long formId) {
         tokenStore.put(formToken, formId);
     }
 
-    public int getFormIdByToken(String formToken) {
-        Integer formId = tokenStore.get(formToken);
+    public Long getFormIdByToken(String formToken) {
+        Long formId = tokenStore.get(formToken);
         if (formId == null) {
             throw new IllegalArgumentException("Invalid or expired token");
         }

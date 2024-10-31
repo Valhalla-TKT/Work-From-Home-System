@@ -1,14 +1,16 @@
 <!DOCTYPE html>
 
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org"
+	  xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 
 <head>
 	<title>WorkHub</title>
 </head>
 
 <body>
-
 	<div id="wrap" th:fragment="content">
+
+
 		<div id="wrap-inner" class="flushed">
 			<div id="content" role="main">
 				<div class="container-medium">
@@ -26,8 +28,8 @@
 								</svg>
 
 								<label for="search-by-staff-name">
-									<input type="text" name="search-input" id="search-by-staff-name"
-										placeholder="Search by staff name..."
+									<input type="search" name="search-input" id="search-by-staff-name"
+										placeholder="Search by name, email, staff ID, or role..."
 										class="js-search-input input-with-outline-only search-input" />
 								</label>
 							</form>
@@ -36,16 +38,25 @@
 								class="display-flex align-center new-opportunities-container justify-space-between margin-b-40 margin-t-40">
 								<div class="add-function">
 									<div class="display-flex align-center">
-										<div class="new-opportunities-heading">All staffs</div>
+										<div class="new-opportunities-heading">Total staffs (<span id="total-count"></span>)</div>
+										<label for="users-per-page-select" style="margin-left: 10px;"></label><select id="users-per-page-select">
+											<option value="5">5</option>
+											<option value="10" selected>10</option>
+											<option value="20">20</option>
+											<option value="50">50</option>
+										</select>
+										<span style="margin-left: 10px;">(Note: You can adjust the number of results per page.)</span>
 									</div>
-									<a class="job-banner-cta js-job-cta btn2 add-data visible-hr-only" href="#">
-										<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
-											viewBox="0 0 24 24" fill="none" role="img" class="icon">
-											<path d="M12 5V19M5 12H19" stroke="currentColor" stroke-width="2"
-												stroke-linecap="round" stroke-linejoin="round"></path>
-										</svg>
-										Add Staff
-									</a>
+									<div class="display-flex">
+										<a class="job-banner-cta js-job-cta btn2" sec:authorize="hasAuthority('HR')" th:href="@{/admin/user/new}">
+											<i class="fa-solid fa-user-plus"></i>
+											Add
+										</a>
+										<a class="job-banner-cta js-job-cta btn2 add-data" sec:authorize="hasAuthority('HR')" href="#" style="margin-left: 20px;">
+											<i class="fa-solid fa-file-import"></i>
+											Import
+										</a>
+									</div>
 								</div>
 
 								<a class="form-btn outlined filters-button filters-toggle-btn" href="#">
@@ -59,137 +70,498 @@
 									<span class="label" title="Filters">Filters</span>
 								</a>
 							</div>
-							<div class="staff-card-container" id="staff-list"
-								style="margin-top: 50px; display: flex !important; flex-wrap:wrap !important; justify-content: space-between; align-items:center;">
+							<style>
+								.filters-container {
+									display: flex;
+									flex-wrap: wrap;
+									align-items: center;
+									flex-direction: row;
+									column-gap: 15px;
+									font-family: Arial, sans-serif;
+								}
 
+								.filter {
+									margin-right: 10px;
+								}
+
+								.table-container {
+									overflow-x: auto;
+								}
+								.table {
+									width: 100%;
+									border-collapse: collapse;
+									margin-top: 50px;
+									font-family: Arial, sans-serif;
+								}
+
+								.table th, .table td {
+									border: none;
+									padding: 10px 15px;
+									text-align: left;
+									width: 20%;
+									box-sizing: border-box;
+								}
+
+								.table thead th {
+									color: #333;
+									font-weight: bold;
+								}
+
+								.table tbody tr:nth-child(even) {
+									background-color: #fff;
+								}
+
+								.table tbody tr:nth-child(even) {
+									background-color: #fff;
+								}
+
+								.table tbody tr:hover {
+									background-color: #f2f2f2;
+								}
+
+								.table tbody tr th, .table tbody tr  td {
+									border-top: 1px solid rgb(201, 201, 201);
+									border-bottom: 1px solid rgb(201, 201, 201);
+								}
+
+								.pagination {
+									display: flex;
+									justify-content: end;
+									margin-top: 20px;
+								}
+
+								.page-numbers {
+									display: flex;
+									margin: 0 5px;
+									padding: 10px 15px;
+									color: #333;
+								}
+
+								.page-link {
+									padding: 5px 10px;
+								}
+
+
+							</style>
+							<div class="filters-container">
+								<div class="filter">
+									<label for="gender-filter">Gender</label>
+									<select id="gender-filter">
+										<option value="all">Filter by Gender</option>
+										<option value="male">Male</option>
+										<option value="female">Female</option>
+									</select>
+								</div>
+								<div class="filter">
+									<label for="division-filter">Division</label>
+									<select id="division-filter">
+										<option value="all">Filter by Division</option>
+										<!-- Add division options here -->
+									</select>
+								</div>
+								<div class="filter">
+									<label for="department-filter">Department</label>
+									<select id="department-filter">
+										<option value="all">Filter by Department</option>
+										<!-- Add department options here -->
+									</select>
+								</div>
+								<div class="filter">
+									<label for="team-filter">Team</label>
+									<select id="team-filter">
+										<option value="all">Filter by Team</option>
+										<!-- Add team options here -->
+									</select>
+								</div>
+							</div>
+
+							<div class="table-container">
+								<table id="staff-table" class="table">
+									<thead>
+										<tr>
+											<th>Name</th>
+											<th>Staff ID</th>
+											<th>Division</th>
+											<th>Department</th>
+											<th>Team</th>
+											<th sec:authorize="hasAuthority('HR')">Action</th>
+										</tr>
+									</thead>
+									<tbody id="staff-list">
+										<!-- staff data will be automatically injected -->
+									</tbody>
+								</table>
 							</div>
 							<div class="pagination">
 								<span class="page-numbers"></span>
 							</div>
 						</div>
-						<div class="search-filters-container">
-							<div class="search-filters job-board-filters-form js-filters" style="text-align: center;">
-								<span> <img alt="staff" th:src="@{/assets/icons/staff.png}" style="width: 50px">
-								</span> <br>
-								<span>Total Staffs : <span id="total-count"></span></span>
-							</div> <br>
-							<div class="search-filters job-board-filters-form js-filters">
-								<form class="job-filters js-job-search-form" id="options" action="#"
-									accept-charset="UTF-8" method="get">
-									<label for="keyword" class="hide" aria-hidden="true">Filter</label>
-									<input type="text" name="keyword" id="keyword" placeholder="Company, skill, tag…"
-										class="hide js-keyword input-with-outline-only" aria-hidden="true" />
-									<label for="gender-filter">Gender</label>
-									<select type="text" name="" id="gender-filter" placeholder="Enter Location…"
-										class="js-location input-with-outline-only"
-										style="width: 100%; margin-bottom: 10px;">
-										<option value="all">Select Staff Gender</option>
-										<option value="male">Male</option>
-										<option value="female">Female</option>
-									</select>
-									<label for="division-filter">Division</label>
-									<select type="text" name="" id="division-filter" placeholder="Enter Location…"
-										class="js-location input-with-outline-only"
-										style="width: 100%; margin-bottom: 10px;"></select>
-									<label for="department-filter">Department</label>
-									<select type="text" name="" id="department-filter" placeholder="Enter Location…"
-										class="js-location input-with-outline-only"
-										style="width: 100%; margin-bottom: 10px;"></select>
-									<label for="team-filter">Team</label>
-									<select type="text" name="" id="team-filter" placeholder="Enter Location…"
-										class="js-location input-with-outline-only"
-										style="width: 100%; margin-bottom: 10px;"></select>
-								</form>
-							</div>
-						</div>
+
 					</div>
 				</div>
 			</div>
 		</div>
 
+		<style>
+			.custum-file-upload {
+				height: 200px;
+				width: 300px;
+				display: flex;
+				flex-direction: column;
+				gap: 20px;
+				cursor: pointer;
+				align-items: center;
+				justify-content: center;
+				border: 2px dashed #cacaca;
+				background-color: rgba(255, 255, 255, 1);
+				padding: 1.5rem;
+				border-radius: 10px;
+				box-shadow: 0px 48px 35px -48px rgba(0,0,0,0.1);
+			}
+
+			.custum-file-upload .icon {
+				display: flex;
+				align-items: center;
+				justify-content: center;
+			}
+
+			.custum-file-upload .icon svg {
+				height: 80px;
+				fill: rgba(75, 85, 99, 1);
+			}
+
+			.custum-file-upload .text {
+				display: flex;
+				align-items: center;
+				justify-content: center;
+			}
+
+			.custum-file-upload .text span {
+				font-weight: 400;
+				color: rgba(75, 85, 99, 1);
+			}
+
+			.custum-file-upload input {
+				display: none;
+			}
+
+
+			#loading-overlay {
+				position: fixed;
+				top: 0;
+				left: 0;
+				width: 100%;
+				height: 100%;
+				background-color: rgba(0, 0, 0, 0.5);
+				display: flex;
+				align-items: center;
+				justify-content: center;
+				z-index: 9999;
+			}
+
+			#loading-spinner .container {
+				width: fit-content;
+				gap: 10px;
+			}
+
+			.folder {
+				width: min-content;
+				margin: auto;
+				animation: float 2s infinite linear;
+			}
+
+			.folder .top {
+				background-color: #FF8F56;
+				width: 60px;
+				height: 12px;
+				border-top-right-radius: 10px;
+			}
+
+			.folder .bottom {
+				background-color: #FFCE63;
+				width: 100px;
+				height: 70px;
+				box-shadow: 5px 5px 0 0 #283149;
+				border-top-right-radius: 8px;
+			}
+
+			.container .title {
+				font-size: 2em;
+				color: #000;
+				text-align: center;
+				margin-top: 15px;
+				z-index: 9999;
+			}
+
+			@keyframes float {
+				0% {
+					transform: translatey(0px);
+				}
+				50% {
+					transform: translatey(-25px);
+				}
+				100% {
+					transform: translatey(0px);
+				}
+			}
+
+		</style>
+
 		<div id="add-data-overlay">
-			<div id="add-data-modal" class="add-data-modal" style="width: 30%; height: 60%; overflow:auto;">
+			<div id="add-data-modal" class="add-data-modal">
 				<div class="add-data-modal-content">
-					<div class="form-title">
-						<span class="title">Add Staff</span>
-						<span class="close">&times;</span>
-					</div> <br>
-					<form id="addForm">
-						<label for="staff-id">Staff ID</label>
-						<input type="tel" id="staff-id" placeholder="xx-xxxxx"
-							required="required" step="any">
-						<label for="name">Staff Name</label>
-						<input type="text" id="name" placeholder="e.g. John" required="required">
-						<label for="email">Email</label>
-						<input type="email" id="email" placeholder="e.g. xxx@diracetechnology.com" required="required">
-						<label for="gender">Choose Gender</label>
-						<select id="gender" required="required" style="width: 100%" step="any">
-							<option selected="selected" disabled="disabled"> Select Gender</option>
-							<option value="M">Male</option>
-							<option value="F">Female</option>
-						</select>
-						<label for="position-name">His/Her Position</label>
-						<input type="text" id="position-name" placeholder="e.g. Software Engineer" required="required">
-						<label for="approveRoleSelectBox">Choose Permission</label>
-						<select id="approveRoleSelectBox" required="required" style="width: 100%" step="any"></select>
-						<div id="team-data">
-							<label for="team-name">Choose Team He/She Has To Join</label>
-							<select id="team-name" required="required" style="width: 100%" step="any"></select>
+					<span class="title">Import Excel</span>
+					<span class="close">&times;</span>
+					<form id="uploadForm" th:action="@{/api/importExcel}" method="post" enctype="multipart/form-data" onsubmit="return false;">
+						<label for="file">Please import the latest employee data.</label>
+						<label class="custum-file-upload" for="file">
+							<div class="icon">
+								<svg xmlns="http://www.w3.org/2000/svg" fill="" viewBox="0 0 24 24"><g stroke-width="0" id="SVGRepo_bgCarrier"></g><g stroke-linejoin="round" stroke-linecap="round" id="SVGRepo_tracerCarrier"></g><g id="SVGRepo_iconCarrier"> <path fill="" d="M10 1C9.73478 1 9.48043 1.10536 9.29289 1.29289L3.29289 7.29289C3.10536 7.48043 3 7.73478 3 8V20C3 21.6569 4.34315 23 6 23H7C7.55228 23 8 22.5523 8 22C8 21.4477 7.55228 21 7 21H6C5.44772 21 5 20.5523 5 20V9H10C10.5523 9 11 8.55228 11 8V3H18C18.5523 3 19 3.44772 19 4V9C19 9.55228 19.4477 10 20 10C20.5523 10 21 9.55228 21 9V4C21 2.34315 19.6569 1 18 1H10ZM9 7H6.41421L9 4.41421V7ZM14 15.5C14 14.1193 15.1193 13 16.5 13C17.8807 13 19 14.1193 19 15.5V16V17H20C21.1046 17 22 17.8954 22 19C22 20.1046 21.1046 21 20 21H13C11.8954 21 11 20.1046 11 19C11 17.8954 11.8954 17 13 17H14V16V15.5ZM16.5 11C14.142 11 12.2076 12.8136 12.0156 15.122C10.2825 15.5606 9 17.1305 9 19C9 21.2091 10.7909 23 13 23H20C22.2091 23 24 21.2091 24 19C24 17.1305 22.7175 15.5606 20.9844 15.122C20.7924 12.8136 18.858 11 16.5 11Z" clip-rule="evenodd" fill-rule="evenodd"></path> </g></svg>
+							</div>
+							<div class="text"> <span>Click to upload File</span>
+							</div>
+							<input type="file" name="file" id="file" accept=".xls, .xlsx, application/vnd.ms-excel, .csv, text/csv" />
+						</label>
+						<div id="selected-sheet-icon" class="selected-sheet-icon" style="display: none;">
+							<svg xmlns="http://www.w3.org/2000/svg" fill="#28a745" viewBox="0 0 24 24" height="24px"><path d="M5 2h9l6 6v14H5V2zm8 1.5V9h5.5L13 3.5zM5 20v-1.5h14V20H5zm5-7h4v4h1.5v-4H19v-1.5h-3.5v-4H14v4h-4v1.5zm0 2.5h3v3H12v-3H9v-1.5h3V14H9v-1.5zm0 1.5H8v2h2v-2z"/></svg>
+							<span id="selected-sheet-name" class="selected-sheet-name"></span>
 						</div>
-						<div id="department-data">
-							<label for="department-name">Choose department He/She Has To Join</label>
-							<select id="department-name" required="required" style="width: 100%" step="any"></select>
-						</div>
-						<div id="division-data">
-							<label for="division-name">Choose division He/She Has To Join</label>
-							<select id="division-name" required="required" style="width: 100%" step="any"></select>
-						</div>
-						<button class="btn2 add-data-btn" type="button" id="create-staff">Add Staff</button>
+						<input type="hidden" id="sheetNameInput" name="sheetName" />
+						<button class="btn2 add-data-btn" type="button" id="import" disabled>Import Now</button>
 					</form>
 				</div>
 			</div>
 		</div>
 
+		<style>
+			.errorMessageForUserEditForm {
+				margin-left: 30px;
+				font-size: 14px;
+				color: red;
+			}
+		</style>
 		<!-- Detail Modal -->
 		<div id="detail-data-overlay" style="display: none;">
-			<div id="detail-data-modal" class="add-data-modal" style="width: 30%; height: 60%; overflow:auto;">
+			<div id="detail-data-modal" class="add-data-modal" style="width: 40%; height: 60%; overflow:auto;">
 				<div class="add-data-modal-content">
 					<div class="form-title">
 						<span class="title">Staff Detail</span>
-						<span class="close">&times;</span>
+						<span class="close close-edit-modal">&times;</span>
 					</div> <br>
 					<form id="detail">
 						<label for="staff-id-detail">Staff ID</label>
-						<input type="tel" id="staff-id-detail" style="color: #0d0c22; background: #fff;" placeholder="xx-xxxxx"
-							   required="required" step="any" disabled>
+						<div class="input-container">
+							<input type="tel" id="staff-id-detail" placeholder="xx-xxxxx"
+								   required="required" step="any" disabled class="dark-and-white">
+							<span class="edit-icon"><i class="fa-solid fa-pencil"></i></span>
+						</div>
 						<label for="name-detail">Staff Name</label>
-						<input type="text" id="name-detail" placeholder="e.g. John" required="required" style="color: #0d0c22; background: #fff;" disabled>
+						<div class="input-container">
+							<input type="text" id="name-detail" placeholder="" disabled class="dark-and-white">
+							<span class="edit-icon"><i class="fa-solid fa-pencil"></i></span>
+						</div>
 						<label for="email-detail">Email</label>
-						<input type="email" id="email-detail" placeholder="e.g. xxx@gmail.com" required="required" style="color: #0d0c22; background: #fff;" disabled>
-						<label for="gender-detail">Choose Gender</label>
-						<input type="text" id="gender-detail" required="required" style="color: #0d0c22; background: #fff;" disabled>
-						<label for="position-name-detail">His/Her Position</label>
-						<input type="text" id="position-name-detail" placeholder="e.g. Software Engineer" required="required" style="color: #0d0c22; background: #fff;">
-						<label for="approveRoleSelectBoxDetail">Choose Permission</label>
-						<select id="approveRoleSelectBoxDetail" required="required" style="width: 100%" step="any"></select>
-						<div id="team-data-detail">
-							<label for="team-name-detail">Choose Team He/She Has To Join</label>
-							<select id="team-name-detail" required="required" style="width: 100%" step="any"></select>
+						<div class="input-container">
+							<input type="email" id="email-detail" placeholder="" disabled class="dark-and-white">
+							<span class="edit-icon"><i class="fa-solid fa-pencil"></i></span>
 						</div>
-						<div id="department-data-detail">
-							<label for="department-name-detail">Choose department He/She Has To Join</label>
-							<select id="department-name-detail" required="required" style="width: 100%" step="any"></select>
+						<label for="gender-detail">Gender</label>
+						<div class="input-container">
+							<input type="text" id="gender-detail" style="text-transform: capitalize;" disabled class="dark-and-white">
+							<span class="edit-icon"><i class="fa-solid fa-pencil"></i></span>
 						</div>
-						<div id="division-data-detail">
-							<label for="division-name-detail">Choose division He/She Has To Join</label>
-							<select id="division-name-detail" required="required" style="width: 100%" step="any"></select>
+						<label for="position-name-detail">Position</label>
+						<div class="input-container">
+							<input type="text" id="position-name-detail" placeholder="" disabled class="dark-and-white">
+							<span class="edit-icon"><i class="fa-solid fa-pencil"></i></span>
 						</div>
+						<label for="team-name-detail">Team<span id="teamNameErrorMessage" class="errorMessageForUserEditForm"></span></label>
+						<div class="input-container">
+							<select id="team-name-detail" class="dark-and-white w-100" disabled>
+							</select>
+							<span class="edit-icon"><i class="fa-solid fa-pencil"></i></span>
+						</div>
+						<label for="department-name-detail">Department<span id="departmentNameErrorMessage" class="errorMessageForUserEditForm"></span></label>
+						<div class="input-container">
+							<select id="department-name-detail" class="dark-and-white w-100" disabled>
+								<option value="" disabled selected>Select Department</option>
+							</select>
+							<span class="edit-icon"><i class="fa-solid fa-pencil"></i></span>
+						</div>
+						<label for="division-name-detail">Division<span id="divisionNameErrorMessage" class="errorMessageForUserEditForm"></span></label>
+						<div class="input-container">
+							<select id="division-name-detail" class="dark-and-white w-100" disabled>
+								<option value="" disabled selected>Select Division</option>
+							</select>
+							<span class="edit-icon"><i class="fa-solid fa-pencil"></i></span>
+						</div>
+
 						<input type="hidden" id="user-id-detail">
-						<button class="btn2 add-data-btn" type="button" id="update-approve-role">Save Changes</button>
+						<div style="display: flex; justify-content: end; flex-direction: row; column-gap: 20px;">
+							<button class="btn2" style="width:30%; margin-top: 20px;" type="button" id="update-user">Update</button>
+							<button class="btn2 add-data-btn" style="width:30%;" type="button" id="change-role">Change Role</button>
+						</div>
 					</form>
+
+					<style>
+						.dark-and-white {
+							color: #0d0c22 !important;
+							background: #fff !important;
+						}
+
+						.input-container {
+							position: relative;
+							display: flex;
+							align-items: center;
+						}
+
+						.input-container input {
+							width: 100%;
+							padding-right: 25px;
+							color: #0d0c22;
+							background: #fff;
+						}
+
+						.edit-icon {
+							position: absolute;
+							right: 15px;
+							cursor: pointer;
+							display: none;
+							font-size: 14px;
+						}
+
+						.input-container:hover .edit-icon {
+							display: inline;
+						}
+
+						#staff-id-detail + .edit-icon, #gender-detail  + .edit-icon{
+							display: none !important;
+						}
+					</style>
+
+					<script>
+						document.querySelectorAll('.input-container').forEach(container => {
+							const input = container.querySelector('input');
+							const select = container.querySelector('select');
+							const icon = container.querySelector('.edit-icon');
+
+							if (input && (input.id !== 'staff-id-detail' && input.id !== 'gender-detail')) {
+								// Event listeners for input fields
+								icon.addEventListener('click', () => {
+									input.disabled = false;
+									input.focus();
+								});
+
+								input.addEventListener('blur', () => {
+									input.disabled = true;
+									icon.style.display = 'none';
+								});
+
+								container.addEventListener('mouseover', () => {
+									if (input.disabled) {
+										icon.style.display = 'inline';
+									}
+								});
+
+								container.addEventListener('mouseout', () => {
+									if (input.disabled) {
+										icon.style.display = 'none';
+									}
+								});
+							} else if (select && (select.id === 'team-name-detail' || select.id === 'department-name-detail' || select.id === 'division-name-detail')) {
+								// Event listeners for select fields
+								icon.addEventListener('click', () => {
+									select.disabled = false;
+									select.focus();
+								});
+
+								select.addEventListener('focusout', () => {
+									select.disabled = true;
+									icon.style.display = 'none';
+								});
+
+								container.addEventListener('mouseover', () => {
+									if (select.disabled) {
+										icon.style.display = 'inline';
+									}
+								});
+
+								container.addEventListener('mouseout', () => {
+									if (select.disabled) {
+										icon.style.display = 'none';
+									}
+								});
+							}
+						});
+
+					</script>
 				</div>
 			</div>
 		</div>
+
+		<div id="loading-overlay" style="display: none;">
+			<div id="loading-spinner">
+				<div class="container">
+					<div class="folder">
+						<div class="top"></div>
+						<div class="bottom"></div>
+					</div>
+					<div class="title">importing excel please wait...</div>
+				</div>
+			</div>
+		</div>
+
+		<style>
+
+			#team-checkbox-container,
+			#department-checkbox-container,
+			#division-checkbox-container {
+				display: grid;
+				grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+				gap: 10px;
+			}
+			.form-check-label {
+				top:-20px;
+				position:relative;
+			}
+		</style>
+		<!-- Role Change Modal -->
+		<div id="role-change-overlay" style="display: none;">
+		    <div id="role-change-modal" class="add-data-modal" style="width: 60%; height: 60%; overflow:auto;">
+		        <div class="add-data-modal-content">
+		            <div class="form-title">
+		                <span class="title">Change Role</span>
+		                <span class="close close-role-modal" id="close-role-modal">&times;</span>
+		            </div> <br>
+		            <p style="color: #555; font-size: 16px;">
+	                    <strong>Note:</strong> Based on your selection, specific checkboxes will appear:
+	                    <br>- If you choose "Project Manager," the team selection will be displayed.
+	                    <br>- If you choose "Department Head," the department selection will be displayed.
+	                    <br>- If you choose "Division Head," the division selection will be displayed.
+	                </p>
+		            <form id="role-change-form">
+		            	<label for="name-detail-2">Staff Name</label>
+						<input type="text" id="name-detail-2" placeholder="e.g. John" required="required" style="color: #0d0c22; background: #fff;" disabled>
+		                <label for="approveRoleSelectBoxDetail">Choose Permission</label>
+		                <select id="approveRoleSelectBoxDetail" required="required" style="width: 100%;" step="any"></select>
+						<div id="team-detail-checkbox-container">
+							<label for="team-checkbox-container">Choose Team</label>
+							<div id="team-checkbox-container" style="width: 100%"></div>
+						</div>
+						<div id="department-detail-checkbox-container">
+							<label for="department-checkbox-container">Choose Department</label>
+							<div id="department-checkbox-container" style="width: 100%"></div>
+						</div>
+						<div id="division-detail-checkbox-container">
+							<label for="division-checkbox-container">Choose Division</label>
+							<div id="division-checkbox-container" style="width: 100%"></div>
+						</div>
+						<button class="btn2 add-data-btn" type="button" id="update-approve-role">Save Changes</button>
+		            </form>
+		        </div>
+		    </div>
+		</div>
+
 	</div>
 </body>
 

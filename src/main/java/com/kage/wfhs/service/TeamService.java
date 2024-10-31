@@ -22,6 +22,8 @@ public interface TeamService {
 	
 	List<TeamDto> getAllTeam();
 
+	List<TeamDto> getMyTeam();
+
 	void updateTeam(TeamDto teamDto);
 
 	void deleteTeamById(Long id);
@@ -31,4 +33,6 @@ public interface TeamService {
 	List<TeamDto> getTeamByDepartmentId(Long departmentId);
 
     List<TeamDto> getTeamByDivisionId(Long divisionId);
+
+    boolean isNameExist(String name);
 }

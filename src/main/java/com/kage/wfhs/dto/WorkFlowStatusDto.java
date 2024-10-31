@@ -10,7 +10,6 @@ package com.kage.wfhs.dto;
 import com.kage.wfhs.model.ApproveRole;
 import com.kage.wfhs.model.RegisterForm;
 import com.kage.wfhs.model.Status;
-import com.kage.wfhs.model.User;
 import lombok.*;
 
 import java.util.Date;
@@ -21,12 +20,13 @@ import java.util.Date;
 @AllArgsConstructor
 @ToString
 public class WorkFlowStatusDto {
-    private Long id, approverId, registerFormId;
+    private Long id, approverId, registerFormId, newApproverId;
     private boolean state;
     private Status status;
     private String reason;
     private Date approveDate;
-    private User approver;
+    private String approverName;
+//    private User approver;
     private RegisterForm registerForm;
     private ApproveRole approveRole;
 }
