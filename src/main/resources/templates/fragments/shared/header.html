@@ -108,6 +108,34 @@
             user-select: none; /* Standard */
         }
     </style>
+
+    <script>
+        document.addEventListener('keydown', function(event) {
+            if ((event.ctrlKey || event.metaKey) && event.key === 'r') {
+                event.preventDefault();
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'Action Disabled',
+                    text: 'Ctrl + R is disabled on this page.',
+                    confirmButtonText: 'Okay'
+                });
+            }
+        });
+
+        document.addEventListener('contextmenu', function(event) {
+            event.preventDefault();
+            Swal.fire({
+                icon: 'info',
+                title: 'Action Disabled',
+                text: 'Right-click is disabled on this page.',
+                confirmButtonText: 'Got it'
+            });
+        });
+
+        function refreshPage() {
+            location.reload();
+        }
+    </script>
 </head>
 <body>
 </body>

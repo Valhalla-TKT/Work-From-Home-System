@@ -108,7 +108,7 @@
 	background-color: black;
 	border-color: transparent;
 	transform: scale(0.8);
-	box-shadow: 0 0 20px #0d0c22;
+	box-shadow: 0 0 5px #0d0c22;
 }
 
 .user-form-container .radio-button__input:checked+.radio-button__label {
@@ -118,7 +118,7 @@
 .user-form-container .radio-button__label:hover .radio-button__custom {
 	transform: scale(1.2);
 	border-color: black;
-	box-shadow: 0 0 20px #0d0c22;
+	box-shadow: 0 0 5px #0d0c22;
 }
 
 .radio-os {
@@ -165,6 +165,21 @@
 
 /*  */
 
+.checkbox-dialog {
+	box-sizing: content-box;
+	padding: 20px;
+	background: white;
+	max-width: 600px;
+	max-height: 500px;
+	overflow-y: auto;
+	border-radius: 20px;
+	border: 0;
+	box-shadow: 0 5px 30px 0 rgba(0, 0, 0, 0.1);
+	-webkit-animation: fadeIn 1s ease both;
+	animation: fadeIn 1s ease both;
+}
+
+
 .outside-container {
 	display: flex;
 	flex-direction: row;
@@ -177,7 +192,7 @@
 }
 
 .checkbox-wrapper:hover .check {
-	stroke-dashoffset: 0;
+	/*stroke-dashoffset: 0;*/
 }
 
 .checkbox-wrapper {
@@ -335,4 +350,10 @@ to {
 .pledge-container {
 	width: 100%;
 	text-align: left;
+}
+
+.outside-container .text-checkbox span {
+	font-size: 14px;
+	color: #0D0C22;
+	font-weight: 400;
 }

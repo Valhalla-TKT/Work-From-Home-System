@@ -46,30 +46,30 @@ $(document).ready(function() {
 	var applied_date = new Date();
 	
 	// Working place myanmar
-	$('#work-in-others-button').hide();
-    $('#region-state-select').hide();
-    $('#city-township-select').hide();
+	// $('#work-in-others-button').hide();
+    // $('#region-state-select').hide();
+    // $('#city-township-select').hide();
 
 	applyFormPageUpdateProfile.show()
 
-    function toggleButtonAndSelect() {
-        $('#working-input-box').val('');        
-        $('#region-state-select').val('');
-        $('#city-township-select').val('');
-        workingPlaceInputBox.toggle()
-        $('#region-state-select').toggle();
-        $('#city-township-select').toggle();
-        $('#work-in-myanmar-button').toggle();
-        $('#work-in-others-button').toggle();
-    }
+    // function toggleButtonAndSelect() {
+    //     $('#working-input-box').val('');
+    //     $('#region-state-select').val('');
+    //     $('#city-township-select').val('');
+    //     workingPlaceInputBox.toggle()
+    //     $('#region-state-select').toggle();
+    //     $('#city-township-select').toggle();
+    //     $('#work-in-myanmar-button').toggle();
+    //     // $('#work-in-others-button').toggle();
+    // }
 
-    $('#work-in-myanmar-button').click(function(){
-        toggleButtonAndSelect();
-    });
+    // $('#work-in-myanmar-button').click(function(){
+    //     toggleButtonAndSelect();
+    // });
 
-    $('#work-in-others-button').click(function(){
-        toggleButtonAndSelect();
-    });
+    // $('#work-in-others-button').click(function(){
+    //     toggleButtonAndSelect();
+    // });
 
 
 
@@ -89,43 +89,41 @@ $(document).ready(function() {
 		}
 	});
 
-	$('#region-state-select').change(function() {
-		var selectedRegion = $(this).val();
-		var cities = [];
-
-		$.each(regions, function(index, region) {
-			if (region.regionState === selectedRegion) {
-				cities = region.cities;
-				return false;
-			}
-		});
-
-		cities.sort(function(a, b) {
-			return a.city.localeCompare(b.city);
-		});
-
-		$('#city-township-select').empty();
-		$('#city-township-select').append('<option value="" disabled selected>City/Township</option>');
-
-		var uniqueCities = new Set();
-
-		$.each(cities, function(index, city) {
-			if (!uniqueCities.has(city.city)) {
-				uniqueCities.add(city.city);
-				$('#city-township-select').append('<option value="' + city.city + '">' + city.city + '</option>');
-			}
-		});
-	});
-
-	var selectedRegion, selectedCity, workInMyanmar, workInMyanmarBoolean = false;
-    $('#city-township-select').change(function(){
-        selectedRegion = $('#region-state-select').val().trim();
-        selectedCity = $(this).val();
-		workInMyanmar = selectedRegion + ', ' + selectedCity;
-		console.log(workInMyanmar)
-		workInMyanmarBoolean = true;
-		console.log(workInMyanmarBoolean)
-    });    
+	// $('#region-state-select').change(function() {
+	// 	var selectedRegion = $(this).val();
+	// 	var cities = [];
+	//
+	// 	$.each(regions, function(index, region) {
+	// 		if (region.regionState === selectedRegion) {
+	// 			cities = region.cities;
+	// 			return false;
+	// 		}
+	// 	});
+	//
+	// 	cities.sort(function(a, b) {
+	// 		return a.city.localeCompare(b.city);
+	// 	});
+	//
+	// 	$('#city-township-select').empty();
+	// 	$('#city-township-select').append('<option value="" disabled selected>City/Township</option>');
+	//
+	// 	var uniqueCities = new Set();
+	//
+	// 	$.each(cities, function(index, city) {
+	// 		if (!uniqueCities.has(city.city)) {
+	// 			uniqueCities.add(city.city);
+	// 			$('#city-township-select').append('<option value="' + city.city + '">' + city.city + '</option>');
+	// 		}
+	// 	});
+	// });
+	//
+	// var selectedRegion, selectedCity, workInMyanmar, workInMyanmarBoolean = false;
+    // $('#city-township-select').change(function(){
+    //     selectedRegion = $('#region-state-select').val().trim();
+    //     selectedCity = $(this).val();
+	// 	workInMyanmar = selectedRegion + ', ' + selectedCity;
+	// 	workInMyanmarBoolean = true;
+    // });
 
 	
 	if(fromDateInputBox.length) {
@@ -566,25 +564,24 @@ $(document).ready(function() {
 			return;
 		}
 		positionName = positionInputBox.val();
-		console.log(applicantId, requesterId)
 
-		if (!workingPlaceInputBox.val() && !workInMyanmarBoolean) {
+		if (!workingPlaceInputBox.val()) {
 			Swal.fire({
-				title: "Error!",
+				title: "Warning!",
 				text: "Please enter a working place.",
-				icon: "error",
+				icon: "warning",
 				confirmButtonText: "OK"
 			});
 			return;
 		}
 
-		working_place = workInMyanmarBoolean ? workInMyanmar : workingPlaceInputBox.val();
+		working_place = workingPlaceInputBox.val();
 
 		if (workFromHomePercent <= 0.0 || workFromHomePercent > 100) {
 			Swal.fire({
-				title: "Error!",
+				title: "Warning!",
 				text: "Please choose a valid work from home percentage: 25%, 50%, 75%, or 100%.",
-				icon: "error",
+				icon: "warning",
 				confirmButtonText: "OK"
 			});
 			return;
@@ -593,9 +590,9 @@ $(document).ready(function() {
 
 		if (!reasonInputBox.val()) {
 			Swal.fire({
-				title: "Error!",
+				title: "Warning!",
 				text: "Please enter a request reason.",
-				icon: "error",
+				icon: "warning",
 				confirmButtonText: "OK"
 			});
 			return;
@@ -604,9 +601,9 @@ $(document).ready(function() {
 
 		if (!fromDateInputBox.val()) {
 			Swal.fire({
-				title: "Error!",
+				title: "Warning!",
 				text: "Please select a from date.",
-				icon: "error",
+				icon: "warning",
 				confirmButtonText: "OK"
 			});
 			return;
@@ -615,9 +612,9 @@ $(document).ready(function() {
 
 		if (!toDateInputBox.val()) {
 			Swal.fire({
-				title: "Error!",
+				title: "Warning!",
 				text: "Please select a to date.",
-				icon: "error",
+				icon: "warning",
 				confirmButtonText: "OK"
 			});
 			return;
@@ -631,9 +628,9 @@ $(document).ready(function() {
 		if(os_type === 'Window') {
 			if (!windowOperationSystemInputBox[0].files.length) {
 				Swal.fire({
-					title: "Error!",
+					title: "Warning!",
 					text: "Please upload the photo of Windows Operation System.",
-					icon: "error",
+					icon: "warning",
 					confirmButtonText: "OK"
 				});
 				return;
@@ -642,9 +639,9 @@ $(document).ready(function() {
 
 			if (!windowSecurityPatchInputBox[0].files.length) {
 				Swal.fire({
-					title: "Error!",
+					title: "Warning!",
 					text: "Please upload the photo of Windows Security Patch.",
-					icon: "error",
+					icon: "warning",
 					confirmButtonText: "OK"
 				});
 				return;
@@ -653,9 +650,9 @@ $(document).ready(function() {
 
 			if (!windowAntivirusSoftwareInputBox[0].files.length) {
 				Swal.fire({
-					title: "Error!",
+					title: "Warning!",
 					text: "Please upload the photo of Antivirus Software.",
-					icon: "error",
+					icon: "warning",
 					confirmButtonText: "OK"
 				});
 				return;
@@ -665,9 +662,9 @@ $(document).ready(function() {
 
 			if (!windowAntivirusPatternInputBox[0].files.length) {
 				Swal.fire({
-					title: "Error!",
+					title: "Warning!",
 					text: "Please upload the photo of Antivirus Pattern.",
-					icon: "error",
+					icon: "warning",
 					confirmButtonText: "OK"
 				});
 				return;
@@ -676,9 +673,9 @@ $(document).ready(function() {
 
 			if (!windowAntivirusFullScanInputBox[0].files.length) {
 				Swal.fire({
-					title: "Error!",
+					title: "Warning!",
 					text: "Please upload the photo of Antivirus Full Scan.",
-					icon: "error",
+					icon: "warning",
 					confirmButtonText: "OK"
 				});
 				return;
@@ -691,9 +688,9 @@ $(document).ready(function() {
 		if(os_type === 'Mac') {
 			if (!macOperationSystemInputBox[0].files.length) {
 				Swal.fire({
-					title: "Error!",
+					title: "Warning!",
 					text: "Please upload the photo of Operation System.",
-					icon: "error",
+					icon: "warning",
 					confirmButtonText: "OK"
 				});
 				return;
@@ -703,9 +700,9 @@ $(document).ready(function() {
 
 			if (!macSecurityPatchInputBox[0].files.length) {
 				Swal.fire({
-					title: "Error!",
+					title: "Warning!",
 					text: "Please upload the photo of Security Patch.",
-					icon: "error",
+					icon: "warning",
 					confirmButtonText: "OK"
 				});
 				return;
@@ -715,9 +712,9 @@ $(document).ready(function() {
 
 			if (!macAntivirusSoftwareInputBox[0].files.length) {
 				Swal.fire({
-					title: "Error!",
+					title: "Warning!",
 					text: "Please upload the photo of Antivirus Software.",
-					icon: "error",
+					icon: "warning",
 					confirmButtonText: "OK"
 				});
 				return;
@@ -729,9 +726,9 @@ $(document).ready(function() {
 		if(os_type === 'Linux') {
 			if (!linuxOperationSystemInputBox[0].files.length) {
 				Swal.fire({
-					title: "Error!",
+					title: "Warning!",
 					text: "Please upload the photo of Operating System.",
-					icon: "error",
+					icon: "warning",
 					confirmButtonText: "OK"
 				});
 				return;
@@ -740,9 +737,9 @@ $(document).ready(function() {
 
 			if (!linuxSecurityPatchInputBox[0].files.length) {
 				Swal.fire({
-					title: "Error!",
+					title: "Warning!",
 					text: "Please upload the photo of Security Patch.",
-					icon: "error",
+					icon: "warning",
 					confirmButtonText: "OK"
 				});
 				return;
@@ -751,9 +748,9 @@ $(document).ready(function() {
 
 			if (!linuxAntivirusSoftwareInputBox[0].files.length) {
 				Swal.fire({
-					title: "Error!",
+					title: "Warning!",
 					text: "Please upload the photo of Antivirus Software.",
-					icon: "error",
+					icon: "warning",
 					confirmButtonText: "OK"
 				});
 				return;
@@ -764,9 +761,9 @@ $(document).ready(function() {
 
 		if (!signedDateInputBox.val()) {
 			Swal.fire({
-				title: "Error!",
+				title: "Warning!",
 				text: "Please select a signed date.",
-				icon: "error",
+				icon: "warning",
 				confirmButtonText: "OK"
 			});
 			return;
@@ -776,9 +773,9 @@ $(document).ready(function() {
 
 		if (!signatureInputBox[0].files.length) {
 			Swal.fire({
-				title: "Error!",
+				title: "Warning!",
 				text: "Please upload the photo of Signature.",
-				icon: "error",
+				icon: "warning",
 				confirmButtonText: "OK"
 			});
 			return;
