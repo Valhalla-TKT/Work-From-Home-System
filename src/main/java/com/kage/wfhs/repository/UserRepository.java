@@ -30,7 +30,7 @@ public interface UserRepository extends JpaRepository<User,Long> {
                                         """)
     String findLastStaffIdByGender(@Param("gender") String gender);
 
-    @Query(value = "SELECT * FROM User WHERE staff_id = :staffId", nativeQuery = true)
+    @Query(value = "SELECT * FROM user WHERE staff_id = :staffId", nativeQuery = true)
     User findByStaffId(@Param("staffId") String staffId);
     User findByEmail(String email);
     Optional<User> findById(Long id);
