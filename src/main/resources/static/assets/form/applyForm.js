@@ -34,6 +34,7 @@ $(document).ready(function() {
     
     const checkBoxModalDialog = $("#checkbox-dialog");
 	const applyFormPageUpdateProfile = $("#apply-form-page-update-profile")
+	applyFormPageUpdateProfile.show()
     
     // Generate from date to date
 	var currentDate = new Date();
@@ -43,14 +44,156 @@ $(document).ready(function() {
 	// Data to send Backend
 	var applicantId, requesterId, positionName, working_place, request_reason, from_date, to_date, os_type, operatingSystem, securityPatch, antivirusSoftware, antivirusPattern, antivirusFullScan, signed_date, signature, approverId;
 	var request_percent = 0.0;
-	var applied_date = new Date();
+
+	// Add for ver 2.2 (Manual ver 1.8 - including WFA)
+	const checkListForWFASection = $("#check-list-for-wfa-section")
+	checkListForWFASection.hide();
+
+	const toggleCheckListForWFASection = $("#toggle-check-list-for-wfa-section")
+	let isWFAUser = false;
+	toggleCheckListForWFASection.click(function(event) {
+		event.preventDefault();
+
+		const hasNonEmptyInput = $("#check-list-for-wfa-section input").filter(function() {
+			if ($(this).attr("type") === "checkbox") {
+				return $(this).is(":checked");
+			} else {
+				return $(this).val().trim() !== "";
+			}
+		}).length > 0;
+
+		if (isWFAUser && hasNonEmptyInput) {
+			Swal.fire({
+				title: 'Are you sure you want to proceed?',
+				text: "This action will reset all data in the WFA checklist. Do you want to continue?",
+				icon: 'question',
+				showCancelButton: true,
+				confirmButtonColor: '#0d0c22',
+				cancelButtonColor: '#fff',
+				confirmButtonText: 'Continue',
+				cancelButtonText: 'Cancel'
+			}).then((result) => {
+				if (result.isConfirmed) {
+					isWFAUser = false;
+					toggleAndClearWFATextBoxData();
+				}
+			});
+		} else {
+			isWFAUser = !isWFAUser;
+			toggleAndClearWFATextBoxData();
+		}
+	});
+
+	function toggleAndClearWFATextBoxData() {
+		console.log("isWFAUser", isWFAUser)
+		checkListForWFASection.toggle();
+		$("#check-list-for-wfa-section input").each(function() {
+			if ($(this).attr("type") === "checkbox") {
+				$(this).prop("checked", false);
+			} else {
+				$(this).val("");
+			}
+		});
+	}
+
+	const applicantAppliedCheckbox1 = $("#applicant-applied-checkbox-1")
+	const applicantAppliedCheckbox2 = $("#applicant-applied-checkbox-2")
+	let isApplicantAppliedCheckbox1, isApplicantAppliedCheckbox2 = false;
+
+	if(applicantAppliedCheckbox1.length) {
+		applicantAppliedCheckbox1.on("change", function() {
+			isApplicantAppliedCheckbox1 = $(this).is(":checked");
+			console.log("Checkbox checked:", isApplicantAppliedCheckbox1);
+		});
+	}
+
+	if(applicantAppliedCheckbox2.length) {
+		applicantAppliedCheckbox2.on("change", function() {
+			isApplicantAppliedCheckbox2 = $(this).is(":checked");
+			console.log("Checkbox checked:", isApplicantAppliedCheckbox2);
+		});
+	}
+
+	let pmApprovedDateWFA, deptHeadApprovedDateWFA, divisionHeadApprovedDateWFA, applicantAppliedDate1WFA, applicantAppliedDate2WFA;
+	const dateInputByPM = $("#date-input-by-pm")
+	const dateInputByDeptHead = $("#date-input-by-dept-head")
+	const dateInputByDivisionHead = $("#date-input-by-division-head")
+	const dateInputByApplicant1 = $("#date-input-by-applicant-1")
+	const dateInputByApplicant2 = $("#date-input-by-applicant-2")
+	if (dateInputByPM.length) {
+		dateInputByPM.change(function() {
+			pmApprovedDateWFA = $(this).val();
+		});
+	}
+
+	if (dateInputByDeptHead.length) {
+		dateInputByDeptHead.change(function() {
+			deptHeadApprovedDateWFA = $(this).val();
+		});
+	}
+
+	if (dateInputByDivisionHead.length) {
+		dateInputByDivisionHead.change(function() {
+			divisionHeadApprovedDateWFA = $(this).val();
+		});
+	}
+
+	if (dateInputByApplicant1.length) {
+		dateInputByApplicant1.change(function() {
+			applicantAppliedDate1WFA = $(this).val();
+		});
+	}
+
+	if (dateInputByApplicant2.length > 0) {
+		dateInputByApplicant2.change(function() {
+			applicantAppliedDate2WFA = $(this).val();
+		});
+	}
+
+	let pmApprovedNameWFA, deptHeadApprovedNameWFA, divisionHeadApprovedNameWFA, applicantName1WFA, applicantName2WFA;
+
+	const nameInputByPM = $("#name-input-by-pm");
+	const nameInputByDeptHead = $("#name-input-by-dept-head");
+	const nameInputByDivisionHead = $("#name-input-by-division-head");
+	const nameInputByApplicant1 = $("#name-input-by-applicant-1");
+	const nameInputByApplicant2 = $("#name-input-by-applicant-2");
+
+	if (nameInputByPM.length) {
+		nameInputByPM.on("input", function() {
+			pmApprovedNameWFA = $(this).val();
+		});
+	}
+
+	if (nameInputByDeptHead.length) {
+		nameInputByDeptHead.on("input", function() {
+			deptHeadApprovedNameWFA = $(this).val();
+		});
+	}
+
+	if (nameInputByDivisionHead.length) {
+		nameInputByDivisionHead.on("input", function() {
+			divisionHeadApprovedNameWFA = $(this).val();
+		});
+	}
+
+	if (nameInputByApplicant1.length) {
+		nameInputByApplicant1.on("input", function() {
+			applicantName1WFA = $(this).val();
+		});
+	}
+
+	if (nameInputByApplicant2.length) {
+		nameInputByApplicant2.on("input", function() {
+			applicantName2WFA = $(this).val();
+		});
+	}
+
+	// var applied_date = new Date();
 	
 	// Working place myanmar
 	// $('#work-in-others-button').hide();
     // $('#region-state-select').hide();
     // $('#city-township-select').hide();
-
-	applyFormPageUpdateProfile.show()
 
     // function toggleButtonAndSelect() {
     //     $('#working-input-box').val('');
@@ -134,14 +277,10 @@ $(document).ready(function() {
 			var chosenDate = $(this).val();
 			console.log(chosenDate);
 		});
-		
 		fromDateInputBox.on('blur', function() {
 			$(this).removeAttr('readonly');
 		});
 	}
-	
-	
-	
 	
 	if(toDateInputBox.length) {
 		toDateInputBox.dateDropper({
@@ -150,16 +289,12 @@ $(document).ready(function() {
 		toDateInputBox.on('change', function() {
 			var chosenDate = $(this).val();
 			console.log(chosenDate);
-		});toDateInputBox.on('blur', function() {
+		});
+		toDateInputBox.on('blur', function() {
 		  $(this).removeAttr('readonly');
 		});
 	}
-	
-	
-	
-	
-		
-	
+
 	if(signedDateInputBox.length) {
 		signedDateInputBox.dateDropper({
 			format: 'd-m-Y'
@@ -173,10 +308,8 @@ $(document).ready(function() {
 		  $(this).removeAttr('readonly');
 		});	
 	}
-	
-	
-    
-    const otherRequestData = {
+
+	const otherRequestData = {
         name: '',
         staffId: '00-00000',
         position: 'Eg. Software Engineer',
@@ -390,7 +523,7 @@ $(document).ready(function() {
 		$("#current-step-2").show();
 		$("#current-step-3").hide();
 		if(checkBoxModalDialog.length) {
-			if ($("input[type='checkbox']:not(:checked)").length === 0) {
+			if (checkBoxModalDialog.find("input[type='checkbox']:not(:checked)").length === 0) {
 				hideCheckBoxDialogModal();
 			} else {
 				showCheckBoxDialogModal();
@@ -409,6 +542,14 @@ $(document).ready(function() {
 		$("#current-step-1").hide();
 		$("#current-step-2").hide();
 		$("#current-step-3").show();
+
+		// Add for ver 2.2 (Manual ver 1.8 - including WFA)
+		if (isWFAUser && nameInputByApplicant1.val()) {
+			checkListForWFASection.show();
+		} else {
+			isWFAUser = false
+			checkListForWFASection.hide();
+		}
 	}
 
 	function showPreviousDiv() {
@@ -435,16 +576,18 @@ $(document).ready(function() {
 		$("#current-step-1").hide();
 		$("#current-step-2").show();
 		$("#current-step-3").hide();
+
+		checkListForWFASection.hide();
 	}
 	
 	$("#checkbox-dialog-form").submit(function(event) {
-            event.preventDefault();
-            if ($("input[type='checkbox']:not(:checked)").length === 0) {
-                hideCheckBoxDialogModal();
-            } else {
-                alert("Please check all checkboxes before submitting.");
-            }
-      });
+		event.preventDefault();
+		if (checkBoxModalDialog.find("input[type='checkbox']:not(:checked)").length === 0) {
+			hideCheckBoxDialogModal();
+		} else {
+			alert("Please check all checkboxes before submitting.");
+		}
+  	});
 
 	$('#hide-checkbox-dialog-form').click(function (event) {
 		event.preventDefault();
@@ -782,6 +925,55 @@ $(document).ready(function() {
 		}
 		signature = signatureInputBox.prop('files')[0];
 
+		// Add for ver 2.2 (Manual ver 1.8 - including WFA)
+		if (isWFAUser) {
+			if (!nameInputByApplicant1.val() || !nameInputByApplicant2.val()) {
+				Swal.fire({
+					title: "Warning!",
+					text: "You must fill all name input boxes for WFA.",
+					icon: "warning",
+					confirmButtonText: "OK"
+				});
+				return;
+			} else if (applicantName1WFA !== applicantName2WFA) {
+				Swal.fire({
+					title: "Warning!",
+					text: "Please fill the same name in Check List WFA",
+					icon: "warning",
+					confirmButtonText: "OK"
+				});
+				return;
+			}
+
+			if (!isApplicantAppliedCheckbox1 || !isApplicantAppliedCheckbox2) {
+				Swal.fire({
+					title: "Warning!",
+					text: "Please check all checkboxes below 'Checked by Applicant' in Check List WFA",
+					icon: "warning",
+					confirmButtonText: "OK"
+				});
+				return;
+			}
+
+			if (!dateInputByApplicant1.val() || !dateInputByApplicant2.val()) {
+				Swal.fire({
+					title: "Warning!",
+					text: "You must fill all Signed Date input boxes for WFA.",
+					icon: "warning",
+					confirmButtonText: "OK"
+				});
+				return;
+			} else if (applicantAppliedDate1WFA !== applicantAppliedDate2WFA) {
+				Swal.fire({
+					title: "Warning!",
+					text: "Please fill the same Signed Date in Check List WFA",
+					icon: "warning",
+					confirmButtonText: "OK"
+				});
+				return;
+			}
+		}
+
 		event.preventDefault();
 
 		await Swal.fire({
@@ -850,7 +1042,19 @@ $(document).ready(function() {
 							toDate: to_date,
 							signedDate: signed_date,
 							osType: os_type,
-							approverId: approverId
+							approverId: approverId,
+							// Add for ver 2.2 (Manual ver 1.8 - including WFA)
+							wfaUserStatus: isWFAUser
+						};
+
+						// Add for ver 2.2 (Manual ver 1.8 - including WFA)
+						const workFromAbroadInformationData = {
+							applicantId: applicantId,
+							applicantAppliedDate: applicantAppliedDate2WFA,
+							applicantAppliedCheckbox1: isApplicantAppliedCheckbox1,
+							applicantAppliedCheckbox2: isApplicantAppliedCheckbox2,
+							//applicantSignature: applicantSignature,
+							//applicantSignedDate: applicantSignedDate
 						};
 
 						formData.append("data", new Blob([JSON.stringify(data)], { type: "application/json" }));
@@ -860,8 +1064,10 @@ $(document).ready(function() {
 						formData.append("antivirusPattern", antivirusPattern);
 						formData.append("antivirusFullScan", antivirusFullScan);
 						formData.append("signature", signature);
+						// Add for ver 2.2 (Manual ver 1.8 - including WFA)
+						formData.append("workFromAbroadInformationData", new Blob([JSON.stringify(workFromAbroadInformationData)], { type: "application/json" }));
 
-
+						console.log(workFromAbroadInformationData)
 						$.ajax({
 							url: `${getContextPath()}/api/registerform/create`,
 							type: 'POST',
@@ -902,7 +1108,6 @@ $(document).ready(function() {
 
 	async function getAllApprover(approveRoleId, name) {
 		const response = await fetchApproversByApproveRoleId(approveRoleId);
-		console.log(response)
 		var selectBox = $('#approver-name');
 		selectBox.empty();
 		selectBox.append('<option value="" selected>Choose Approver Name</option>');
@@ -1029,39 +1234,6 @@ $(document).ready(function() {
 			})
 	}
 
-
-	// async function getAllTeam() {
-	// 	let response;
-	//
-	// 	try {
-	// 		if (isDivisionHead) {
-	// 			// Fetch teams based on the division ID if the user is a division head
-	// 			response = await fetchTeamsByDivisionId(currentUser.division.id);
-	// 		} else if (isDepartmentHead) {
-	// 			// Fetch teams based on the department ID if the user is a department head
-	// 			response = await fetchTeamsByDepartmentId(currentUser.department.id);
-	// 		} else {
-	// 			response = await fetchTeams();
-	// 		}
-	//
-	// 		// Populate the select box with the retrieved data
-	// 		var selectBox = $('#team-name');
-	// 		selectBox.empty();
-	// 		selectBox.append('<option value="all" selected>Choose Name</option>');
-	// 		response.forEach(team => {
-	// 			var option = $('<option>', {
-	// 				value: team.id,
-	// 				text: team.name,
-	// 			});
-	// 			selectBox.append(option);
-	// 		});
-	//
-	// 	} catch (error) {
-	// 		console.error('Error:', error);
-	// 	}
-	// }
-
-
 	$('#team-name').on('change', async function() {
 		await getAllTeamMember();
 	});
@@ -1078,7 +1250,6 @@ $(document).ready(function() {
 		} else if (selectedDivisionId && selectedDivisionId !== "all") {
 			response = await getUsersByDivisionId(selectedDivisionId);
 		} else {
-			console.log('hi')
 			response = await fetchUsers();
 		}
 		if (response) {

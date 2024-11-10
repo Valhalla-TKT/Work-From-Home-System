@@ -3548,10 +3548,17 @@ input:checked::after {
 input[type='checkbox']:checked:after {
     content: '';
     position: absolute;
+    left: 3.5px;
+    top: 3px;
     width: 12px;
     height: 12px;
     background-image: url(/wfhs/assets/icons/check-white-4280ab4c53ca62fad039199f10c3964076dae155a1335788ec62f4b9dd5a5f4f.svg);
     background-repeat: no-repeat
+}
+
+input[type='checkbox']:checked {
+    background: black;
+    border-color: black;
 }
 
 input[type='checkbox']:disabled {
