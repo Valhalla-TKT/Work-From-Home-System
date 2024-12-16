@@ -25,6 +25,7 @@ public class WorkFromAbroadInformationDto {
     private String divisionHeadName;
     private Date divisionHeadApprovedDate;
     private Long applicantId;
+    private String applicantName;
     private Date applicantAppliedDate;
     private boolean isApplicantAppliedCheckbox1;
     private boolean isApplicantAppliedCheckbox2;

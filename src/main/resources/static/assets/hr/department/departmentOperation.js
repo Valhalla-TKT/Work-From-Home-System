@@ -141,9 +141,7 @@ function getAllDepartment() {
 			                              <img src="${getContextPath()}/assets/icons/DAT Logo.png"  alt="DAT Logo"/>
 			                          </div>
 			                          <div class="job-title-company-container">
-			                              <div class="job-role">
-			                                  <span class="job-board-job-company">${department.code}</span>
-			                              </div>
+			                              
 			                              <h4 class="job-title job-board-job-title">
 			                              	${department.name}
 			                              </h4>

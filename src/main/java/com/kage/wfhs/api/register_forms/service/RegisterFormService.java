@@ -13,6 +13,7 @@ import java.util.Map;
 
 import com.kage.wfhs.api.register_forms.dto.FormHistoryDto;
 import com.kage.wfhs.api.register_forms.dto.FormListDto;
+import com.kage.wfhs.api.register_forms.model.RegisterForm;
 import org.springframework.stereotype.Service;
 
 import com.kage.wfhs.api.register_forms.dto.RegisterFormDto;
@@ -21,7 +22,7 @@ import jakarta.servlet.http.HttpServletResponse;
 
 @Service
 public interface RegisterFormService {
-	void createRegisterForm(RegisterFormDto registerFormDto) throws Exception;
+	RegisterForm createRegisterForm(RegisterFormDto registerFormDto) throws Exception;
 
 	RegisterFormDto getRegisterForm(Long id);
 

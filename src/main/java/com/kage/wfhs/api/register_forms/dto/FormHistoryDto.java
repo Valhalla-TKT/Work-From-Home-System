@@ -11,4 +11,5 @@ public class FormHistoryDto {
     private Long formId;
     private String signedDate;
     private String status;
+    private boolean isWFAUser;
 }

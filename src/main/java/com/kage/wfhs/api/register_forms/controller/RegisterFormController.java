@@ -11,6 +11,7 @@ import com.kage.wfhs.api.captures.dto.CaptureDto;
 import com.kage.wfhs.api.captures.service.CaptureService;
 import com.kage.wfhs.api.excel.service.ExcelService;
 import com.kage.wfhs.api.register_forms.dto.RegisterFormDto;
+import com.kage.wfhs.api.register_forms.service.FormApplyService;
 import com.kage.wfhs.api.register_forms.service.RegisterFormService;
 import com.kage.wfhs.api.users.dto.UserDto;
 import com.kage.wfhs.api.users.service.UserService;
@@ -74,6 +75,8 @@ public class RegisterFormController {
 
     private final WorkFromAbroadInformationService workFromAbroadInformationService;
 
+    private final FormApplyService formApplyService;
+
     private static final Logger logger = LoggerFactory.getLogger(RegisterFormController.class);
 
     @PostMapping("/create")
@@ -89,20 +92,31 @@ public class RegisterFormController {
             @RequestPart("workFromAbroadInformationData") WorkFromAbroadInformationApplyDto workFromAbroadInformationApplyDto
             ) throws Exception {
 
-        registerFormDto.setSignedDate(registerFormDto.getSignedDate());
-        registerFormDto.setOperationSystemInput(operationSystem);
-        registerFormDto.setSecurityPatchInput(securityPatch);
-        registerFormDto.setAntivirusSoftwareInput(antivirusSoftware);
-        registerFormDto.setAntivirusPatternInput(antivirusPattern);
-        registerFormDto.setAntivirusFullScanInput(antivirusFullScan);
-        registerFormDto.setSignatureInput(signature);
-        registerFormService.createRegisterForm(registerFormDto);
-        workFlowStatusService.createWorkFlowStatus(registerFormDto.getApplicantId(), registerFormService.getFormLastId(), registerFormDto.getApproverId());
+//        registerFormDto.setSignedDate(registerFormDto.getSignedDate());
+//        registerFormDto.setOperationSystemInput(operationSystem);
+//        registerFormDto.setSecurityPatchInput(securityPatch);
+//        registerFormDto.setAntivirusSoftwareInput(antivirusSoftware);
+//        registerFormDto.setAntivirusPatternInput(antivirusPattern);
+//        registerFormDto.setAntivirusFullScanInput(antivirusFullScan);
+//        registerFormDto.setSignatureInput(signature);
+//        registerFormService.createRegisterForm(registerFormDto);
+//        workFlowStatusService.createWorkFlowStatus(registerFormDto.getApplicantId(), registerFormService.getFormLastId(), registerFormDto.getApproverId());
+//
+//        // Add for ver 2.2 (Manual ver 1.8 - including WFA)
+//        if(registerFormDto.isWfaUserStatus())
+//            workFromAbroadInformationService.addWorkFromAbroadInformation(registerFormService.getFormLastId(), workFromAbroadInformationApplyDto);
+//        return ResponseEntity.ok("Request Form Successful....");
 
-        // Add for ver 2.2 (Manual ver 1.8 - including WFA)
-        if(registerFormDto.isWfaUserStatus())
-            workFromAbroadInformationService.addWorkFromAbroadInformation(registerFormService.getFormLastId(), workFromAbroadInformationApplyDto);
-        return ResponseEntity.ok("Request Form Successful....");
+        return formApplyService.applyForm(
+                registerFormDto,
+                operationSystem,
+                securityPatch,
+                antivirusSoftware,
+                antivirusPattern,
+                antivirusFullScan,
+                signature,
+                workFromAbroadInformationApplyDto
+        );
     }
 
     @PostMapping("/getFormById")

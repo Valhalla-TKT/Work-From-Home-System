@@ -69,7 +69,7 @@ public class RegisterFormServiceImplement implements RegisterFormService {
     private final ApproveRoleService approveRoleService;
 
     @Override
-    public void createRegisterForm(RegisterFormDto registerFormDto) throws Exception {
+    public RegisterForm createRegisterForm(RegisterFormDto registerFormDto) throws Exception {
         User applicant = EntityUtil.getEntityById(userRepo, registerFormDto.getApplicantId());
         if (applicant.getPositionName() == null || applicant.getPositionName().isEmpty()) {
             applicant.setPositionName(registerFormDto.getPositionName());
@@ -82,7 +82,7 @@ public class RegisterFormServiceImplement implements RegisterFormService {
         registerForm.setSignature(ImageUtil.convertImageToBase64(registerFormDto.getSignatureInput()));
         registerForm.setStatus(Status.PENDING);
         registerForm.setWfaUser(registerFormDto.isWfaUserStatus());
-        registerFormRepo.save(registerForm);
+        RegisterForm savedRegisterForm = registerFormRepo.save(registerForm);
         //notificationService.savePendingNotification(registerForm.getStatus().name());
 
         Long formId = registerFormRepo.findLastId();
@@ -90,6 +90,7 @@ public class RegisterFormServiceImplement implements RegisterFormService {
         checkOsTypeAndSave(registerFormDto, formId, capture);
         CurrentLoginUserDto formApplier = DtoUtil.map(applicant, CurrentLoginUserDto.class, modelMapper);
         logService.logUserFormApply(formApplier);
+        return savedRegisterForm;
     }
 
     private void checkOsTypeAndSave(RegisterFormDto registerFormDto, Long formId, Capture capture) {
@@ -368,6 +369,7 @@ public class RegisterFormServiceImplement implements RegisterFormService {
                         .toLocalDate();
                 formHistoryDto.setSignedDate(signedDate.format(formatter));
                 formHistoryDto.setStatus(registerForm.getStatus().name());
+                formHistoryDto.setWFAUser(registerForm.isWfaUser());
             }
             formList.add(formHistoryDto);
         }

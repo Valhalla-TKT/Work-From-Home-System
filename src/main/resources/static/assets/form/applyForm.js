@@ -610,30 +610,30 @@ $(document).ready(function() {
 	        formData.append('from_date', formatDate(fromDate));
 	        formData.append('to_date', formatDate(toDate));
 	        $.ajax({
-		    url: `${getContextPath()}/api/registerform/createCeoForm`,
-		    type: 'POST',
-		    data: formData,
-		    processData: false,
-		    contentType: false,
-		  	//await createCeoForm(currentUserId, formatDate(new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 1)), formatDate(toDate));
-		    success: function(response) {
-		        console.log("Successful : ", response);
-		        $('#message').text(response);
-		        Swal.fire({
-	                title: "Success!",
-	                text: "WFH Form Application Complete!",
-	                icon: "success",
-	                timer: 3000,
-	                timerProgressBar: true,
-	                showConfirmButton: false
-	            }).then(() => {
-	                window.location.href = `${getContextPath()}/home`;
-	            });
-		    },
-		    error: function(error) {
-		        console.error('Error:', error);
-		    }
-		});
+				url: `${getContextPath()}/api/registerform/createCeoForm`,
+				type: 'POST',
+				data: formData,
+				processData: false,
+				contentType: false,
+				//await createCeoForm(currentUserId, formatDate(new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 1)), formatDate(toDate));
+				success: function(response) {
+					console.log("Successful : ", response);
+					$('#message').text(response);
+					Swal.fire({
+						title: "Success!",
+						text: "WFH Form Application Complete!",
+						icon: "success",
+						timer: 3000,
+						timerProgressBar: true,
+						showConfirmButton: false
+					}).then(() => {
+						window.location.href = `${getContextPath()}/home`;
+					});
+				},
+				error: function(error) {
+					console.error('Error:', error);
+				}
+			});
 
 	  });
 	$('#apply-form-btn').click( function(event) {

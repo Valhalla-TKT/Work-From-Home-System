@@ -50,12 +50,16 @@ document.addEventListener('DOMContentLoaded', function () {
                         break;
                 }
 
+                const wfaAction = item.wfauser
+                    ? '<span class="view-wfa-checklist-btn">View WFA Checklist</span>'
+                    : '<span class="add-wfa-checklist-btn">Add WFA Checklist</span>';
+
                 row.innerHTML = `
                     <td>${start + index + 1}</td>
                     <td>${month}</td>
                     <td>${year}</td>
                     <td>${statusIcon}</td>
-                    <td><span class="view-detail-btn">View Detail</span></td>
+                    <td><span class="view-detail-btn">View Detail</span> / ${wfaAction}</td>
                 `;
                 formHistoryTableBody.appendChild(row);
             });
@@ -64,7 +68,7 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     }
 
-    function setupRowClickHandlers() {
+    function setupDetailClickHandlers() {
         document.querySelectorAll('.view-detail-btn').forEach(button => {
             button.addEventListener('click', function () {
                 const formId = this.closest('tr').dataset.formId;
@@ -87,10 +91,43 @@ document.addEventListener('DOMContentLoaded', function () {
                         .catch(error => {
                             console.error('Error in generating form token:', error);
                         });
+                } else {
+                    location.reload();
                 }
             });
         });
     }
+
+    // Add for ver 2.2 (Manual ver 1.8 - including WFA)
+    const setupWFADetailClickHandlers = () => {
+        document.querySelectorAll('.view-wfa-checklist-btn').forEach(button => {
+            button.addEventListener('click', function () {
+                const formId = this.closest('tr').dataset.formId;
+                if (formId) {
+                    fetch(`${getContextPath()}/form/wfa/generateToken`, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({ formId })
+                    })
+                        .then(response => response.json())
+                        .then(data => {
+                            if (data.success) {
+                                window.location.href = `${getContextPath()}${data.redirectUrl}`;
+                            } else {
+                                console.error('Error in generating form token:', data.message);
+                            }
+                        })
+                        .catch(error => {
+                            console.error('Error in generating form token:', error);
+                        });
+                } else {
+                    location.reload();
+                }
+            });
+        });
+    };
 
     function updatePagination() {
         pageNumbers.innerHTML = '';
@@ -111,7 +148,10 @@ document.addEventListener('DOMContentLoaded', function () {
 
     function displayCurrentPage() {
         renderFormHistory();
-        setupRowClickHandlers();
+        setupDetailClickHandlers();
+
+        // Add for ver 2.2 (Manual ver 1.8 - including WFA)
+        setupWFADetailClickHandlers();
     }
 
     function filterHistory() {

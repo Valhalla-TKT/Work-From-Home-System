@@ -230,6 +230,15 @@ public class UserServiceImplement implements UserService {
 		Date startOfMonth = monthRange[0];
 		Date endOfMonth = monthRange[1];
 
+		Date today = new Date();
+
+		Calendar calendar = Calendar.getInstance();
+		calendar.setTime(today);
+		int todayDate = calendar.get(Calendar.DAY_OF_MONTH);
+
+		if (todayDate >= 26) {
+			return false;
+		}
         return registerForms.stream()
 				.anyMatch(form -> form.getSignedDate() != null &&
 						form.getSignedDate().compareTo(startOfMonth) >= 0 &&

@@ -21,6 +21,9 @@ import com.kage.wfhs.api.divisions.repository.DivisionRepository;
 import com.kage.wfhs.api.teams.repository.TeamRepository;
 import com.kage.wfhs.api.users.repository.UserRepository;
 
+import com.kage.wfhs.api.work_from_abroad_information.dto.WorkFromAbroadInformationApplyDto;
+import com.kage.wfhs.api.work_from_abroad_information.dto.WorkFromAbroadInformationDto;
+import com.kage.wfhs.api.work_from_abroad_information.service.WorkFromAbroadInformationService;
 import com.kage.wfhs.common.jwt.JwtUtils;
 import com.kage.wfhs.common.util.TokenService;
 import com.kage.wfhs.api.approve_roles.service.ApproveRoleService;
@@ -56,6 +59,9 @@ public class PublicController {
     private final RegisterFormService registerFormService;
     private final CaptureService captureService;
     private final JwtUtils jwtUtils;
+
+    // Add for ver 2.2 (Manual ver 1.8 - including WFA)
+    public final WorkFromAbroadInformationService workFromAbroadInformationService;
     
     @GetMapping("/login")
     public String login(){
@@ -157,6 +163,44 @@ public class PublicController {
             }
         } else {
             return "error"; // or redirect to an error page
+        }
+    }
+
+    // Add for ver 2.2 (Manual ver 1.8 - including WFA)
+    @PostMapping("/form/wfa/generateToken")
+    @ResponseBody
+    public Map<String, Object> generateWFAFormToken(HttpServletRequest request, @RequestBody Map<String, Long> payload) {
+        Map<String, Object> response = new HashMap<>();
+        try {
+            long formId = payload.get("formId");
+            String formToken = tokenService.generateSecureToken(formId);
+            tokenService.storeTokenMapping(formToken, formId);
+            response.put("success", true);
+            response.put("redirectUrl", "/form/wfa/viewCheckList/" + formToken);
+        } catch (Exception e) {
+            response.put("success", false);
+            response.put("message", "Error in generating form token");
+        }
+        return response;
+    }
+
+    @GetMapping("/form/wfa/viewCheckList/{formToken}")
+    public String viewCheckList(HttpServletRequest request, @PathVariable("formToken") String formToken, ModelMap model) {
+        if (jwtUtils.isTokenValid(request)) {
+            String jwtToken = jwtUtils.extractTokenFromCookie(request);
+            String username = jwtUtils.getUsernameFromToken(jwtToken);
+            Long formId = tokenService.getFormIdByToken(formToken);
+
+            if (formId != null && isAuthorizedUser(username, formId)) {
+                WorkFromAbroadInformationDto workFromAbroadInformationDto = workFromAbroadInformationService.getWorkFromAbroadInformationByFormID(formId);
+                model.addAttribute("workFromAbroadInformation", workFromAbroadInformationDto);
+//                model.addAttribute("workFromAbroadInformationDto", new WorkFromAbroadInformationApplyDto());
+                return "viewWFAFormCheckList";
+            } else {
+                return "error";
+            }
+        } else {
+            return "error";
         }
     }
 

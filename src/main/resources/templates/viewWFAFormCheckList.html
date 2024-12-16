@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" id="fullscreen-body">
+
+<head th:replace="~{fragments/shared/header :: header}">
+  <title>WorkHub</title>
+</head>
+<body id="page" class="logged-out not-pro not-player not-self not-team not-on-team no-hiring  nav-v2-theme-cream">
+<!-- header -->
+<div th:replace="~{fragments/shared/navigation :: navigation}"></div>
+<!-- header -->
+<!-- main -->
+<div th:replace="~{fragments/wfaForm/viewWFAFormCheckList :: content}"></div>
+<!-- main -->
+</body>
+</html>

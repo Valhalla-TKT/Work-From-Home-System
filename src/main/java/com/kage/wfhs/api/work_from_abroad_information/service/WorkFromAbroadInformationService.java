@@ -5,4 +5,8 @@ import com.kage.wfhs.api.work_from_abroad_information.dto.WorkFromAbroadInformat
 
 public interface WorkFromAbroadInformationService {
     void addWorkFromAbroadInformation(Long formLastId, WorkFromAbroadInformationApplyDto workFromAbroadInformationApplyDto);
+    WorkFromAbroadInformationDto getWorkFromAbroadInformationByFormID(Long formId);
+
+    void saveApplicantAppliedDate(String applicantAppliedDate, Long formId);
+    void saveApproverSignedDate(Long userId, String signedDate, Long formId);
 }
