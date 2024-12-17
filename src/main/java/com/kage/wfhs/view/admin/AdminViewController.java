@@ -11,6 +11,10 @@ import com.kage.wfhs.api.users.service.UserService;
 import com.kage.wfhs.api.session.dto.CurrentLoginUserDto;
 import com.kage.wfhs.api.approve_roles.dto.ApproveRoleDto;
 import com.kage.wfhs.api.approve_roles.service.ApproveRoleService;
+import com.kage.wfhs.api.work_from_abroad_information.dto.WorkFromAbroadFormListDto;
+import com.kage.wfhs.api.work_from_abroad_information.dto.WorkFromAbroadInformationDto;
+import com.kage.wfhs.api.work_from_abroad_information.service.WorkFromAbroadInformationService;
+import com.kage.wfhs.common.util.EncryptionUtils;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
@@ -18,6 +22,7 @@ import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -38,6 +43,9 @@ public class AdminViewController {
     private final DepartmentService departmentService;
 
     private final DivisionService divisionService;
+
+    // Add for ver 2.2 (Manual ver 1.8 - including WFA)
+    private final WorkFromAbroadInformationService workFromAbroadInformationService;
 
     @GetMapping("/division")
     public String divisionPage() {
@@ -131,8 +139,32 @@ public class AdminViewController {
         return "hr/importExcel";
     }
 
-    @GetMapping("/permission")
-    public String permission() {
-        return "hr/permission";
+//    @GetMapping("/permission")
+//    public String permission() {
+//        return "hr/permission";
+//    }
+
+    @GetMapping("/wfa-form-list")
+    public String wfaFormList(ModelMap model) {
+        List<WorkFromAbroadFormListDto> workFromAbroadFormListDtoList = workFromAbroadInformationService.getWorkFromAbroadFormList();
+        model.addAttribute("wfaFormList", workFromAbroadFormListDtoList);
+        return "viewWFAFormList";
+    }
+
+    // Add for ver 2.2 (Manual ver 1.8 - including WFA)
+    @GetMapping("/form/{hashFormId}/wfa/view-wfa-checklist-by-approver")
+    public String viewWfaCheckListByApprover(
+            @PathVariable("hashFormId") String hashFormId,
+            ModelMap model
+    ) {
+        try {
+            String decryptedFormId = EncryptionUtils.decrypt(hashFormId);
+            Long formId = Long.parseLong(decryptedFormId);
+            WorkFromAbroadInformationDto workFromAbroadInformationDto = workFromAbroadInformationService.getWorkFromAbroadInformationByFormID(formId);
+            model.addAttribute("workFromAbroadInformation", workFromAbroadInformationDto);
+            return "viewWFAFormCheckListByApprover";
+        } catch (Exception ex) {
+            throw new IllegalArgumentException("Invalid hashFormId format");
+        }
     }
 }

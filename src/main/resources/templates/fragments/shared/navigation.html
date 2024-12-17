@@ -56,6 +56,12 @@
 										<span class="nav-v2-sub__subtitle">Effortlessly check work history</span>
 									</a>
 								</li>
+								<!-- Add for ver 2.2 (Manual ver 1.8 - including WFA) -->
+								<li class="nav-v2-sub__item" sec:authorize="!hasAuthority('APPLICANT')">
+									<a class="nav-v2-sub__link" data-nav-event-clicked="Post a Job" th:href="@{/admin/wfa-form-list}"> View WFA Form List
+										<span class="nav-v2-sub__subtitle">View WFA Forms</span>
+									</a>
+								</li>
 							</ul>
 						</li>
 

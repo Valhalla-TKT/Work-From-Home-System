@@ -54,7 +54,7 @@ public class SecurityConfig {
                 .cors(Customizer.withDefaults())
                 .httpBasic(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/static/**", "/assets/**", "/icons/**", "/formImages/**", "/images/**", "/ws/**", "/auth/**").permitAll()
+                        .requestMatchers("/static/**", "/assets/**", "/icons/**", "/formImages/**", "/images/**", "/ws/**", "/auth/**", "/api/wfa/update-wfa-checklist-by-approver").permitAll()
                         .requestMatchers("/admin/**").access((authentication, context) -> {
                             Authentication authen = authentication.get();
                             boolean isApplicant = authen.getAuthorities().stream()

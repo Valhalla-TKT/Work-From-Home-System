@@ -129,6 +129,131 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     };
 
+    const setupAddWFACheckListClickHandlers = () => {
+        document.querySelectorAll('.add-wfa-checklist-btn').forEach(button => {
+            button.addEventListener('click', function () {
+                const formId = this.closest('tr').dataset.formId;
+                if (formId) {
+                    Swal.fire({
+                        title: 'Checked by Applicant',
+                        width: '800px',
+                        html: `
+                        <div class="wfa-checklist-form">
+                            <div class="checklist-item mb-4">
+                                <div class="d-flex align-items-center mb-2">
+                                    <input type="checkbox" id="hr-info-check" class="form-check-input me-2">
+                                    <label for="hr-info-check" class="form-check-label" style="color: #000;">
+                                        WFA information must be informed to HR Dept.<span style="color: red;">*</span>
+                                    </label>
+                                </div>
+                                <div class="d-flex justify-content-between gap-3">
+                                    <div class="flex-grow-1">
+                                        <label class="d-block mb-1">Name</label>
+                                        <input type="text" id="hr-info-name" class="form-control rounded-3">
+                                    </div>
+                                    <div style="width: 200px;">
+                                        <label class="d-block mb-1">Signed Date</label>
+                                        <input type="date" id="hr-info-date" class="form-control rounded-3">
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="checklist-item">
+                                <div class="d-flex align-items-center mb-2">
+                                    <input type="checkbox" id="env-check" class="form-check-input me-2">
+                                    <label for="env-check" class="form-check-label" style="color: #000;">
+                                        WFA working environment must be ready.<span style="color: red;">*</span>
+                                    </label>
+                                </div>
+                                <div class="d-flex justify-content-between gap-3">
+                                    <div class="flex-grow-1">
+                                        <label class="d-block mb-1">Name</label>
+                                        <input type="text" id="env-name" class="form-control rounded-3">
+                                    </div>
+                                    <div style="width: 200px;">
+                                        <label class="d-block mb-1">Signed Date</label>
+                                        <input type="date" id="env-date" class="form-control rounded-3">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <style>
+                            .wfa-checklist-form {
+                                text-align: left;
+                                padding: 20px;
+                            }
+                            .form-control {
+                                border: 1px solid #ccc;
+                                padding: 8px 12px;
+                            }
+                            .form-check-input {
+                                width: 20px;
+                                height: 20px;
+                            }
+                            .form-check-label {
+                                font-size: 16px;
+                            }
+                        </style>
+                    `,
+                        showCancelButton: true,
+                        confirmButtonText: 'Submit',
+                        cancelButtonText: 'Cancel',
+                        preConfirm: () => {
+                            // Validation
+                            const hrInfoChecked = document.getElementById('hr-info-check').checked;
+                            const envChecked = document.getElementById('env-check').checked;
+
+                            if (!hrInfoChecked || !envChecked) {
+                                Swal.showValidationMessage('Please check all required items');
+                                return false;
+                            }
+
+                            return {
+                                hrInfo: {
+                                    checked: hrInfoChecked,
+                                    name: document.getElementById('hr-info-name').value,
+                                    date: document.getElementById('hr-info-date').value
+                                },
+                                environment: {
+                                    checked: envChecked,
+                                    name: document.getElementById('env-name').value,
+                                    date: document.getElementById('env-date').value
+                                }
+                            };
+                        }
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+
+                            const bodyPayload = new URLSearchParams({
+                                applicantAppliedDate: result.value.hrInfo.date,
+                                formId: formId
+                            });
+
+                            fetch(`${getContextPath()}/api/wfa/update-wfa-checklist`, {
+                                method: 'POST',
+                                headers: {
+                                    'Content-Type': 'application/x-www-form-urlencoded',
+                                },
+                                body: bodyPayload
+                            })
+                                .then(response => response.text())
+                                .then(data => {
+                                    Swal.fire('Updated!', 'The WFA checklist has been updated.', 'success');
+                                })
+                                .catch(error => {
+                                    Swal.fire('Error!', 'There was an issue updating the checklist.', 'error');
+                                });
+
+                        }
+                    });
+                } else {
+                    location.reload();
+                }
+            });
+        });
+    };
+
     function updatePagination() {
         pageNumbers.innerHTML = '';
         const totalPages = Math.ceil(filteredData.length / itemsPerPage);
@@ -152,6 +277,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
         // Add for ver 2.2 (Manual ver 1.8 - including WFA)
         setupWFADetailClickHandlers();
+        setupAddWFACheckListClickHandlers();
     }
 
     function filterHistory() {
