@@ -12,7 +12,6 @@ function getJwtToken() {
 }
 
 const jwtToken = getJwtToken();
-console.log("JWT Token from Cookie:", jwtToken);
 
 if (!jwtToken) {
     console.error("JWT cookie not found. Ensure the cookie is set and accessible.");

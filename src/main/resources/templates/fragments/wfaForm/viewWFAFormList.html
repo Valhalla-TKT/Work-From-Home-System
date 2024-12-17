@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+
+<head>
+    <title>WorkHub</title>
+</head>
+
+<body>
+<div id="wrap" th:fragment="content">
+
+    <script th:src="@{/assets/wfaForm/wfaFormList.js}"></script>
+    <div id="wrap-inner" class="flushed">
+        <div id="content" role="main">
+            <div class="container-medium">
+                <div class="content-container display-flex direction-col-reverse">
+                    <div class="job-listings-container flex-1">
+                        <form data-search-input-form class="search-input-form" style="margin-top: 20px;">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="17" height="17" viewBox="0 0 17 17"
+                                 fill="none" role="img" class="icon">
+                                <path
+                                        d="M1.5 7.75C1.5 9.4076 2.15848 10.9973 3.33058 12.1694C4.50269 13.3415 6.0924 14 7.75 14C9.4076 14 10.9973 13.3415 12.1694 12.1694C13.3415 10.9973 14 9.4076 14 7.75C14 6.0924 13.3415 4.50269 12.1694 3.33058C10.9973 2.15848 9.4076 1.5 7.75 1.5C6.0924 1.5 4.50269 2.15848 3.33058 3.33058C2.15848 4.50269 1.5 6.0924 1.5 7.75V7.75Z"
+                                        stroke="currentColor" stroke-width="1.5" stroke-linecap="round"
+                                        stroke-linejoin="round"></path>
+                                <path d="M12.814 12.8132L15.5 15.4999" stroke="currentColor" stroke-width="1.5"
+                                      stroke-linecap="round" stroke-linejoin="round"></path>
+                            </svg>
+
+                            <label for="search-by-staff-name">
+                                <input type="search" name="search-input" id="search-by-staff-name"
+                                       placeholder="Search by name or staff ID"
+                                       class="js-search-input input-with-outline-only search-input" />
+                            </label>
+                        </form>
+                        <div
+                                class="display-flex align-center new-opportunities-container justify-space-between margin-b-40 margin-t-40">
+                            <div class="add-function">
+                                <div class="display-flex align-center">
+                                    <div class="new-opportunities-heading">
+                                        <span th:if="${#lists.size(wfaFormList) > 0}">
+                                            Total WFA Forms: <span th:text="${#lists.size(wfaFormList)}"></span>
+                                        </span>
+                                        <span th:if="${#lists.size(wfaFormList) == 0}">
+                                            No WFA Forms
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <style>
+
+                            .table-container {
+                                overflow-x: auto;
+                            }
+                            .table {
+                                width: 100%;
+                                border-collapse: collapse;
+                                font-family: Arial, sans-serif;
+                            }
+
+                            .table th, .table td {
+                                border: none;
+                                padding: 10px 15px;
+                                text-align: left;
+                                width: 20%;
+                                box-sizing: border-box;
+                            }
+
+                            .table thead th {
+                                color: #333;
+                                font-weight: bold;
+                            }
+
+                            .table tbody tr:nth-child(even) {
+                                background-color: #fff;
+                            }
+
+                            .table tbody tr:nth-child(even) {
+                                background-color: #fff;
+                            }
+
+                            .table tbody tr:hover {
+                                background-color: #f2f2f2;
+                            }
+
+                            .table tbody tr th, .table tbody tr  td {
+                                border-top: 1px solid rgb(201, 201, 201);
+                                border-bottom: 1px solid rgb(201, 201, 201);
+                            }
+                        </style>
+                        <div class="table-container">
+                            <table id="staff-table" class="table">
+                                <thead>
+                                <tr>
+                                    <th>Name</th>
+                                    <th>Staff ID</th>
+                                    <th>Division</th>
+                                    <th>Department</th>
+                                    <th>Team</th>
+                                    <th>Action</th>
+                                </tr>
+                                </thead>
+                                <tbody id="staff-list">
+                                    <tr th:if="${#lists.size(wfaFormList) > 0}" th:each="form : ${wfaFormList}">
+                                        <td th:text="${form.applicantName}"></td>
+                                        <td th:text="${form.applicantStaffId}"></td>
+                                        <td th:text="${form.applicantDivision}"></td>
+                                        <td th:text="${form.applicantDepartment}"></td>
+                                        <td th:text="${form.applicantTeam}"></td>
+                                        <td><button class="btn btn-primary view-button" th:attr="data-hash-form-id=${form.hashFormId}">View</button></td>
+                                    </tr>
+                                    <tr th:if="${#lists.size(wfaFormList) == 0}">
+                                        <td colspan="6" class="text-center">No data available to display.</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+</body>
+</html>

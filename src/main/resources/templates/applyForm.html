@@ -12,7 +12,6 @@
     <!-- header -->
     <div th:replace="~{fragments/shared/navigation :: navigation}"></div>
 	<!-- header -->
-
     <div th:replace="~{fragments/form/apply :: content}"></div>
 	<!-- main -->
 
@@ -258,37 +257,38 @@
     	}
 
       
-      function showNextDiv() {
-    	  document.getElementById('data-section').style.display = 'none';
-    	  document.getElementById('capture-section').style.display = 'block';
-    	  document.getElementById('signature-section').style.display = 'none';
-    	  document.getElementById('go-back').style.display = 'block';
-    	  document.getElementById('go-back-1').style.display = 'none';   
-    	}
-      
-      function goBack() {
-    	  document.getElementById('data-section').style.display = 'block';
-    	  document.getElementById('capture-section').style.display = 'none';
-    	  document.getElementById('signature-section').style.display = 'none';
-    	  document.getElementById('go-back').style.display = 'none';
-    	  document.getElementById('go-back-1').style.display = 'none';
-    	}            
-      
-      function showNextDiv1() {
-    	  document.getElementById('data-section').style.display = 'none';
-    	  document.getElementById('capture-section').style.display = 'none';
-    	  document.getElementById('signature-section').style.display = 'block';
-    	  document.getElementById('go-back').style.display = 'none';
-    	  document.getElementById('go-back-1').style.display = 'block';
-    	}
-      
-      function goBack1() {
-    	  document.getElementById('data-section').style.display = 'none';
-    	  document.getElementById('capture-section').style.display = 'block';
-    	  document.getElementById('signature-section').style.display = 'none';
-    	  document.getElementById('go-back').style.display = 'block';
-    	  document.getElementById('go-back-1').style.display = 'none';
-    	}
+      // function showNextDiv() {
+    	//   document.getElementById('data-section').style.display = 'none';
+    	//   document.getElementById('capture-section').style.display = 'block';
+    	//   document.getElementById('signature-section').style.display = 'none';
+    	//   document.getElementById('go-back').style.display = 'block';
+    	//   document.getElementById('go-back-1').style.display = 'none';
+    	// }
+      //
+      // function goBack() {
+    	//   document.getElementById('data-section').style.display = 'block';
+    	//   document.getElementById('capture-section').style.display = 'none';
+    	//   document.getElementById('signature-section').style.display = 'none';
+    	//   document.getElementById('go-back').style.display = 'none';
+    	//   document.getElementById('go-back-1').style.display = 'none';
+    	// }
+      //
+      // function showNextDiv1() {
+    	//   document.getElementById('data-section').style.display = 'none';
+    	//   document.getElementById('capture-section').style.display = 'none';
+    	//   document.getElementById('signature-section').style.display = 'block';
+    	//   document.getElementById('go-back').style.display = 'none';
+    	//   document.getElementById('go-back-1').style.display = 'block';
+    	// }
+      //
+      // function goBack1() {
+    	//   document.getElementById('data-section').style.display = 'none';
+    	//   document.getElementById('capture-section').style.display = 'block';
+    	//   document.getElementById('signature-section').style.display = 'none';
+    	//   document.getElementById('go-back').style.display = 'block';
+    	//   document.getElementById('go-back-1').style.display = 'none';
+      //     document.getElementById('check-list-for-wfa-section').style.display = 'none';
+    	// }
 	
       function showWindow() {
     	  osType = ''
@@ -342,8 +342,6 @@
     </script>
     
     <div th:replace="~{fragments/shared/footer :: footer}"></div>
-    
-    
     
     
 </body>

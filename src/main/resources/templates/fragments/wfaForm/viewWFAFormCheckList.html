@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+
+<head>
+  <title>WorkHub</title>
+</head>
+
+<body>
+<div id="wrap" th:fragment="content">
+    <script th:src="@{/assets/wfaForm/WFAcheckListUpdate.js}"></script>
+  <div id="wrap-inner">
+    <div id="content" role="main">
+      <div class="container-job-board">
+        <div class="job-board-gradient"></div>
+        <div class="header">
+          <div class="inner-header">
+            <div class="go-back display-none" id="go-back">
+              <button>
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
+                     fill="currentColor" class="bi bi-arrow-left"
+                     viewBox="0 0 16 16">
+                  <path fill-rule="evenodd"
+                        d="M15 8a.5.5 0 0 0-.5-.5H2.707l3.147-3.146a.5.5 0 1 0-.708-.708l-4 4a.5.5 0 0 0 0 .708l4 4a.5.5 0 0 0 .708-.708L2.707 8.5H14.5A.5.5 0 0 0 15 8"/>
+                </svg>
+              </button>
+            </div>
+            <div class="go-back display-none" id="go-back-1">
+              <button>
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
+                     fill="currentColor" class="bi bi-arrow-left"
+                     viewBox="0 0 16 16">
+                  <path fill-rule="evenodd"
+                        d="M15 8a.5.5 0 0 0-.5-.5H2.707l3.147-3.146a.5.5 0 1 0-.708-.708l-4 4a.5.5 0 0 0 0 .708l4 4a.5.5 0 0 0 .708-.708L2.707 8.5H14.5A.5.5 0 0 0 15 8" />
+                </svg>
+              </button>
+            </div>
+            <div class="header-title">
+
+              <div class="title-section">
+                <h1 class="display-block">DIR-ACE Technology Ltd.</h1>
+                <h2>Request Work From Home: Complete the Form Below</h2>
+              </div>
+
+            </div>
+          </div>
+
+
+        </div>
+
+        <form
+                id="wfa-check-list-update-form"
+                class="form-content"
+                style="z-index: 2;"
+                enctype="multipart/form-data"
+
+        >
+          <div data-v-115a39aa="" class="job-creation">
+            <!---->
+            <div data-v-115a39aa="" class="container">
+              <section data-v-741dde45="" data-v-115a39aa="" id="check-list-for-wfa-section"
+                       class="user-form-container user-form">
+                <div class="">
+                  <div class="">
+                    <h3>Check List for WFA</h3>
+                  </div>
+                </div>
+                  <div data-v-741dde45="" class="form-field-container">
+                      <h4>Checked by PM</h4>
+                      <br>
+                      <span data-v-741dde45="" class="error-marker">
+                    <div data-v-42dea6db="" data-v-741dde45="" class="">
+                        <div style="display: flex; justify-content: row; column-gap: 10px;">
+                            <input type="checkbox" id="pm-approve-checkbox" style="border: 1px solid black;"
+                                   name=""
+                                   th:checked="${workFromAbroadInformation.projectManagerName != null and workFromAbroadInformation.projectManagerName != ''}"
+                            >
+                            <label data-v-42dea6db="" for="pm-approve-checkbox" class="label">
+                                Approval from PM must be finished.
+                                <span data-v-42dea6db="" class="color-lobster">*</span>
+                            </label>
+                        </div>
+                        <!-- Labels and Inputs in Two Columns -->
+                        <div data-v-42dea6db="" class="label-input-group" style="display: flex; justify-content: space-between; margin-top: 1rem;">
+                            <!-- Name Column -->
+                            <div style="display: flex; flex-direction: column; align-items: flex-start; width: 62%;">
+                                <label data-v-42dea6db="" for="name-input-by-pm" class="label">Name</label>
+                                <input data-v-42dea6db="" id="name-input-by-pm" type="text"
+                                       style="color: #0d0c22; background: #fff; border: 1px solid black; width: 100%; padding: 0.5rem;"
+                                       class="input"
+                                       th:value="${workFromAbroadInformation.projectManagerName}"
+                                />
+                            </div>
+
+                            <!-- Signed Date Column -->
+                            <div style="display: flex; flex-direction: column; align-items: flex-start; width: 32%;">
+                                <label data-v-42dea6db="" for="date-input-by-pm" class="label">Signed Date</label>
+                                <input data-v-42dea6db="" id="date-input-by-pm" type="date"
+                                       style="color: #0d0c22; background: #fff; border: 1px solid black; width: 100%; padding: 0.5rem;"
+                                       class="input"
+                                       th:value="${#dates.format(workFromAbroadInformation.projectManagerApprovedDate, 'yyyy-MM-dd')}"
+                                />
+                            </div>
+                        </div>
+                    </div>
+                </span>
+                  </div>
+
+                  <div data-v-741dde45="" class="form-field-container">
+                      <h4>Checked by Dept Head</h4>
+                      <br>
+                      <span data-v-741dde45="" class="error-marker">
+                      <div data-v-42dea6db="" data-v-741dde45="" class="">
+                          <div style="display: flex; justify-content: row; column-gap: 10px;">
+                              <input type="checkbox" id="dept-head-approve-checkbox" style="border: 1px solid black;"
+                                     name=""
+                                     th:checked="${workFromAbroadInformation.deptHeadName != null and workFromAbroadInformation.deptHeadName != ''}"
+                              >
+                              <label data-v-42dea6db="" for="dept-head-approve-checkbox" class="label">
+                                  Approval from Dept Head must be finished.
+                                  <span data-v-42dea6db="" class="color-lobster">*</span>
+                              </label>
+
+                          </div>
+                          <!-- Labels and Inputs in Two Columns -->
+                          <div data-v-42dea6db="" class="label-input-group" style="display: flex; justify-content: space-between; margin-top: 1rem;">
+                              <!-- Name Column -->
+                              <div style="display: flex; flex-direction: column; align-items: flex-start; width: 62%;">
+                                  <label data-v-42dea6db="" for="name-input-by-dept-head" class="label">Name</label>
+                                  <input data-v-42dea6db="" id="name-input-by-dept-head" type="text"
+                                         style="color: #0d0c22; background: #fff; border: 1px solid black; width: 100%; padding: 0.5rem;"
+                                         class="input"
+                                         th:value="${workFromAbroadInformation.deptHeadName}"
+                                  />
+                              </div>
+
+                              <!-- Signed Date Column -->
+                              <div style="display: flex; flex-direction: column; align-items: flex-start; width: 32%;">
+                                  <label data-v-42dea6db="" for="date-input-by-dept-head" class="label">Signed Date</label>
+                                  <input data-v-42dea6db="" id="date-input-by-dept-head" type="date"
+                                         style="color: #0d0c22; background: #fff; border: 1px solid black; width: 100%; padding: 0.5rem;"
+                                         class="input"
+                                         th:value="${#dates.format(workFromAbroadInformation.deptHeadApprovedDate, 'yyyy-MM-dd')}"
+                                  />
+                              </div>
+                          </div>
+                      </div>
+                  </span>
+                  </div>
+
+                  <div data-v-741dde45="" class="form-field-container">
+                      <h4>Checked by Division Head</h4>
+                      <br>
+                      <span data-v-741dde45="" class="error-marker">
+                      <div data-v-42dea6db="" data-v-741dde45="" class="">
+                          <div style="display: flex; justify-content: row; column-gap: 10px;">
+                              <input type="checkbox" id="division-head-approve-checkbox" style="border: 1px solid black;"
+                                     name=""
+                                     th:checked="${workFromAbroadInformation.divisionHeadName != null and workFromAbroadInformation.divisionHeadName != ''}"
+                              >
+                              <label data-v-42dea6db="" for="division-head-approve-checkbox" class="label">
+                                  Approval from Division Head must be finished.
+                                  <span data-v-42dea6db="" class="color-lobster">*</span>
+                              </label>
+
+                          </div>
+                          <!-- Labels and Inputs in Two Columns -->
+                          <div data-v-42dea6db="" class="label-input-group" style="display: flex; justify-content: space-between; margin-top: 1rem;">
+                              <!-- Name Column -->
+                              <div style="display: flex; flex-direction: column; align-items: flex-start; width: 62%;">
+                                  <label data-v-42dea6db="" for="name-input-by-division-head" class="label">Name</label>
+                                  <input data-v-42dea6db="" id="name-input-by-division-head" type="text"
+                                         style="color: #0d0c22; background: #fff; border: 1px solid black; width: 100%; padding: 0.5rem;"
+                                         class="input"
+                                         th:value="${workFromAbroadInformation.divisionHeadName}"
+                                  />
+                              </div>
+
+                              <!-- Signed Date Column -->
+                              <div style="display: flex; flex-direction: column; align-items: flex-start; width: 32%;">
+                                  <label data-v-42dea6db="" for="date-input-by-division-head" class="label">Signed Date</label>
+                                  <input data-v-42dea6db="" id="date-input-by-division-head" type="date"
+                                         style="color: #0d0c22; background: #fff; border: 1px solid black; width: 100%; padding: 0.5rem;"
+                                         class="input"
+                                         th:value="${#dates.format(workFromAbroadInformation.divisionHeadApprovedDate, 'yyyy-MM-dd')}"
+                                  />
+                              </div>
+                          </div>
+                      </div>
+                  </span>
+                  </div>
+
+                <div data-v-741dde45="" class="form-field-container">
+                  <h4>Checked by Applicant</h4>
+                  <br>
+                  <span data-v-741dde45="" class="error-marker">
+                      <div data-v-42dea6db="" data-v-741dde45="" class="">
+                          <div style="display: flex; justify-content: row; column-gap: 10px;">
+                              <input type="checkbox" id="applicant-applied-checkbox-1" style="border: 1px solid black;"
+                                     name="applicantAppliedCheckbox1"
+                                     th:field="*{workFromAbroadInformation.applicantAppliedCheckbox1}"
+                              />
+                              <label data-v-42dea6db="" for="applicant-applied-checkbox-1" class="label">
+                                  WFA information must be informed to HR Dept.
+                                  <span data-v-42dea6db="" class="color-lobster">*</span>
+                              </label>
+
+                          </div>
+                        <!-- Labels and Inputs in Two Columns -->
+                          <div data-v-42dea6db="" class="label-input-group" style="display: flex; justify-content: space-between; margin-top: 1rem;">
+                              <!-- Name Column -->
+                              <div style="display: flex; flex-direction: column; align-items: flex-start; width: 62%;">
+                                  <label data-v-42dea6db="" for="name-input-by-applicant-1" class="label">Name</label>
+                                  <input data-v-42dea6db="" id="name-input-by-applicant-1" type="text"
+                                         style="color: #0d0c22; background: #fff; border: 1px solid black; width: 100%; padding: 0.5rem;"
+                                         class="input"
+                                         th:value="${workFromAbroadInformation.applicantName}"
+                                  />
+                              </div>
+
+                            <!-- Signed Date Column -->
+                              <div style="display: flex; flex-direction: column; align-items: flex-start; width: 32%;">
+                                  <label data-v-42dea6db="" for="date-input-by-applicant-1" class="label">Signed Date</label>
+                                  <input data-v-42dea6db="" id="date-input-by-applicant-1" type="date"
+                                         style="color: #0d0c22; background: #fff; border: 1px solid black; width: 100%; padding: 0.5rem;"
+                                         class="input"
+                                         th:value="${#dates.format(workFromAbroadInformation.applicantAppliedDate, 'yyyy-MM-dd')}"
+                                  />
+                              </div>
+                          </div>
+                      </div>
+                  </span>
+                </div>
+
+                <div data-v-741dde45="" class="form-field-container">
+                  <span data-v-741dde45="" class="error-marker">
+                      <div data-v-42dea6db="" data-v-741dde45="" class="">
+                          <div style="display: flex; justify-content: row; column-gap: 10px;">
+                              <input type="checkbox" id="applicant-applied-checkbox-2" style="border: 1px solid black;"
+                                     name="applicantAppliedCheckbox2"
+                                     th:field="*{workFromAbroadInformation.applicantAppliedCheckbox2}"
+                              >
+                              <label data-v-42dea6db="" for="applicant-applied-checkbox-2" class="label">
+                                  WFA working environment must be ready.
+                                  <span data-v-42dea6db="" class="color-lobster">*</span>
+                              </label>
+
+                          </div>
+                        <!-- Labels and Inputs in Two Columns -->
+                          <div data-v-42dea6db="" class="label-input-group" style="display: flex; justify-content: space-between; margin-top: 1rem;">
+                              <!-- Name Column -->
+                              <div style="display: flex; flex-direction: column; align-items: flex-start; width: 62%;">
+                                  <label data-v-42dea6db="" for="name-input-by-applicant-2" class="label">Name</label>
+                                  <input data-v-42dea6db="" id="name-input-by-applicant-2" type="text"
+                                         style="color: #0d0c22; background: #fff; border: 1px solid black; width: 100%; padding: 0.5rem;"
+                                         class="input"
+                                         th:value="${workFromAbroadInformation.applicantName}"
+                                  />
+                              </div>
+
+                            <!-- Signed Date Column -->
+                              <div style="display: flex; flex-direction: column; align-items: flex-start; width: 32%;">
+                                  <label data-v-42dea6db="" for="date-input-by-applicant-2" class="label">Signed Date</label>
+                                  <input
+                                          id="date-input-by-applicant-2" type="date"
+                                          style="color: #0d0c22; background: #fff; border: 1px solid black; width: 100%; padding: 0.5rem;"
+                                          class="input"
+                                          th:value="${#dates.format(workFromAbroadInformation.applicantAppliedDate, 'yyyy-MM-dd')}"
+                                  />
+                              </div>
+                          </div>
+                      </div>
+                  </span>
+                </div>
+                  <input type="hidden" id="registerFormId" th:value="${workFromAbroadInformation.registerFormId}"/>
+
+              </section>
+                <footer class="button-container display-flex justify-content-end">
+                    <div class="margin-l-8 form-sub" type="submit" id="update-wfa-check-list">Update</div>
+                </footer>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+</body>
+</html>

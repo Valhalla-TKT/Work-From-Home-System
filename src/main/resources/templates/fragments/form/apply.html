@@ -19,7 +19,7 @@
 					<div class="job-board-gradient"></div>
 					<div class="header">
 						<div class="inner-header">
-							<div class="go-back display-none" id="go-back" onclick="goBack()">
+							<div class="go-back display-none" id="go-back">
 								<button class="go-back-btn">
 									<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
 										fill="currentColor" class="bi bi-arrow-left"
@@ -29,7 +29,7 @@
 						            </svg>
 								</button>
 							</div>
-							<div class="go-back display-none" id="go-back-1" onclick="goBack1()">
+							<div class="go-back display-none" id="go-back-1">
 								<button>
 									<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
 										fill="currentColor" class="bi bi-arrow-left"
@@ -349,8 +349,8 @@
 															<div class="">
 																<!---->
 																<span class="error-marker"> <input id="from-date"
-																	type="text" placeholder="e.g. 1/1/2000"
-																	required="required" step="any" class="input" style="border: 1px solid black;"/>
+																	type="text" disabled
+																	required="required" step="any" class="input" style="color: #0d0c22; background: #fff; border: 1px solid black;"/>
 																</span>
 																<!---->
 															</div>
@@ -368,8 +368,8 @@
 															<div class="">
 																<!---->
 																<span class="error-marker"> <input id="to-date"
-																	type="text" placeholder="e.g. 1/1/2000"
-																	required="required" step="any" class="input" style="border: 1px solid black;"/>
+																	type="text" disabled
+																	required="required" step="any" class="input" style="color: #0d0c22; background: #fff; border: 1px solid black;"/>
 																</span>
 																<!---->
 															</div>
@@ -791,33 +791,14 @@
 													</label>
 												</div>
 											</div>
-										 <!-- <div data-v-741dde45="" class="form">
-											 <div id="name-select-box-container" data-v-741dde45="" class="form-field-container">
-					                          <span data-v-741dde45="" class="error-marker">
-					                            <div data-v-42dea6db="" data-v-741dde45="" class="">
-					                              <label data-v-42dea6db=""for="name Select" class="label">
-					                                Name
-					                                <span data-v-42dea6db="" class="color-lobster">*</span>
-					                              </label>
-					                              <div data-v-42dea6db="" class="">
-					                                <span data-v-42dea6db="" class="error-marker">
-					                                  <select data-v-42dea6db="" id="team-member-list" required="required" step="any" class="select" style="width: 100%; color: #0d0c22; border: 1px solid black;" >
-					                                  	<option selected disabled>Choose Name</option>
-					                                  </select>					              
-					                                </span>
-					                              </div>
-					                            </div>
-					                          </span>
-					                        </div> 
-					                       </div> -->
 										</section>
 										<footer class="button-container display-flex justify-space-between">
-											<span style="text-decoration: underline; color: red;">WFA applicants, click here to complete the WFA checklist.</span>
+											<span style="text-decoration: underline; color: red; cursor:pointer;" id="toggle-check-list-for-wfa-section">WFA applicants, click here to complete the WFA checklist.</span>
 											<div class="margin-l-8 form-sub" id="apply-form-btn">Apply</div> 
 										</footer>
 									</div>
 								</section>
-								<section data-v-741dde45="" data-v-115a39aa=""
+								<section data-v-741dde45="" data-v-115a39aa="" id="check-list-for-wfa-section"
 										 class="user-form-container user-form">
 									<div class="">
 										<div class="">
@@ -825,31 +806,32 @@
 										</div>
 									</div>
 									<div data-v-741dde45="" class="form-field-container">
-										<!-- Main Label -->
+										<h4>Checked by PM</h4>
+										<br>
 										<span data-v-741dde45="" class="error-marker">
 											<div data-v-42dea6db="" data-v-741dde45="" class="">
-												<div class="display-inline-flex">
-													<label data-v-42dea6db="" for="name-input" class="label">
-														1. Approval from PM must be finished.
+												<div style="display: flex; justify-content: row; column-gap: 10px;">
+													<input type="checkbox" id="pm-approve-checkbox" style="border: 1px solid black;"
+														   name="">
+													<label data-v-42dea6db="" for="pm-approve-checkbox" class="label">
+														Approval from PM must be finished.
 														<span data-v-42dea6db="" class="color-lobster">*</span>
 													</label>
-													<input type="checkbox" style="border: 1px solid black; margin-left: 10px;"
-														   name="" id="">
 												</div>
 												<!-- Labels and Inputs in Two Columns -->
 												<div data-v-42dea6db="" class="label-input-group" style="display: flex; justify-content: space-between; margin-top: 1rem;">
 													<!-- Name Column -->
-													<div style="display: flex; flex-direction: column; align-items: flex-start; width: 48%;">
-														<label data-v-42dea6db="" for="name-input" class="label">Name</label>
-														<input data-v-42dea6db="" id="name-input" type="text"
+													<div style="display: flex; flex-direction: column; align-items: flex-start; width: 62%;">
+														<label data-v-42dea6db="" for="name-input-by-pm" class="label">Name</label>
+														<input data-v-42dea6db="" id="name-input-by-pm" type="text"
 															   style="color: #0d0c22; background: #fff; border: 1px solid black; width: 100%; padding: 0.5rem;"
 															   class="input" />
 													</div>
 									
 													<!-- Signed Date Column -->
-													<div style="display: flex; flex-direction: column; align-items: flex-start; width: 48%;">
-														<label data-v-42dea6db="" for="date-input" class="label">Signed Date</label>
-														<input data-v-42dea6db="" id="date-input" type="text"
+													<div style="display: flex; flex-direction: column; align-items: flex-start; width: 32%;">
+														<label data-v-42dea6db="" for="date-input-by-pm" class="label">Signed Date</label>
+														<input data-v-42dea6db="" id="date-input-by-pm" type="date"
 															   style="color: #0d0c22; background: #fff; border: 1px solid black; width: 100%; padding: 0.5rem;"
 															   class="input" />
 													</div>
@@ -858,28 +840,146 @@
 										</span>
 									</div>
 
-									<div data-v-741dde45="" class="form">
-										<div class="file-upload-form">
-											<label for="file12" class="file-upload-label"
-												   id="file-label-12-2" ondrop="drop(event, 12)"
-												   ondragover="allowDrop(event, 12)">
-												<p style="color: red;">➀ Please import your signature here.</p>
-												<div class="file-upload-design">
-													<svg viewBox="0 0 640 512" height="1em">
-														<path
-																d="M144 480C64.5 480 0 415.5 0 336c0-62.8 40.2-116.2 96.2-135.9c-.1-2.7-.2-5.4-.2-8.1c0-88.4 71.6-160 160-160c59.3 0 111 32.2 138.7 80.2C409.9 102 428.3 96 448 96c53 0 96 43 96 96c0 12.2-2.3 23.8-6.4 34.6C596 238.4 640 290.1 640 352c0 70.7-57.3 128-128 128H144zm79-217c-9.4 9.4-9.4 24.6 0 33.9s24.6 9.4 33.9 0l39-39V392c0 13.3 10.7 24 24 24s24-10.7 24-24V257.9l39 39c9.4 9.4 24.6 9.4 33.9 0s9.4-24.6 0-33.9l-80-80c-9.4-9.4-24.6-9.4-33.9 0l-80 80z"></path>
-													</svg>
-													<p>Drag and Drop</p>
-													<p>or</p>
-													<span class="browse-button">Browse file</span>
-												</div> <input id="file12-2" type="file"
-															  onchange="previewImage(this,12)" accept="image/*"
-															  style="display: none;" ondragenter="dragEnter(event,12)"
-															  ondragleave="dragLeave(event,12)"> <img
-													id="preview-window-12-2" alt="Preview Image"
-													style="display: none;">
-											</label>
-										</div>
+									<div data-v-741dde45="" class="form-field-container">
+										<h4>Checked by Dept Head</h4>
+										<br>
+										<span data-v-741dde45="" class="error-marker">
+											<div data-v-42dea6db="" data-v-741dde45="" class="">
+												<div style="display: flex; justify-content: row; column-gap: 10px;">
+													<input type="checkbox" id="dept-head-approve-checkbox" style="border: 1px solid black;"
+														   name="">
+													<label data-v-42dea6db="" for="dept-head-approve-checkbox" class="label">
+														Approval from Dept Head must be finished.
+														<span data-v-42dea6db="" class="color-lobster">*</span>
+													</label>
+													
+												</div>
+												<!-- Labels and Inputs in Two Columns -->
+												<div data-v-42dea6db="" class="label-input-group" style="display: flex; justify-content: space-between; margin-top: 1rem;">
+													<!-- Name Column -->
+													<div style="display: flex; flex-direction: column; align-items: flex-start; width: 62%;">
+														<label data-v-42dea6db="" for="name-input-by-dept-head" class="label">Name</label>
+														<input data-v-42dea6db="" id="name-input-by-dept-head" type="text"
+															   style="color: #0d0c22; background: #fff; border: 1px solid black; width: 100%; padding: 0.5rem;"
+															   class="input" />
+													</div>
+									
+													<!-- Signed Date Column -->
+													<div style="display: flex; flex-direction: column; align-items: flex-start; width: 32%;">
+														<label data-v-42dea6db="" for="date-input-by-dept-head" class="label">Signed Date</label>
+														<input data-v-42dea6db="" id="date-input-by-dept-head" type="date"
+															   style="color: #0d0c22; background: #fff; border: 1px solid black; width: 100%; padding: 0.5rem;"
+															   class="input" />
+													</div>
+												</div>
+											</div>
+										</span>
+									</div>
+
+									<div data-v-741dde45="" class="form-field-container">
+										<h4>Checked by Division Head</h4>
+										<br>
+										<span data-v-741dde45="" class="error-marker">
+											<div data-v-42dea6db="" data-v-741dde45="" class="">
+												<div style="display: flex; justify-content: row; column-gap: 10px;">
+													<input type="checkbox" id="division-head-approve-checkbox" style="border: 1px solid black;"
+														   name="">
+													<label data-v-42dea6db="" for="division-head-approve-checkbox" class="label">
+														Approval from Division Head must be finished.
+														<span data-v-42dea6db="" class="color-lobster">*</span>
+													</label>
+													
+												</div>
+												<!-- Labels and Inputs in Two Columns -->
+												<div data-v-42dea6db="" class="label-input-group" style="display: flex; justify-content: space-between; margin-top: 1rem;">
+													<!-- Name Column -->
+													<div style="display: flex; flex-direction: column; align-items: flex-start; width: 62%;">
+														<label data-v-42dea6db="" for="name-input-by-division-head" class="label">Name</label>
+														<input data-v-42dea6db="" id="name-input-by-division-head" type="text"
+															   style="color: #0d0c22; background: #fff; border: 1px solid black; width: 100%; padding: 0.5rem;"
+															   class="input" />
+													</div>
+									
+													<!-- Signed Date Column -->
+													<div style="display: flex; flex-direction: column; align-items: flex-start; width: 32%;">
+														<label data-v-42dea6db="" for="date-input-by-division-head" class="label">Signed Date</label>
+														<input data-v-42dea6db="" id="date-input-by-division-head" type="date"
+															   style="color: #0d0c22; background: #fff; border: 1px solid black; width: 100%; padding: 0.5rem;"
+															   class="input" />
+													</div>
+												</div>
+											</div>
+										</span>
+									</div>
+									
+									<div data-v-741dde45="" class="form-field-container">
+										<h4>Checked by Applicant</h4>
+										<br>
+										<span data-v-741dde45="" class="error-marker">
+											<div data-v-42dea6db="" data-v-741dde45="" class="">
+												<div style="display: flex; justify-content: row; column-gap: 10px;">
+													<input type="checkbox" id="applicant-applied-checkbox-1" style="border: 1px solid black;"
+														   name="">
+													<label data-v-42dea6db="" for="applicant-applied-checkbox-1" class="label">
+														WFA information must be informed to HR Dept.
+														<span data-v-42dea6db="" class="color-lobster">*</span>
+													</label>
+													
+												</div>
+												<!-- Labels and Inputs in Two Columns -->
+												<div data-v-42dea6db="" class="label-input-group" style="display: flex; justify-content: space-between; margin-top: 1rem;">
+													<!-- Name Column -->
+													<div style="display: flex; flex-direction: column; align-items: flex-start; width: 62%;">
+														<label data-v-42dea6db="" for="name-input-by-applicant-1" class="label">Name</label>
+														<input data-v-42dea6db="" id="name-input-by-applicant-1" type="text"
+															   style="color: #0d0c22; background: #fff; border: 1px solid black; width: 100%; padding: 0.5rem;"
+															   class="input" />
+													</div>
+									
+													<!-- Signed Date Column -->
+													<div style="display: flex; flex-direction: column; align-items: flex-start; width: 32%;">
+														<label data-v-42dea6db="" for="date-input-by-applicant-1" class="label">Signed Date</label>
+														<input data-v-42dea6db="" id="date-input-by-applicant-1" type="date"
+															   style="color: #0d0c22; background: #fff; border: 1px solid black; width: 100%; padding: 0.5rem;"
+															   class="input" />
+													</div>
+												</div>
+											</div>
+										</span>
+									</div>
+									
+									<div data-v-741dde45="" class="form-field-container">
+										<span data-v-741dde45="" class="error-marker">
+											<div data-v-42dea6db="" data-v-741dde45="" class="">
+												<div style="display: flex; justify-content: row; column-gap: 10px;">
+													<input type="checkbox" id="applicant-applied-checkbox-2" style="border: 1px solid black;"
+														   name="">
+													<label data-v-42dea6db="" for="applicant-applied-checkbox-2" class="label">
+														WFA working environment must be ready.
+														<span data-v-42dea6db="" class="color-lobster">*</span>
+													</label>
+													
+												</div>
+												<!-- Labels and Inputs in Two Columns -->
+												<div data-v-42dea6db="" class="label-input-group" style="display: flex; justify-content: space-between; margin-top: 1rem;">
+													<!-- Name Column -->
+													<div style="display: flex; flex-direction: column; align-items: flex-start; width: 62%;">
+														<label data-v-42dea6db="" for="name-input-by-applicant-2" class="label">Name</label>
+														<input data-v-42dea6db="" id="name-input-by-applicant-2" type="text"
+															   style="color: #0d0c22; background: #fff; border: 1px solid black; width: 100%; padding: 0.5rem;"
+															   class="input" />
+													</div>
+									
+													<!-- Signed Date Column -->
+													<div style="display: flex; flex-direction: column; align-items: flex-start; width: 32%;">
+														<label data-v-42dea6db="" for="date-input-by-applicant-2" class="label">Signed Date</label>
+														<input data-v-42dea6db="" id="date-input-by-applicant-2" type="date"
+															   style="color: #0d0c22; background: #fff; border: 1px solid black; width: 100%; padding: 0.5rem;"
+															   class="input" />
+													</div>
+												</div>
+											</div>
+										</span>
 									</div>
 
 								</section>
